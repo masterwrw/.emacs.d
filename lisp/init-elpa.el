@@ -25,6 +25,7 @@
 ;;------------------------------------------------------------------------------
 (require-package 'color-theme)
 (require-package 'smex)
+(require-package 'swiper)
 (require-package 'cnfonts)
 (require-package 'helm-ag)
 (require-package 'company)
