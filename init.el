@@ -42,6 +42,8 @@
 (require 'init-cnfonts)
 (require 'init-color-theme)
 (require 'init-helm-ag)
+(require 'init-company)
+(require 'init-smex)
 (require 'init-keymap)
 
 

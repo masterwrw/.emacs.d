@@ -24,7 +24,10 @@
 ;; Fire up package.el and ensure the following packages are installed.
 ;;------------------------------------------------------------------------------
 (require-package 'color-theme)
+(require-package 'smex)
 (require-package 'cnfonts)
 (require-package 'helm-ag)
+(require-package 'company)
+
 
 (provide 'init-elpa)
