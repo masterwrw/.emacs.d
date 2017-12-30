@@ -4,10 +4,9 @@
 
 ;; Set packages site
 (setq package-archives
-      '(
-	("gnu" . "http://elpa.emacs-china.org/gnu/")
-	("melpa" . "http://elpa.emacs-china.org/melpa/")
-	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")))
+      '(("gnu" . "https://elpa.emacs-china.org/gnu/")
+	("melpa" . "https://elpa.emacs-china.org/melpa/")
+	("melpa-stable" . "https://elpa.emacs-china.org/melpa-stable/")))
 
 
 ;; On-demand installation of packages
