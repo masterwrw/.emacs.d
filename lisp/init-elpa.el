@@ -5,6 +5,7 @@
 ;; Set packages site
 (setq package-archives
       '(
+	("gnu" . "http://elpa.emacs-china.org/gnu/")
 	("melpa" . "http://elpa.emacs-china.org/melpa/")
 	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")))
 
