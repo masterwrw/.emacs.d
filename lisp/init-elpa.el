@@ -29,6 +29,7 @@
 (require-package 'cnfonts)
 (require-package 'helm-ag)
 (require-package 'company)
+(require-package 'magit)
 
 
 (provide 'init-elpa)
