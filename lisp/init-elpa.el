@@ -2,6 +2,7 @@
 (require 'package)
 (package-initialize)
 
+;; Set packages site
 (setq package-archives
       '(
 	("melpa" . "http://elpa.emacs-china.org/melpa/")
@@ -24,5 +25,6 @@
 ;;------------------------------------------------------------------------------
 (require-package 'color-theme)
 (require-package 'cnfonts)
+(require-package 'helm-ag)
 
 (provide 'init-elpa)

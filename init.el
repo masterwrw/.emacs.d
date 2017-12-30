@@ -41,4 +41,8 @@
 (require 'init-gui-frames)
 (require 'init-cnfonts)
 (require 'init-color-theme)
+(require 'init-helm-ag)
 (require 'init-keymap)
+
+
+(server-start)

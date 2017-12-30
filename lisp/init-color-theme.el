@@ -1,5 +1,5 @@
 (require 'color-theme)
 (color-theme-initialize)
-(color-theme-blue-sea)
+(color-theme-deep-blue)
 
 (provide 'init-color-theme)
