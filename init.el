@@ -45,6 +45,7 @@
 (require 'init-company)
 (require 'init-smex)
 (require 'init-keymap)
+(require 'init-misc)
 
 
 (server-start)
