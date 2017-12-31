@@ -28,8 +28,10 @@
 (require-package 'smex)
 (require-package 'swiper)
 (require-package 'cnfonts)
+;; Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
 (require-package 'helm-ag)
 (require-package 'company)
+(require-package 'company-c-headers)
 (require-package 'magit)
 (require-package 'yasnippet)
 (require-package 'dired+)
@@ -42,5 +44,6 @@
 (require-package 'neotree)
 (require-package 'autopair)
 (require-package 'bind-key)
+
 
 (provide 'init-elpa)
