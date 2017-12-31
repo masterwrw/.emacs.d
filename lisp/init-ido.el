@@ -1,3 +1,6 @@
+(require-package 'flx-ido)
+(require-package 'ido-vertical-mode)
+
 (require 'flx-ido)
 (ido-mode 1)
 (ido-everywhere 1)

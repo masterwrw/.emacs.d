@@ -18,4 +18,4 @@
 (if (fboundp 'menu-bar-mode)
     (menu-bar-mode -1))
 
-(provide 'init-gui-frames)
+(provide 'init-ui)

@@ -1,3 +1,5 @@
+(require-package 'bind-key)
+
 (require 'bind-key)
 (bind-key "C-o" 'other-window)
 (bind-key "C-f" 'swiper)

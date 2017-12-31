@@ -1,3 +1,5 @@
+(require-package 'autopair)
+
 (require 'autopair)
 (autopair-global-mode)
 

@@ -1,3 +1,5 @@
+(require-package 'cnfonts)
+
 (require 'cnfonts)
 (cnfonts-enable)
 

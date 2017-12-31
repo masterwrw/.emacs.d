@@ -1,3 +1,5 @@
+(require-package 'smex)
+
 ;; smex or counsel-M-x?
 (defvar my-use-smex nil
   "Use `smex' instead of `counsel-M-x' when press M-x.")
