@@ -42,6 +42,7 @@
 (require 'init-keymap)
 (require 'init-bind-key)
 (require 'init-misc)
+(require 'init-org-bullets)
 (require-package 'ace-window)
 (require-package 'ace-jump-mode)
 (require-package 'find-file-in-project)
@@ -55,3 +56,17 @@
 ;;(load custom-file 'noerror)
 
 (server-start)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (org-bullets yasnippet which-key use-package try swiper smex neotree magit iedit ido-vertical-mode helm-ag flx-ido findr find-file-in-project dired+ company-c-headers color-theme cnfonts bookmark+ autopair ace-window ace-jump-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
