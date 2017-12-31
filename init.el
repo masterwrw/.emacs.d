@@ -35,7 +35,7 @@
 (load custom-file 'noerror)
 
 ;; init files
-(require 'init-autoload)
+;; (require 'init-autoload)
 (require 'init-site-lisp) ;; Must come before elpa
 (require 'init-elpa)
 (require 'init-gui-frames)
