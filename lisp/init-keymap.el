@@ -1,4 +1,6 @@
 ;; F1 列出所有 buffer
+(defalias 'list-buffers 'ibuffer) ; make ibuffer default
+;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (global-set-key (kbd "<f1>") 'list-buffers)
 
 ;; F3 关闭其它 frame
