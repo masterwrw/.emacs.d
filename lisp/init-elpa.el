@@ -44,6 +44,6 @@
 (require-package 'neotree)
 (require-package 'autopair)
 (require-package 'bind-key)
-
+(require-package 'bookmark+)
 
 (provide 'init-elpa)

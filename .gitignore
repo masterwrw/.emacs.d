@@ -4,3 +4,5 @@ elpa/
 custom-set-variables.el
 server/
 cnfonts/
+bookmarks
+ido.last
