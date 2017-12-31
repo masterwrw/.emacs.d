@@ -38,6 +38,7 @@
 (require-package 'findr)
 (require-package 'iedit)
 (require-package 'flx-ido)
+(require-package 'ido-vertical-mode)
 (require-package 'ace-window)
 (require-package 'ace-jump-mode)
 (require-package 'find-file-in-project)
