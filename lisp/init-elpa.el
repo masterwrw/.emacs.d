@@ -23,6 +23,7 @@
 ;;------------------------------------------------------------------------------
 ;; Fire up package.el and ensure the following packages are installed.
 ;;------------------------------------------------------------------------------
+(require-package 'async)
 (require-package 'color-theme)
 (require-package 'smex)
 (require-package 'swiper)
@@ -30,6 +31,16 @@
 (require-package 'helm-ag)
 (require-package 'company)
 (require-package 'magit)
-
+(require-package 'yasnippet)
+(require-package 'dired+)
+(require-package 'findr)
+(require-package 'iedit)
+(require-package 'flx-ido)
+(require-package 'ace-window)
+(require-package 'ace-jump-mode)
+(require-package 'find-file-in-project)
+(require-package 'neotree)
+(require-package 'autopair)
+(require-package 'bind-key)
 
 (provide 'init-elpa)
