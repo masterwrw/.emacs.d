@@ -25,6 +25,7 @@
 ;; Packages and configuration
 (require 'init-try)
 (require 'init-which-key)
+(require 'init-bind-key)
 (require 'init-async)
 (require 'init-dired-plus)
 (require 'init-findr)
@@ -37,10 +38,10 @@
 (require 'init-company)
 (require 'init-yasnippet)
 (require 'init-smex)
-(require 'init-ido)
+;; Using swiper so ido no longer needed
+;(require 'init-ido)
 (require 'init-autopair)
 
-(require 'init-bind-key)
 (require 'init-misc)
 (require 'init-org-bullets)
 ;(require 'init-tabbar)
