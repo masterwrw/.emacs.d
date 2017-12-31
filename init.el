@@ -41,7 +41,7 @@
 ;; Using swiper so ido no longer needed
 ;(require 'init-ido)
 (require 'init-autopair)
-
+(require 'init-avy)
 (require 'init-misc)
 (require 'init-org-bullets)
 ;(require 'init-tabbar)
