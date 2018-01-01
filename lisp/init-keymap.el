@@ -12,4 +12,6 @@
 ;; F6 快速打开文件
 (global-set-key (kbd "<f6>") 'find-file)
 
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (provide 'init-keymap)
