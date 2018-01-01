@@ -1,6 +1,8 @@
+;; cnfonts
 (require-package 'cnfonts)
-
 (require 'cnfonts)
 (cnfonts-enable)
 
-(provide 'init-cnfonts)
+
+
+(provide 'init-font)

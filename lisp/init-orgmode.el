@@ -5,4 +5,5 @@
 			     (org-bullets-mode 1))))
 
 
-(provide 'init-org-bullets)
+
+(provide 'init-orgmode)

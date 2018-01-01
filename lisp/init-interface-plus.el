@@ -1,3 +1,6 @@
+;; swiper configuration
+;; Using swiper so ido no longer needed
+;(require 'init-ido)
 (use-package counsel
   :ensure t
   )
@@ -26,5 +29,36 @@
     ))
 
 
+;; smex configuration
+(require-package 'smex)
 
-(provide 'init-swiper)
+;; smex or counsel-M-x?
+(defvar my-use-smex nil
+  "Use `smex' instead of `counsel-M-x' when press M-x.")
+
+(defun my-M-x ()
+  (interactive)
+  (cond
+    (my-use-smex
+      (smex))
+    ((fboundp 'counsel-M-x)
+     ;; `counsel-M-x' will use `smex' to remember history
+     (counsel-M-x))
+    ((fboundp 'smex)
+     (smex))
+    (t
+      (execute-extended-command))))
+(global-set-key (kbd "M-x") 'my-M-x)
+(global-set-key (kbd "C-x C-m") 'my-M-x)
+
+
+;; tabbar
+(use-package tabbar
+  :ensure t
+  :config
+  (tabbar-mode 1))
+
+
+
+
+(provide 'init-interface-plus)

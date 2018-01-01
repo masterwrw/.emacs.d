@@ -19,7 +19,7 @@
 
 ;; Custom configuration
 (require 'init-system-env)
-(require 'init-ui)
+(require 'init-gui)
 (require 'init-common)
 
 ;; Packages and configuration
@@ -27,29 +27,20 @@
 (require 'init-which-key)
 (require 'init-bind-key)
 (require 'init-async)
-(require 'init-dired-plus)
-(require 'init-findr)
-(require 'init-iedit)
-(require 'init-magit)
-(require 'init-swiper)
-(require 'init-cnfonts)
+
+(require 'init-interface-plus)
+(require 'init-file-manager)
+(require 'init-project-manager)
+(require 'init-programming)
+(require 'init-orgmode)
 (require 'init-color-theme)
-(require 'init-helm-ag)
-(require 'init-company)
-(require 'init-yasnippet)
-(require 'init-smex)
-;; Using swiper so ido no longer needed
-;(require 'init-ido)
-(require 'init-autopair)
-(require 'init-avy)
+(require 'init-font)
+(require 'init-navigation)
+
 (require 'init-misc)
-(require 'init-org-bullets)
-;(require 'init-tabbar)
-(require 'init-ace-window)
-(require-package 'ace-jump-mode)
-(require-package 'find-file-in-project)
-(require-package 'neotree)
-(require-package 'bookmark+)
+
+
+
 (require 'init-keymap)
 (require 'init-site-lisp) ;; Must come before elpa
 
