@@ -10,4 +10,9 @@
         (require-package package min-version t)))))
 
 
+(defun reload-init ()
+  "Reload the init file"
+  (interactive)
+  (load-file (expand-file-name "init.el" user-emacs-directory)))
+
 (provide 'init-common)
