@@ -59,6 +59,11 @@
   (tabbar-mode 1))
 
 
+;; beacon, Highlight the cursor whenever the window scrolls
+(use-package beacon
+  :ensure t
+  :config
+  (beacon-mode 1))
 
 
 (provide 'init-interface-plus)
