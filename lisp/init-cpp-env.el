@@ -1,5 +1,14 @@
 ;;; C++ programming environment
 
+;; build in cc-mode config
+(setq c-basic-offset 4)
+
+;; function-args
+(require-package 'function-args)
+(fa-config-default)
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 ;; cedet
 (require 'semantic) ; code jump, ref...
 (require 'ede) ; project manage
@@ -10,6 +19,8 @@
 
 (add-hook 'c-mode-hook 'semantic-mode)
 (add-hook 'c++-mode-hook 'semantic-mode)
+
+(set-default 'semantic-case-fold t)
 
 ;; System header path
 (require 'semantic/bovine/gcc nil 'noerror)
