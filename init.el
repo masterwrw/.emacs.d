@@ -37,6 +37,7 @@
 (require 'init-color-theme)
 (require 'init-font)
 (require 'init-navigation)
+(require 'init-cpp-env)
 
 (require 'init-misc)
 
