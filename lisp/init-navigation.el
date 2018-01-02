@@ -1,7 +1,6 @@
 ;; avy, Jump to arbitrary positions in visible text and select text quickly.
 (use-package avy
-  :ensure t
-  :bind ("M-s" . avy-goto-char))
+  :ensure t)
 
 
 ;; ace-window, Quickly switch windows.
@@ -11,7 +10,6 @@
   :init
   (progn
     (global-set-key [remap other-window] 'ace-window)
-    (bind-key "C-o" 'ace-window)
     ))
 
 

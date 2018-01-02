@@ -23,10 +23,9 @@
 (yas-global-mode 1)
 
 
-;; helm-ag
+;; helm-ag, Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
 (require-package 'helm-ag)
-;; Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
-(global-set-key (kbd "<f8>") 'helm-do-ag-project-root)
+
 
 
 

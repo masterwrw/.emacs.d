@@ -3,9 +3,9 @@
 (require 'package)
 (setq package-enable-at-startup nil) ; not activat installed packages
 (setq package-archives
-      '(("gnu" . "https://elpa.emacs-china.org/gnu/")
-	("melpa" . "https://elpa.emacs-china.org/melpa/")
-	("melpa-stable" . "https://elpa.emacs-china.org/melpa-stable/")))
+      '(("gnu" . "http://elpa.emacs-china.org/gnu/")
+	("melpa" . "http://elpa.emacs-china.org/melpa/")
+	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")))
 
 (package-initialize) ; activate installed packages
 
