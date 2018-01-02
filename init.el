@@ -19,6 +19,7 @@
 
 ;; Custom configuration
 (require 'init-system-env)
+(require 'init-coding)
 (require 'init-gui)
 (require 'init-common)
 

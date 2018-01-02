@@ -20,6 +20,7 @@
 (bind-key "C-<f6>" 'counsel-find-file)
 
 
+(bind-key "C-s" 'save-buffer)
 (bind-key "C-o" 'ace-window)
 
 (bind-key "M-x" 'counsel-M-x)
