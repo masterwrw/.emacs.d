@@ -3,13 +3,10 @@
 (require 'package)
 (setq package-enable-at-startup nil) ; not activat installed packages
 
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-		    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (setq package-archives
-      '(("gnu" . (concat proto "://elpa.emacs-china.org/gnu/"))
-	("melpa" . (concat proto "://elpa.emacs-china.org/melpa/"))
-	("melpa-stable" . (concat proto "://elpa.emacs-china.org/melpa-stable/")))))
+(setq package-archives
+      '(("gnu" . "http://elpa.emacs-china.org/gnu/")
+	("melpa" . "http://elpa.emacs-china.org/melpa/")
+	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")))
 
 (package-initialize) ; activate installed packages
 
