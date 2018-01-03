@@ -3,27 +3,40 @@
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 (bind-key "<f1>" 'switch-to-buffer)
-(bind-key "C-<f1>" 'list-buffers)
+(if *win64*
+    (bind-key "C-<f1>" 'list-buffers)
+  (bind-key "C-1" 'list-buffers))
 
 ;; Find in file or find in git project
 (bind-key "<f2>" 'swiper)
-(bind-key "C-<f2>" 'counsel-ag)
+(if *win64*
+    (bind-key "C-<f2>" 'counsel-ag)
+  (bind-key "C-2" 'counsel-ag))
 
 ;; Close other frame or window
 (bind-key "<f3>" 'delete-other-frames)
-(bind-key "C-<f3>" 'delete-other-windows)
+(if *win64*
+    (bind-key "C-<f3>" 'delete-other-windows)
+  (bind-key "C-3" 'delete-other-windows))
 
 (bind-key "<f4>" 'kill-buffer)
 
 ;; Open file
 (bind-key "<f6>" 'find-file)
-(bind-key "C-<f6>" 'counsel-find-file)
+(if *win64*
+    (bind-key "C-<f6>" 'counsel-find-file)
+  (bind-key "C-6" 'counsel-find-file))
 
 (bind-key "<f12>" 'semantic-ia-fast-jump)
 
 
 (bind-key "C-s" 'save-buffer)
 (bind-key "C-o" 'ace-window)
+;; map M-c to M-w(copy)
+;(define-key key-translation-map [(meta c)] [(meta w)])
+;; map M-v to C-y(paste)
+;(define-key key-translation-map [(meta v)] [(control y)])
+
 
 (bind-key "M-x" 'counsel-M-x)
 
