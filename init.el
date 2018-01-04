@@ -41,7 +41,7 @@
 (require 'init-cpp-env)
 (require 'init-bat-env)
 (require 'init-misc)
-
+(require 'init-rss-feed)
 
 
 (require 'init-keymap)
