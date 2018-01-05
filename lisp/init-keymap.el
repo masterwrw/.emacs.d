@@ -311,6 +311,20 @@ _vr_ reset      ^^                       ^^                 ^^
 (bind-key "<f8>" 'hydra-launcher/body)
 
 
+;; hydra vi
+(defhydra hydra-vi (:pre (set-cursor-color "#40e0d0")
+                    :post (progn
+                            (set-cursor-color "#ffffff")
+                            (message
+                             "Thank you, come again.")))
+  "vi"
+  ("l" forward-char)
+  ("h" backward-char)
+  ("j" next-line)
+  ("k" previous-line)
+  ("q" nil "quit"))
+
+
 
 ; (global-set-key (kbd "M-x") 'my-M-x)
 ; (global-set-key (kbd "C-x C-m") 'my-M-x)
