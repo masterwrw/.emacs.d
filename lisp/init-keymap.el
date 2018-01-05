@@ -296,6 +296,22 @@ _vr_ reset      ^^                       ^^                 ^^
 (bind-key "<f7>" 'hydra-org-agenda/body)
 
 
+
+;; command
+(defhydra hydra-launcher (:color blue)
+  "Launch"
+  ("s" (browse-url "http://www.bing.com"))
+  ("g" (lambda ()
+         (interactive)
+         (let ((current-prefix-arg 4))
+           (call-interactively #'magit-status)))
+       "git")
+  ("q" nil "cancel"))
+
+(bind-key "<f8>" 'hydra-launcher/body)
+
+
+
 ; (global-set-key (kbd "M-x") 'my-M-x)
 ; (global-set-key (kbd "C-x C-m") 'my-M-x)
 ; (global-set-key (kbd "<f8>") 'helm-do-ag-project-root)
