@@ -43,9 +43,11 @@
 (require 'init-misc)
 (require 'init-rss-feed)
 
+(require 'init-site-lisp)
+(require 'init-blog)
+(require 'init-service-manager)
 
 (require 'init-keymap)
-(require 'init-site-lisp) ;; Must come before elpa
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
