@@ -42,7 +42,7 @@
 (require 'init-bat-env)
 (require 'init-misc)
 (require 'init-rss-feed)
-
+(require 'init-keyfreq)
 (require 'init-site-lisp)
 (require 'init-blog)
 (require 'init-service-manager)
