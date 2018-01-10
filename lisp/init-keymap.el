@@ -45,6 +45,22 @@
 (bind-key "C-=" 'cnfonts-increase-fontsize)
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
+(bind-key "C-t" 'elscreen-create)
+; <f4> is kill-buffer, C-<f4> or C-4 is kill current tab
+(if *win64*
+    (bind-key "C-<f4>" 'elscreen-kill)
+  (bind-key "C-4" 'elscreen-kill))
+
+(bind-key "M-0" '(lambda() (interactive) (elscreen-goto 0)))
+(bind-key "M-1" '(lambda() (interactive) (elscreen-goto 1)))
+(bind-key "M-2" '(lambda() (interactive) (elscreen-goto 2)))
+(bind-key "M-3" '(lambda() (interactive) (elscreen-goto 3)))
+(bind-key "M-4" '(lambda() (interactive) (elscreen-goto 4)))
+(bind-key "M-5" '(lambda() (interactive) (elscreen-goto 5)))
+(bind-key "M-6" '(lambda() (interactive) (elscreen-goto 6)))
+(bind-key "M-7" '(lambda() (interactive) (elscreen-goto 7)))
+(bind-key "M-8" '(lambda() (interactive) (elscreen-goto 8)))
+(bind-key "M-9" '(lambda() (interactive) (elscreen-goto 9)))
 
 
 ;; dydra package

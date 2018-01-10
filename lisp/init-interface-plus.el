@@ -37,10 +37,16 @@
 
 
 ;; tabbar
-(use-package tabbar
-  :ensure t
-  :config
-  (tabbar-mode 1))
+;(use-package tabbar
+;  :ensure t
+;  :config
+;  (tabbar-mode 1))
+
+;; elscreen, Emacs window session manager, like tab bar.
+(require-package 'elscreen)
+(require 'elscreen)
+(elscreen-start)
+
 
 
 ;; beacon, Highlight the cursor whenever the window scrolls
