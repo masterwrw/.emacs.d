@@ -45,6 +45,9 @@
 (bind-key "C-=" 'cnfonts-increase-fontsize)
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
+(bind-key "M-i" 'change-inner)
+(bind-key "M-o" 'change-outer)
+
 
 ;; dydra package
 (require-package 'hydra)

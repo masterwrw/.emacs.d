@@ -3,6 +3,9 @@
 (require 'autopair)
 (autopair-global-mode)
 
+;; change-inner
+(require-package 'change-inner)
+(require 'change-inner)
 
 ;; iedit, Edit multiple regions in the same way simultaneously.
 (require-package 'iedit)
