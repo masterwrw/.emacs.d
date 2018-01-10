@@ -45,12 +45,26 @@
 (bind-key "C-=" 'cnfonts-increase-fontsize)
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
-(bind-key "M-i" 'change-inner)
-(bind-key "M-o" 'change-outer)
 
 
 ;; dydra package
 (require-package 'hydra)
+
+(defhydra hydra-edit (:color blue)
+  "
+_i_ change-inner     _o_ chnage-outer
+_g_ goto-last-change _r_ goto-last-change-reverse
+_l_ goto-line
+"
+  ("i" change-inner)
+  ("o" change-outer)
+  ("g" goto-last-change)
+  ("r" goto-last-change-reverse)
+  ("l" goto-line)
+  ("q" nil "quit"))
+(bind-key "<f9>" 'hydra-edit/body)
+
+
 ; go to line
 (defhydra hydra-goto-line (goto-map ""
                            :pre (linum-mode 1)

@@ -17,6 +17,10 @@
 (windmove-default-keybindings)
 
 
+;; goto-chg, Goto Last Change
+(require-package 'goto-chg)
+(require 'goto-chg)
+
 
 
 (provide 'init-navigation)
