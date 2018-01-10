@@ -76,7 +76,7 @@
   "
 _i_ change-inner     _o_ chnage-outer      _p_ sp-change-inner
 _g_ goto-last-change _r_ goto-last-change-reverse
-_l_ goto-line
+_l_ goto-line        _q_ quit
 "
   ("i" change-inner)
   ("o" change-outer)
@@ -84,8 +84,22 @@ _l_ goto-line
   ("g" goto-last-change)
   ("r" goto-last-change-reverse)
   ("l" goto-line)
-  ("q" nil "quit"))
+  ("q" nil))
 (bind-key "<f9>" 'hydra-edit/body)
+
+
+;; dumb-jump key bind
+(defhydra hydra-dumb-jump (:color blue :columns 3)
+    "Dumb Jump"
+    ("j" dumb-jump-go "Go")
+    ("o" dumb-jump-go-other-window "Other window")
+    ("e" dumb-jump-go-prefer-external "Go external")
+    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+    ("i" dumb-jump-go-prompt "Prompt")
+    ("l" dumb-jump-quick-look "Quick look")
+    ("b" dumb-jump-back "Back")
+    ("q" nil "quit"))
+(bind-key "<f12>" 'hydra-dumb-jump/body)
 
 
 ; go to line
