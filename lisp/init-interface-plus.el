@@ -55,5 +55,11 @@
   :config
   (beacon-mode 1))
 
+;; smooth-scrolling, Make emacs scroll smoothly
+(require-package 'smooth-scrolling)
+(require 'smooth-scrolling)
+(smooth-scrolling-mode 1)
+
+
 
 (provide 'init-interface-plus)
