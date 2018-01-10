@@ -1,3 +1,8 @@
+;;; all key bindings in this file
+
+;; remap escape key to C-g
+(bind-key "<escape>" 'keyboard-escape-quit)
+
 
 ;; Switch buffer
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
