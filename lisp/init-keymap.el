@@ -68,12 +68,13 @@
 
 (defhydra hydra-edit (:color blue)
   "
-_i_ change-inner     _o_ chnage-outer
+_i_ change-inner     _o_ chnage-outer      _p_ sp-change-inner
 _g_ goto-last-change _r_ goto-last-change-reverse
 _l_ goto-line
 "
   ("i" change-inner)
   ("o" change-outer)
+  ("p" sp-change-inner)
   ("g" goto-last-change)
   ("r" goto-last-change-reverse)
   ("l" goto-line)

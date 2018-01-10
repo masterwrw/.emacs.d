@@ -3,9 +3,22 @@
 (require 'autopair)
 (autopair-global-mode)
 
+
 ;; change-inner
 (require-package 'change-inner)
 (require 'change-inner)
+
+
+;; smartparens
+(require-package 'smartparens)
+(require 'smartparens)
+
+
+;; wgrep-ag, Writable grep buffer and apply the changes to files
+(require-package 'wgrep)
+(require-package 'wgrep-ag)
+(require 'wgrep)
+
 
 ;; iedit, Edit multiple regions in the same way simultaneously.
 (require-package 'iedit)
