@@ -46,6 +46,7 @@
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
 (bind-key "C-t" 'elscreen-create)
+(bind-key "<C-tab>" 'elscreen-next)
 ; <f4> is kill-buffer, C-<f4> or C-4 is kill current tab
 (if *win64*
     (bind-key "C-<f4>" 'elscreen-kill)
