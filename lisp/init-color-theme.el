@@ -12,9 +12,14 @@
 
 ;; leuven-theme, light and dark theme
 (require-package 'leuven-theme)
-(load-theme 'leuven t) ; light
+;(load-theme 'leuven t) ; light
 ;(require 'leuven-dark-theme)
 ;(load-theme 'leuven-dark t)
+
+
+(require-package 'solarized-theme)
+(require 'solarized-theme)
+(load-theme 'solarized-light)
 
 
 
