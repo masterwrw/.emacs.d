@@ -23,4 +23,18 @@
 
 
 
+;; powerline, Rewrite of Powerline
+(require-package 'powerline)
+(require 'powerline)
+(powerline-default-theme)
+
+;; air-themes, vim-airline themes for emacs powerline
+(require-package 'airline-themes)
+(require 'airline-themes)
+(load-theme 'airline-solarized-gui)
+
+
+
+
+
 (provide 'init-color-theme)
