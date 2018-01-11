@@ -19,19 +19,26 @@
 
 (require-package 'solarized-theme)
 (require 'solarized-theme)
-(load-theme 'solarized-light)
+(if *win64*
+    (load-theme 'solarized-light)
+  (load-theme 'solarized-dark))
+
 
 
 
 ;; powerline, Rewrite of Powerline
 (require-package 'powerline)
 (require 'powerline)
-(powerline-default-theme)
+;(powerline-default-theme)
 
 ;; air-themes, vim-airline themes for emacs powerline
 (require-package 'airline-themes)
 (require 'airline-themes)
-(load-theme 'airline-solarized-gui)
+(if *win64*
+    (load-theme 'airline-solarized-gui)
+  (load-theme 'airline-molokai))
+
+
 
 
 
