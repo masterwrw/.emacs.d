@@ -14,6 +14,15 @@
 (require 'smartparens)
 
 
+;; Indent configuration
+(setq-default tab-width 4 indent-tabs-mode nil)
+(setq-default c-basic-offset 4 c-default-style "bsd")
+;; dtrt-indent, Adapt to foreign indentation offsets
+(require-package 'dtrt-indent)
+(require 'dtrt-indent)
+(dtrt-indent-mode 1)
+
+
 ;; wgrep-ag, Writable grep buffer and apply the changes to files
 (require-package 'wgrep)
 (require-package 'wgrep-ag)
@@ -41,6 +50,8 @@
 
 ;; helm-ag, Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
 (require-package 'helm-ag)
+
+
 
 
 
