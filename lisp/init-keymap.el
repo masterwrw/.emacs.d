@@ -11,30 +11,26 @@
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 (bind-key "<f1>" 'switch-to-buffer)
-(if *win64*
-    (bind-key "C-<f1>" 'list-buffers)
-  (bind-key "C-1" 'list-buffers))
+(bind-key "C-<f1>" 'list-buffers)
 
 ;; Find in file or find in git project
 (bind-key "<f2>" 'swiper)
-(if *win64*
-    (bind-key "C-<f2>" 'counsel-ag)
-  (bind-key "C-2" 'counsel-ag))
+(bind-key "C-<f2>" 'counsel-ag)
 
 ;; Close other frame or window
 (bind-key "<f3>" 'delete-other-frames)
-(if *win64*
-    (bind-key "C-<f3>" 'delete-other-windows)
-  (bind-key "C-3" 'delete-other-windows))
+(bind-key "C-<f3>" 'delete-other-windows)
 
+;; Kill buffer or kill tab
 (bind-key "<f4>" 'kill-buffer)
+(bind-key "C-<f4>" 'elscreen-kill)
 
 ;; Open file
 (bind-key "<f6>" 'find-file)
-(if *win64*
-    (bind-key "C-<f6>" 'counsel-find-file)
-  (bind-key "C-6" 'counsel-find-file))
+(bind-key "C-<f6>" 'counsel-find-file)
+(bind-key "C-6" 'ffip)
 
+;; Fast jump
 (bind-key "<f12>" 'semantic-ia-fast-jump)
 
 
@@ -55,10 +51,6 @@
 
 (bind-key "C-t" 'elscreen-create)
 (bind-key "<C-tab>" 'elscreen-next)
-; <f4> is kill-buffer, C-<f4> or C-4 is kill current tab
-(if *win64*
-    (bind-key "C-<f4>" 'elscreen-kill)
-  (bind-key "C-4" 'elscreen-kill))
 
 (bind-key "M-0" '(lambda() (interactive) (elscreen-goto 0)))
 (bind-key "M-1" '(lambda() (interactive) (elscreen-goto 1)))
