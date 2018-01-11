@@ -1,7 +1,7 @@
 ;;; all key bindings in this file
 
 ;; remap escape key to C-g
-(bind-key "<escape>" 'keyboard-escape-quit)
+(bind-key "<escape>" 'minibuffer-keyboard-quit)
 
 
 ;; Switch buffer
