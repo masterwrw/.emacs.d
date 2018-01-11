@@ -28,6 +28,12 @@
 (require 'multiple-cursors)
 
 
+;; auto-highlight-symbol
+(require-package 'auto-highlight-symbol)
+(require 'auto-highlight-symbol)
+(global-auto-highlight-symbol-mode t)
+
+
 
 ;; wgrep-ag, Writable grep buffer and apply the changes to files
 (require-package 'wgrep)
