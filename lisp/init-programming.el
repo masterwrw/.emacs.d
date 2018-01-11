@@ -23,6 +23,12 @@
 (dtrt-indent-mode 1)
 
 
+;; multiple-cursors
+(require-package 'multiple-cursors)
+(require 'multiple-cursors)
+
+
+
 ;; wgrep-ag, Writable grep buffer and apply the changes to files
 (require-package 'wgrep)
 (require-package 'wgrep-ag)
