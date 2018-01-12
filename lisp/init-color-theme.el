@@ -20,8 +20,8 @@
 (require-package 'solarized-theme)
 (require 'solarized-theme)
 (if *win64*
-    (load-theme 'solarized-light)
-  (load-theme 'solarized-dark))
+    (load-theme 'solarized-light t)
+  (load-theme 'solarized-dark t))
 
 
 
@@ -35,8 +35,8 @@
 (require-package 'airline-themes)
 (require 'airline-themes)
 (if *win64*
-    (load-theme 'airline-solarized-gui)
-  (load-theme 'airline-molokai))
+    (load-theme 'airline-solarized-gui t)
+  (load-theme 'airline-molokai t))
 
 
 
