@@ -47,6 +47,7 @@
 (require 'init-site-lisp)
 (require 'init-blog)
 (require 'init-service-manager)
+(require 'init-helm)
 ;(require 'init-evil)
 (require 'init-keymap)
 

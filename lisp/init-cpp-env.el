@@ -39,18 +39,21 @@
 
 
 ;; cedet
-; (require 'semantic) ; code jump, ref...
-; (require 'ede) ; project manage
-; ;(require 'srecode) ; template system
-; (require 'cedet)
-; 
-; (require 'semantic/ia)
-; 
-; (add-hook 'c-mode-hook 'semantic-mode)
-; (add-hook 'c++-mode-hook 'semantic-mode)
-; 
-; (set-default 'semantic-case-fold t)
-; 
+(require 'cc-mode)
+(require 'semantic)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+(global-semantic-stickyfunc-mode 1)
+
+(semantic-mode 1)
+
+
+;; Enable EDE only in C/C++
+(require 'ede)
+(global-ede-mode)
+
+
 ; ;; System header path
 ; (require 'semantic/bovine/gcc nil 'noerror)
 ; 
