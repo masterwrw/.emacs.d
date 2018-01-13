@@ -34,6 +34,37 @@
 (global-auto-highlight-symbol-mode t)
 
 
+;; undo-tree
+(require-package 'undo-tree)
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+
+
+;; ws-butler, Unobtrusively remove trailing whitespace.
+(require-package 'ws-butler)
+(require 'ws-butler)
+(add-hook 'prog-mode-hook 'ws-butler-mode)
+(add-hook 'text-mode 'ws-butler-mode)
+(add-hook 'fundamental-mode 'ws-butler-mode)
+
+
+;; anzu, Show number of matches in mode-line while searching.
+(require-package 'anzu)
+(require 'anzu)
+(global-anzu-mode)
+
+
+;; clean-aindent-mode, Simple indent and unindent, trims indent white-space.
+(require-package 'clean-aindent-mode)
+(require 'clean-aindent-mode)
+(add-hook 'prog-mode-hook 'clean-aindent-mode)
+
+
+;; volatile-highlights, Minor mode for visual feedback on some operations.
+(require-package 'volatile-highlights)
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
+
 
 ;; wgrep-ag, Writable grep buffer and apply the changes to files
 (require-package 'wgrep)
