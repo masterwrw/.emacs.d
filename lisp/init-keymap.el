@@ -31,7 +31,7 @@
 (bind-key "C-6" 'ffip)
 
 ;; Fast jump
-(bind-key "<f12>" 'semantic-ia-fast-jump)
+;(bind-key "<f12>" 'semantic-ia-fast-jump)
 
 
 (bind-key "C-s" 'save-buffer)
