@@ -1,3 +1,8 @@
+;; imenu-list, Show imenu entries in a separate buffer
+(require-package 'imenu-list)
+(require 'imenu-list)
+
+
 ;; autopair
 (require-package 'autopair)
 (require 'autopair)
