@@ -20,7 +20,7 @@
 
 ;; Custom configuration
 (require 'init-system-env)
-(when *win64*
+(when *is-windows*
     (require 'init-coding))
 (require 'init-gui)
 (require 'init-common)
