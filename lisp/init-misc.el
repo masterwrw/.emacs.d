@@ -1,8 +1,11 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (global-auto-revert-mode)
+(diminish 'auto-revert-mode)
+
 
 ;; Show line content if it is too long
 (global-visual-line-mode)
+(diminish 'visual-line-mode)
 
 
 ;; Don't create backup files

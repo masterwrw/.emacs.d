@@ -38,6 +38,7 @@
 (require-package 'auto-highlight-symbol)
 (require 'auto-highlight-symbol)
 (global-auto-highlight-symbol-mode t)
+(diminish 'auto-highlight-symbol-mode)
 
 
 ;; undo-tree
@@ -53,12 +54,14 @@
 (add-hook 'prog-mode-hook 'ws-butler-mode)
 (add-hook 'text-mode 'ws-butler-mode)
 (add-hook 'fundamental-mode 'ws-butler-mode)
+(diminish 'ws-butler-mode)
 
 
 ;; anzu, Show number of matches in mode-line while searching.
 (require-package 'anzu)
 (require 'anzu)
 (global-anzu-mode)
+(diminish 'anzu-mode)
 
 
 ;; clean-aindent-mode, Simple indent and unindent, trims indent white-space.
@@ -71,6 +74,7 @@
 (require-package 'volatile-highlights)
 (require 'volatile-highlights)
 (volatile-highlights-mode t)
+(diminish 'volatile-highlights-mode)
 
 
 ;; wgrep-ag, Writable grep buffer and apply the changes to files

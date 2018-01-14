@@ -53,7 +53,9 @@
 (use-package beacon
   :ensure t
   :config
-  (beacon-mode 1))
+  (beacon-mode 1)
+  (diminish 'beacon-mode))
+
 
 ;; smooth-scrolling, Make emacs scroll smoothly
 (require-package 'smooth-scrolling)
