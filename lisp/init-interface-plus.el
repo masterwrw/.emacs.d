@@ -62,4 +62,10 @@
 
 
 
+;; diminish, Diminished modes are minor modes with no modeline display
+(require-package 'diminish)
+(require 'diminish)
+
+
+
 (provide 'init-interface-plus)

@@ -6,7 +6,7 @@
 (require-package 'projectile)
 (projectile-global-mode)
 (setq projectile-enable-caching 1)
-
+(diminish 'projectile-mode "prj")
 
 
 

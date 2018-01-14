@@ -7,6 +7,7 @@
 (require-package 'autopair)
 (require 'autopair)
 (autopair-global-mode)
+(diminish 'autopair-mode)
 
 
 ;; change-inner
@@ -20,8 +21,8 @@
 
 
 ;; Indent configuration
-(setq-default tab-width 4 indent-tabs-mode nil)
-(setq-default c-basic-offset 4 c-default-style "bsd")
+(setq tab-width 4 indent-tabs-mode nil)
+(setq c-basic-offset 4 c-default-style "bsd")
 ;; dtrt-indent, Adapt to foreign indentation offsets
 (require-package 'dtrt-indent)
 (require 'dtrt-indent)
@@ -43,6 +44,7 @@
 (require-package 'undo-tree)
 (require 'undo-tree)
 (global-undo-tree-mode 1)
+(diminish 'undo-tree-mode "undo")
 
 
 ;; ws-butler, Unobtrusively remove trailing whitespace.
@@ -87,7 +89,8 @@
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
   '(progn
-     (add-to-list 'company-backends 'company-c-headers)))
+     (add-to-list 'company-backends 'company-c-headers)
+     (diminish 'company-mode "com")))
 
 
 ;; yasnippet
