@@ -1,4 +1,4 @@
 (require-package 'batch-mode)
-(if *win64* (require 'batch-mode))
+(if *is-windows* (require 'batch-mode))
 
 (provide 'init-bat-env)

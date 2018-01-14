@@ -19,7 +19,7 @@
 
 (require-package 'solarized-theme)
 (require 'solarized-theme)
-(if *win64*
+(if *is-windows*
     (load-theme 'solarized-light t)
   (load-theme 'solarized-dark t))
 
@@ -34,7 +34,7 @@
 ;; air-themes, vim-airline themes for emacs powerline
 (require-package 'airline-themes)
 (require 'airline-themes)
-(if *win64*
+(if *is-windows*
     (load-theme 'airline-solarized-gui t)
   (load-theme 'airline-molokai t))
 
