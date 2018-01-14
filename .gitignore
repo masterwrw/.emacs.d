@@ -12,3 +12,6 @@ semanticdb
 eshell/
 places
 diary
+irony/
+projectile-bookmarks.eld
+ede-projects.el
