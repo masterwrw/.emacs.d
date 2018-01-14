@@ -85,6 +85,27 @@
 
 ;; company, auto complete
 (require-package 'company)
+(require 'company)
+(setq company-show-numbers t) ; use alt+number to quick select
+(setq company-idle-delay 0) ; immediately company complete
+(setq company-selection-wrap-around t) ; make previous/next selection in the popup cycles
+
+(add-to-list 'company-backends 'company-elisp)
+
+;; company-dabbrev config, it is for current buffer string auto complete.
+(add-to-list 'company-backends 'company-dabbrev)
+(add-to-list 'company-backends 'company-dabbrev-code)
+(setq company-dabbrev-code-everywhere t)
+(setq company-dabbrev-minimum-length 2)
+(setq company-dabbrev-other-buffers 'all)
+
+
+;; company-statistics, Sort candidates using completion history
+(require-package 'company-statistics)
+(require 'company-statistics)
+(company-statistics-mode)
+
+
 (require-package 'company-c-headers)
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company
