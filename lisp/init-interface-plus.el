@@ -68,4 +68,11 @@
 
 
 
+;; fullframe, Generalized automatic execution in a single frame
+(require-package 'fullframe)
+(require 'fullframe)
+
+
+
+
 (provide 'init-interface-plus)

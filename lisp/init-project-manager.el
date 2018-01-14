@@ -1,5 +1,7 @@
 (require-package 'find-file-in-project)
 (require-package 'magit)
+(fullframe magit-status magit-mode-quit-window nil)
+
 
 
 ;; projectile
