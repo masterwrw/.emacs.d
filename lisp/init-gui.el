@@ -14,10 +14,14 @@
 (if (fboundp 'set-scroll-bar-mode)
     (set-scroll-bar-mode nil))
 
-;; No menu bar
-(if (fboundp 'menu-bar-mode)
-    (menu-bar-mode -1))
-
+(if (not *is-windows*)
+    (progn
+      (if (fboundp 'menu-bar-mode) ;; No menu bar
+          (menu-bar-mode -1)))
+  (progn
+    (require-package 'start-menu)
+    (require 'start-menu)
+    (start-menu-enable)))
 
 
 
