@@ -16,6 +16,9 @@
 (save-place-mode 1)
 
 
+;; Set default directory on startup
+(setq default-directory "~/.emacs.d")
+
 
 
 (provide 'init-misc)
