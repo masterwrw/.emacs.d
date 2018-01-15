@@ -8,7 +8,7 @@
 ;; Index for all org files
 (load-library "find-lisp")
 (if (file-exists-p "~/notebook/notes")
-  (setq org-agenda-files (find-lisp-find-files "~/notebook/notes" "\.org$"))
+  (setq org-agenda-files (find-lisp-find-files "~/notebook/notes" "\.org$")))
 
 
 
