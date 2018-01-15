@@ -4,7 +4,11 @@
 (setq inhibit-startup-echo-area-message t)
 
 ;; Set emacs title
-(setq frame-title-format "%b")
+; https://stackoverflow.com/questions/3669511/the-function-to-show-current-files-full-path-in-mini-buffer#
+(setq frame-title-format
+      (list (format "%s %%S: %%j " (system-name))
+            '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
 
 ;; No tool bar
 (if (fboundp 'tool-bar-mode)
