@@ -46,7 +46,7 @@
 (require-package 'elscreen)
 (require 'elscreen)
 (elscreen-start)
-
+(require 'setup-elscreen)
 
 
 ;; beacon, Highlight the cursor whenever the window scrolls
@@ -77,11 +77,11 @@
 
 
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
-(require-package 'persp-mode)
-(with-eval-after-load "persp-mode"
-  ;; .. all settings you want here
-  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
-(require 'persp-mode)
+;(require-package 'persp-mode)
+;(with-eval-after-load "persp-mode"
+;  ;; .. all settings you want here
+;  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+;(require 'persp-mode)
 
 
 
