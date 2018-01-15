@@ -76,5 +76,14 @@
 
 
 
+;; persp-mode, windows/buffers sets shared among frames + save/load.
+(require-package 'persp-mode)
+(with-eval-after-load "persp-mode"
+  ;; .. all settings you want here
+  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+(require 'persp-mode)
+
+
+
 
 (provide 'init-interface-plus)
