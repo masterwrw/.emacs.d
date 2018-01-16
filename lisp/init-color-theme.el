@@ -30,7 +30,7 @@
 ;; air-themes, vim-airline themes for emacs powerline
 (require-package 'airline-themes)
 (require 'airline-themes)
-(load-theme 'airline-molokai t))
+(load-theme 'airline-molokai t)
 
 
 
