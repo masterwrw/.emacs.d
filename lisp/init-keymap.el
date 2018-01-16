@@ -1,7 +1,7 @@
 ;;; all key bindings in this file
 
-;; remap escape key to C-g
-(bind-key "<escape>" 'minibuffer-keyboard-quit)
+;; remap escape key to C-g, comment because enable evil mode
+;(bind-key "<escape>" 'minibuffer-keyboard-quit)
 
 ;; Auto new line and indent if press RETURN key
 ;(define-key global-map (kbd "RET") 'newline-and-indent)
