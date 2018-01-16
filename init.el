@@ -29,9 +29,11 @@
 (require 'init-try)
 (require 'init-bind-key)
 (require 'init-async)
+(require 'init-site-lisp)
 
 (require 'init-interface-plus)
 (require 'init-file-manager)
+(require 'init-helm)
 (require 'init-project-manager)
 (require 'init-programming)
 (require 'init-orgmode)
@@ -43,10 +45,8 @@
 (require 'init-misc)
 (require 'init-rss-feed)
 (require 'init-keyfreq)
-(require 'init-site-lisp)
 (require 'init-blog)
 (require 'init-service-manager)
-(require 'init-helm)
 ;(require 'init-evil)
 (require 'init-keymap)
 
