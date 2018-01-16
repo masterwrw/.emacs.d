@@ -27,7 +27,6 @@
 
 ;; Packages and configuration
 (require 'init-try)
-(require 'init-which-key)
 (require 'init-bind-key)
 (require 'init-async)
 
