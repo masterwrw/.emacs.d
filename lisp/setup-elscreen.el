@@ -9,6 +9,7 @@
 
 
 ;; Auto save elscreen on exit
+(setq desktop-save t)
 (defun elscreen-store ()
     "Store the elscreen tab configuration."
     (interactive)
