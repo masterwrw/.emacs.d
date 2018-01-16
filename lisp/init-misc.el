@@ -10,6 +10,11 @@
 
 ;; Don't create backup files
 (setq make-backup-files nil)
+(setq backup-inhibited t)
+
+
+;; Stop auto save file to #autosave#
+(setq auto-save-default nil)
 
 
 ;; Remember the cursor position of files when reopening them
