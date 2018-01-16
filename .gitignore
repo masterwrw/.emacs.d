@@ -19,3 +19,4 @@ company-statistics-cache.el
 persp-confs/
 .elscreen
 .emacs.desktop*
+.cache*
