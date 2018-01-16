@@ -21,6 +21,10 @@
 (save-place-mode 1)
 
 
+;; Recent file number
+(setq recentf-max-saved-items 100)
+
+
 ;; Set default directory on startup
 (setq default-directory "~/.emacs.d")
 
