@@ -18,20 +18,24 @@
 (bind-key "C-<f2>" 'counsel-ag)
 
 ;; Close other frame or window
-(bind-key "<f3>" 'delete-other-frames)
-(bind-key "C-<f3>" 'delete-other-windows)
+(bind-key "<f3>" 'delete-other-windows)
+(bind-key "C-<f3>" 'delete-other-frames)
 
 ;; Kill buffer or kill tab
 (bind-key "<f4>" 'kill-buffer)
 (bind-key "C-<f4>" 'elscreen-kill)
 
 ;; Open file
-(bind-key "<f6>" 'find-file)
-(bind-key "C-<f6>" 'counsel-find-file)
-(bind-key "C-6" 'ffip)
+(bind-key "<f6>" 'counsel-find-file)
+(bind-key "C-<f6>" 'ffip)
+(bind-key "C-6" 'helm-projectile-find-file)
 
 ;; Fast jump
-;(bind-key "<f12>" 'semantic-ia-fast-jump)
+(bind-key "<f12>" 'semantic-ia-fast-jump)
+
+;; dumb-jump under samba share directory will be very slow, and not work.
+;(bind-key "<f12>" 'dumb-jump-go-other-window)
+;(bind-key "M-<left>" 'dumb-jump-back)
 
 
 (bind-key "C-s" 'save-buffer)
@@ -42,7 +46,7 @@
 ;(define-key key-translation-map [(meta v)] [(control y)])
 
 
-(bind-key "M-x" 'counsel-M-x)
+(bind-key "M-x" 'helm-M-x)
 
 (bind-key "M-s" 'avy-goto-char)
 
@@ -95,7 +99,6 @@ _l_ goto-line        _q_ quit
     ("l" dumb-jump-quick-look "Quick look")
     ("b" dumb-jump-back "Back")
     ("q" nil "quit"))
-(bind-key "<f12>" 'hydra-dumb-jump/body)
 
 
 ; go to line
