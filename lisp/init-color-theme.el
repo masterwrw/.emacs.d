@@ -1,3 +1,5 @@
+;;; Color theme configuration
+
 (require-package 'color-theme)
 
 (require 'color-theme)
@@ -6,13 +8,13 @@
 
 
 ;; dracula-theme, dark theme
-;(require-package 'dracula-theme)
+(require-package 'dracula-theme)
 ;(load-theme 'dracula t)
 
 
 ;; leuven-theme, light and dark theme
 (require-package 'leuven-theme)
-(load-theme 'leuven t) ; light
+;(load-theme 'leuven t) ; light
 ;(require 'leuven-dark-theme)
 ;(load-theme 'leuven-dark t)
 
@@ -21,7 +23,11 @@
 (require 'solarized-theme)
 
 
+(require-package 'material-theme)
+(load-theme 'material t)
 
+
+;;================== mode line theme ===================
 ;; powerline, Rewrite of Powerline
 (require-package 'powerline)
 (require 'powerline)
