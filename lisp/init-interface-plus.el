@@ -127,6 +127,20 @@
   (diminish 'openwith-mode))
 
 
+;; Fast setp upward and downward
+(defun my-fast-step-upward ()
+  "Step 3 lines up, recenteres the screen."
+  (interactive)
+  (forward-line -3)
+  (recenter))
+
+(defun my-fast-step-downward ()
+  "Step 3 lines down, recenteres the screen."
+  (interactive)
+  (forward-line 3)
+  (recenter))
+
+
 
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
 ;(require-package 'persp-mode)

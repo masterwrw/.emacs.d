@@ -86,6 +86,10 @@
 (bind-key "C-<right>" 'jump-to-next-pos)
 
 
+(bind-key "M-n" 'my-fast-step-downward)
+(bind-key "M-p" 'my-fast-step-upward)
+
+
 (defhydra hydra-code-browser (:color blue)
   "
 _a_ dumb go             _v_ xref reference      _e_ hide block
