@@ -186,6 +186,19 @@
 
 
 
+;;========================== navigation ===========================
+;; backward-forward, navigation backwards and forwards across marks
+;; backward-forward-previous-location <C-left>
+;; backward-forward-next-location     <C-right>
+(require-package 'backward-forward)
+(require 'backward-forward)
+(advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper)
+(backward-forward-mode t)
+
+
+
+
+
 ;;-------------------------------cedet-----------------------------
 ;(require 'cedet)
 
