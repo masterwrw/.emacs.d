@@ -87,6 +87,15 @@
 
 
 
+;; auto-dim-other-buffers, Makes non-current buffers less prominent
+(require-package 'auto-dim-other-buffers)
+(require 'auto-dim-other-buffers)
+(add-hook 'after-init-hook (lambda ()
+  (when (fboundp 'auto-dim-other-buffers-mode)
+    (auto-dim-other-buffers-mode t))))
+(custom-set-faces '(auto-dim-other-buffers-face ((t (:background "blue")))))
+
+
 ;; openwith
 (require-package 'openwith)
 (when (require 'openwith nil 'noerror)
