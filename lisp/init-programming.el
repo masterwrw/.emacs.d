@@ -132,6 +132,8 @@
 
 
 
+;; Jump to previous position on current buffer.
+(require 'jtpp)
 
 
 

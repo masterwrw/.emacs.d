@@ -87,6 +87,11 @@
 (bind-key "M-8" '(lambda() (interactive) (elscreen-goto 8)))
 (bind-key "M-9" '(lambda() (interactive) (elscreen-goto 9)))
 
+
+(bind-key "C-," 'jump-to-prev-pos)
+(bind-key "C-." 'jump-to-next-pos)
+
+
 (defhydra hydra-code-browser (:color blue)
   "
 _a_ dumb go             _v_ xref reference      _e_ hide block
