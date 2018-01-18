@@ -89,9 +89,12 @@
 
 (defhydra hydra-code-browser (:color blue)
   "
-_a_ dumb go            _s_ xref definitions     _b_ dumb back
-_c_ helm reference     _v_ xref reference
-_d_ helm find symbol   _q_ quit
+_a_ dumb go             _v_ xref reference      _e_ hide block
+_s_ xref definitions    _c_ helm reference      _r_ show block
+_b_ dumb back           _d_ helm find symbol    _w_ goto last change
+_g_ magit status
+
+_q_ quit
 "
   ("a" dumb-jump-go)
   ("b" dump-jump-back)
@@ -99,6 +102,10 @@ _d_ helm find symbol   _q_ quit
   ("s" xref-find-definition)
   ("v" xref-find-reference)
   ("d" helm-gtags-find-symbol)
+  ("w" goto-last-change)
+  ("e" hs-hide-block)
+  ("r" hs-show-block)
+  ("g" magit-status)
   ("q" nil))
 (bind-key "<f8>" 'hydra-code-browser/body)
 

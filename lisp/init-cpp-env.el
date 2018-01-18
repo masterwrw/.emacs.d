@@ -9,6 +9,12 @@
   :ensure t
   :mode ("\\.pro\\'" "\\.pri\\'"))
 
+
+;; build-in mode, Code block folding
+(add-hook 'c++-mode-hook 'hs-minor-mode)
+(add-hook 'c-mode-hook 'hs-minor-mode)
+
+
 ;;======================== xref ======================================
 ;(require-package 'helm-xref)
 ;(require 'helm-xref)
