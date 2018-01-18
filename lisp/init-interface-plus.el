@@ -65,11 +65,13 @@
 
 
 ;; beacon, Highlight the cursor whenever the window scrolls
-(use-package beacon
-  :ensure t
-  :config
-  (beacon-mode 1)
-  (diminish 'beacon-mode))
+;; This package will be slow under windows
+(if (not *is-windows*)
+    (use-package beacon
+      :ensure t
+      :config
+      (beacon-mode 1)
+      (diminish 'beacon-mode)))
 
 
 ;; smooth-scrolling, Make emacs scroll smoothly
