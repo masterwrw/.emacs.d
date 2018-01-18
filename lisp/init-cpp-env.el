@@ -14,6 +14,11 @@
 ;(require 'helm-xref)
 ;(setq xref-show-xrefs-function 'helm-xref-show-xrefs)
 
+;; gxref, xref backend using GNU Global.
+(require-package 'gxref)
+(require 'gxref)
+(add-to-list 'xref-backend-functions 'gxref-xref-backend)
+
 
 ;;======================== lsp mode ==================================
 ;(require-package 'lsp-mode)

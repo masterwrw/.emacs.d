@@ -1,5 +1,10 @@
 ;;; all key bindings in this file
 
+;; dydra package
+(require-package 'hydra)
+(require 'hydra)
+
+
 ;; remap escape key to C-g if not enable evil mode
 (if (not (bound-and-true-p evil-mode))
     (bind-key "<escape>" 'minibuffer-keyboard-quit))
@@ -34,6 +39,7 @@
 (bind-key "<f6>" 'counsel-find-file)
 (bind-key "C-<f6>" 'ffip)
 (bind-key "C-6" 'helm-projectile-find-file)
+
 
 
 (bind-key "<f9>" 'imenu-list-minor-mode)
@@ -81,9 +87,21 @@
 (bind-key "M-8" '(lambda() (interactive) (elscreen-goto 8)))
 (bind-key "M-9" '(lambda() (interactive) (elscreen-goto 9)))
 
+(defhydra hydra-code-browser (:color blue)
+  "
+_a_ dumb go            _s_ xref definitions     _b_ dumb back
+_c_ helm reference     _v_ xref reference
+_d_ helm find symbol   _q_ quit
+"
+  ("a" dumb-jump-go)
+  ("b" dump-jump-back)
+  ("c" helm-gtags-find-rtag)
+  ("s" xref-find-definition)
+  ("v" xref-find-reference)
+  ("d" helm-gtags-find-symbol)
+  ("q" nil))
+(bind-key "<f8>" 'hydra-code-browser/body)
 
-;; dydra package
-(require-package 'hydra)
 
 (defhydra hydra-edit (:color blue)
   "
@@ -98,7 +116,7 @@ _l_ goto-line        _q_ quit
   ("r" goto-last-change-reverse)
   ("l" goto-line)
   ("q" nil))
-(bind-key "<f9>" 'hydra-edit/body)
+;(bind-key "<f9>" 'hydra-edit/body)
 
 
 ;; dumb-jump key bind
@@ -359,7 +377,7 @@ _vr_ reset      ^^                       ^^                 ^^
   ("." org-agenda-goto-today)
   ("gr" org-agenda-redo))
 
-(bind-key "<f7>" 'hydra-org-agenda/body)
+;(bind-key "<f7>" 'hydra-org-agenda/body)
 
 
 
@@ -374,7 +392,7 @@ _vr_ reset      ^^                       ^^                 ^^
        "git")
   ("q" nil "cancel"))
 
-(bind-key "<f8>" 'hydra-launcher/body)
+;(bind-key "<f8>" 'hydra-launcher/body)
 
 
 ;; hydra vi
