@@ -49,14 +49,6 @@
     (bind-key "<f11>" 'helm-gtags-find-rtag))
 
 
-;; Fast jump
-;(bind-key "<f12>" 'semantic-ia-fast-jump)
-
-;; dumb-jump under samba share directory will be very slow, and not work.
-(bind-key "<f12>" 'dumb-jump-go)
-(bind-key "M-<left>" 'dumb-jump-back)
-
-
 (bind-key "C-s" 'save-buffer)
 (bind-key "C-o" 'ace-window)
 ;; map M-c to M-w(copy)
@@ -88,8 +80,10 @@
 (bind-key "M-9" '(lambda() (interactive) (elscreen-goto 9)))
 
 
-(bind-key "C-," 'jump-to-prev-pos)
-(bind-key "C-." 'jump-to-next-pos)
+(bind-key "M-<left>" 'backward-forward-previous-location)
+(bind-key "M-<right>" 'backward-forward-next-location)
+(bind-key "C-<left>" 'jump-to-prev-pos)
+(bind-key "C-<right>" 'jump-to-next-pos)
 
 
 (defhydra hydra-code-browser (:color blue)
@@ -97,12 +91,14 @@
 _a_ dumb go             _v_ xref reference      _e_ hide block
 _s_ xref definitions    _c_ helm reference      _r_ show block
 _b_ dumb back           _d_ helm find symbol    _w_ goto last change
+_z_ semantic jump
 _g_ magit status
 
 _q_ quit
 "
-  ("a" dumb-jump-go)
+  ("a" dumb-jump-go)     ;; dumb-jump under samba share directory will be very slow, and not work.
   ("b" dump-jump-back)
+  ("z" semantic-ia-fast-jump)
   ("c" helm-gtags-find-rtag)
   ("s" xref-find-definition)
   ("v" xref-find-reference)
