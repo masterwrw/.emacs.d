@@ -82,14 +82,18 @@
 (bind-key "M-9" '(lambda() (interactive) (elscreen-goto 9)))
 
 
-(bind-key "M-<left>" 'backward-forward-previous-location)
-(bind-key "M-<right>" 'backward-forward-next-location)
-(bind-key "C-<left>" 'jump-to-prev-pos)
-(bind-key "C-<right>" 'jump-to-next-pos)
+(bind-key "C-<left>" 'backward-forward-previous-location)
+(bind-key "C-<right>" 'backward-forward-next-location)
+;(bind-key "C-<left>" 'jump-to-prev-pos)
+;(bind-key "C-<right>" 'jump-to-next-pos)
 
 
-(bind-key "M-n" 'my-fast-step-downward)
-(bind-key "M-p" 'my-fast-step-upward)
+(bind-key "M-<down>" 'my-fast-step-downward)
+(bind-key "M-<up>" 'my-fast-step-upward)
+(bind-key "M-<right>" 'forward-word)
+(bind-key "M-<left>" 'backward-word)
+(bind-key "M-<delete>" 'kill-word)
+(bind-key "M-<backspace>" 'backward-kill-word)
 
 
 (defhydra hydra-code-browser (:color blue)
