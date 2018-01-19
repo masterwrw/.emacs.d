@@ -40,6 +40,7 @@
 (require 'init-color-theme)
 (require 'init-font)
 (require 'init-navigation)
+(require 'init-clisp-env)
 (require 'init-cpp-env)
 (require 'init-python-env)
 (require 'init-bat-env)
