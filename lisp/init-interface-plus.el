@@ -88,12 +88,12 @@
 
 
 ;; auto-dim-other-buffers, Makes non-current buffers less prominent
-(require-package 'auto-dim-other-buffers)
-(require 'auto-dim-other-buffers)
-(add-hook 'after-init-hook (lambda ()
-  (when (fboundp 'auto-dim-other-buffers-mode)
-    (auto-dim-other-buffers-mode t))))
-(custom-set-faces '(auto-dim-other-buffers-face ((t (:background "DodgerBlue1")))))
+;(require-package 'auto-dim-other-buffers)
+;(require 'auto-dim-other-buffers)
+;(add-hook 'after-init-hook (lambda ()
+;  (when (fboundp 'auto-dim-other-buffers-mode)
+;    (auto-dim-other-buffers-mode t))))
+;(custom-set-faces '(auto-dim-other-buffers-face ((t (:background "DodgerBlue1")))))
 
 
 ;; openwith
@@ -145,6 +145,16 @@
   "Switch to previous buffer no ask"
   (interactive)
   (switch-to-buffer nil))
+
+
+
+(defun my-server-start ()
+  "Start server for open file only one emacs"
+  (interactive)
+  (require 'server)
+  (if (not (server-running-p))
+      (server-start)))
+
 
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
 ;(require-package 'persp-mode)
