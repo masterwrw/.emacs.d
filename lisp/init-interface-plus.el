@@ -93,7 +93,7 @@
 (add-hook 'after-init-hook (lambda ()
   (when (fboundp 'auto-dim-other-buffers-mode)
     (auto-dim-other-buffers-mode t))))
-(custom-set-faces '(auto-dim-other-buffers-face ((t (:background "blue")))))
+(custom-set-faces '(auto-dim-other-buffers-face ((t (:background "DodgerBlue1")))))
 
 
 ;; openwith
@@ -141,6 +141,10 @@
   (recenter))
 
 
+(defun my-auto-switch-buffer ()
+  "Switch to previous buffer no ask"
+  (interactive)
+  (switch-to-buffer nil))
 
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
 ;(require-package 'persp-mode)

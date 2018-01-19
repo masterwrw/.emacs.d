@@ -65,8 +65,10 @@
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
 (bind-key "C-t" 'elscreen-create)
-(bind-key "<C-tab>" 'elscreen-next)
+;(bind-key "<C-tab>" 'elscreen-next)
 (bind-key "<C-iso-lefttab>" 'elscreen-previous) ; Ctrl+Shift+Tab
+(bind-key "<C-tab>" 'my-auto-switch-buffer)
+
 
 (bind-key "M-0" '(lambda() (interactive) (elscreen-goto 0)))
 (bind-key "M-1" '(lambda() (interactive) (elscreen-goto 1)))
