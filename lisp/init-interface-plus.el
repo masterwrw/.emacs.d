@@ -73,6 +73,9 @@
       (beacon-mode 1)
       (diminish 'beacon-mode)))
 
+;; Highlight current line
+(global-hl-line-mode)
+
 
 ;; smooth-scrolling, Make emacs scroll smoothly
 (require-package 'smooth-scrolling)
