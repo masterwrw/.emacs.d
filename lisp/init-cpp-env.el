@@ -92,7 +92,7 @@
 ;; function-args
 (require-package 'function-args)
 (require 'function-args)
-(fa-config-default)
+;(fa-config-default) ;; Disable function-args-mode-map keymap
 
 
 ;; dumb-jump
