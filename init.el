@@ -44,6 +44,7 @@
 (require 'init-cpp-env)
 (require 'init-python-env)
 (require 'init-bat-env)
+(require 'init-newlisp-env)
 (require 'init-misc)
 (require 'init-rss-feed)
 (require 'init-keyfreq)
