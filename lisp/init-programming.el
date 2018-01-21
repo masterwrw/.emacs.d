@@ -20,6 +20,11 @@
 (require 'smartparens)
 
 
+;; paredit
+(require-package 'paredit)
+(require 'paredit)
+
+
 ;; Indent configuration
 (setq tab-width 4 indent-tabs-mode nil)
 (setq c-basic-offset 4 c-default-style "bsd")
