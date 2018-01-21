@@ -45,6 +45,7 @@
 (require 'init-python-env)
 (require 'init-bat-env)
 (require 'init-newlisp-env)
+(require 'init-racket-env)
 (require 'init-misc)
 (require 'init-rss-feed)
 (require 'init-keyfreq)
