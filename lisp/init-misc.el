@@ -29,6 +29,10 @@
 (setq vc-handled-backends ())
 
 
+;; Delete selection enable
+(delete-selection-mode 1)
+
+
 ;; Set default directory on startup
 (setq default-directory "~/.emacs.d")
 
