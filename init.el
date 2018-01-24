@@ -1,5 +1,7 @@
 (setq inhibit-startup-message t)
 
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (require 'package)
 (setq package-enable-at-startup nil) ; not activat installed packages
 
@@ -48,13 +50,13 @@
 (require 'init-racket-env)
 (require 'init-misc)
 (require 'init-rss-feed)
-(require 'init-keyfreq)
+;(require 'init-keyfreq) ; M-v not work
 (require 'init-blog)
 (require 'init-service-manager)
 ;(require 'init-evil)
 (require 'init-keymap)
 
-(fset 'yes-or-no-p 'y-or-n-p)
+
 
 (require 'server)
 (unless (server-running-p)
