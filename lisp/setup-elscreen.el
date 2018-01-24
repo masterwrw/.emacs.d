@@ -17,7 +17,7 @@
         (with-temp-file elscreen-tab-configuration-store-filename
             (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
 
-(push #'elscreen-store kill-emacs-hook)
+;(push #'elscreen-store kill-emacs-hook)
 
 
 ;; Auto restore elscreen on startup
