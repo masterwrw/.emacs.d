@@ -33,7 +33,7 @@
 (setq org-src-fontify-natively t)
 
 
-(unless *is-linux*
+(if *is-linux*
   (use-package org-bullets
     :ensure t
     :config
