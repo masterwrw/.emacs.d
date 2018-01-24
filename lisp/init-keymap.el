@@ -35,6 +35,11 @@
 (bind-key "<f4>" 'kill-buffer)
 (bind-key "C-<f4>" 'elscreen-kill)
 
+;; Split window
+(bind-key "<f5>" 'split-window-right)
+(bind-key "C-<f5>" 'split-window-below)
+(bind-key "S-<f5>" 'delete-other-windows)
+
 ;; Open file
 (bind-key "<f6>" 'counsel-find-file)
 (bind-key "C-<f6>" 'ffip)
