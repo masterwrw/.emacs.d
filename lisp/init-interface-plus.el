@@ -192,6 +192,22 @@ PROMPT sets the `read-string prompt."
 
 
 
+;;; Quick scroll
+(defun scroll-up-lines ()
+  "Scroll up lines"
+  (interactive)
+  (scroll-up 10)
+  (forward-line 10))
+
+(defun scroll-down-lines ()
+  "Scroll down lines"
+  (interactive)
+  (scroll-down 10)
+  (forward-line -10))
+
+
+
+
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
 ;(require-package 'persp-mode)
 ;(with-eval-after-load "persp-mode"

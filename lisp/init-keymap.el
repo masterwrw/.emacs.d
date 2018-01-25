@@ -90,6 +90,13 @@
 (bind-key "C-=" 'cnfonts-increase-fontsize)
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
+(if *is-windows*
+    (bind-key "<wheel-up>" 'scroll-down-lines)
+    (bind-key "<mouse-4>" 'scroll-down-lines))
+(if *is-windows*
+    (bind-key "<wheel-down>" 'scroll-up-lines)
+    (bind-key "<mouse-5>" 'scroll-up-lines))
+
 (bind-key "C-t" 'elscreen-create)
 ;(bind-key "<C-tab>" 'elscreen-next)
 (bind-key "<C-iso-lefttab>" 'elscreen-previous) ; Ctrl+Shift+Tab
