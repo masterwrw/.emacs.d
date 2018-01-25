@@ -35,6 +35,11 @@
 (dtrt-indent-mode 1)
 
 
+;; aggressive-indent, Minor mode to aggressively keep your code always indented
+(require-package 'aggressive-indent)
+(require 'aggressive-indent)
+
+
 ;; multiple-cursors
 (require-package 'multiple-cursors)
 (require 'multiple-cursors)
