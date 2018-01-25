@@ -18,15 +18,12 @@
 (if (fboundp 'set-scroll-bar-mode)
     (set-scroll-bar-mode nil))
 
-(if (not *is-windows*)
-    (progn
-      (if (fboundp 'menu-bar-mode) ;; No menu bar
-          (menu-bar-mode -1)))
-  (progn
-    (require-package 'start-menu)
-    (require 'start-menu)
-    (start-menu-enable)))
+;; No menu bar
+(menu-bar-mode -1)
 
+;; No fringe, http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
+;(set-window-fringes nil 0 0)
+(fringe-mode '(0 . 0))
 
 
 (provide 'init-gui)
