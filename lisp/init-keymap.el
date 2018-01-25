@@ -78,6 +78,15 @@
 
 (bind-key "M-s" 'avy-goto-char)
 
+
+(if *is-windows*
+    (bind-key "C-<wheel-up>" 'text-scale-increase)
+    (bind-key "C-<mouse-4>" 'text-scale-increase))
+
+(if *is-windows*
+    (bind-key "C-<wheel-down>" 'text-scale-decrease)
+    (bind-key "C-<mouse-5>" 'text-scale-decrease))
+
 (bind-key "C-=" 'cnfonts-increase-fontsize)
 (bind-key "C--" 'cnfonts-decrease-fontsize)
 
