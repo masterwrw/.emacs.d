@@ -25,5 +25,10 @@
 ;(set-window-fringes nil 0 0)
 (fringe-mode '(0 . 0))
 
+;; No ring bell audio, http://emacsredux.com/blog/2016/02/14/disable-annoying-audio-notifications/
+(setq ring-bell-function 'ignore)
+
+
+
 
 (provide 'init-gui)
