@@ -54,8 +54,20 @@
     (bind-key "<f11>" 'helm-gtags-find-rtag))
 
 
+;;; Some key may not work.
 (bind-key "C-s" 'save-buffer)
-(bind-key "C-o" 'ace-window)
+(bind-key "C-S-s" 'write-file)
+(bind-key "C-f" 'isearch-forward)
+(bind-key "C-n" 'xah-new-empty-buffer)
+(bind-key "C-S-n" 'make-frame-command)
+(bind-key "C-v" 'yank)
+(bind-key "C-w" 'kill-buffer)
+(bind-key "C-y" 'redo)
+(bind-key "C-z" 'undo)
+(bind-key "C-/" 'comment-or-uncomment-region)
+
+
+;(bind-key "C-o" 'ace-window)
 ;; map M-c to M-w(copy)
 ;(define-key key-translation-map [(meta c)] [(meta w)])
 ;; map M-v to C-y(paste)
