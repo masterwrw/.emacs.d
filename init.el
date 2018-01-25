@@ -2,6 +2,8 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(setq gc-cons-threshold 100000000)
+
 (require 'package)
 (setq package-enable-at-startup nil) ; not activat installed packages
 
