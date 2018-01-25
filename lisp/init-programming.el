@@ -2,7 +2,8 @@
 (require-package 'imenu-list)
 (require 'imenu-list)
 
-
+;;; Pair configuration
+(show-paren-mode 1)
 ;; autopair
 (require-package 'autopair)
 (require 'autopair)
