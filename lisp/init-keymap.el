@@ -39,7 +39,7 @@
  "o"   'find-file
  "p"   'p
  "q"   'beginning-of-visual-line
- "r"   'r
+ "r"   'replace-string
  "s"   's
  "t"   't
  "u"   'u
