@@ -96,6 +96,10 @@
 (require 'fullframe)
 
 
+;; Icons
+(require-package 'all-the-icons)
+(require 'all-the-icons)
+
 
 ;; auto-dim-other-buffers, Makes non-current buffers less prominent
 ;(require-package 'auto-dim-other-buffers)
