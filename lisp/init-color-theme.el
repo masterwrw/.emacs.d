@@ -9,7 +9,7 @@
 
 ;; dracula-theme, dark theme
 (require-package 'dracula-theme)
-;(load-theme 'dracula t)
+(load-theme 'dracula t)
 
 
 ;; leuven-theme, light and dark theme
@@ -24,19 +24,19 @@
 
 
 (require-package 'material-theme)
-(load-theme 'material t)
+;(load-theme 'material t)
 
 
 ;;================== mode line theme ===================
 ;; powerline, Rewrite of Powerline
 (require-package 'powerline)
 (require 'powerline)
-(powerline-center-theme)
+;(powerline-center-theme)
 
 ;; air-themes, vim-airline themes for emacs powerline
 (require-package 'airline-themes)
 (require 'airline-themes)
-(load-theme 'airline-molokai t)
+;(load-theme 'airline-molokai t)
 
 
 
