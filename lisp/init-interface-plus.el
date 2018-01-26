@@ -17,7 +17,10 @@
              :ensure t
              :config
              (which-key-mode)
-             (diminish 'which-key-mode))
+             (diminish 'which-key-mode)
+             (which-key-setup-side-window-right)
+	     ;(which-key-setup-minibuffer)
+	     )
 
 
 ;; swiper configuration

@@ -1,5 +1,10 @@
 ;;; all key bindings in this file
 
+;; general, More convenient key definitions in emacs
+(require-package 'general)
+(require 'general)
+
+
 ;; dydra package
 (require-package 'hydra)
 (require 'hydra)
@@ -9,13 +14,53 @@
 (if (not (bound-and-true-p evil-mode))
     (bind-key "<escape>" 'minibuffer-keyboard-quit))
 
-;; Auto new line and indent if press RETURN key
-;(define-key global-map (kbd "RET") 'newline-and-indent)
 
-
-;; Switch buffer
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
+
+;;;================== General keys ========================
+(general-define-key
+ :prefix "M-<RET>"
+ "a"   'mark-whole-buffer
+ "b"   'switch-to-buffer
+ "c"   'xah-copy-line-or-region
+ "C-c" 'xah-copy-line-or-region
+ "d"   'dumb-jump-go
+ "e"   'e
+ "f"   'isearch-forward
+ "g"   'magit-status
+ "h"   'h
+ "i"   'i
+ "j"   'j
+ "k"   'xah-cut-line-or-region
+ "l"   'goto-line
+ "m"   'set-mark-command
+ "n"   'xah-new-empty-buffer
+ "o"   'find-file
+ "p"   'p
+ "q"   'beginning-of-visual-line
+ "r"   'r
+ "s"   's
+ "t"   't
+ "u"   'u
+ "v"   'yank
+ "C-v" 'yank
+ "w"   'ibuffer
+ "x"   'xah-cut-line-or-region
+ "y"   'redo
+ "z"   'undo
+ "C-z" 'undo
+
+ ";" 'a
+ "," 'dumb-jump
+ "." 'dump-jump-back
+ "/" 'comment-or-uncomment-region
+ "C-/" 'comment-or-uncomment-region)
+
+
+
+;;;========================================================
+;; Switch buffer
 (bind-key "<f1>" 'switch-to-buffer)
 (bind-key "C-<f1>" 'helm-buffers-list)
 (bind-key "C-1" 'list-buffers)
@@ -61,7 +106,6 @@
 (bind-key "C-n" 'xah-new-empty-buffer)
 (bind-key "C-S-n" 'make-frame-command)
 (bind-key "C-v" 'yank)
-(bind-key "C-w" 'kill-buffer)
 (bind-key "C-y" 'redo)
 (bind-key "C-z" 'undo)
 (bind-key "C-/" 'comment-or-uncomment-region)
@@ -101,6 +145,9 @@
 ;(bind-key "<C-tab>" 'elscreen-next)
 (bind-key "<C-iso-lefttab>" 'elscreen-previous) ; Ctrl+Shift+Tab
 (bind-key "<C-tab>" 'my-auto-switch-buffer)
+
+
+(bind-key "C-`" 'set-mark-command)
 
 
 (bind-key "M-0" '(lambda() (interactive) (elscreen-goto 0)))
