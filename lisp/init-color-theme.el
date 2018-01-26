@@ -12,6 +12,11 @@
 (load-theme 'dracula t)
 
 
+;; hemisu-theme
+(require-package 'hemisu-theme)
+(require 'hemisu-theme)
+
+
 ;; leuven-theme, light and dark theme
 (require-package 'leuven-theme)
 ;(load-theme 'leuven t) ; light
