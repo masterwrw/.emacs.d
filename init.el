@@ -10,7 +10,8 @@
 (setq package-archives
       '(("gnu" . "http://elpa.emacs-china.org/gnu/")
 	("melpa" . "http://elpa.emacs-china.org/melpa/")
-	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")))
+	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
+	("marmalade" . "http://marmalade-repo.org/packages/")))
 
 (package-initialize) ; activate installed packages
 
