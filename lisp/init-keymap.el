@@ -19,8 +19,9 @@
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 
 ;;;================== General keys ========================
+(setq my-leader-key "<f9>")
 (general-define-key
- :prefix "M-<RET>"
+ :prefix my-leader-key
  "a"   'mark-whole-buffer
  "b"   'switch-to-buffer
  "c"   'xah-copy-line-or-region
@@ -41,7 +42,7 @@
  "q"   'beginning-of-visual-line
  "r"   'replace-string
  "s"   's
- "t"   't
+ "t"   'org-capture
  "u"   'u
  "v"   'yank
  "C-v" 'yank
@@ -92,7 +93,7 @@
 
 
 
-(bind-key "<f9>" 'imenu-list-minor-mode)
+;(bind-key "<f9>" 'imenu-list-minor-mode)
 
 
 (if *is-windows*
