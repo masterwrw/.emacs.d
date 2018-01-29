@@ -11,7 +11,8 @@
       '(("gnu" . "http://elpa.emacs-china.org/gnu/")
 	("melpa" . "http://elpa.emacs-china.org/melpa/")
 	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
-	("marmalade" . "http://marmalade-repo.org/packages/")))
+	("marmalade" . "http://marmalade-repo.org/packages/")
+	("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize) ; activate installed packages
 
@@ -25,8 +26,8 @@
 
 ;; Custom configuration
 (require 'init-system-env)
-(when *is-windows*
-    (require 'init-coding))
+;(when *is-windows*
+;    (require 'init-coding))
 (require 'init-common)
 (require 'init-gui)
 
@@ -41,7 +42,6 @@
 (require 'init-helm)
 (require 'init-project-manager)
 (require 'init-programming)
-(require 'init-orgmode)
 (require 'init-color-theme)
 (require 'init-font)
 (require 'init-navigation)
@@ -52,6 +52,7 @@
 (require 'init-nsis-env)
 (require 'init-newlisp-env)
 (require 'init-racket-env)
+(require 'init-orgmode)
 (require 'init-misc)
 (require 'init-rss-feed)
 ;(require 'init-keyfreq) ; M-v not work

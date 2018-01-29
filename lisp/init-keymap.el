@@ -5,11 +5,6 @@
 (require 'general)
 
 
-;; dydra package
-(require-package 'hydra)
-(require 'hydra)
-
-
 ;; remap escape key to C-g if not enable evil mode
 (if (not (bound-and-true-p evil-mode))
     (bind-key "<escape>" 'minibuffer-keyboard-quit))
@@ -18,32 +13,54 @@
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 
+
+(defhydra hydra-code-browser (:color blue)
+  "
+_a_ dumb go             _v_ xref reference      _e_ hide block
+_s_ xref definitions    _c_ helm reference      _r_ show block
+_b_ dumb back           _d_ helm find symbol    _w_ goto last change
+_z_ semantic jump
+_g_ magit status
+
+_q_ quit
+"
+  ("a" dumb-jump-go)     ;; dumb-jump under samba share directory will be very slow, and not work.
+  ("b" dump-jump-back)
+  ("z" semantic-ia-fast-jump)
+  ("c" helm-gtags-find-rtag)
+  ("s" xref-find-definition)
+  ("v" xref-find-reference)
+  ("d" helm-gtags-find-symbol)
+  ("w" goto-last-change)
+  ("e" hs-hide-block)
+  ("r" hs-show-block)
+  ("g" magit-status)
+  ("q" nil))
+(bind-key "<f8>" 'hydra-code-browser/body)
+
+
 ;;;================== General keys ========================
 (setq my-leader-key "<f9>")
 (general-define-key
  :prefix my-leader-key
  "a"   'mark-whole-buffer
- "b"   'switch-to-buffer
- "c"   'xah-copy-line-or-region
+ "br"  'hydra-org-brain/body
+ "bk"  'bookmark-bmenu-list
+ "cc"   'xah-copy-line-or-region
  "C-c" 'xah-copy-line-or-region
+ "ca"  'org-capture
  "d"   'dumb-jump-go
- "e"   'e
  "f"   'isearch-forward
- "g"   'magit-status
- "h"   'h
- "i"   'i
- "j"   'j
+ "gg"  'magit-status
+ "gl"  'goto-line
+ "j"   'hydra-code-browser
  "k"   'xah-cut-line-or-region
- "l"   'goto-line
  "m"   'set-mark-command
  "n"   'xah-new-empty-buffer
  "o"   'find-file
- "p"   'p
  "q"   'beginning-of-visual-line
  "r"   'replace-string
- "s"   's
- "t"   'org-capture
- "u"   'u
+ "uu"  'uuidgen
  "v"   'yank
  "C-v" 'yank
  "w"   'ibuffer
@@ -51,10 +68,6 @@
  "y"   'redo
  "z"   'undo
  "C-z" 'undo
-
- ";" 'a
- "," 'dumb-jump
- "." 'dump-jump-back
  "/" 'comment-or-uncomment-region
  "C-/" 'comment-or-uncomment-region)
 
@@ -190,29 +203,6 @@
   (define-key minibuffer-local-isearch-map (kbd "<right>") 'isearch-forward-exit-minibuffer))
 
 
-(defhydra hydra-code-browser (:color blue)
-  "
-_a_ dumb go             _v_ xref reference      _e_ hide block
-_s_ xref definitions    _c_ helm reference      _r_ show block
-_b_ dumb back           _d_ helm find symbol    _w_ goto last change
-_z_ semantic jump
-_g_ magit status
-
-_q_ quit
-"
-  ("a" dumb-jump-go)     ;; dumb-jump under samba share directory will be very slow, and not work.
-  ("b" dump-jump-back)
-  ("z" semantic-ia-fast-jump)
-  ("c" helm-gtags-find-rtag)
-  ("s" xref-find-definition)
-  ("v" xref-find-reference)
-  ("d" helm-gtags-find-symbol)
-  ("w" goto-last-change)
-  ("e" hs-hide-block)
-  ("r" hs-show-block)
-  ("g" magit-status)
-  ("q" nil))
-(bind-key "<f8>" 'hydra-code-browser/body)
 
 
 (defhydra hydra-edit (:color blue)

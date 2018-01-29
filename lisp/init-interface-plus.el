@@ -213,6 +213,11 @@ PROMPT sets the `read-string prompt."
   (forward-line -10))
 
 
+;; dydra package
+(require-package 'hydra)
+(require 'hydra)
+
+
 
 
 ;; persp-mode, windows/buffers sets shared among frames + save/load.
