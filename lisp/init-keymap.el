@@ -46,7 +46,7 @@ _q_ quit
  "a"   'mark-whole-buffer
  "br"  'hydra-org-brain/body
  "bk"  'bookmark-bmenu-list
- "cc"   'xah-copy-line-or-region
+ "cc"  'xah-copy-line-or-region
  "C-c" 'xah-copy-line-or-region
  "ca"  'org-capture
  "d"   'dumb-jump-go
@@ -57,7 +57,7 @@ _q_ quit
  "k"   'xah-cut-line-or-region
  "m"   'set-mark-command
  "n"   'xah-new-empty-buffer
- "o"   'find-file
+ "o"   'other-window
  "q"   'beginning-of-visual-line
  "r"   'replace-string
  "uu"  'uuidgen
