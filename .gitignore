@@ -22,3 +22,4 @@ persp-confs/
 .emacs.desktop*
 .cache*
 url/
+.org-id-locations
