@@ -123,10 +123,20 @@
 (require-package 'uuidgen)
 (require 'uuidgen)
 
+
 ;; Need insert uuid
+(defun my-auto-insert-uuid ()
+    (replace-string "(uuid)" (uuidgen-4)))
+
+;(push '("b" "Brain" plain (function org-brain-goto-end)
+;	"* %i%?\n:PROPERTIES:\n:ID:       (uuid)\n:END:" :empty-lines 1)
+;      org-capture-templates)
+;(add-hook 'org-capture-prepare-finalize-hook 'my-auto-insert-uuid) //works
+
 (push '("b" "Brain" plain (function org-brain-goto-end)
-	"* %i%?\n:PROPERTIES:\n:ID:       \n:END:" :empty-lines 1)
+	"* %i%?" :empty-lines 1)
       org-capture-templates)
+(add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
 
 
 (require-package 'org-cliplink)
