@@ -19,6 +19,9 @@
 
 (eh-hack-load-path)
 
+(require-package 'org)
+(require 'org)
+
 
 (if *is-linux*
   (use-package org-bullets
@@ -72,24 +75,20 @@
 
 (setq org-agenda-files (list (concat org-directory "/inbox.org")
                              (concat org-directory "/finished.org")
-                             (concat org-directory "/canceled.org")
-                             (concat org-directory "/journal.org")))
+                             (concat org-directory "/canceled.org")))
 
 
 (setq org-capture-templates
       '(
-        ("i" "Inbox" entry (file "~/notebook/notes/gtd/inbox.org")
-         "* %?\n" :prepend t :empty-lines 1)
 
-        ("t" "Create Task" entry (file "~/notebook/notes/gtd/todo.org")
+        ("t" "Add to task" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Tasks")
          "* %?\n Created on %T\n" :prepend t)
 
-        ("j" "Journal" entry (file+datetree "~/notebook/notes/gtd/journal.org")
-         "* %?\n Input time %U\n  %i\n  %a")
-
-        ("s" "Screencast" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Screencast")
+        ("s" "Add to project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
          "* %?\n%i\n")
 
+	("i" "Add to inbox" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Inbox")
+         "* %?\n%i" :prepend t :empty-lines 1)
         ))
 
 
@@ -105,8 +104,6 @@
 
 
 ;;; org-brain, require org-mode version 9
-(require-package 'org)
-(require 'org)
 (require-package 'org-brain)
 (require 'org-brain)
 (setq org-brain-path "~/notebook/notes/brain")
@@ -133,7 +130,7 @@
 ;      org-capture-templates)
 ;(add-hook 'org-capture-prepare-finalize-hook 'my-auto-insert-uuid) //works
 
-(push '("b" "Brain" plain (function org-brain-goto-end)
+(push '("b" "Add to brain" plain (function org-brain-goto-end)
 	"* %i%?" :empty-lines 1)
       org-capture-templates)
 (add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
@@ -157,8 +154,8 @@ Suggest the URL title as a description for resource."
 
 (defhydra hydra-org-brain (:color blue)
   "
-_h_ New child  _p_ New parent  _f_ Add friendship
-_c_ Add child  _C_ Remove child  _P_ Remove parent  _F_ Remove friendship
+_c_ Add child(advise)  _p_ New parent  _f_ Add friendship
+_h_ New child  _C_ Remove child  _P_ Remove parent  _F_ Remove friendship
 _d_ Delete entry  _l_ Add resource  _L_ Add link resource
 _n_ Pin  _t_ Set title  _T_ Set tag  _r_ Random  _R_ Random circle
 _j_ Goto next link _b_ Go back _v_ Open brain  _C-r_ Rename file
