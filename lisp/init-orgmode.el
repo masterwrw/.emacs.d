@@ -84,7 +84,10 @@
         ("t" "Add to task" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Tasks")
          "* %?\n Created on %T\n" :prepend t)
 
-        ("s" "Add to project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
+        ("p" "Add to project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
+         "* %?\n%i\n")
+
+	("b" "Add to book" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Book")
          "* %?\n%i\n")
 
 	("i" "Add to inbox" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Inbox")
