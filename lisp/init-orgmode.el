@@ -77,6 +77,9 @@
                              (concat org-directory "/finished.org")
                              (concat org-directory "/canceled.org")))
 
+(defun my-inbox ()
+  (interactive)
+  (find-file org-default-notes-file))
 
 (setq org-capture-templates
       '(

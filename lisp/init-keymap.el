@@ -53,6 +53,7 @@ _q_ quit
  "f"   'isearch-forward
  "gg"  'magit-status
  "gl"  'goto-line
+ "i"   'my-inbox
  "j"   'hydra-code-browser
  "k"   'xah-cut-line-or-region
  "m"   'set-mark-command
