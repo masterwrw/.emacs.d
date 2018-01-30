@@ -96,14 +96,18 @@ _q_ quit
   ("w" org-iswitchb)
   ("q" nil))
 
+
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c)"))))
+      '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
+	))
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "red" :weight bold)
               ("NEXT" :foreground "blue" :weight bold)
+	      ("WAITING" :foreground "orange" :weight bold)
+	      ("SOMEDAY" :foreground "magenta" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold))))
+              ("ABORT" :foreground "forest green" :weight bold))))
 
 ;;;==========================Calendar========================================
 (setq calendar-week-start-day 1) ;; Start at monday
@@ -115,37 +119,43 @@ _q_ quit
 (setq org-default-notes-file (concat org-directory "/inbox.org"))
 
 (setq org-agenda-files (list (concat org-directory "/inbox.org")
-                             (concat org-directory "/finished.org")
-                             (concat org-directory "/canceled.org")))
+			     (concat org-directory "/task.org")
+			     (concat org-directory "/note.org")
+                             (concat org-directory "/project.org")))
 
 (defun my-inbox ()
   (interactive)
   (find-file org-default-notes-file))
 
+
 (setq org-capture-templates
       '(
 
-        ("t" "Add to task" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Tasks")
-         "* %?\n Created on %T\n" :prepend t :jump-to-captured t)
+        ("n" "New" entry (file "~/notebook/notes/gtd/inbox.org")
+         "* %?\n%i\n" :prepend t :jump-to-captured t)
 
-        ("p" "Add to project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
-         "* %?\n%i\n" :jump-to-captured t)
-
-	("b" "Add to book" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Book")
+	("t" "Taks" entry (file+headline "~/notebook/notes/gtd/task.org" "Tasks")
          "* %?\n%i\n")
 
-	("c" "Add to calendar" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Calendar")
+	("i" "Ideas" entry (file+headline "~/notebook/notes/gtd/task.org" "Ideas")
+         "* %?\n%i\n")
+
+	("c" "Calendar" entry (file+headline "~/notebook/notes/gtd/task.org" "Calendar")
+         "* %?\nSCHEDULED: %^t\n%i\n" :jump-to-captured t)
+
+	("r" "Note" entry (file "~/notebook/notes/gtd/note.org")
+         "* %?\n%i" :prepend t :empty-lines 1)
+
+        ("p" "Project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
          "* %?\n%i\n" :jump-to-captured t)
 
-	("i" "Add to inbox" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Inbox")
-         "* %?\n%i" :prepend t :empty-lines 1)
         ))
 
 
 (setq org-refile-targets
       '(
         ("~/notebook/notes/gtd/finished.org" :level . 1)
-        ("~/notebook/notes/gtd/canceled.org" :level . 1)
+        ("~/notebook/notes/gtd/trash.org" :level . 1)
         ))
 
 (setq org-archive-location "~/notebook/notes/gtd/finished.org::")
@@ -153,7 +163,8 @@ _q_ quit
 
 
 
-;;; org-brain, require org-mode version 9
+;;;============================org-brain===================================
+;; require org-mode version 9
 (require-package 'org-brain)
 (require 'org-brain)
 (setq org-brain-path "~/notebook/notes/brain")
