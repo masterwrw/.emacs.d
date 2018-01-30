@@ -19,10 +19,15 @@
 
 (eh-hack-load-path)
 
+;; Require latest org
 (require-package 'org)
+
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
 (require 'org)
 
 
+;; Require org-bullets
 (if *is-linux*
   (use-package org-bullets
     :ensure t
@@ -31,6 +36,7 @@
                                (org-bullets-mode 1)))))
 
 
+;;; Custom util function
 ;; http://wenshanren.org/?p=327
 (defun my-org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
@@ -59,6 +65,7 @@
     (previous-line 2)))
 
 
+;;; ========================Org configuration==============================
 ;; Indent content
 (setq org-edit-src-content-indentation 0)
 
@@ -68,8 +75,41 @@
 (setq org-startup-indented t)
 (setq org-startup-folded (quote overview))
 
+;; Hides blank lines between headings
+(setq org-cycle-separator-lines 0)
 
-;;; org capture configuration
+(setq require-final-newline t)
+
+(defhydra org-mode-hydra (:colur blue)
+  "
+_a_ Agenda
+_s_ Store link   _d_ Toggle link display  _c_ Schedule
+_l_ Insert link
+_w_ Switch
+_q_ quit
+"
+  ("a" org-agenda)
+  ("s" org-store-link)
+  ("d" org-toggle-link-display)
+  ("c" org-schedule)
+  ("l" org-insert-link)
+  ("w" org-iswitchb)
+  ("q" nil))
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCELLED(c)"))))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("CANCELLED" :foreground "forest green" :weight bold))))
+
+
+
+
+
+;;; ========================org capture configuration========================
 (setq org-directory "~/notebook/notes/gtd")
 (setq org-default-notes-file (concat org-directory "/inbox.org"))
 
@@ -91,6 +131,9 @@
          "* %?\n%i\n")
 
 	("b" "Add to book" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Book")
+         "* %?\n%i\n")
+
+	("b" "Add to calendar" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Calendar")
          "* %?\n%i\n")
 
 	("i" "Add to inbox" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Inbox")
@@ -193,11 +236,6 @@ _k_ Goto previous link  _q_ quit
   ("R" org-brain-visualize-wander)
   ("C-r" org-brain-rename-file)
   ("q" nil))
-
-;; Index for all org files
-;(load-library "find-lisp")
-;(if (file-exists-p "~/notebook/notes")
-;  (setq org-agenda-files (find-lisp-find-files "~/notebook/notes" "\.org$")))
 
 
 

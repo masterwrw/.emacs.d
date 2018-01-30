@@ -61,6 +61,7 @@ _q_ quit
  "o"   'other-window
  "q"   'beginning-of-visual-line
  "r"   'replace-string
+ "td"  'org-mode-hydra/body
  "uu"  'uuidgen
  "v"   'yank
  "C-v" 'yank
