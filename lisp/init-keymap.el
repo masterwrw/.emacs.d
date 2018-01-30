@@ -40,7 +40,8 @@ _q_ quit
 
 
 ;;;================== General keys ========================
-(setq my-leader-key "<f9>")
+(global-unset-key (kbd "M-<SPC>"))
+(setq my-leader-key (kbd "M-<SPC>"))
 (general-define-key
  :prefix my-leader-key
  "a"   'mark-whole-buffer
@@ -120,9 +121,9 @@ _q_ quit
 ;;; Some key may not work.
 (bind-key "C-s" 'save-buffer)
 (bind-key "C-S-s" 'write-file)
-(bind-key "C-f" 'isearch-forward)
-(bind-key "C-n" 'xah-new-empty-buffer)
-(bind-key "C-S-n" 'make-frame-command)
+;(bind-key "C-f" 'isearch-forward)
+;(bind-key "C-n" 'xah-new-empty-buffer)
+;(bind-key "C-S-n" 'make-frame-command)
 (bind-key "C-v" 'yank)
 (bind-key "C-y" 'redo)
 (bind-key "C-z" 'undo)
