@@ -50,6 +50,7 @@ _q_ quit
  "C-c" 'xah-copy-line-or-region
  "ca"  'org-capture
  "d"   'dumb-jump-go
+ "e"   'er/expand-region
  "f"   'isearch-forward
  "gg"  'magit-status
  "gl"  'goto-line
