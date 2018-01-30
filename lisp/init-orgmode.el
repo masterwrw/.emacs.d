@@ -105,7 +105,8 @@ _q_ quit
               ("DONE" :foreground "forest green" :weight bold)
               ("CANCELLED" :foreground "forest green" :weight bold))))
 
-
+;;;==========================Calendar========================================
+(setq calendar-week-start-day 1) ;; Start at monday
 
 
 
@@ -125,16 +126,16 @@ _q_ quit
       '(
 
         ("t" "Add to task" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Tasks")
-         "* %?\n Created on %T\n" :prepend t)
+         "* %?\n Created on %T\n" :prepend t :jump-to-captured t)
 
         ("p" "Add to project" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Project")
-         "* %?\n%i\n")
+         "* %?\n%i\n" :jump-to-captured t)
 
 	("b" "Add to book" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Book")
          "* %?\n%i\n")
 
-	("b" "Add to calendar" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Calendar")
-         "* %?\n%i\n")
+	("c" "Add to calendar" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Calendar")
+         "* %?\n%i\n" :jump-to-captured t)
 
 	("i" "Add to inbox" entry (file+headline "~/notebook/notes/gtd/inbox.org" "Inbox")
          "* %?\n%i" :prepend t :empty-lines 1)
