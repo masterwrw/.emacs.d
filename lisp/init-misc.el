@@ -15,6 +15,10 @@
 
 ;; Stop auto save file to #autosave#
 (setq auto-save-default nil)
+;; Set auto save file
+(require 'auto-save)
+(auto-save-enable)
+(setq auto-save-slient t)
 
 
 ;; Remember the cursor position of files when reopening them
