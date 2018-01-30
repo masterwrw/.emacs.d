@@ -134,11 +134,11 @@ _q_ quit
         ("n" "New" entry (file "~/notebook/notes/gtd/inbox.org")
          "* %?\n%i\n" :prepend t :jump-to-captured t)
 
-	("t" "Taks" entry (file+headline "~/notebook/notes/gtd/task.org" "Tasks")
+	("t" "Task" entry (file+headline "~/notebook/notes/gtd/task.org" "Tasks")
          "* %?\n%i\n")
 
 	("i" "Ideas" entry (file+headline "~/notebook/notes/gtd/task.org" "Ideas")
-         "* %?\n%i\n")
+         "* %?\n%i\n" :jump-to-captured t)
 
 	("c" "Calendar" entry (file+headline "~/notebook/notes/gtd/task.org" "Calendar")
          "* %?\nSCHEDULED: %^t\n%i\n" :jump-to-captured t)
