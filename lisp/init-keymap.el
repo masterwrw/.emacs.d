@@ -61,7 +61,8 @@ _q_ quit
  "n"   'xah-new-empty-buffer
  "o"   'other-window
  "q"   'beginning-of-visual-line
- "r"   'replace-string
+ "rs"  'replace-string
+ "re"  'multiple-cursors-hydra/body
  "td"  'org-mode-hydra/body
  "uu"  'uuidgen
  "v"   'yank

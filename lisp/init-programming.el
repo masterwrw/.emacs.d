@@ -43,7 +43,12 @@
 ;; multiple-cursors
 (require-package 'multiple-cursors)
 (require 'multiple-cursors)
-
+(defhydra multiple-cursors-hydra (:color blue)
+  ("a" mc/mark-all-like-this "all like this")
+  ("b" mc/edit-lines "edit lines")
+  ("c" mc/mark-next-like-this "next like this")
+  ("d" mc/mark-previous-like-this "previous like this")
+  ("q" nil "quit"))
 
 ;; auto-highlight-symbol
 (require-package 'auto-highlight-symbol)
