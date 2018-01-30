@@ -1,15 +1,21 @@
 ;;; Color theme configuration
 
-(require-package 'color-theme)
+;(require-package 'color-theme)
 
-(require 'color-theme)
-(color-theme-initialize)
+;(require 'color-theme)
+;(color-theme-initialize)
 ;(color-theme-deep-blue)
 
 
 ;; dracula-theme, dark theme
 (require-package 'dracula-theme)
-(load-theme 'dracula t)
+;(load-theme 'dracula t)
+
+
+;; atom-one-dark-theme
+(require-package 'atom-one-dark-theme)
+(require 'atom-one-dark-theme)
+(load-theme 'atom-one-dark t)
 
 
 ;; hemisu-theme
