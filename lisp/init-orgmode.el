@@ -170,19 +170,20 @@ _q_ quit
 (require 'uuidgen)
 
 
+;;; Not use capture, because will be add child but no new file
 ;; Need insert uuid
-(defun my-auto-insert-uuid ()
-    (replace-string "(uuid)" (uuidgen-4)))
+;(defun my-auto-insert-uuid ()
+;    (replace-string "(uuid)" (uuidgen-4)))
 
 ;(push '("b" "Brain" plain (function org-brain-goto-end)
 ;	"* %i%?\n:PROPERTIES:\n:ID:       (uuid)\n:END:" :empty-lines 1)
 ;      org-capture-templates)
 ;(add-hook 'org-capture-prepare-finalize-hook 'my-auto-insert-uuid) //works
 
-(push '("b" "Add to brain" plain (function org-brain-goto-end)
-	"* %i%?" :empty-lines 1)
-      org-capture-templates)
-(add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
+;(push '("b" "Add to brain" plain (function org-brain-goto-end)
+;	"* %i%?" :empty-lines 1)
+;      org-capture-templates)
+;(add-hook 'org-capture-prepare-finalize-hook 'org-id-get-create)
 
 
 (require-package 'org-cliplink)
