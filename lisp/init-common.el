@@ -57,7 +57,7 @@ Version 2017-11-01"
 ;;(setq initial-major-mode (quote text-mode))
 
 ;;; Start emacs with empty buffer
-(setq initial-buffer-choice 'xah-new-empty-buffer)
+;(setq initial-buffer-choice 'xah-new-empty-buffer)
 
 
 
