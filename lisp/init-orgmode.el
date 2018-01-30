@@ -251,6 +251,14 @@ _k_ Goto previous link  _q_ quit
   ("q" nil))
 
 
+;;;=====================org crypt======================================
+;; Advise set auto-save-default to nil
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote("crypt")))
+(setq org-crypt-key nil)
+;(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
+
 
 
 (provide 'init-orgmode)
