@@ -54,7 +54,7 @@ _q_ quit
  "gg"  'magit-status
  "gl"  'goto-line
  "i"   'my-inbox
- "j"   'hydra-code-browser
+ "j"   'hydra-code-browser/body
  "k"   'xah-cut-line-or-region
  "m"   'set-mark-command
  "n"   'xah-new-empty-buffer
