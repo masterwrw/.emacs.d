@@ -18,7 +18,7 @@
              :config
              (which-key-mode)
              (diminish 'which-key-mode)
-             (which-key-setup-side-window-right)
+             (which-key-setup-side-window-bottom)
 	     ;(which-key-setup-minibuffer)
 	     )
 
