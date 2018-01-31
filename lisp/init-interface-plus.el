@@ -1,7 +1,7 @@
 ;;; Interface plus
 
 ;; Cursor shape
-(setq-default cursor-type 'bar)
+(setq-default cursor-type 'box)
 
 ;; Make cursor not blink
 (blink-cursor-mode 0)
