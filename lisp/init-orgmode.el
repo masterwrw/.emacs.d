@@ -17,14 +17,14 @@
            (when (autoloadp sym)
              (unintern sym)))))))
 
-(eh-hack-load-path)
+;; emacs 27 used orgmode 9
+(if (< emacs-major-version 27)
+    (progn ;; Require latest org
+      (eh-hack-load-path)
+      (require-package 'org)
+      (require 'org)
+      (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))))
 
-;; Require latest org
-(require-package 'org)
-
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-
-(require 'org)
 
 
 ;; Require org-bullets
