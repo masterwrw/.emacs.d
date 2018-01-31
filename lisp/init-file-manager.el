@@ -26,5 +26,9 @@
 
 
 
+(require-package 'fzf)
+(require 'fzf)
+
+
 
 (provide 'init-file-manager)
