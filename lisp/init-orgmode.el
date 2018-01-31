@@ -214,14 +214,14 @@ Suggest the URL title as a description for resource."
 (define-key org-brain-visualize-mode-map (kbd "L") #'org-brain-cliplink-resource)
 
 
-(defhydra hydra-org-brain (:color blue)
+(defhydra org-brain-hydra (:color pink :hint nil)
   "
 _c_ Add child(advise)  _p_ New parent  _f_ Add friendship
 _h_ New child  _C_ Remove child  _P_ Remove parent  _F_ Remove friendship
 _d_ Delete entry  _l_ Add resource  _L_ Add link resource
 _n_ Pin  _t_ Set title  _T_ Set tag  _r_ Random  _R_ Random circle
 _j_ Goto next link _b_ Go back _v_ Open brain  _C-r_ Rename file
-_k_ Goto previous link  _q_ quit
+_k_ Goto previous link
 "
   ("j" forward-button)
   ("k" backward-button)
@@ -248,7 +248,7 @@ _k_ Goto previous link  _q_ quit
   ("r" org-brain-visualize-random)
   ("R" org-brain-visualize-wander)
   ("C-r" org-brain-rename-file)
-  ("q" nil))
+  ("q" nil "quit" :color blue))
 
 
 ;;;=====================org crypt======================================

@@ -43,7 +43,7 @@
 ;; multiple-cursors
 (require-package 'multiple-cursors)
 (require 'multiple-cursors)
-(defhydra multiple-cursors-hydra (:color blue)
+(defhydra multiple-cursors-hydra (:color blue :hint nil)
   ("a" mc/mark-all-like-this "all like this")
   ("b" mc/edit-lines "edit lines")
   ("c" mc/mark-next-like-this "next like this")

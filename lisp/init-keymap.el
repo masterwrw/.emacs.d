@@ -14,15 +14,13 @@
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 
 
-(defhydra hydra-code-browser (:color blue)
+(defhydra code-browser-hydra (:color pink :hint nil)
   "
 _a_ dumb go             _v_ xref reference      _e_ hide block
 _s_ xref definitions    _c_ helm reference      _r_ show block
 _b_ dumb back           _d_ helm find symbol    _w_ goto last change
 _z_ semantic jump
 _g_ magit status
-
-_q_ quit
 "
   ("a" dumb-jump-go)     ;; dumb-jump under samba share directory will be very slow, and not work.
   ("b" dump-jump-back)
@@ -35,8 +33,8 @@ _q_ quit
   ("e" hs-hide-block)
   ("r" hs-show-block)
   ("g" magit-status)
-  ("q" nil))
-(bind-key "<f8>" 'hydra-code-browser/body)
+  ("q" nil "quit" :color blue))
+
 
 
 ;;;================== General keys ========================
@@ -45,7 +43,7 @@ _q_ quit
 (general-define-key
  :prefix my-leader-key
  "a"   'mark-whole-buffer
- "br"  'hydra-org-brain/body
+ "br"  'org-brain-hydra/body
  "bk"  'bookmark-bmenu-list
  "cc"  'xah-copy-line-or-region
  "C-c" 'xah-copy-line-or-region
@@ -57,7 +55,7 @@ _q_ quit
  "gg"  'magit-status
  "gl"  'goto-line
  "i"   'my-inbox
- "j"   'hydra-code-browser/body
+ "j"   'code-browser-hydra/body
  "k"   'xah-cut-line-or-region
  "m"   'set-mark-command
  "n"   'xah-new-empty-buffer
