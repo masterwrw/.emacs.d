@@ -149,13 +149,13 @@
   "Step 3 lines up, recenteres the screen."
   (interactive)
   (forward-line -3)
-  (recenter))
+  (scroll-down-line 3))
 
 (defun my-fast-step-downward ()
   "Step 3 lines down, recenteres the screen."
   (interactive)
   (forward-line 3)
-  (recenter))
+  (scroll-up-line 3))
 
 
 (defun my-auto-switch-buffer ()
