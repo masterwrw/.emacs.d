@@ -50,6 +50,7 @@ _q_ quit
  "cc"  'xah-copy-line-or-region
  "C-c" 'xah-copy-line-or-region
  "ca"  'org-capture
+ "cw"  'eno-hydra/body
  "d"   'dumb-jump-go
  "e"   'er/expand-region
  "f"   'isearch-forward

@@ -152,5 +152,37 @@
 (require 'jtpp)
 
 
+;; eno, Goto/copy/cut any word/symbol/line in view, similar to ace-jump/easymotion
+(require-package 'eno)
+(require 'eno)
+
+(defhydra eno-hydra (:color pink :hint nil)
+"
+^Word^          ^Symbol         ^Str^          ^Paren^
+^^^^^^^^----------------------------------------------
+_a_: jump       _e_: jump       _i_: jump      _m_: jump
+_b_: copy       _f_: copy       _j_: copy      _n_: copy
+_c_: cut        _g_: cut        _k_: cut       _o_: cut
+_d_: paste      _h_: paste      _l_: paste     _p_: paste
+"
+  ("a" eno-word-jump)
+  ("b" eno-word-copy)
+  ("c" eno-word-cut)
+  ("d" eno-word-paste)
+  ("e" eno-symbol-jump)
+  ("f" eno-symbol-copy)
+  ("g" eno-symbol-cut)
+  ("h" eno-symbol-paste)
+  ("i" eno-str-jump)
+  ("j" eno-str-copy)
+  ("k" eno-str-cut)
+  ("l" eno-str-paste)
+  ("m" eno-paren-jump)
+  ("n" eno-paren-copy)
+  ("o" eno-paren-cut)
+  ("p" eno-paren-paste)
+  ("q" nil "quit" :color blue))
+
+
 
 (provide 'init-programming)
