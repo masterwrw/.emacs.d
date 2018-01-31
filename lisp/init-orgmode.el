@@ -132,7 +132,7 @@ _q_ quit
       '(
 
         ("n" "New" entry (file "~/notebook/notes/gtd/inbox.org")
-         "* %?\n%i\n" :prepend t :jump-to-captured t)
+         "* %?\n%i\n")
 
 	("t" "Task" entry (file+headline "~/notebook/notes/gtd/task.org" "Tasks")
          "* %?\n%i\n")
