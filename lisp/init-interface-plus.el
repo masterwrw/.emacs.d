@@ -84,7 +84,7 @@
       (diminish 'beacon-mode)))
 
 ;; Highlight current line
-(global-hl-line-mode)
+(setq global-hl-line-mode nil)
 
 
 ;; smooth-scrolling, Make emacs scroll smoothly
@@ -163,6 +163,11 @@
   (interactive)
   (switch-to-buffer nil))
 
+
+(defun my-kill-current-buffer ()
+  "Quick kill current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
 
 
 (defun my-server-start ()
