@@ -14,7 +14,7 @@
 
 
 ;; Hoding the shift key and with the arrows, go to other window
-(windmove-default-keybindings)
+;(windmove-default-keybindings)
 
 
 ;; goto-chg, Goto Last Change
