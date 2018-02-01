@@ -1,8 +1,176 @@
 ;;; all key bindings in this file
-
 ;; general, More convenient key definitions in emacs
 (require-package 'general)
 (require 'general)
+
+
+(global-unset-key (kbd "<f1>"))
+(global-unset-key (kbd "<f2>"))
+(global-unset-key (kbd "<f3>"))
+(global-unset-key (kbd "<f4>"))
+(global-unset-key (kbd "<f5>"))
+(global-unset-key (kbd "<f6>"))
+(global-unset-key (kbd "<f7>"))
+(global-unset-key (kbd "<f8>"))
+(global-unset-key (kbd "<f9>"))
+(global-unset-key (kbd "<f10>"))
+(global-unset-key (kbd "<f11>"))
+(global-unset-key (kbd "<f12>"))
+
+;; f1, buffer and file command
+(bind-key "C-<f1>" 'ivy-switch-buffer)
+(general-define-key :prefix (kbd "<f1>")
+                    "j" 'my-auto-switch-buffer
+                    "b" 'switch-to-buffer
+                    "l" 'ibuffer
+                    "k" 'my-kill-current-buffer
+                    "C-k" 'kill-buffer
+                    "f" 'counsel-find-file
+                    "C-f" 'ffip
+                    "S-f" 'helm-projectile-find-file
+                    "r" 'write-file)
+
+
+;(defhydra buffer-file-hydra (:color pink :hint nil :exit t)
+;  "
+;^Buffer^            ^File^
+;^^^^^------------------------------
+;_j_: quick switch   _f_: find file
+;_t_: switch to      _o_: ffip
+;_l_: list buffer    _p_: helm
+;_k_: kill buffer    _r_: save as
+;"
+;  ("j" my-auto-switch-buffer)
+;  ("t" switch-to-buffer)
+;  ("l" ibuffer)
+;  ("k" kill-buffer)
+;  ("f" counsel-find-file)
+;  ("o" ffip)
+;  ("p" helm-projectile-find-file)
+;  ("r" write-file)
+;  ("q" nil "quit" :color blue))
+
+
+;; f2, editor command
+(bind-key "C-<f2>" 'eno-word-copy)
+(general-define-key :prefix (kbd "<f2>")
+                    "c" 'xah-copy-line-or-region
+                    "x" 'xah-cut-line-or-region
+                    "v" 'yank
+                    "z" 'undo
+                    "y" 'redo
+                    "e" 'er/expand-region
+                    "s" 'swiper
+                    "C-s" 'helm-ag
+                    "j" 'dump-jump-go
+                    "o" 'eno-word-copy
+                    "/" 'xah-comment-dwim
+                    "C-/" 'comment-or-uncomment-region
+                    "m" 'set-mark-command
+                    "rr" 'replace-rectangle
+                    "rs" 'replace-string
+                    "k" 'kill-rectangle
+                    "<tab>" 'indent-region)
+
+
+;(defhydra editor-hydra (:color pink :hint nil)
+;  ("c" xah-copy-line-or-region "copy")
+;  ("x" xah-cut-line-or-region "cut")
+;  ("v" yank "paste")
+;  ("z" undo "undo")
+;  ("y" redo "redo")
+;  ("e" er/expand-region "expand")
+;  ("h" swiper "swiper")
+;  ("j" dump-jump-go "jump")
+;  ("l" helm-ag "ag")
+;  ("o" eno-hydra/body "quick get")
+;  ("/" comment-or-uncomment-region "comment/uncomment")
+;  ("m" set-mark-command "mark")
+;  ("q" nil "quit" :color blue))
+
+
+
+;; f3, window or frame command
+(bind-key "C-<f3>" 'ace-window)
+(general-define-key :prefix (kbd "<f3>")
+                    "b" 'split-window-below
+                    "r" 'split-window-right
+                    "h" 'split-window-horizontally
+                    "v" 'split-window-vertically
+                    "o" 'ace-window
+                    "d" 'delete-other-windows
+                    "C-d" 'delete-other-frames)
+
+;(defhydra window-hydra (:color pink :hint nil :exit t)
+;  "
+;^Split^       ^Switch^     ^Delete^
+;^^^^----------------------------------------
+;_b_: below    _o_: other   _k_: delete other
+;_r_: right
+;_h_: horiz
+;_v_: verti
+;"
+;  ("b" split-window-below)
+;  ("r" split-window-right)
+;  ("h" split-window-horizontally)
+;  ("v" split-window-vertically)
+;  ("o" ace-window)
+;  ("k" delete-other-windows)
+;  ("q" nil "quit" :color blue))
+
+
+
+;; f4, org/gtd command
+(bind-key "C-<f4>" 'org-capture)
+(general-define-key :prefix (kbd "<f4>")
+                    "c" 'org-capture
+                    "a" 'org-agenda
+                    "b" 'org-brain-hydra/body)
+
+
+;; f5, compile and run command
+(bind-key "C-<f5>" 'eval-buffer)
+(general-define-key :prefix (kbd "<f5>")
+                    "a" 'eval-last-sexp
+                    "C-a" 'eval-buffer)
+
+
+
+;; f6, project manager command
+(bind-key "C-<f6>" 'magit-status)
+(general-define-key :prefix (kbd "<f6>")
+                    "s" 'magit-status
+                    "b" 'magit-branch
+                    "f" 'magit-checkout-file
+                    "r" 'magit-reset
+                    "l" 'magit-log-head)
+
+;(defhydra project-hydra (:color pink :hint nil :exit t)
+;  "
+;^Magit^
+;^^^^^^------------------------------------------
+;_s_: status
+;_b_: branch
+;_f_: checkout file
+;_r_: reset
+;"
+;  ("s" magit-status)
+;  ("b" magit-branch)
+;  ("f" magit-checkout-file)
+;  ("r" magit-reset)
+;  ("q" nil "quit" :color blue))
+
+
+
+;; f12, quick help
+(general-define-key :prefix (kbd "<f12>")
+                    "v" 'describe-variable
+                    "f" 'describe-function
+                    "k" 'describe-key
+                    "m" 'describe-mode
+                    "C-m" 'describe-minor-mode
+                    "i" 'info)
+
 
 
 ;; remap escape key to C-g if not enable evil mode
@@ -11,7 +179,7 @@
 
 
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
-(defalias 'list-buffers 'ibuffer) ; make ibuffer default
+;(defalias 'list-buffers 'ibuffer) ; make ibuffer default
 
 
 (defhydra code-browser-hydra (:color pink :hint nil)
@@ -79,34 +247,34 @@ _g_ magit status
 
 ;;;========================================================
 ;; Switch buffer
-(bind-key "<f1>" 'switch-to-buffer)
-(bind-key "C-<f1>" 'helm-buffers-list)
-(bind-key "C-1" 'list-buffers)
-
-;; Find in file or find in git project
-(bind-key "<f2>" 'swiper)
-(if *is-windows*
-    (bind-key "C-<f2>" 'helm-ag)
-  (bind-key "C-<f2>" 'counsel-ag))
-(bind-key "C-2" 'helm-do-ag)
-
-;; Close other frame or window
-(bind-key "<f3>" 'delete-other-windows)
-(bind-key "C-<f3>" 'delete-other-frames)
-
-;; Kill buffer or kill tab
-(bind-key "<f4>" 'kill-buffer)
-(bind-key "C-<f4>" 'elscreen-kill)
-
-;; Split window
-(bind-key "<f5>" 'split-window-right)
-(bind-key "C-<f5>" 'split-window-below)
-(bind-key "S-<f5>" 'delete-other-windows)
-
-;; Open file
-(bind-key "<f6>" 'counsel-find-file)
-(bind-key "C-<f6>" 'ffip)
-(bind-key "C-6" 'helm-projectile-find-file)
+;(bind-key "<f1>" 'switch-to-buffer)
+;(bind-key "C-<f1>" 'helm-buffers-list)
+;(bind-key "C-1" 'list-buffers)
+;
+;;; Find in file or find in git project
+;(bind-key "<f2>" 'swiper)
+;(if *is-windows*
+;    (bind-key "C-<f2>" 'helm-ag)
+;  (bind-key "C-<f2>" 'counsel-ag))
+;(bind-key "C-2" 'helm-do-ag)
+;
+;;; Close other frame or window
+;(bind-key "<f3>" 'delete-other-windows)
+;(bind-key "C-<f3>" 'delete-other-frames)
+;
+;;; Kill buffer or kill tab
+;(bind-key "<f4>" 'kill-buffer)
+;(bind-key "C-<f4>" 'elscreen-kill)
+;
+;;; Split window
+;(bind-key "<f5>" 'split-window-right)
+;(bind-key "C-<f5>" 'split-window-below)
+;(bind-key "S-<f5>" 'delete-other-windows)
+;
+;;; Open file
+;(bind-key "<f6>" 'counsel-find-file)
+;(bind-key "C-<f6>" 'ffip)
+;(bind-key "C-6" 'helm-projectile-find-file)
 
 
 
@@ -118,8 +286,8 @@ _g_ magit status
 
 
 ;;; Some key may not work.
-(bind-key "C-s" 'save-buffer)
-(bind-key "C-S-s" 'write-file)
+;(bind-key "C-s" 'save-buffer)
+;(bind-key "C-S-s" 'write-file)
 ;(bind-key "C-f" 'isearch-forward)
 ;(bind-key "C-n" 'xah-new-empty-buffer)
 ;(bind-key "C-S-n" 'make-frame-command)
