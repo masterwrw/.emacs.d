@@ -11,7 +11,7 @@
       '(("gnu" . "http://elpa.emacs-china.org/gnu/")
 	("melpa" . "http://elpa.emacs-china.org/melpa/")
 	("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/")
-	("marmalade" . "http://marmalade-repo.org/packages/")
+					;	("marmalade" . "http://marmalade-repo.org/packages/")
 	("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize) ; activate installed packages
@@ -59,7 +59,7 @@
 (require 'init-blog)
 (require 'init-service-manager)
 ;(require 'init-evil)
-(require 'init-keymap)
+(require 'init-key-binding)
 
 
 
