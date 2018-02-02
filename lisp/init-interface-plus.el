@@ -36,6 +36,7 @@
   (progn
     (ivy-mode 1)
     (setq ivy-use-virtual-buffers t)
+    (setq ivy-height 20)
  ;   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
     ))
 
