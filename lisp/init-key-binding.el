@@ -1,6 +1,6 @@
 ;;; Basic key bindings
 
-(bind-key "C-o" 'ace-window)
+(bind-key "C-o" 'other-window)
 (bind-key "M-x" 'counsel-M-x)
 
 (bind-key "C-<left>" 'backward-forward-previous-location)
@@ -11,9 +11,13 @@
 (bind-key "M-<right>" 'forward-word)
 (bind-key "M-<left>" 'backward-word)
 
-;(bind-key "M-<delete>" 'kill-word)
-;(bind-key "M-<backspace>" 'backward-kill-word)
+(bind-key "<f6>" 'set-mark-command)
+(bind-key "M-;" 'xah-comment-dwim)
 
+(bind-key "C-<f1>" 'my-auto-switch-buffer)
+(bind-key "C-<f2>" 'swiper)
+(bind-key "C-<f3>" 'delete-other-windows)
+(bind-key "C-<f4>" 'my-kill-current-buffer)
 
 (if *is-windows*
     (bind-key "C-<wheel-up>" 'text-scale-increase)
