@@ -51,6 +51,7 @@
 (require 'init-nsis-env)
 (require 'init-newlisp-env)
 (require 'init-racket-env)
+(require 'init-compile)
 (require 'init-orgmode)
 (require 'init-misc)
 (require 'init-rss-feed)
