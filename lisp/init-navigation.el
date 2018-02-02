@@ -6,11 +6,7 @@
 ;; ace-window, Quickly switch windows.
 (require-package 'ace-jump-mode)
 (use-package ace-window
-  :ensure t
-  :init
-  (progn
-    (global-set-key [remap other-window] 'ace-window)
-    ))
+  :ensure t)
 
 
 ;; Hoding the shift key and with the arrows, go to other window
