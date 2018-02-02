@@ -1,5 +1,8 @@
 ;;; Basic key bindings
 
+(defalias 'list-buffers 'ibuffer)
+
+
 (bind-key "C-o" 'other-window)
 (bind-key "M-x" 'counsel-M-x)
 

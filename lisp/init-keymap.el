@@ -178,9 +178,6 @@
     (bind-key "<escape>" 'minibuffer-keyboard-quit))
 
 
-;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
-;(defalias 'list-buffers 'ibuffer) ; make ibuffer default
-
 
 (defhydra code-browser-hydra (:color pink :hint nil)
   "
