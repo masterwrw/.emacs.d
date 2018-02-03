@@ -4,6 +4,8 @@
 
 
 (bind-key "C-o" 'other-window)
+(define-key compilation-mode-map (kbd "C-o") 'other-window)
+
 (bind-key "M-x" 'counsel-M-x)
 
 (bind-key "C-<left>" 'backward-forward-previous-location)
@@ -16,6 +18,7 @@
 
 (define-key org-mode-map (kbd "M-<down>") 'my-fast-step-downward)
 (define-key org-mode-map (kbd "M-<up>") 'my-fast-step-upward)
+
 
 (bind-key "<f6>" 'set-mark-command)
 (bind-key "M-;" 'xah-comment-dwim)
