@@ -14,6 +14,9 @@
 (bind-key "M-<right>" 'forward-word)
 (bind-key "M-<left>" 'backward-word)
 
+(define-key org-mode-map (kbd "M-<down>") 'my-fast-step-downward)
+(define-key org-mode-map (kbd "M-<up>") 'my-fast-step-upward)
+
 (bind-key "<f6>" 'set-mark-command)
 (bind-key "M-;" 'xah-comment-dwim)
 
