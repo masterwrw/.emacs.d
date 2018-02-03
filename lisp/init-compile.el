@@ -26,14 +26,8 @@ directory."
 
 (require-package 'smart-compile)
 (require 'smart-compile)
+(setq smart-compile-option-string "-w -s -j4"))
 
-;; mingw32-make
-(if *is-windows*
-    (progn
-      (setq smart-compile-make-program "mingw32-make")
-      (setq smart-compile-option-string "-w -s -j4 -f Makefile.Release")
-      )
-    (setq smart-compile-option-string "-w -s -j4"))
 
 
 ; Success or failure of compile
@@ -45,9 +39,8 @@ directory."
 	(tooltip-show "\n Compilation Successful :-) \n "))
       (tooltip-show "\n Compilation Failed :-( \n ")))
 
+(add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
-(add-to-list 'compilation-finish-functions
-	     'notify-compilation-result)
 
 
 (defun recompile-quietly ()
@@ -55,6 +48,17 @@ directory."
   (interactive)
   (save-window-excursion
     (recompile)))
+
+
+
+;; For M-x compile
+(defun mingw32-make-command ()
+  (set (make-local-variable 'compile-command)
+       (format "mingw32-make -w -s -j4 -f Makefile.Release -C %s"
+	       (file-name-directory (get-closest-pathname "Makefile.Release")))))
+
+(when *is-windows*
+  (add-hook 'c++-mode-hook 'mingw32-make-command))
 
 
 
