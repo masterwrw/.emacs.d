@@ -125,8 +125,13 @@ _q_ quit
 
 (defun my-inbox ()
   (interactive)
-  (find-file org-default-notes-file))
+  (find-file org-default-notes-file)
+  )
 
+(defun load-todo ()
+  (interactive)
+  (find-file (concat org-directory "/task.org"))
+  )
 
 (setq org-capture-templates
       '(

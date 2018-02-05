@@ -1,4 +1,5 @@
 ;;; C++ programming environment
+(require 'cc-mode)
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
@@ -121,6 +122,14 @@
     (when (boundp 'w32-pipe-buffer-size)
       (setq irony-server-w32-pipe-buffer-size (* 64 1024)))))
 
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+					;(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+					;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
 
 ;; company-irony
 (require-package 'company-irony)
@@ -195,6 +204,25 @@
 (advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper)
 (backward-forward-mode t)
 
+
+
+;;========================= auto insert code block ================
+(define-skeleton skeleton-new-class
+  "generate a class" "Class Name:"
+  "\nclass " str "\n"
+  "{\n"
+  "public:\n"
+  "    " str "()\n    {\n    }\n\n"
+  "    virtual ~" str "()\n    {\n    }\n\n"
+  "    " str "(const " str "& other)\n    {\n    }\n\n"
+  "    " str "& operator=( const " str "& other)\n"
+  "    {\n"
+  "        return *this;\n"
+  "    }\n"
+  "};"
+  )
+
+(define-abbrev-table 'c++-mode-abbrev-table '(("newclass" "" skeleton-new-class 1)))
 
 
 
