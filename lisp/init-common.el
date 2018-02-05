@@ -15,6 +15,10 @@
   (interactive)
   (load-file (expand-file-name "init.el" user-emacs-directory)))
 
+(defun reload-dot-emacs ()
+  "Reload .emacs file"
+  (interactive)
+  (load-file "~/.emacs"))
 
 ;; Redefined keyboard-escape-quit function, see https://stackoverflow.com/questions/557282/in-emacs-whats-the-best-way-for-keyboard-escape-quit-not-destroy-other-windows#
 (defadvice keyboard-escape-quit (around my-keyboard-escape-quit activate)
