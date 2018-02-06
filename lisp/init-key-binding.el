@@ -43,9 +43,10 @@
 ;  (copy-region-as-kill (mark) (point))
 ;  )
 (define-key global-map "\e " 'set-mark-command)
-(define-key global-map "\eq" 'copy-region-as-kill)
+(define-key global-map "\eq" 'xah-copy-line-or-region)
 (define-key global-map "\ea" 'yank)
-(define-key global-map "\ez" 'kill-region)
+(define-key org-mode-map "\ea" 'yank)
+(define-key global-map "\ez" 'xah-cut-line-or-region)
 (define-key global-map [M-up] 'previous-blank-line)
 (define-key global-map [M-down] 'next-blank-line)
 (define-key global-map [M-right] 'forward-word)
@@ -138,10 +139,11 @@
 (define-key c++-mode-map "\e/" 'c-mark-function)
 
 (define-key c++-mode-map "\e " 'set-mark-command)
-(define-key c++-mode-map "\eq" 'copy-region-as-kill)
+(define-key c++-mode-map "\eq" 'xah-copy-line-or-region)
 (define-key c++-mode-map "\ea" 'yank)
-(define-key c++-mode-map "\ez" 'kill-region)
+(define-key c++-mode-map "\ez" 'xah-cut-line-or-region)
 (define-key c++-mode-map "\C-m" 'newline-and-indent)
+(define-key c++-mode-map "\em" 'compile)
 
 
 (bind-key "M-x" 'counsel-M-x)
@@ -162,10 +164,11 @@
 (define-key org-mode-map (kbd "M-<up>") 'my-fast-step-upward)
 
 (define-key global-map (kbd "M-/") 'xah-comment-dwim)
+(define-key c++-mode-map (kbd "M-/") 'xah-comment-dwim)
 
-(bind-key "C-<f1>" 'my-auto-switch-buffer)
-(bind-key "C-<f2>" 'swiper)
-(bind-key "C-<f3>" 'delete-other-windows)
+(bind-key "M-1" 'my-auto-switch-buffer)
+(bind-key "M-2" 'swiper)
+(bind-key "M-3" 'delete-other-windows)
 
 (if *is-windows*
     (bind-key "C-<wheel-up>" 'text-scale-increase)

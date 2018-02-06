@@ -112,7 +112,7 @@ directory."
   "Notify that the compilation is finished."
   (if (string-match "^finished" msg)
       (progn
-	(delete-windows-on buffer) ; Auto close compilation buffer
+;;	(delete-windows-on buffer) ; Auto close compilation buffer
 	(tooltip-show "\n Compilation Successful :-) \n "))
       (tooltip-show "\n Compilation Failed :-( \n ")))
 
