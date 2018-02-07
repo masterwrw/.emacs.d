@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: qtpro
+# key: qtpro
+# --
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = ${1:name}
+TEMPLATE = app
+
+MOC_DIR     = tmp/moc
+RCC_DIR     = tmp/rcc
+UI_DIR      = tmp/ui
+
+CONFIG += c++11
+
+HEADERS += stdafx.h
+
+SOURCES += main.cpp
