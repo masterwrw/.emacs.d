@@ -127,15 +127,25 @@ directory."
     (recompile)))
 
 
-
 ;; For M-x compile
 (defun mingw32-make-command ()
   (set (make-local-variable 'compile-command)
        (format "mingw32-make -w -s -j4 -f Makefile.Release -C %s"
 	       (file-name-directory (get-closest-pathname "Makefile.Release")))))
 
-(when *is-windows*
-  (add-hook 'c++-mode-hook 'mingw32-make-command))
+
+
+(if *is-windows*
+    (setq my-makescript "build.bat")
+    (setq my-makescript "build.linux")
+    )
+
+(defun build-command ()
+  (set (make-local-variable 'compile-command)
+       (get-closest-pathname my-makescript)))
+
+
+(add-hook 'c++-mode-hook 'build-command)
 
 
 

@@ -143,7 +143,11 @@
 (define-key c++-mode-map "\ea" 'yank)
 (define-key c++-mode-map "\ez" 'xah-cut-line-or-region)
 (define-key c++-mode-map "\C-m" 'newline-and-indent)
-(define-key c++-mode-map "\em" 'compile)
+(defun my-compile ()
+  "Auto compile project no ask command"
+  (interactive)
+  (compile compile-command))
+(define-key c++-mode-map "\em" 'my-compile)
 
 
 (bind-key "M-x" 'counsel-M-x)
