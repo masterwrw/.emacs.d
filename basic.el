@@ -50,6 +50,13 @@
 (abbrev-mode 1)
 
 
+;; grep command
+(set-variable 'grep-command "grep -irHn ")
+(when *is-windows*
+    (setq grep-use-null-device t)
+    (set-variable 'grep-command "findstr -s -n -i -l "))
+
+
 (defun xah-new-empty-buffer ()
   "Create a new empty buffer.
 New buffer will be named untitled or untitled<2>, untitled<3>, etc.
@@ -268,7 +275,7 @@ of FILE in the current directory, suitable for creation"
   :init
   (global-set-key (kbd "M-x") 'smex)
   (global-set-key (kbd "M-X") 'execute-extended-command))
-  
+
 
 ;; diminish, Diminished modes are minor modes with no modeline display
 (require-package 'diminish)
@@ -314,7 +321,7 @@ of FILE in the current directory, suitable for creation"
 (use-package yasnippet
   :ensure t
   :init
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippetsts")
+;;  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippetsts")
   (yas-global-mode 1))
 
 
@@ -345,7 +352,7 @@ of FILE in the current directory, suitable for creation"
 
 
 ;; ws-butler, Unobtrusively remove trailing whitespace.
-(use-package 'ws-butler
+(use-package ws-butler
   :ensure t
   :init
   (add-hook 'prog-mode-hook 'ws-butler-mode)
@@ -365,7 +372,10 @@ of FILE in the current directory, suitable for creation"
 ;; wgrep-ag, Writable grep buffer and apply the changes to files
 (use-package wgrep-ag
   :ensure t
-  :requires wgrep)
+  :requires wgrep
+  :init
+  ;; To save buffer automatically when wgrep-finish-edit.
+  (setq wgrep-auto-save-buffer t))
 
 
 ;; company, auto complete
@@ -396,48 +406,39 @@ of FILE in the current directory, suitable for creation"
   (company-statistics-mode))
 
 
-(require-package 'company-c-headers)
-(add-hook 'after-init-hook 'global-company-mode)
-(eval-after-load 'company
-  '(progn
-     (add-to-list 'company-backends 'company-c-headers)
-     (diminish 'company-mode "com")))
-
-
-;; yasnippet
-(require-package 'yasnippet)
-(require 'yasnippet)
-(yas-global-mode 1)
-
-(add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
-
-;; helm-ag, Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
-(require-package 'helm-ag)
-
-
-
-;; Jump to previous position on current buffer.
-(require 'jtpp)
+(use-package company-c-headers
+  :ensure t
+  :requires company
+  :init
+  (add-hook 'after-init-hook 'global-company-mode)
+  (add-to-list 'company-backends 'company-c-headers)
+  (diminish 'company-mode "com"))
 
 
 ;; eno, Goto/copy/cut any word/symbol/line in view, similar to ace-jump/easymotion
-(require-package 'eno)
-(require 'eno)
+(use-package eno
+  :ensure t)
 
 
+;; vlf, View large file
+(use-package vlf
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Quick copy current line
+(global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
+(global-set-key '[(f5)] 'compile)
 
-(global-set-key '[(f1)] 'ido-find-file)
-(global-set-key '[(C-f1)] 'ido-find-file-other-window)
-(global-set-key '[(S-f1)] 'dired)
-
-(global-set-key '[(f2)] 'other-window)
-(global-set-key '[(C-f2)] 'ido-switch-buffer)
-(global-set-key '[(S-f2)] 'ido-switch-buffer-other-window)
-
-(global-set-key '[(f3)] 'split-window-horizontally)
-(global-set-key '[(f3)] 'split-window-vertically)
+;;(global-set-key '[(f1)] 'ido-find-file)
+;;(global-set-key '[(C-f1)] 'ido-find-file-other-window)
+;;(global-set-key '[(S-f1)] 'dired)
+;;
+;;(global-set-key '[(f2)] 'other-window)
+;;(global-set-key '[(C-f2)] 'ido-switch-buffer)
+;;(global-set-key '[(S-f2)] 'ido-switch-buffer-other-window)
+;;
+;;(global-set-key '[(f3)] 'split-window-horizontally)
+;;(global-set-key '[(f3)] 'split-window-vertically)
 
 
 ;; Maximizing on startup
@@ -459,6 +460,3 @@ of FILE in the current directory, suitable for creation"
 )
 (add-hook 'window-setup-hook 'post-load-stuff t)
 (add-hook 'window-setup-hook 'toggle-frame-maximized t)
-
-
-
