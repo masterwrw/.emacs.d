@@ -26,6 +26,11 @@
 ;; Backup directory, file name is !drive_f!dirname!dirname!filename~
 (setq backup-directory-alist (quote (("." . "~/emscache"))))
 
+(setq url-proxy-services
+   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+     ("http" . "127.0.0.1:1080")
+     ("https" . "127.0.0.1:1080")))
+
 (show-paren-mode 1)
 
 (tool-bar-mode -1)
@@ -430,6 +435,18 @@ of FILE in the current directory, suitable for creation"
 ;; vlf, View large file
 (use-package vlf
   :ensure t)
+
+
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+(require 'init-site-lisp)
+
+(when (and *is-windows* (file-exists-p "~/.emacs.d/site-lisp/everything/everything.el"))
+  (setq everything-ffap-integration nil)
+  ;; to disable ffap integration
+  (setq everything-cmd "D:/Software/Everything-1.4.1.877.x64/es.exe")
+  ;; to let everything.el know where to find es.exe
+  (require 'everything))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key "\e " 'set-mark-command)
