@@ -457,6 +457,14 @@ of FILE in the current directory, suitable for creation"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key "\e " 'set-mark-command)
 
+;; Quick copy current line
+(global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
+
+(global-set-key (kbd "M-w") 'xah-copy-line-or-region)
+(global-set-key (kbd "C-w") 'xah-cut-line-or-region)
+(global-set-key (kbd "M-;") 'xah-comment-dwim)
+
+
 ;; Magit
 (global-set-key '[(f4)]		'magit-status)
 (global-set-key '[(C-f4)]	'magit-checkout-file)
@@ -464,8 +472,6 @@ of FILE in the current directory, suitable for creation"
 (global-set-key '[(C-M-f4)]	'magit-commit)
 
 
-;; Quick copy current line
-(global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
 (global-set-key '[(f5)] 'compile)
 
 
