@@ -23,6 +23,9 @@
 ;; Set default directory on startup
 (setq default-directory "~/.emacs.d")
 
+;; Backup directory, file name is !drive_f!dirname!dirname!filename~
+(setq backup-directory-alist (quote (("." . "~/emscache"))))
+
 (show-paren-mode 1)
 
 (tool-bar-mode -1)
@@ -441,6 +444,14 @@ of FILE in the current directory, suitable for creation"
 ;; Quick copy current line
 (global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
 (global-set-key '[(f5)] 'compile)
+
+
+;; ediff
+(global-set-key '[(f7)]          'ediff-directories)
+(global-set-key '[(S-f7)]        'ediff-buffers)
+(global-set-key '[(C-f7)]        'ediff-files)
+(global-set-key '[(C-M-f7)]      'ediff-regions-linewise)
+
 
 ;;(global-set-key '[(f1)] 'ido-find-file)
 ;;(global-set-key '[(C-f1)] 'ido-find-file-other-window)
