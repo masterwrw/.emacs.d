@@ -437,6 +437,12 @@ of FILE in the current directory, suitable for creation"
   :ensure t)
 
 
+(use-package w32-browser
+  :ensure t
+  :init
+  (define-key dired-mode-map [f11] 'dired-w32-browser))
+
+
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (require 'init-site-lisp)
 
