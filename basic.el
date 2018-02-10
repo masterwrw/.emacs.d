@@ -56,6 +56,10 @@
     (setq grep-use-null-device t)
     (set-variable 'grep-command "findstr -s -n -i -l "))
 
+;; Set register
+(setq register-separator ?+)
+(set-register register-separator "\n\n")
+
 
 (defun xah-new-empty-buffer ()
   "Create a new empty buffer.
@@ -425,6 +429,15 @@ of FILE in the current directory, suitable for creation"
   :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key "\e " 'set-mark-command)
+
+;; Magit
+(global-set-key '[(f4)]		'magit-status)
+(global-set-key '[(C-f4)]	'magit-checkout-file)
+(global-set-key '[(S-f4)]	'magit-stage-file)
+(global-set-key '[(C-M-f4)]	'magit-commit)
+
+
 ;; Quick copy current line
 (global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
 (global-set-key '[(f5)] 'compile)
