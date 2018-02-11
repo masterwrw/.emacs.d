@@ -10,42 +10,42 @@
   :mode ("\\.pro\\'" "\\.pri\\'"))
 
 ;;======================== xref ======================================
-(require-package 'helm-xref)
-(require 'helm-xref)
-(setq xref-show-xrefs-function 'helm-xref-show-xrefs)
+;(require-package 'helm-xref)
+;(require 'helm-xref)
+;(setq xref-show-xrefs-function 'helm-xref-show-xrefs)
 
 
 ;;======================== lsp mode ==================================
-(require-package 'lsp-mode)
-(require 'lsp-mode)
-(require 'lsp-imenu)
-
-(require-package 'lsp-ui)
-(require 'lsp-ui)
-;(require 'lsp-ui-doc) ; lsp-ui-doc uses child frame which requires Emacs >= 26
-(add-hook 'lsp-mode-hook 'lsp-ui-mode)
-
-(require-package 'company-lsp)
-(require 'company-lsp)
-(add-to-list 'company-backends 'company-lsp)
-
-;;; cquery configuration
-;; https://github.com/jacobdufault/cquery/wiki/Emacs
-;(add-to-list 'load-path "~/.emacs.d/site-lisp/cquery")
-(require 'cquery)
-(setq cquery-executable "/usr/bin/cquery")
-;; lsp-cquery-enable, cquery tries to find the suitable clang resource directory for you. If the heuristics does not work, you can specify one:
-;(setq cquery-resource-dir (expand-file-name "/path/to/cquery/clang_resource_dir/"))
-
-
-(defun my-lsp-setup ()
-  (lsp-cquery-enable)
-  (lsp-enable-imenu)
-  (lsp-ui-mode)
-  (cquery-xref-find-custom "$cquery/base")
-  (cquery-xref-find-custom "$cquery/callers")
-  (cquery-xref-find-custom "$cquery/derived")
-  (cquery-xref-find-custom "$cquery/vars"))
+;(require-package 'lsp-mode)
+;(require 'lsp-mode)
+;(require 'lsp-imenu)
+;
+;(require-package 'lsp-ui)
+;(require 'lsp-ui)
+;;(require 'lsp-ui-doc) ; lsp-ui-doc uses child frame which requires Emacs >= 26
+;(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;
+;(require-package 'company-lsp)
+;(require 'company-lsp)
+;(add-to-list 'company-backends 'company-lsp)
+;
+;;;; cquery configuration
+;;; https://github.com/jacobdufault/cquery/wiki/Emacs
+;;(add-to-list 'load-path "~/.emacs.d/site-lisp/cquery")
+;(require 'cquery)
+;(setq cquery-executable "/usr/bin/cquery")
+;;; lsp-cquery-enable, cquery tries to find the suitable clang resource directory for you. If the heuristics does not work, you can specify one:
+;;(setq cquery-resource-dir (expand-file-name "/path/to/cquery/clang_resource_dir/"))
+;
+;
+;(defun my-lsp-setup ()
+;  (lsp-cquery-enable)
+;  (lsp-enable-imenu)
+;  (lsp-ui-mode)
+;  (cquery-xref-find-custom "$cquery/base")
+;  (cquery-xref-find-custom "$cquery/callers")
+;  (cquery-xref-find-custom "$cquery/derived")
+;  (cquery-xref-find-custom "$cquery/vars"))
 
 ;(add-hook 'lsp-mode-hook 'my-lsp-setup)
 
@@ -78,48 +78,51 @@
 
 ;;======================== Auto complete settings ====================
 ;; function-args
-;(require-package 'function-args)
-;(fa-config-default)
+(require-package 'function-args)
+(require 'function-args)
+(fa-config-default)
 
 
 ;; dumb-jump
-;(require-package 'dumb-jump)
-;(require 'dumb-jump)
-;(dumb-jump-mode)
+(require-package 'dumb-jump)
+(require 'dumb-jump)
+(dumb-jump-mode)
 
 
 ;;-------------------------irony for auto complete--------------------
-;; irony
-;(require-package 'irony)
-;(require 'irony)
-;(add-hook 'c++-mode-hook 'irony-mode)
-;(add-hook 'c-mode-hook 'irony-mode)
-;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-;(diminish 'irony-mode "iro")
-;
-;(when *is-windows*
-;  (progn
-;    ;; Windows performance tweaks
-;    (when (boundp 'w32-pipe-read-delay)
-;      (setq w32-pipe-read-delay 0))
-;    ;; Set the buffer size to 64K on Windows (from the original 4K)
-;    (when (boundp 'w32-pipe-buffer-size)
-;      (setq irony-server-w32-pipe-buffer-size (* 64 1024)))))
-;
-;
-;;; company-irony
-;(require-package 'company-irony)
-;(require 'company-irony)
-;(eval-after-load 'company
-;  '(add-to-list 'company-backends 'company-irony))
-;
-;
-;;; company-irony-c-headers
-;(require-package 'company-irony-c-headers)
-;(require 'company-irony-c-headers)
-;;; Load with `irony-mode` as a grouped backend
-;(eval-after-load 'company
-;  '(add-to-list 'company-backends 'company-irony-c-headers))
+; irony
+(require-package 'irony)
+(require 'irony)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(diminish 'irony-mode "iro")
+
+
+(when *is-windows*
+  (progn
+    (setq irony--server-executable "f\:/home/.emacs.d/irony/bin/irony-server.exe")
+    ;; Windows performance tweaks
+    (when (boundp 'w32-pipe-read-delay)
+      (setq w32-pipe-read-delay 0))
+    ;; Set the buffer size to 64K on Windows (from the original 4K)
+    (when (boundp 'w32-pipe-buffer-size)
+      (setq irony-server-w32-pipe-buffer-size (* 64 1024)))))
+
+
+;; company-irony
+(require-package 'company-irony)
+(require 'company-irony)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
+
+;; company-irony-c-headers
+(require-package 'company-irony-c-headers)
+(require 'company-irony-c-headers)
+;; Load with `irony-mode` as a grouped backend
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony-c-headers))
 
 
 ;;======================== fast jump settings =====================

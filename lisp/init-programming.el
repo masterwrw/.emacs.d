@@ -91,9 +91,10 @@
 (require-package 'company)
 (require 'company)
 (setq company-show-numbers t) ; use alt+number to quick select
-(setq company-idle-delay 0) ; immediately company complete
+(setq company-idle-delay 0.2) ; immediately company complete
 (setq company-selection-wrap-around t) ; make previous/next selection in the popup cycles
 
+(setq company-backends nil)
 (add-to-list 'company-backends 'company-elisp)
 
 ;; company-dabbrev config, it is for current buffer string auto complete.

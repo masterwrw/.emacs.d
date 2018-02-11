@@ -35,11 +35,11 @@
 (bind-key "C-6" 'helm-projectile-find-file)
 
 ;; Fast jump
-(bind-key "<f12>" 'semantic-ia-fast-jump)
+;(bind-key "<f12>" 'semantic-ia-fast-jump)
 
 ;; dumb-jump under samba share directory will be very slow, and not work.
-;(bind-key "<f12>" 'dumb-jump-go-other-window)
-;(bind-key "M-<left>" 'dumb-jump-back)
+(bind-key "<f12>" 'dumb-jump-go)
+(bind-key "M-<left>" 'dumb-jump-back)
 
 
 (bind-key "C-s" 'save-buffer)
