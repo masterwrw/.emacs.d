@@ -11,11 +11,15 @@
 ;(defalias 'list-buffers 'ibuffer-other-window) ; make ibuffer-other-window default
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
 (bind-key "<f1>" 'switch-to-buffer)
-(bind-key "C-<f1>" 'list-buffers)
+(bind-key "C-<f1>" 'helm-buffers-list)
+(bind-key "C-1" 'list-buffers)
 
 ;; Find in file or find in git project
 (bind-key "<f2>" 'swiper)
-(bind-key "C-<f2>" 'counsel-ag)
+(if *is-windows*
+    (bind-key "C-<f2>" 'helm-ag)
+  (bind-key "C-<f2>" 'counsel-ag))
+(bind-key "C-2" 'helm-do-ag)
 
 ;; Close other frame or window
 (bind-key "<f3>" 'delete-other-windows)
@@ -46,7 +50,7 @@
 ;(define-key key-translation-map [(meta v)] [(control y)])
 
 
-(bind-key "M-x" 'helm-M-x)
+(bind-key "M-x" 'counsel-M-x)
 
 (bind-key "M-s" 'avy-goto-char)
 
