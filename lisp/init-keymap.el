@@ -34,6 +34,14 @@
 (bind-key "C-<f6>" 'ffip)
 (bind-key "C-6" 'helm-projectile-find-file)
 
+
+(bind-key "<f9>" 'imenu-list-minor-mode)
+
+
+(if *is-windows*
+    (bind-key "<f11>" 'helm-gtags-find-rtag))
+
+
 ;; Fast jump
 ;(bind-key "<f12>" 'semantic-ia-fast-jump)
 
