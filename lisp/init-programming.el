@@ -95,7 +95,7 @@
 (setq company-selection-wrap-around t) ; make previous/next selection in the popup cycles
 
 (setq company-backends nil)
-(add-to-list 'company-backends 'company-elisp)
+(add-to-list 'company-backends 'company-elisp 'company-files 'company-etags)
 
 ;; company-dabbrev config, it is for current buffer string auto complete.
 (add-to-list 'company-backends 'company-dabbrev)
