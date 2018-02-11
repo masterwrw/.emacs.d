@@ -36,8 +36,8 @@
 
 ;; auto-highlight-symbol
 (require-package 'auto-highlight-symbol)
-(require 'auto-highlight-symbol)
-(global-auto-highlight-symbol-mode t)
+;(require 'auto-highlight-symbol)
+;(global-auto-highlight-symbol-mode t) ;; Conflict with M-<left> for jump back.
 (diminish 'auto-highlight-symbol-mode)
 
 
