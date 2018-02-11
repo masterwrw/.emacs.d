@@ -163,7 +163,8 @@
 (defun my-gtags-setup ()
   (require-package 'helm-gtags)
   (require 'helm-gtags)
-  (helm-gtags-mode))
+  (helm-gtags-mode)
+  (add-to-list 'company-backends 'company-gtags))
 
 
 ;; Windows use gtags, linux use ctags

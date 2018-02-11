@@ -103,6 +103,7 @@
 (setq company-dabbrev-code-everywhere t)
 (setq company-dabbrev-minimum-length 2)
 (setq company-dabbrev-other-buffers 'all)
+(setq company-dabbrev-downcase nil)
 
 
 ;; company-statistics, Sort candidates using completion history
