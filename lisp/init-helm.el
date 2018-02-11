@@ -17,6 +17,10 @@
 (setq projectile-indexing-method 'alien)
 
 
+;; Save history
+(setq helm-M-x-always-save-history t)
+
+
 ;; helm-gtags
 ;(require-package 'helm-gtags)
 ;(setq helm-gtags-ignore-case t)
