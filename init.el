@@ -22,8 +22,8 @@
 (require 'init-system-env)
 (when *is-windows*
     (require 'init-coding))
-(require 'init-gui)
 (require 'init-common)
+(require 'init-gui)
 
 ;; Packages and configuration
 (require 'init-try)
