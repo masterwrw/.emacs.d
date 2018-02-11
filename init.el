@@ -47,7 +47,7 @@
 (require 'init-keyfreq)
 (require 'init-blog)
 (require 'init-service-manager)
-(require 'init-evil)
+;(require 'init-evil)
 (require 'init-keymap)
 
 (fset 'yes-or-no-p 'y-or-n-p)
