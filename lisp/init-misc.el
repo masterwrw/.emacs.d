@@ -25,6 +25,10 @@
 (setq recentf-max-saved-items 100)
 
 
+;; For quick find file in git repo
+(setq vc-handled-backends ())
+
+
 ;; Set default directory on startup
 (setq default-directory "~/.emacs.d")
 
