@@ -26,10 +26,10 @@
 ;; Backup directory, file name is !drive_f!dirname!dirname!filename~
 (setq backup-directory-alist (quote (("." . "~/emscache"))))
 
-(setq url-proxy-services
-   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-     ("http" . "127.0.0.1:1080")
-     ("https" . "127.0.0.1:1080")))
+;;(setq url-proxy-services
+;;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+;;     ("http" . "127.0.0.1:1080")
+;;     ("https" . "127.0.0.1:1080")))
 
 (show-paren-mode 1)
 
@@ -400,7 +400,10 @@ of FILE in the current directory, suitable for creation"
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-limit 20)
   (setq company-backends nil)
-  (add-to-list 'company-backends 'company-elisp 'company-files 'company-etags)
+  (add-to-list 'company-backends 'company-keywords)
+  (add-to-list 'company-backends 'company-elisp)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'company-etags)
   ;; company-dabbrev config, it is for current buffer string auto complete.
   (add-to-list 'company-backends 'company-dabbrev)
   (add-to-list 'company-backends 'company-dabbrev-code)
@@ -421,10 +424,11 @@ of FILE in the current directory, suitable for creation"
 (use-package company-c-headers
   :ensure t
   :requires company
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  (add-to-list 'company-backends 'company-c-headers)
-  (diminish 'company-mode "com"))
+  :config
+  (progn
+    (add-to-list 'company-backends 'company-c-headers)
+    (add-hook 'after-init-hook 'global-company-mode)
+    (diminish 'company-mode "com")))
 
 
 ;; eno, Goto/copy/cut any word/symbol/line in view, similar to ace-jump/easymotion
@@ -549,3 +553,17 @@ of FILE in the current directory, suitable for creation"
 (modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
 (modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (artist-mode w32-browser ws-butler which-key wgrep-ag volatile-highlights vlf uuidgen use-package try treemacs tabbar start-menu solarized-theme smooth-scrolling smex smartparens smart-compile slime session racket-mode qt-pro-mode python-mode python-docstring py-autopep8 prodigy persp-mode paredit osx-plist org-cliplink org-bullets org-brain openwith o-blog nyan-mode nsis-mode nikola newlisp-mode neotree multiple-cursors material-theme magit lsp-ui leuven-theme keyfreq indent-guide imenu-list iedit ido-vertical-mode hexo hemisu-theme helm-xref helm-swoop helm-projectile helm-gtags helm-ag gxref ggtags general fzf function-args fullframe flx-ido findr evil eno elscreen elpy elfeed ein dumb-jump dtrt-indent dracula-theme dired+ diminish counsel-gtags counsel-etags company-statistics company-lsp company-irony-c-headers company-irony company-c-headers color-theme color-identifiers-mode cnfonts clean-aindent-mode change-inner bookmark+ beacon batch-mode backward-forward autopair auto-highlight-symbol auto-dim-other-buffers atom-one-dark-theme anzu all-the-icons alert airline-themes aggressive-indent ace-jump-mode 2048-game))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
