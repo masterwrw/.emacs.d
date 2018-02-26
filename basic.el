@@ -1,7 +1,19 @@
 ;;; Basic configuration
+(when (version< emacs-version "24.4")
+  (error "This requires Emacs 24.4 and above!"))
 
+;; Optimize loading performance
+(defvar default-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(setq gc-cons-threshold 30000000)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            "Restore defalut values after init"
+            (setq file-name-handler-alist default-file-name-handler-alist)
+            (setq gc-cons-threshold 800000)))
+
+(setq inhibit-startup-message t)
 (fset 'yes-or-no-p 'y-or-n-p)
-(setq gc-cons-threshold 100000000)
 
 (setq frame-title-format "-- master -- %f -- %b")
 (setq ring-bell-function 'ignore)
@@ -10,7 +22,7 @@
 (setq *is-linux* (featurep 'x))
 (setq *is-windows* (not *is-linux*))
 
-(setq shift-select-mode nil)
+(setq shift-select-mode t)
 ; Smooth scroll
 (setq scroll-step 3)
 
@@ -21,15 +33,15 @@
 (setq vc-handled-backends ())
 
 ;; Set default directory on startup
-(setq default-directory "~/.emacs.d")
+(setq default-directory "~")
 
 ;; Backup directory, file name is !drive_f!dirname!dirname!filename~
 (setq backup-directory-alist (quote (("." . "~/emscache"))))
 
-(setq url-proxy-services
-   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-     ("http" . "127.0.0.1:1080")
-     ("https" . "127.0.0.1:1080")))
+;;(setq url-proxy-services
+;;   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+;;     ("http" . "127.0.0.1:1080")
+;;     ("https" . "127.0.0.1:1080")))
 
 (show-paren-mode 1)
 
@@ -67,83 +79,6 @@
 ;; Set register
 (setq register-separator ?+)
 (set-register register-separator "\n\n")
-
-
-(defun xah-new-empty-buffer ()
-  "Create a new empty buffer.
-New buffer will be named untitled or untitled<2>, untitled<3>, etc.
-
-It returns the buffer (for elisp programing).
-
-URL `http://ergoemacs.org/emacs/emacs_new_empty_buffer.html'
-Version 2017-11-01"
-  (interactive)
-  (let (($buf (generate-new-buffer "untitled")))
-    (switch-to-buffer $buf)
-    (funcall initial-major-mode)
-    (setq buffer-offer-save t)
-    $buf
-    ))
-;;; Set new buffer default mode
-;;(setq initial-major-mode (quote text-mode))
-
-;;; Start emacs with empty buffer
-;(setq initial-buffer-choice 'xah-new-empty-buffer)
-
-
-(defun xah-cut-line-or-region ()
-  "Cut current line, or text selection.
-When `universal-argument' is called first, cut whole buffer (respects `narrow-to-region').
-
-URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
-Version 2015-06-10"
-  (interactive)
-  (if current-prefix-arg
-      (progn ; not using kill-region because we don't want to include previous kill
-        (kill-new (buffer-string))
-        (delete-region (point-min) (point-max)))
-    (progn (if (use-region-p)
-               (kill-region (region-beginning) (region-end) t)
-             (kill-region (line-beginning-position) (line-beginning-position 2))))))
-
-
-
-(defun xah-copy-line-or-region ()
-  "Copy current line, or text selection.
-When called repeatedly, append copy subsequent lines.
-When `universal-argument' is called first, copy whole buffer (respects `narrow-to-region').
-
-URL `http://ergoemacs.org/emacs/emacs_copy_cut_current_line.html'
-Version 2017-12-04"
-  (interactive)
-  (if current-prefix-arg
-      (progn
-        (kill-ring-save (point-min) (point-max)))
-    (if (use-region-p)
-        (progn
-          (kill-ring-save (region-beginning) (region-end)))
-      (if (eq last-command this-command)
-          (if (eobp)
-              (progn )
-            (progn
-              (kill-append "\n" nil)
-              (kill-append
-               (buffer-substring-no-properties (line-beginning-position) (line-end-position))
-               nil)
-              (progn
-                (end-of-line)
-                (forward-char))))
-        (if (eobp)
-            (if (eq (char-before) 10 )
-                (progn )
-              (progn
-                (kill-ring-save (line-beginning-position) (line-end-position))
-                (end-of-line)))
-          (progn
-            (kill-ring-save (line-beginning-position) (line-end-position))
-            (end-of-line)
-            (forward-char)))))))
-
 
 (defun xah-comment-dwim ()
   "Like `comment-dwim', but toggle comment if cursor is not at end of line.
@@ -280,7 +215,24 @@ of FILE in the current directory, suitable for creation"
   (flx-ido-mode 1)
   ;; disable ido faces to see flx highlights.
   (setq ido-enable-flex-matching t)
-  (setq ido-use-faces nil))
+  ;;(setq ido-use-faces nil)
+  )
+
+(use-package ido-vertical-mode
+  :ensure t
+  :config
+  (progn
+    (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+    (setq ido-vertical-show-count t)
+    (setq ido-use-faces t)
+    (set-face-attribute 'ido-vertical-first-match-face nil
+			:background "#e5b7c0")
+    (set-face-attribute 'ido-vertical-only-match-face nil
+			:background "#e52b50"
+			:foreground "white")
+    (set-face-attribute 'ido-vertical-match-face nil
+			:foreground "#b00000")
+    (ido-vertical-mode 1)))
 
 (use-package smex
   :ensure t
@@ -290,9 +242,13 @@ of FILE in the current directory, suitable for creation"
 
 
 ;; diminish, Diminished modes are minor modes with no modeline display
-(require-package 'diminish)
-(require 'diminish)
+(use-package diminish :ensure t)
 
+(use-package swiper
+  :ensure t
+  :config
+  (progn
+    (global-set-key "\C-s" 'swiper)))
 
 ;; which-key
 (use-package which-key
@@ -432,37 +388,35 @@ of FILE in the current directory, suitable for creation"
   :ensure t)
 
 
-;; vlf, View large file
-(use-package vlf
-  :ensure t)
-
-
 (use-package w32-browser
   :ensure t
   :init
   (define-key dired-mode-map [f11] 'dired-w32-browser))
 
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-(require 'init-site-lisp)
-
-(when (and *is-windows* (file-exists-p "~/.emacs.d/site-lisp/everything/everything.el"))
-  (setq everything-ffap-integration nil)
-  ;; to disable ffap integration
-  (setq everything-cmd "D:/Software/Everything-1.4.1.877.x64/es.exe")
-  ;; to let everything.el know where to find es.exe
-  (require 'everything))
+;;(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
+;;(require 'init-site-lisp)
+;;
+;;(when (and *is-windows* (file-exists-p "~/.emacs.d/site-lisp/everything/everything.el"))
+;;  (setq everything-ffap-integration nil)
+;;  ;; to disable ffap integration
+;;  (setq everything-cmd "D:/Software/Everything-1.4.1.877.x64/es.exe")
+;;  ;; to let everything.el know where to find es.exe
+;;  (require 'everything))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; \e means escape
 (global-set-key "\e " 'set-mark-command)
 
-;; Quick copy current line
+;; Quick copy/cut current line
 (global-set-key "\C-c\C-c" "\C-a\C- \C-n\M-w")
+(global-set-key "\C-c\C-x" "\C-a\C- \C-n\C-w")
 
-(global-set-key (kbd "M-w") 'xah-copy-line-or-region)
-(global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-;") 'xah-comment-dwim)
+
+(global-set-key (kbd "<M-wheel-up>") 'text-scale-increase)
+(global-set-key (kbd "<M-wheel-down>") 'text-scale-decrease)
 
 
 ;; Magit
@@ -482,16 +436,16 @@ of FILE in the current directory, suitable for creation"
 (global-set-key '[(C-M-f7)]      'ediff-regions-linewise)
 
 
-;;(global-set-key '[(f1)] 'ido-find-file)
-;;(global-set-key '[(C-f1)] 'ido-find-file-other-window)
-;;(global-set-key '[(S-f1)] 'dired)
-;;
-;;(global-set-key '[(f2)] 'other-window)
-;;(global-set-key '[(C-f2)] 'ido-switch-buffer)
-;;(global-set-key '[(S-f2)] 'ido-switch-buffer-other-window)
-;;
-;;(global-set-key '[(f3)] 'split-window-horizontally)
-;;(global-set-key '[(f3)] 'split-window-vertically)
+(global-set-key '[(f1)] 'ido-find-file)
+(global-set-key '[(C-f1)] 'ido-find-file-other-window)
+(global-set-key '[(S-f1)] 'dired)
+
+(global-set-key '[(f2)] 'other-window)
+(global-set-key '[(C-f2)] 'ido-switch-buffer)
+(global-set-key '[(S-f2)] 'ido-switch-buffer-other-window)
+
+(global-set-key '[(f3)] 'split-window-horizontally)
+(global-set-key '[(f3)] 'split-window-vertically)
 
 
 ;; Maximizing on startup
@@ -507,8 +461,8 @@ of FILE in the current directory, suitable for creation"
   (interactive)
   (menu-bar-mode -1)
   (maximize-frame)
-  (set-foreground-color "burlywood3")
-  (set-background-color "black")
+;;  (set-foreground-color "burlywood3")
+;;  (set-background-color "black")
   (set-cursor-color "#40FF40")
 )
 (add-hook 'window-setup-hook 'post-load-stuff t)
@@ -518,15 +472,15 @@ of FILE in the current directory, suitable for creation"
 
 (add-to-list 'default-frame-alist '(font . "Liberation Mono-11.5"))
 (set-face-attribute 'default t :font "Liberation Mono-11.5")
-(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
-(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
-(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
-(set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
-(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
+;;(set-face-attribute 'font-lock-builtin-face nil :foreground "#DAB98F")
+;;(set-face-attribute 'font-lock-comment-face nil :foreground "gray50")
+;;(set-face-attribute 'font-lock-constant-face nil :foreground "olive drab")
+;;(set-face-attribute 'font-lock-doc-face nil :foreground "gray50")
+;;(set-face-attribute 'font-lock-function-name-face nil :foreground "burlywood3")
+;;(set-face-attribute 'font-lock-keyword-face nil :foreground "DarkGoldenrod3")
+;;(set-face-attribute 'font-lock-string-face nil :foreground "olive drab")
+;;(set-face-attribute 'font-lock-type-face nil :foreground "burlywood3")
+;;(set-face-attribute 'font-lock-variable-name-face nil :foreground "burlywood3")
 
 ;; Custom word face
 (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
@@ -545,7 +499,21 @@ of FILE in the current directory, suitable for creation"
            ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
 	fixme-modes)
 (modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-study-face "Green" nil nil t nil t nil nil)
 (modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
+(modify-face 'font-lock-important-face "Green" nil nil t nil t nil nil)
 (modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ido-vertical-mode w32-browser eno company-c-headers company-statistics company wgrep-ag anzu ws-butler multiple-cursors racket-mode autopair color-identifiers-mode yasnippet indent-guide projectile magit avy cnfonts which-key swiper diminish smex flx-ido dash use-package bind-key))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
