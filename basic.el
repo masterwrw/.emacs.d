@@ -356,7 +356,10 @@ of FILE in the current directory, suitable for creation"
   (setq company-minimum-prefix-length 2)
   (setq company-tooltip-limit 20)
   (setq company-backends nil)
-  (add-to-list 'company-backends 'company-elisp 'company-files 'company-etags)
+  (add-to-list 'company-backends 'company-keywords)
+  (add-to-list 'company-backends 'company-elisp)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'company-etags)
   ;; company-dabbrev config, it is for current buffer string auto complete.
   (add-to-list 'company-backends 'company-dabbrev)
   (add-to-list 'company-backends 'company-dabbrev-code)
@@ -377,10 +380,11 @@ of FILE in the current directory, suitable for creation"
 (use-package company-c-headers
   :ensure t
   :requires company
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  (add-to-list 'company-backends 'company-c-headers)
-  (diminish 'company-mode "com"))
+  :config
+  (progn
+    (add-to-list 'company-backends 'company-c-headers)
+    (add-hook 'after-init-hook 'global-company-mode)
+    (diminish 'company-mode "com")))
 
 
 ;; eno, Goto/copy/cut any word/symbol/line in view, similar to ace-jump/easymotion

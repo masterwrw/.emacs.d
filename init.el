@@ -1,3 +1,6 @@
+;; Set current directory is home directory
+;(setenv "HOME" (file-name-directory (expand-file-name (buffer-name))))
+
 (setq inhibit-startup-message t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -53,6 +56,7 @@
 (require 'init-racket-env)
 (require 'init-compile)
 (require 'init-orgmode)
+(require 'init-tramp)
 (require 'init-misc)
 (require 'init-rss-feed)
 ;(require 'init-keyfreq) ; M-v not work
