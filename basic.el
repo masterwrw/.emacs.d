@@ -214,7 +214,7 @@ of FILE in the current directory, suitable for creation"
   (ido-everywhere 1)
   (flx-ido-mode 1)
   ;; disable ido faces to see flx highlights.
-  (setq ido-enable-flex-matching t)
+  ;;(setq ido-enable-flex-matching t)
   ;;(setq ido-use-faces nil)
   )
 
@@ -269,6 +269,10 @@ of FILE in the current directory, suitable for creation"
 ;; avy, Jump to arbitrary positions in visible text and select text quickly.
 (use-package avy
   :ensure t)
+
+(use-package counsel
+  :ensure t
+  )
 
 (use-package magit
   :ensure t)
@@ -422,6 +426,12 @@ of FILE in the current directory, suitable for creation"
 (global-set-key (kbd "<M-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<M-wheel-down>") 'text-scale-decrease)
 
+;;(global-set-key (kbd "<M-up>") 'previous-buffer)
+;;(global-set-key (kbd "<M-down>") 'next-buffer)
+
+(global-set-key "\C-x\C-b" 'ibuffer)
+(global-set-key "\C-x\C-f" 'counsel-find-file)
+;;(global-set-key "\M-x" 'counsel-M-x)
 
 ;; Magit
 (global-set-key '[(f4)]		'magit-status)
