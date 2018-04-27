@@ -23,3 +23,4 @@ persp-confs/
 .cache*
 url/
 .org-id-locations
+config.el

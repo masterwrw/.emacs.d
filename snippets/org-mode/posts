@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: posts
+# key: posts
+# --
+#+OPTIONS: ^:nil \n:t
+#+BEGIN_COMMENT
+.. title: ${1:`(replace-regexp-in-string "-\\|_" " " (file-name-base))`}
+.. slug: `(file-name-base)`
+.. date: `(format-time-string "%Y-%m-%d %H:%M:%S UTC+08:00" (current-time))`
+.. tags: $2, draft
+.. category:
+.. link:
+.. description:
+.. type: text
+#+END_COMMENT
+
+$0
