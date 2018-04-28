@@ -1,4 +1,25 @@
 #+STARTUP: overview
+* Start up profiler
+** benchmark-init
+#+BEGIN_SRC emacs-lisp
+  (use-package benchmark-init
+    :ensure t
+    :init
+    (benchmark-init/activate)
+    :hook
+    (after-init . benchmark-init/deactivate))
+#+END_SRC
+
+** Custom time calc
+Build-in function is M-x init-emacs-time.
+#+BEGIN_SRC emacs-lisp
+  (defvar init-start (current-time))
+  (add-hook 'after-init-hook
+            (lambda ()
+              (message (format "Init completed in %.6fs\n\n" (- (float-time (current-time)) (float-time init-start))))
+              ))
+#+END_SRC
+
 * Theme
 ** A dark theme
 #+BEGIN_SRC emacs-lisp
@@ -185,6 +206,7 @@ https://github.com/tumashu/cnfonts
 
 
 #+END_SRC
+
 ** Enoding
 *** utf-8
 #+BEGIN_SRC emacs-lisp
@@ -221,7 +243,7 @@ https://github.com/tumashu/cnfonts
         (modify-coding-system-alist 'process "*" 'gbk)
         (set-buffer-process-coding-system 'gbk 'gbk)
         (set-file-name-coding-system 'gbk)))
-    (add-hook 'shell-mode-hook 'change-shell-mode-coding)
+    (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
     (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 #+END_SRC
@@ -554,6 +576,52 @@ In the ibuffer, you can delete buffers, rename buffer etc.
   (global-set-key (kbd "C-c l k") 'kill-whole-line)
 #+END_SRC
 
+** Copy a paragraph
+#+BEGIN_SRC emacs-lisp
+  (defun eye/copy-paragraph ()
+    "Copy paragraphes at point"
+    (interactive)
+    (let ((beg (progn (backward-paragraph 1) (point)))
+          (end (progn (forward-paragraph 1) (point))))
+      (copy-region-as-kill beg end)))
+#+END_SRC
+
+** Improved capitalize-word
+Default downcase-word must move cursor to the word beginning.
+#+BEGIN_SRC emacs-lisp
+  (defun eye/capitalize-word ()
+    (interactive)
+    (save-excursion
+      (forward-char 1)
+      (backward-word)
+      (capitalize-word 1)))
+  (global-set-key (kbd "M-c") 'eye/capitalize-word)
+#+END_SRC
+
+** Improved upcase-word
+Default upcase-word must move cursor to the word beginning.
+#+BEGIN_SRC emacs-lisp
+  (defun eye/upcase-word ()
+    (interactive)
+    (save-excursion
+      (forward-char 1)
+      (backward-word)
+      (upcase-word 1)))
+  (global-set-key (kbd "M-u") 'eye/upcase-word)
+#+END_SRC
+
+** Improved downcase-word
+Default downcase-word must move cursor to the word beginning.
+#+BEGIN_SRC emacs-lisp
+  (defun eye/downcase-word ()
+    (interactive)
+    (save-excursion
+      (forward-char 1)
+      (backward-word)
+      (downcase-word 1)))
+  (global-set-key (kbd "M-l") 'eye/downcase-word)
+#+END_SRC
+
 ** Delete selection when yank
 #+BEGIN_SRC emacs-lisp
   (delete-selection-mode 1)
@@ -729,13 +797,17 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
 
 * Programming
 ** yasnippet
+Set defer is for quickly startup.
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
+    :defer t
     :config
     (use-package yasnippet-snippets
-      :ensure t)
-    (yas-reload-all))
+      :ensure t
+      :defer t)
+    ;;(yas-reload-all)
+    )
 #+END_SRC
 
 ** flycheck
@@ -798,6 +870,29 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
 
   ;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
   ;;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
+#+END_SRC
+
+** cmd
+#+BEGIN_SRC emacs-lisp
+  (defun eye/shell-cmd (buffer env)
+    "Run cmd with new buffer name and path environment."
+    (let ((explicit-shell-file-name "C:\\Windows\\System32\\cmd.exe")
+          (shell-path-bak (getenv "PATH")) ;; save path
+          (shell-buffer-name buffer)
+          (shell-path-cmd env))
+      (setenv "PATH" shell-path-cmd)
+      (shell shell-buffer-name)
+      ;; restore path
+      (setenv "PATH" shell-path-bak)))
+#+END_SRC
+
+*** cmake
+#+BEGIN_SRC emacs-lisp
+  (defun eye/shell-cmake ()
+    (interactive)
+    (eye/shell-cmd "shell-cmake" (concat "C:\\green-soft\\git\\bin;"
+                                         "C:\\green-soft\\cmake-3.11.0-rc4-win64-x64\\bin;"
+                                         )))
 #+END_SRC
 
 ** languages
@@ -943,6 +1038,14 @@ The exec-path is used for emacs itself to find programs.
       (add-hook 'python-mode-hook 'company-mode))
 #+END_SRC
 
+**** cmd shell
+#+BEGIN_SRC emacs-lisp
+  (defun eye/shell-python3 ()
+    (interactive)
+    (eye/shell-cmd "shell-python3" "C:\\Python\\Python36;C:\\Python\\Python36\\Scripts;")
+    )
+#+END_SRC
+
 *** emacs-lisp
 **** eldoc
 #+BEGIN_SRC emacs-lisp
@@ -1031,6 +1134,33 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 #+END_SRC
 
 * Blog
+** deft
+#+BEGIN_SRC emacs-lisp
+  (use-package deft
+    :ensure t
+    :bind ("<f8>" . deft)
+    :config
+    (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
+    (setq deft-extensions '("org"))
+    (setq deft-text-mode 'org-mode)
+    (setq deft-incremental-search nil)
+    (setq deft-use-filename-as-title t)
+    (setq deft-strip-summary-regexp (concat "\\("
+                                            "^#\\+OPTIONS:.*"
+                                            "\\|^#\\+BEGIN.*"
+                                            "\\|^\.+ title: "
+                                            "\\|^\.+ slug.*"
+                                            "\\|^\.+ date.*"
+                                            "\\|^\.+ tags.*"
+                                            "\\|^\.+ category.*"
+                                            "\\|^\.+ link.*"
+                                            "\\|^\.+ desc.*"
+                                            "\\|^\.+ type.*"
+                                            "\\|^#\\+END.*"
+                                            "\\)"))
+    )
+#+END_SRC 
+
 ** prodgy service manager
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
@@ -1038,6 +1168,37 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 #+END_SRC
 
 ** nikola
+#+BEGIN_SRC emacs-lisp
+  (use-package nikola
+    :ensure t
+    :config
+    (setq nikola-output-root-directory "d:/projects/python/nikola/eye.github.io/")
+    (setq nikola-verbose t)
+    (setq nikola-webserver-auto t)
+    (setq nikola-webserver-host "127.0.0.1")
+    (setq nikola-webserver-port "8080")
+    (setq nikola-webserver-open-browser-p t)
+    (setq nikola-new-post-extension "org")
+    ;;(setq nikola-deploy-input t)
+    ;;(setq nikola-deploy-input-default "New article")
+    ;;(setq nikola-build-before-hook-script (concat nikola-output-root-directory "scripts/pre-build.sh"))
+    ;;(setq nikola-build-after-hook-script (concat nikola-output-root-directory "scripts/post-build.sh"))
+    ;;(setq nikola-deploy-after-hook-script "nikola iarchiver")
+    )
+#+END_SRC
+
+*** cmd shell
+#+BEGIN_SRC emacs-lisp
+  (defun eye/shell-nikola ()
+    (interactive)
+    (eye/shell-cmd "shell-nikola"
+                   (concat "c:\\green-soft\\emacs-25.3_1-x86_64\\bin;"
+                           "C:\\Python\\Python36;C:\\Python\\Python36\\Scripts;"
+                           )))
+#+END_SRC
+
+*** prodigy service manager
+Maybe can not find nikola command if have not global environment.
 #+BEGIN_SRC emacs-lisp
   (prodigy-define-service
     :name "Blog service"
