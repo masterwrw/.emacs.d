@@ -24,3 +24,4 @@ persp-confs/
 url/
 .org-id-locations
 config.el
+virtual.dired
