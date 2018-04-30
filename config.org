@@ -1067,6 +1067,20 @@ The exec-path is used for emacs itself to find programs.
     (add-hook 'qt-pro-mode 'yas-minor-mode))
 #+END_SRC
 
+**** qml
+#+BEGIN_SRC emacs-lisp
+  (use-package qml-mode
+    :ensure t
+    :init
+    (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
+    (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
+    :config
+    (use-package company-qml
+      :ensure t
+      :init
+      (add-to-list 'company-backends 'company-qml)))
+#+END_SRC
+
 **** Change .h file to c++ mode
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
