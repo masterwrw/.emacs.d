@@ -856,12 +856,10 @@ Set defer is for quickly startup.
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure t
-    :defer t
     :config
     (use-package yasnippet-snippets
-      :ensure t
-      :defer t)
-    ;;(yas-reload-all)
+      :ensure t)
+    (yas-reload-all)
     )
 #+END_SRC
 
@@ -935,7 +933,7 @@ Set defer is for quickly startup.
           (shell-path-bak (getenv "PATH")) ;; save path
           (shell-buffer-name buffer)
           (shell-path-cmd env))
-      (setenv "PATH" shell-path-cmd)
+      (setenv "PATH" (concat shell-path-cmd "C:\\Windows\\System32;"))
       (shell shell-buffer-name)
       ;; restore path
       (setenv "PATH" shell-path-bak)))
@@ -1146,9 +1144,23 @@ The exec-path is used for emacs itself to find programs.
 #+END_SRC
 
 *** lua
+**** lua-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package lua-mode
+    :ensure t)
+#+END_SRC
+
 **** yasnippet
 #+BEGIN_SRC emacs-lisp
   (add-hook 'lua-mode-hook 'yas-minor-mode)
+#+END_SRC
+
+**** cmd
+#+BEGIN_SRC emacs-lisp
+  (defun eye/lua-shell ()
+    (interactive)
+    (setq default-directory "d:/projects/lua")
+    (eye/shell-cmd "lua-shell" "c:\\Lua5.1;"))
 #+END_SRC
 
 *** sql
