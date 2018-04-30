@@ -529,6 +529,12 @@ In the ibuffer, you can delete buffers, rename buffer etc.
                      (bookmark-save)))
 #+END_SRC
 
+*** Keybinding
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f2> a") 'bookmark-set)
+  (global-set-key (kbd "<f2> l") 'list-bookmarks)
+#+END_SRC
+
 * Text manipulation
 ** multiple-cursors
 #+BEGIN_SRC emacs-lisp
@@ -1161,6 +1167,11 @@ The exec-path is used for emacs itself to find programs.
     (setq git-commit-summary-max-length 50)
     :bind
     ("M-g" . magit-status))
+#+END_SRC
+
+** Keybindings
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "<f3> s") 'magit-status)
 #+END_SRC
 
 ** fullframe
