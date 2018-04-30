@@ -827,7 +827,10 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
       (setq path (read-directory-name "Directory: ")) ;; TODO: maybe check last / charactor
       (setq path (concat path "virtual.dired"))
       (if (not (file-exists-p path))
-          (eshell-command (concat "ls -lR > " path)))
+          (eshell-command (concat "ls -lR "
+                                  path
+                                  " > "
+                                  path)))
       (if (file-exists-p path)
           (find-file path)
         (message "Can not create virtual.dired file."))))
