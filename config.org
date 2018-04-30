@@ -1,4 +1,64 @@
 #+STARTUP: overview
+* Garbage collection
+#+BEGIN_SRC emacs-lisp
+  ;;; This fixed garbage collection, makes emacs start up faster ;;;;;;;
+  (setq gc-cons-threshold 402653184
+        gc-cons-percentage 0.6)
+
+  (defvar startup/file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
+
+  (defun startup/revert-file-name-handler-alist ()
+    (setq file-name-handler-alist startup/file-name-handler-alist))
+
+  (defun startup/reset-gc ()
+    (setq gc-cons-threshold 16777216
+          gc-cons-percentage 0.1))
+
+  (add-hook 'emacs-startup-hook 'startup/revert-file-name-handler-alist)
+  (add-hook 'emacs-startup-hook 'startup/reset-gc)
+#+END_SRC
+
+* Installing use-package
+#+BEGIN_SRC emacs-lisp
+  ;; package-archives
+  (require 'package)
+  (setq package-enable-at-startup nil) ;; not activat installed packages
+
+  (defvar site-gnu '("gnu" . "http://elpa.emacs-china.org/gnu/"))
+  (defvar site-melpa '("melpa" . "http://elpa.emacs-china.org/melpa/"))
+  (defvar site-melpa-stable '("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/"))
+  (defvar site-marmalade '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (defvar site-org '("org" . "https://orgmode.org/elpa/"))
+
+  (setq package-archives nil)
+  (add-to-list 'package-archives site-melpa-stable t)
+  (add-to-list 'package-archives site-melpa t)
+  (add-to-list 'package-archives site-gnu t)
+  ;;(add-to-list 'package-archives site-marmalade t)
+  (package-initialize) ;; activate installed packages
+
+  (unless (and (file-exists-p "~/.emacs.d/elpa/archives/gnu")
+               (file-exists-p "~/.emacs.d/elpa/archives/melpa")
+               (file-exists-p "~/.emacs.d/elpa/archives/melpa-stable"))
+    (package-refresh-contents))
+
+  ;; On-demand installation of packages
+  (defun require-package (package &optional min-version no-refresh)
+    "Ask elpa to install given PACKAGE."
+    (if (package-installed-p package min-version)
+        t
+      (if (or (assoc package package-archive-contents) no-refresh)
+          (package-install package)
+        (progn
+          (package-refresh-contents)
+          (require-package package min-version t)))))
+
+  ;;; Bootstrapping use-package
+  (unless (package-installed-p 'use-package)
+    (require-package 'use-package))
+#+END_SRC
+
 * Start up profiler
 ** benchmark-init
 #+BEGIN_SRC emacs-lisp
@@ -1149,13 +1209,14 @@ The exec-path is used for emacs itself to find programs.
   (use-package paredit
     :ensure t
     :config
-    (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-    (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-    (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-    (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
+    ;;(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+    ;;(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+    ;;(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+    ;;(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+    ;;(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+    ;;(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+    ;;(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+    )
 #+END_SRC
 
 *** lua
