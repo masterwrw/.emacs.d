@@ -309,6 +309,21 @@ File name is !drive_f!dirname!dirname!filename~
   (setq initial-scratch-message "Welcome back!")
 #+END_SRC
 
+* Site lisp
+#+BEGIN_SRC emacs-lisp
+  (eval-when-compile (require 'cl))
+  (if (fboundp 'normal-top-level-add-to-load-path)
+      (let* ((my-lisp-dir "~/.emacs.d/site-lisp/")
+             (default-directory my-lisp-dir))
+        (progn
+          (setq load-path
+                (append
+                 (loop for dir in (directory-files my-lisp-dir)
+                       unless (string-match "^\\." dir)
+                       collecting (expand-file-name dir))
+                 load-path)))))
+#+END_SRC
+
 * Projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
@@ -1181,11 +1196,6 @@ The exec-path is used for emacs itself to find programs.
     ("M-g" . magit-status))
 #+END_SRC
 
-** Keybindings
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f3> s") 'magit-status)
-#+END_SRC
-
 ** fullframe
 #+BEGIN_SRC emacs-lisp
   (use-package fullframe
@@ -1360,6 +1370,12 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
   (prelude-install-search-engine "github"     "https://github.com/search?q="                 "Search GitHub: ")
   (prelude-install-search-engine "duckduckgo" "https://duckduckgo.com/?t=lm&q="              "Search DuckDuckGo: ")
   (prelude-install-search-engine "bing"       "https://www.bing.com/search?q="               "Bing: ")
+#+END_SRC
+
+* Media
+** mpg123
+#+BEGIN_SRC emacs-lisp
+  (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
 #+END_SRC
 
 * Diminishing modes
