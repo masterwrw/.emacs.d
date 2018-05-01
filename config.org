@@ -1434,6 +1434,11 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
   (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
 #+END_SRC
 
+* Dictionary
+#+BEGIN_SRC emacs-lisp
+  (use-package youdao-dictionary :ensure t)
+#+END_SRC
+
 * Diminishing modes
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
