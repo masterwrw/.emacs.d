@@ -412,8 +412,8 @@ File name is !drive_f!dirname!dirname!filename~
     :ensure t
     :config
     (require 'spaceline-config)
-      (setq spaceline-buffer-encoding-abbrev-p nil)
-      (setq spaceline-line-column-p nil)
+      (setq spaceline-buffer-encoding-abbrev-p t)
+      (setq spaceline-line-column-p t)
       (setq spaceline-line-p nil)
       (setq powerline-default-separator (quote arrow))
       (spaceline-spacemacs-theme))
@@ -1437,7 +1437,21 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 * Diminishing modes
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
-    :ensure t)
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'linum-relative-mode)
+    (diminish 'hungry-delete-mode)
+    (diminish 'visual-line-mode)
+    (diminish 'subword-mode)
+    (diminish 'irony-mode)
+    (diminish 'page-break-lines-mode)
+    (diminish 'auto-revert-mode)
+    (diminish 'rainbow-delimiters-mode)
+    (diminish 'rainbow-mode)
+    (diminish 'indent-guide-mode)
+    (diminish 'org-indent-mode)
+    (diminish 'helm-mode))
 #+END_SRC
 
 * Custom set variables
