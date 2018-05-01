@@ -530,11 +530,6 @@ After split a window, let the focus in the new split window.
 #+BEGIN_SRC emacs-lisp
   (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 #+END_SRC
-*** Turn switch-to-buffer into ibuffer
-In the ibuffer, you can delete buffers, rename buffer etc.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b") 'ibuffer)
-#+END_SRC
 *** close-all-buffers
 #+BEGIN_SRC emacs-lisp
   (defun close-all-buffers ()
