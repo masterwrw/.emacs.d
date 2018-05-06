@@ -83,14 +83,13 @@ Build-in function is M-x init-emacs-time.
 * Theme
 ** A dark theme
 #+BEGIN_SRC emacs-lisp
+  ;;zerodark-theme, cyberpunk-theme
   (use-package zerodark-theme
     :ensure t
     :init
-    (when (display-graphic-p)
-      (load-theme 'zerodark t)))
-
-  ;;(use-package spacemacs-theme
-  ;;  :ensure t)
+    (add-hook 'after-init-hook
+              (lambda () (when (display-graphic-p)
+                  (load-theme 'zerodark t)))))
 #+END_SRC
 
 ** Some customization
@@ -272,7 +271,7 @@ https://github.com/tumashu/cnfonts
 
 #+END_SRC
 
-** Enoding
+** Encoding
 *** utf-8
 #+BEGIN_SRC emacs-lisp
   (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
@@ -368,7 +367,12 @@ File name is !drive_f!dirname!dirname!filename~
 
 ** scratch buffer text
 #+BEGIN_SRC emacs-lisp
-  (setq initial-scratch-message "Welcome back!")
+  (setq initial-scratch-message nil)
+#+END_SRC
+
+** Cursor type
+#+BEGIN_SRC emacs-lisp
+  (setq default-cursor-type 'bar)
 #+END_SRC
 
 * Site lisp
@@ -619,8 +623,8 @@ After split a window, let the focus in the new split window.
 
 orgmode key map
 #+BEGIN_SRC emacs-lisp
-  (define-key org-mode-map (kbd "<M-left>") 'backward-char)
-  (define-key org-mode-map (kbd "<M-right>") 'forward-char)
+  (define-key org-mode-map (kbd "<M-left>") 'backward-word)
+  (define-key org-mode-map (kbd "<M-right>") 'forward-word)
   (define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
   (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
 #+END_SRC 
@@ -632,7 +636,7 @@ orgmode key map
     :ensure t)
 #+END_SRC
 
-** edit-at-point
+** edit-at-Point
 #+BEGIN_SRC emacs-lisp
   (use-package edit-at-point
     :ensure t
@@ -770,14 +774,6 @@ Default downcase-word must move cursor to the word beginning.
     (interactive)
     (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
   (global-set-key (kbd "C-c r") 'config-reload)
-#+END_SRC
-
-** Visiting task file
-#+BEGIN_SRC emacs-lisp
-  (defun eye/task-visit ()
-    (interactive)
-    (find-file "~/notebook/notes/gtd/task.org"))
-  (global-set-key (kbd "C-c t") 'eye/task-visit)
 #+END_SRC
 
 ** Electric
@@ -1096,19 +1092,19 @@ The exec-path is used for emacs itself to find programs.
 
 **** rtags
 #+BEGIN_SRC emacs-lisp
-  (use-package rtags
-    :ensure t)
-
-  (defun eye/rtags-goto-symbol ()
-    (interactive)
-    (deactivate-mark)
-    (ring-insert find-tag-marker-ring (point-marker))
-    (or (and (require 'rtags nil t)
-             (rtags-find-symbol-at-point))
-        (error nil)))
-
-  (define-key c++-mode-map (kbd "M-.") 'eye/rtags-goto-symbol)
-  (define-key c++-mode-map (kbd "M-,") 'pop-tag-mark)
+  ;;(use-package rtags
+  ;;  :ensure t)
+  ;;
+  ;;(defun eye/rtags-goto-symbol ()
+  ;;  (interactive)
+  ;;  (deactivate-mark)
+  ;;  (ring-insert find-tag-marker-ring (point-marker))
+  ;;  (or (and (require 'rtags nil t)
+  ;;           (rtags-find-symbol-at-point))
+  ;;      (error nil)))
+  ;;
+  ;;(define-key c++-mode-map (kbd "M-.") 'eye/rtags-goto-symbol)
+  ;;(define-key c++-mode-map (kbd "M-,") 'pop-tag-mark)
 #+END_SRC
 
 **** tab width
