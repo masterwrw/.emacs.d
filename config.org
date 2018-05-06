@@ -1448,13 +1448,24 @@ smart compile
 * Org
 ** Common settings
 #+BEGIN_SRC emacs-lisp
-  (setq org-ellipsis " ")
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-src-fontify-natively t) ;; code block highlight
-  (setq org-src-window-setup 'current-window)
-  (add-hook 'org-mode-hook 'org-indent-mode)
-  (add-hook 'org-mode-hook 'yas-minor-mode)
+(setq org-ellipsis " ")
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+(setq org-src-fontify-natively t) ;; code block highlight
+(setq org-src-window-setup 'current-window)
+(add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'yas-minor-mode)
+
+;; indent content
+(setq org-edit-src-content-indentation 0)
+(setq org-startup-indented t)
+(setq org-startup-folded (quote overview))
+;; hides blank lines between headings
+(setq org-cycle-separator-lines 0)
+;; always require new line in header below
+(setq require-final-newline t)
+;; calendar start at monday
+(setq calendar-week-start-day 1)
 #+END_SRC
 
 ** Exported to HTML
@@ -1475,13 +1486,131 @@ smart compile
   (global-set-key (kbd "C-c '") 'org-edit-src-code)
 #+END_SRC
 
-** Easy-to-add emacs-lisp template
+** Easy-to-add src template
 Hitting tab after an "<el" in an org-mode file will create a template for elisp insertion.
 #+BEGIN_SRC emacs-lisp
+  ;; emacs-lisp
   (add-to-list 'org-structure-template-alist
                  '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+
+  ;; c++
   (add-to-list 'org-structure-template-alist
-                 '("cp" "#+BEGIN_SRC C++\n?\n#+END_SRC"))
+               '("cpp" "#+BEGIN_SRC C++\n?\n#+END_SRC"))
+
+  ;; lua
+  (add-to-list 'org-structure-template-alist
+               '("lu" "#+BEGIN_SRC lua\n?\n#+END_SRC"))
+
+  ;; python
+  (add-to-list 'org-structure-template-alist
+                 '("py" "#+BEGIN_SRC python\n?\n#+END_SRC"))
+
+
+  ;;; Custom util function
+  ;; http://wenshanren.org/?p=327
+  (defun eye/org-insert-src-block (src-code-type)
+    "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+    (interactive
+     (let ((src-code-types
+            '("C++" "emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "css"
+              "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+              "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+              "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+              "scheme" "sqlite")))
+       (list (ido-completing-read "Source code type: " src-code-types))))
+    (progn
+      ;(newline-and-indent) ; no auto indent space
+      (insert (format "#+BEGIN_SRC %s\n" src-code-type)) ; use lower string
+      ;(newline-and-indent)
+      (insert "#+END_SRC\n")
+      (previous-line 2)
+      (org-edit-src-code)))
+
+#+END_SRC
+
+** org capture
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/notebook/notes/gtd")
+(setq org-default-notes-file (concat org-directory "/inbox.org"))
+
+(setq org-agenda-files (list (concat org-directory "/inbox.org")
+                             (concat org-directory "/todo.org")
+			     (concat org-directory "/note.org")
+                             ))
+
+(setq org-capture-templates
+      '(
+	("n" "New" entry (file "~/notebook/notes/gtd/inbox.org")
+         "* %?\n%i\n" :prepend t :empty-lines 1)
+	("t" "Todo" entry (file+headline "~/notebook/notes/gtd/todo.org" "Todo")
+         "* %?\n%i\n")
+        ))
+
+(setq org-refile-targets
+      '(
+	("~/notebook/notes/gtd/note.org" :level . 1)
+        ("~/notebook/notes/gtd/finished.org" :level . 1)
+        ("~/notebook/notes/gtd/trash.org" :level . 1)
+	))
+
+(setq org-archive-location "~/notebook/notes/gtd/finished.org::")
+
+
+(defun eye/inbox ()
+  (interactive)
+  (find-file org-default-notes-file)
+  )
+
+(defun eye/todo ()
+  (interactive)
+  (find-file (concat org-directory "/todo.org"))
+  )
+
+(global-set-key (kbd "<f10>") 'org-capture)
+#+END_SRC
+
+** org crypt
+#+BEGIN_SRC emacs-lisp
+  ;; Advise set auto-save-default to nil
+  (require 'org-crypt)
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance (quote("crypt")))
+  (setq org-crypt-key nil)
+  ;(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
+#+END_SRC
+
+** org-brain
+#+BEGIN_SRC emacs-lisp
+(when (> emacs-major-version 25)
+  (use-package org-brain
+    :ensure t
+    :init
+    (setq org-brain-path "~/notebook/notes/brain")
+    :config
+    (setq org-id-track-globally t)
+    (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
+    (push '("b" "Brain" plain (function org-brain-goto-end)
+            "* %i%?" :empty-lines 1)
+          org-capture-templates)
+    (setq org-brain-visualize-default-choices 'all)
+    (setq org-brain-title-max-length 12))
+  )
+#+END_SRC
+
+** org agenda
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
+	))
+
+(setq org-todo-keyword-faces
+      (quote (("TODO" :foreground "red" :weight bold)
+              ("NEXT" :foreground "blue" :weight bold)
+	      ("WAITING" :foreground "orange" :weight bold)
+	      ("SOMEDAY" :foreground "magenta" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("ABORT" :foreground "forest green" :weight bold))))
+
 #+END_SRC
 
 * Blog
