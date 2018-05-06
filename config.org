@@ -629,6 +629,27 @@ orgmode key map
   (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
 #+END_SRC 
 
+** Quick insert new line
+#+BEGIN_SRC emacs-lisp
+(defun eye/new-next-line ()
+  "在当前行下方快速添加新的一行。"
+  (interactive)
+  (move-end-of-line 1)
+  (newline)
+  (indent-for-tab-command))
+
+(defun eye/new-previous-line ()
+  "在当前行上方快速添加新的一行。"
+  (interactive)
+  (previous-line)
+  (move-end-of-line 1)
+  (newline)
+  (indent-for-tab-command))
+
+(global-set-key (kbd "M-n") 'eye/new-next-line)
+(global-set-key (kbd "M-p") 'eye/new-previous-line)
+#+END_SRC
+
 * Text manipulation
 ** multiple-cursors
 #+BEGIN_SRC emacs-lisp
