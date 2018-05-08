@@ -928,28 +928,35 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
 ** Virtual directory
 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
 #+BEGIN_SRC emacs-lisp
-  (require 'dired-x)
-  (setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
-                              auto-mode-alist))
+(require 'dired-x)
+(setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
+                            auto-mode-alist))
 
-  ;; quick generate virtual.dired file and open it
-  (defun eye/virtual-dir ()
-    "Create and open a virtual directory file.
-  use command: ls -lR > virtual.dired
-  "
-    (interactive)
-    (let (path)
-      ;; get directory path
-      (setq path (read-directory-name "Directory: ")) ;; TODO: maybe check last / charactor
-      (setq path (concat path "virtual.dired"))
-      (if (not (file-exists-p path))
-          (eshell-command (concat "ls -lR "
-                                  path
-                                  " > "
-                                  path)))
-      (if (file-exists-p path)
-          (find-file path)
-        (message "Can not create virtual.dired file."))))
+;; quick generate virtual.dired file and open it
+(defun eye/virtual-dir ()
+  "Create and open a virtual directory file.
+use command: ls -lR > virtual.dired
+"
+  (interactive)
+  ;; Check ls can use
+  (unless (executable-find "ls")
+    (error "Unkown command 'ls'"))
+  (let (dir path cmd)
+    ;; get directory path
+    (setq dir (read-directory-name "Directory: "))
+    (unless (equal "/" (s-right 1 dir)) ;; check last / charactor
+      (setq dir (concat dir "/")))
+    (setq path (concat dir "virtual.dired"))
+    (setq cmd (concat "ls -lR " dir " > " path))
+    (message cmd)
+    (if (or (y-or-n-p "Create or update?") (not (file-exists-p path)))
+        (eshell-command cmd))
+    (if (file-exists-p path)
+        (find-file path)
+      (message "Can not create virtual.dired file."))))
+
+(equal "/" (s-right 1 "hello"))
+
 #+END_SRC
 
 ** Auto revert
@@ -1638,9 +1645,9 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 
 ** org babel execute
 #+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((lua . t)))
+;;(org-babel-do-load-languages
+;; 'org-babel-load-languages
+;; '((lua . t))) ;; can not open ob-lua
 #+END_SRC
 
 * Blog
