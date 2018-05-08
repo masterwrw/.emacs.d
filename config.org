@@ -21,42 +21,42 @@
 
 * Installing use-package
 #+BEGIN_SRC emacs-lisp
-  ;; package-archives
-  (require 'package)
-  (setq package-enable-at-startup nil) ;; not activat installed packages
+;; package-archives
+(require 'package)
+(setq package-enable-at-startup nil) ;; not activat installed packages
 
-  (defvar site-gnu '("gnu" . "http://elpa.emacs-china.org/gnu/"))
-  (defvar site-melpa '("melpa" . "http://elpa.emacs-china.org/melpa/"))
-  (defvar site-melpa-stable '("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/"))
-  (defvar site-marmalade '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (defvar site-org '("org" . "https://orgmode.org/elpa/"))
+(defvar site-gnu '("gnu" . "http://elpa.emacs-china.org/gnu/"))
+(defvar site-melpa '("melpa" . "http://elpa.emacs-china.org/melpa/"))
+(defvar site-melpa-stable '("melpa-stable" . "http://elpa.emacs-china.org/melpa-stable/"))
+(defvar site-marmalade '("marmalade" . "http://marmalade-repo.org/packages/"))
+(defvar site-org '("org" . "https://orgmode.org/elpa/"))
 
-  (setq package-archives nil)
-  (add-to-list 'package-archives site-melpa-stable t)
-  (add-to-list 'package-archives site-melpa t)
-  (add-to-list 'package-archives site-gnu t)
-  ;;(add-to-list 'package-archives site-marmalade t)
-  (package-initialize) ;; activate installed packages
+(setq package-archives nil)
+(add-to-list 'package-archives site-melpa-stable t)
+(add-to-list 'package-archives site-melpa t)
+(add-to-list 'package-archives site-gnu t)
+;;(add-to-list 'package-archives site-marmalade t)
+;;(package-initialize) ;; activate installed packages
 
-  (unless (and (file-exists-p "~/.emacs.d/elpa/archives/gnu")
-               (file-exists-p "~/.emacs.d/elpa/archives/melpa")
-               (file-exists-p "~/.emacs.d/elpa/archives/melpa-stable"))
-    (package-refresh-contents))
+(unless (and (file-exists-p "~/.emacs.d/elpa/archives/gnu")
+             (file-exists-p "~/.emacs.d/elpa/archives/melpa")
+             (file-exists-p "~/.emacs.d/elpa/archives/melpa-stable"))
+  (package-refresh-contents))
 
-  ;; On-demand installation of packages
-  (defun require-package (package &optional min-version no-refresh)
-    "Ask elpa to install given PACKAGE."
-    (if (package-installed-p package min-version)
-        t
-      (if (or (assoc package package-archive-contents) no-refresh)
-          (package-install package)
-        (progn
-          (package-refresh-contents)
-          (require-package package min-version t)))))
+;; On-demand installation of packages
+(defun require-package (package &optional min-version no-refresh)
+  "Ask elpa to install given PACKAGE."
+  (if (package-installed-p package min-version)
+      t
+    (if (or (assoc package package-archive-contents) no-refresh)
+        (package-install package)
+      (progn
+        (package-refresh-contents)
+        (require-package package min-version t)))))
 
-  ;;; Bootstrapping use-package
-  (unless (package-installed-p 'use-package)
-    (require-package 'use-package))
+;;; Bootstrapping use-package
+(unless (package-installed-p 'use-package)
+  (require-package 'use-package))
 #+END_SRC
 
 * Start up profiler
@@ -557,42 +557,43 @@ After split a window, let the focus in the new split window.
 
 ** helm
 #+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :bind
-    ("C-x C-f" . 'helm-find-files)
-    ("C-x C-b" . 'helm-buffers-list)
-    ("M-x" . 'helm-M-x)
-    ("<escape>" . helm-M-x)
-    :config
-    (defun daedreth/helm-hide-minibuffer ()
-      (when (with-helm-buffer helm-echo-input-in-header-line)
-        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-          (overlay-put ov 'window (selected-window))
-          (overlay-put ov 'face
-                       (let ((bg-color (face-background 'default nil)))
-                         `(:background ,bg-color :foreground ,bg-color)))
-          (setq-local cursor-type nil))))
-    (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
-    (setq helm-autoresize-max-height 0
-          helm-autoresize-min-height 40
-          helm-M-x-fuzzy-match t
-          helm-buffers-fuzzy-matching t
-          helm-recentf-fuzzy-match t
-          helm-semantic-fuzzy-match t
-          helm-imenu-fuzzy-match t
-          helm-split-window-in-side-p nil
-          helm-move-to-line-cycle-in-source nil
-          helm-ff-search-library-in-sexp t
-          helm-scroll-amount 8 
-          helm-echo-input-in-header-line t)
-    :init
-    (helm-mode 1))
+(use-package helm
+  :ensure t
+  :bind
+  ("C-x C-f" . 'helm-find-files)
+  ("C-x b" . 'helm-buffers-list)
+  ("C-x C-b" . 'ibuffer)
+  ("M-x" . 'helm-M-x)
+  ("<escape>" . helm-M-x)
+  :config
+  (defun daedreth/helm-hide-minibuffer ()
+    (when (with-helm-buffer helm-echo-input-in-header-line)
+      (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+        (overlay-put ov 'window (selected-window))
+        (overlay-put ov 'face
+                     (let ((bg-color (face-background 'default nil)))
+                       `(:background ,bg-color :foreground ,bg-color)))
+        (setq-local cursor-type nil))))
+  (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+  (setq helm-autoresize-max-height 0
+        helm-autoresize-min-height 40
+        helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t
+        helm-semantic-fuzzy-match t
+        helm-imenu-fuzzy-match t
+        helm-split-window-in-side-p nil
+        helm-move-to-line-cycle-in-source nil
+        helm-ff-search-library-in-sexp t
+        helm-scroll-amount 8 
+        helm-echo-input-in-header-line t)
+  :init
+  (helm-mode 1))
 
-  (require 'helm-config)    
-  (helm-autoresize-mode 1)
-  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+(require 'helm-config)    
+(helm-autoresize-mode 1)
+(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+(define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 #+END_SRC
 
 ** avy
@@ -617,8 +618,10 @@ After split a window, let the focus in the new split window.
 
 ** Quick move
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<M-left>") 'backward-word)
-  (global-set-key (kbd "<M-right>") 'forward-word)
+(global-set-key (kbd "<M-left>") 'backward-word)
+(global-set-key (kbd "<M-right>") 'forward-word)
+(global-set-key (kbd "<M-up>") 'backward-paragraph)
+(global-set-key (kbd "<M-down>") 'forward-paragraph)
 #+END_SRC
 
 orgmode key map
@@ -1143,33 +1146,34 @@ The exec-path is used for emacs itself to find programs.
 
 **** Quick open .h/.cpp file
 #+BEGIN_SRC emacs-lisp
-  (defun eye/find-corresponding-file ()
-      "Find the file that corresponds to this one."
-      (setq CorrespondingFileName nil)
-      (setq BaseFileName (file-name-sans-extension buffer-file-name))
-      (if (string-match "\\.c" buffer-file-name)
-         (setq CorrespondingFileName (concat BaseFileName ".h")))
-      (if (string-match "\\.h" buffer-file-name)
-         (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
-             (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
-      (if (string-match "\\.hin" buffer-file-name)
-         (setq CorrespondingFileName (concat BaseFileName ".cin")))
-      (if (string-match "\\.cin" buffer-file-name)
-         (setq CorrespondingFileName (concat BaseFileName ".hin")))
-      (if (string-match "\\.cpp" buffer-file-name)
-         (setq CorrespondingFileName (concat BaseFileName ".h")))
-          (if (string-match "\\.c" buffer-file-name)
-         (setq CorrespondingFileName (concat BaseFileName ".h")))
-      (if CorrespondingFileName (find-file CorrespondingFileName)
-        (error "Unable to find a corresponding file")))
+(defun eye/find-corresponding-file ()
+    "Find the file that corresponds to this one."
+    (interactive)
+    (setq CorrespondingFileName nil)
+    (setq BaseFileName (file-name-sans-extension buffer-file-name))
+    (if (string-match "\\.c" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".h")))
+    (if (string-match "\\.h" buffer-file-name)
+       (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
+           (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
+    (if (string-match "\\.hin" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".cin")))
+    (if (string-match "\\.cin" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".hin")))
+    (if (string-match "\\.cpp" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".h")))
+        (if (string-match "\\.c" buffer-file-name)
+       (setq CorrespondingFileName (concat BaseFileName ".h")))
+    (if CorrespondingFileName (find-file CorrespondingFileName)
+      (error "Unable to find a corresponding file")))
 
-  (add-hook 'c++-mode-common-hook
-            '(lambda ()
-               (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
+(add-hook 'c++-mode-common-hook
+          '(lambda ()
+             (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
 
-  (add-hook 'c-mode-common-hook
-            '(lambda ()
-               (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
+(add-hook 'c-mode-common-hook
+          '(lambda ()
+             (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
 #+END_SRC
 
 **** qt-pro-mode
@@ -1610,8 +1614,10 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
             "* %i%?" :empty-lines 1)
           org-capture-templates)
     (setq org-brain-visualize-default-choices 'all)
-    (setq org-brain-title-max-length 12))
-  )
+    (setq org-brain-title-max-length 64)
+    ;; If org-brain is slow, set this!, if this value is t, the title can not contain slashes(/)
+    (setq org-brain-file-entries-use-title t)
+    ))
 #+END_SRC
 
 ** org agenda
@@ -1628,6 +1634,13 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
               ("DONE" :foreground "forest green" :weight bold)
               ("ABORT" :foreground "forest green" :weight bold))))
 
+#+END_SRC
+
+** org babel execute
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((lua . t)))
 #+END_SRC
 
 * Blog
@@ -1767,7 +1780,30 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 
 * Dictionary
 #+BEGIN_SRC emacs-lisp
-  (use-package youdao-dictionary :ensure t)
+(use-package youdao-dictionary
+  :ensure t
+  :bind
+  ("<f8>" . 'youdao-dictionary-search)
+  ("M-<f8>" . 'youdao-dictionary-search-from-input))
+#+END_SRC
+
+* hydra
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t
+  :config
+  (defhydra hydra-function (:color red)
+    ("c" org-capture "capture")
+    ("d" youdao-dictionary-search "dict")
+    ("e" youdao-dictionary-search-from-input "dict input")
+    ("m" mpg123 "music")
+    ("g" magit-status "magit")
+    ("=" text-scale-increase "scale add")
+    ("-" text-scale-decrease "scale sub")
+    ("q" nil "cancel"))
+
+  (global-set-key (kbd "<f12>") 'hydra-function/body)
+  )
 #+END_SRC
 
 * Diminishing modes
