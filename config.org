@@ -489,19 +489,26 @@ Show current line and column on modeline.
 
 ** switch-window
 #+BEGIN_SRC emacs-lisp
-  (use-package switch-window
-    :ensure t
-    :config
-      (setq switch-window-input-style 'minibuffer)
-      (setq switch-window-increase 4)
-      (setq switch-window-threshold 2)
-      (setq switch-window-shortcut-style 'qwerty)
-      (setq switch-window-qwerty-shortcuts
-          '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
-    :bind
-      ([remap other-window] . switch-window))
+(use-package switch-window
+  :ensure t
+  :config
+  (setq switch-window-input-style 'minibuffer)
+  (setq switch-window-increase 4)
+  (setq switch-window-threshold 2)
+  (setq switch-window-shortcut-style 'qwerty)
+  (setq switch-window-qwerty-shortcuts
+        '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+  :bind
+  ([remap other-window] . switch-window)
+  ("M-<f3>" . switch-window))
 #+END_SRC
 
+** Delete window
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f3>") 'delete-other-windows)
+(global-set-key (kbd "C-<f3>") 'delete-window)
+#+END_SRC
+ 
 ** Following window splits
 After split a window, let the focus in the new split window.
 #+BEGIN_SRC emacs-lisp
@@ -520,28 +527,25 @@ After split a window, let the focus in the new split window.
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
 
-** Delete other window
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f1>") 'delete-other-windows)
-#+END_SRC
- 
 ** swiper to search
 #+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :bind
-    ("C-s"   . 'swiper)
-    ("C-S-s" . 'swiper-all))
+(use-package swiper
+  :ensure t
+  :bind
+  ("C-f"   . 'swiper)
+  ("M-f" . 'eye/grep)
+  ("C-S-f" . 'swiper-all))
 #+END_SRC
 
 ** Buffer
 *** Always kill current buffer
 #+BEGIN_SRC emacs-lisp
-  (defun kill-current-buffer ()
-    "Kills the current buffer."
-    (interactive)
-    (kill-buffer (current-buffer)))
-  (global-set-key (kbd "C-x k") 'kill-current-buffer)
+(defun kill-current-buffer ()
+  "Kills the current buffer."
+  (interactive)
+  (kill-buffer (current-buffer)))
+(global-set-key (kbd "C-x k") 'kill-current-buffer)
+(global-set-key (kbd "C-<f1>") 'kill-current-buffer)
 #+END_SRC
 *** Kill buffers without asking
 #+BEGIN_SRC emacs-lisp
@@ -567,10 +571,14 @@ After split a window, let the focus in the new split window.
   :ensure t
   :bind
   ("C-x C-f" . 'helm-find-files)
-  ("C-x b" . 'helm-buffers-list)
+  ("C-o" . 'helm-find-files)
   ("C-x C-b" . 'ibuffer)
+  ("<f1>" . 'helm-buffers-list)
+  ("M-<f1>" . 'ibuffer)
   ("M-x" . 'helm-M-x)
-  ("<escape>" . helm-M-x)
+  ;;  ("<escape>" . helm-M-x)
+  :init
+  (helm-mode 1)
   :config
   (defun daedreth/helm-hide-minibuffer ()
     (when (with-helm-buffer helm-echo-input-in-header-line)
@@ -592,9 +600,7 @@ After split a window, let the focus in the new split window.
         helm-move-to-line-cycle-in-source nil
         helm-ff-search-library-in-sexp t
         helm-scroll-amount 8 
-        helm-echo-input-in-header-line t)
-  :init
-  (helm-mode 1))
+        helm-echo-input-in-header-line t))
 
 (require 'helm-config)    
 (helm-autoresize-mode 1)
@@ -607,8 +613,9 @@ After split a window, let the focus in the new split window.
   (use-package avy
     :ensure t
     :bind
-    ("M-s" . avy-goto-char))
+    ("M-g" . avy-goto-char))
 #+END_SRC
+
 ** Bookmark
 #+BEGIN_SRC emacs-lisp
   (add-hook 'kill-emacs-hook
@@ -618,8 +625,8 @@ After split a window, let the focus in the new split window.
 
 *** Keybinding
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "<f2> a") 'bookmark-set)
-  (global-set-key (kbd "<f2> l") 'list-bookmarks)
+  (global-set-key (kbd "<f9>") 'list-bookmarks)
+  (global-set-key (kbd "M-<f9>") 'bookmark-set)
 #+END_SRC
 
 ** Quick move
@@ -660,6 +667,11 @@ orgmode key map
 #+END_SRC
 
 * Text manipulation
+** cua-mode
+#+BEGIN_SRC emacs-lisp
+(cua-mode t)
+#+END_SRC
+
 ** multiple-cursors
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
@@ -931,7 +943,11 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
   (global-set-key (kbd "M-;") 'xah-comment-dwim)
 #+END_SRC
 
-** Virtual directory
+** dired
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-o") 'dired)
+#+END_SRC
+*** Virtual directory
 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
 #+BEGIN_SRC emacs-lisp
 (require 'dired-x)
@@ -955,14 +971,12 @@ use command: ls -lR > virtual.dired
     (setq path (concat dir "virtual.dired"))
     (setq cmd (concat "ls -lR " dir " > " path))
     (message cmd)
-    (if (or (y-or-n-p "Create or update?") (not (file-exists-p path)))
-        (eshell-command cmd))
+    (when (or (y-or-n-p "Create or update?") (not (file-exists-p path)))
+      (setq cmd (read-string "Command:" cmd))
+      (eshell-command cmd))
     (if (file-exists-p path)
         (find-file path)
       (message "Can not create virtual.dired file."))))
-
-(equal "/" (s-right 1 "hello"))
-
 #+END_SRC
 
 ** Auto revert
@@ -971,6 +985,12 @@ use command: ls -lR > virtual.dired
   (add-hook 'prog-mode-hook
             '(lambda ()
                (auto-revert-mode 1)))
+#+END_SRC
+
+** Save buffer
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-s") 'save-buffer)
+(define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
 #+END_SRC
 
 * Programming
@@ -1500,6 +1520,8 @@ smart compile
 (setq require-final-newline t)
 ;; calendar start at monday
 (setq calendar-week-start-day 1)
+
+(setq org-support-shift-select 1)
 #+END_SRC
 
 ** Exported to HTML
@@ -1846,3 +1868,21 @@ Disable auto added stuff, see https://www.reddit.com/r/emacs/comments/4q4ixw/how
   (load custom-file 'noerror)
 #+END_SRC
 
+* Custom key bindings
+| key    | describle             |
+|--------+-----------------------|
+| C-f    | swiper                |
+| M-f    | grep                  |
+| C-s    | save                  |
+| C-o    | open file             |
+| M-o    | dired                 |
+| C-q    | expand region         |
+| M-y    | popup kill ring       |
+| M-g    | go to char            |
+| <f1>   | switch to buffer      |
+| M-<f1> | ibuffer               |
+| C-<f1> | kill current buffer   |
+| <f3>   | delete other window   |
+| C-<f3> | delete current window |
+| M-<f3> | switch window         |
+| <f12>  | hydra function        |
