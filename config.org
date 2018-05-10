@@ -414,15 +414,21 @@ File name is !drive_f!dirname!dirname!filename~
 * Modeline
 ** Spaceline!
 #+BEGIN_SRC emacs-lisp
-  (use-package spaceline
-    :ensure t
-    :config
-    (require 'spaceline-config)
-      (setq spaceline-buffer-encoding-abbrev-p t)
-      (setq spaceline-line-column-p t)
-      (setq spaceline-line-p nil)
-      (setq powerline-default-separator (quote arrow))
-      (spaceline-spacemacs-theme))
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  ;; 默认的 buffer-encoding-abbrev 会把 utf-8-dos 直接显示成 dos，这里重新定义，用于显示完整的编码
+  (spaceline-define-segment buffer-encoding-abbrev
+    "The full `buffer-file-coding-system'."
+    (format "%s" buffer-file-coding-system))
+  
+  (setq spaceline-buffer-encoding-p t)
+  (setq spaceline-buffer-encoding-abbrev-p t)
+  (setq spaceline-line-column-p t)
+  (setq spaceline-line-p nil)
+  (setq powerline-default-separator (quote arrow))
+  (spaceline-spacemacs-theme))
 #+END_SRC
 
 ** No separator
