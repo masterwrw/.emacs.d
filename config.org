@@ -1037,7 +1037,7 @@ Set defer is for quickly startup.
 (use-package company
   :ensure t
   :config
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.5)
   (setq company-minimum-prefix-length 3)
   (setq company-show-numbers t)
   ;; make previous/next selection in the popup cycles
@@ -1049,7 +1049,7 @@ Set defer is for quickly startup.
   (add-to-list 'company-backends 'company-dabbrev)
   (add-to-list 'company-backends 'company-dabbrev-code)
   (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-minimum-length 2)
+  (setq company-dabbrev-minimum-length 3)
   (setq company-dabbrev-other-buffers 'all)
   (setq company-dabbrev-downcase nil)
 
@@ -1882,7 +1882,7 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 (use-package hydra
   :ensure t
   :config
-  (defhydra hydra-function (:color red)
+  (defhydra hydra-function (:color red :exit t)
     ("c" org-capture "capture")
     ("d" youdao-dictionary-search "dict")
     ("e" youdao-dictionary-search-from-input "dict input")
