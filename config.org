@@ -318,7 +318,9 @@ https://github.com/tumashu/cnfonts
 ** Backup directory
 File name is !drive_f!dirname!dirname!filename~
 #+BEGIN_SRC emacs-lisp
-  (setq backup-directory-alist (quote (("." . "d:/cache/backups"))))
+(if (eq system-type 'windows-nt)
+    (setq backup-directory-alist (quote (("." . "d:/cache/backups"))))
+  (setq backup-directory-alist (quote (("." . "~/cache/backups")))))
 #+END_SRC
 
 ** Change yes-or-no questions into y-or-n questions
@@ -1054,9 +1056,12 @@ Set defer is for quickly startup.
   (use-package company-statistics
     :ensure t
     :init
-    (if (not (file-exists-p "d:/cache"))
-        (make-directory "d:/cache"))
-    (setq company-statistics-file "d:/cache/company-statistics-cache.el")
+    (let ((dir "~/cache"))
+      (if (eq system-type 'windows-nt)
+          (setq dir "d:/cache"))
+      (if (not (file-exists-p dir))
+          (make-directory dir))
+      (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
     (company-statistics-mode)))
 
 (with-eval-after-load 'company
