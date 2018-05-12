@@ -785,6 +785,13 @@ Default downcase-word must move cursor to the word beginning.
     :ensure t)
 #+END_SRC
 
+** Mark whole buffer
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-a") 'mark-whole-buffer)
+;; Change default C-a function to C-b
+(global-set-key (kbd "C-b") 'move-beginning-of-line)
+#+END_SRC
+
 * Grep
 #+BEGIN_SRC emacs-lisp
   (defun eye/grep ()
