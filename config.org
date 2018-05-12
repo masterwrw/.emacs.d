@@ -545,7 +545,7 @@ After split a window, let the focus in the new split window.
   (interactive)
   (kill-buffer (current-buffer)))
 (global-set-key (kbd "C-x k") 'kill-current-buffer)
-(global-set-key (kbd "C-<f1>") 'kill-current-buffer)
+(global-set-key (kbd "C-<f2>") 'kill-current-buffer)
 #+END_SRC
 *** Kill buffers without asking
 #+BEGIN_SRC emacs-lisp
@@ -573,8 +573,8 @@ After split a window, let the focus in the new split window.
   ("C-x C-f" . 'helm-find-files)
   ("M-o" . 'helm-find-files)
   ("C-x C-b" . 'ibuffer)
-  ("<f1>" . 'helm-buffers-list)
-  ("M-<f1>" . 'ibuffer)
+  ("<f2>" . 'helm-buffers-list)
+  ("M-<f2>" . 'ibuffer)
   ("M-x" . 'helm-M-x)
   ;;  ("<escape>" . helm-M-x)
   :init
@@ -995,6 +995,13 @@ use command: ls -lR > virtual.dired
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'save-buffer)
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
+#+END_SRC
+
+** Quick help
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f1>") 'describe-variable)
+(global-set-key (kbd "C-<f1>") 'describe-function)
+(global-set-key (kbd "M-<f1>") 'describe-key)
 #+END_SRC
 
 * Programming
@@ -1915,9 +1922,9 @@ Disable auto added stuff, see https://www.reddit.com/r/emacs/comments/4q4ixw/how
 | C-q    | expand region         |
 | M-y    | popup kill ring       |
 | M-g    | go to char            |
-| <f1>   | switch to buffer      |
-| M-<f1> | ibuffer               |
-| C-<f1> | kill current buffer   |
+| <f2>   | switch to buffer      |
+| M-<f2> | ibuffer               |
+| C-<f2> | kill current buffer   |
 | <f3>   | delete other window   |
 | C-<f3> | delete current window |
 | M-<f3> | switch window         |
