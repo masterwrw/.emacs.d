@@ -571,7 +571,7 @@ After split a window, let the focus in the new split window.
   :ensure t
   :bind
   ("C-x C-f" . 'helm-find-files)
-  ("C-o" . 'helm-find-files)
+  ("M-o" . 'helm-find-files)
   ("C-x C-b" . 'ibuffer)
   ("<f1>" . 'helm-buffers-list)
   ("M-<f1>" . 'ibuffer)
@@ -670,6 +670,8 @@ orgmode key map
 ** cua-mode
 #+BEGIN_SRC emacs-lisp
 (cua-mode t)
+(global-set-key (kbd "C-<down>") 'scroll-up-command)
+(global-set-key (kbd "C-<up>") 'scroll-down-command)
 #+END_SRC
 
 ** multiple-cursors
@@ -945,7 +947,7 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
 
 ** dired
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-o") 'dired)
+(global-set-key (kbd "C-o") 'dired)
 #+END_SRC
 *** Virtual directory
 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
@@ -1486,9 +1488,7 @@ smart compile
     :ensure t
     :config
     (setq magit-push-always-verify nil)
-    (setq git-commit-summary-max-length 50)
-    :bind
-    ("M-g" . magit-status))
+    (setq git-commit-summary-max-length 50))
 #+END_SRC
 
 ** fullframe
@@ -1681,45 +1681,50 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 * Blog
 ** deft
 #+BEGIN_SRC emacs-lisp
-  (use-package deft
-    :ensure t
-    :bind ("<f8>" . deft)
-    :config
-    (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
-    (setq deft-extensions '("org"))
-    (setq deft-recursive t)
-    (setq deft-text-mode 'org-mode)
-    (setq deft-incremental-search nil)
-    (setq deft-use-filename-as-title t)
-    (setq deft-strip-summary-regexp (concat "\\("
-                                            "^#\\+OPTIONS:.*"
-                                            "\\|^#\\+BEGIN.*"
-                                            "\\|^\.+ title: "
-                                            "\\|^\.+ slug.*"
-                                            "\\|^\.+ date.*"
-                                            "\\|^\.+ tags.*"
-                                            "\\|^\.+ category.*"
-                                            "\\|^\.+ link.*"
-                                            "\\|^\.+ desc.*"
-                                            "\\|^\.+ type.*"
-                                            "\\|^#\\+END.*"
-                                            "\\)"))
-    )
+(use-package deft
+  :ensure t
+  :bind ("<f8>" . deft)
+  :config
+  (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
+  (setq deft-extensions '("org"))
+  (setq deft-recursive t)
+  (setq deft-text-mode 'org-mode)
+  (setq deft-incremental-search nil)
+  (setq deft-use-filename-as-title t)
+  (setq deft-strip-summary-regexp (concat "\\("
+                                          "^#\\+OPTIONS:.*"
+                                          "\\|^#\\+BEGIN.*"
+                                          "\\|^\.+ title: "
+                                          "\\|^\.+ slug.*"
+                                          "\\|^\.+ date.*"
+                                          "\\|^\.+ tags.*"
+                                          "\\|^\.+ category.*"
+                                          "\\|^\.+ link.*"
+                                          "\\|^\.+ desc.*"
+                                          "\\|^\.+ type.*"
+                                          "\\|^#\\+END.*"
+                                          "\\)"))
+  )
 
-  (defun eye/deft-dir ()
-    (interactive)
-    (setq deft-directory (read-directory-name "Deft dir: " deft-directory))
-    (deft))
+(defun eye/deft-dir ()
+  (interactive)
+  (require 'deft)
+  (setq deft-directory (read-directory-name "Deft dir: " deft-directory))
+  (deft))
 
-  (defun eye/deft-posts ()
-    (interactive)
-    (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
-    (deft))
+(defun eye/deft-posts ()
+  (interactive)
+  (require 'deft)
+  (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
+  (deft)
+  (rename-buffer "*deft-post*"))
 
-  (defun eye/deft-notes ()
-    (interactive)
-    (setq deft-directory "~/notebook/notes")
-    (deft))
+(defun eye/deft-notes ()
+  (interactive)
+  (require 'deft)
+  (setq deft-directory "~/notebook/notes")
+  (deft)
+  (rename-buffer "*deft-notes*"))
 #+END_SRC 
 
 ** prodgy service manager
@@ -1874,8 +1879,8 @@ Disable auto added stuff, see https://www.reddit.com/r/emacs/comments/4q4ixw/how
 | C-f    | swiper                |
 | M-f    | grep                  |
 | C-s    | save                  |
-| C-o    | open file             |
-| M-o    | dired                 |
+| M-o    | open file             |
+| C-o    | dired                 |
 | C-q    | expand region         |
 | M-y    | popup kill ring       |
 | M-g    | go to char            |
