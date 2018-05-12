@@ -855,20 +855,22 @@ Show color of #hex format string.
 ** Indent region or buffer
 If selected a region, indent region, otherwise indent buffer.
 #+BEGIN_SRC emacs-lisp
-  (defun eye/indent-region-or-buffer ()
-    (interactive)
-    (save-excursion
-      (if (region-active-p)
-          (progn
-            (indent-region (region-beginning) (region-end))
-            (message "Indent selected region."))
+(defun eye/indent-region-or-buffer ()
+  (interactive)
+  (save-excursion
+    (if (region-active-p)
         (progn
-          (indent-region (point-min) (point-max))
-          (message "Indent buffer.")))
-      )
+          (indent-region (region-beginning) (region-end))
+          (message "Indent selected region."))
+      (progn
+        (indent-region (point-min) (point-max))
+        (message "Indent buffer.")))
     )
+  )
 
-  (global-set-key (kbd "C-M-\\") 'eye/indent-region-or-buffer)
+(global-set-key (kbd "C-M-\\") 'eye/indent-region-or-buffer)
+(define-key org-src-mode-map (kbd "C-<tab>") 'eye/indent-region-or-buffer)
+(define-key prog-mode-map (kbd "C-<tab>") 'eye/indent-region-or-buffer)
 #+END_SRC
 
 ** Hungry deletion
@@ -1016,26 +1018,39 @@ Set defer is for quickly startup.
 
 ** company mode
 #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 3)
-    (setq company-show-numbers t)
-    (use-package company-statistics
-      :ensure t
-      :init
-      (if (not (file-exists-p "d:/cache"))
-          (make-directory "d:/cache"))
-      (setq company-statistics-file "d:/cache/company-statistics-cache.el")
-      (company-statistics-mode)))
+(use-package company
+  :ensure t
+  :config
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 3)
+  (setq company-show-numbers t)
+  ;; make previous/next selection in the popup cycles
+  (setq company-selection-wrap-around t)
+  (setq company-backends nil)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'company-etags)
+  ;; company-dabbrev config, it is for current buffer string auto complete
+  (add-to-list 'company-backends 'company-dabbrev)
+  (add-to-list 'company-backends 'company-dabbrev-code)
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-minimum-length 2)
+  (setq company-dabbrev-other-buffers 'all)
+  (setq company-dabbrev-downcase nil)
 
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "M-n") nil)
-    (define-key company-active-map (kbd "M-p") nil)
-    (define-key company-active-map (kbd "C-n") #'company-select-next)
-    (define-key company-active-map (kbd "C-p") #'company-select-previous)
-    (define-key company-active-map (kbd "SPC") #'company-abort))
+  (use-package company-statistics
+    :ensure t
+    :init
+    (if (not (file-exists-p "d:/cache"))
+        (make-directory "d:/cache"))
+    (setq company-statistics-file "d:/cache/company-statistics-cache.el")
+    (company-statistics-mode)))
+
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous)
+  (define-key company-active-map (kbd "SPC") #'company-abort))
 #+END_SRC
 
 ** ctags
@@ -1114,19 +1129,26 @@ Requires libclang to be installed.
 
 **** irony
 #+BEGIN_SRC emacs-lisp
-  (use-package company-irony
-      :ensure t
-      :config
-      (setq company-backends '((company-c-headers
-                                company-dabbrev-code
-                                company-irony))))
+(use-package company-irony
+  :ensure t
+  :config
+  (defun eye/add-irony-company-backends ()
+    "If company-irony not exists in company-backends list, then add it to list."
+    (unless (memq 'company-irony company-backends)
+      (add-to-list 'company-backends 'company-irony))
+    (unless (memq 'company-c-headers company-backends)
+      (add-to-list 'company-backends 'company-c-headers)))
+  
+  (add-hook 'c-mode-hook 'eye/add-irony-company-backends)
+  (add-hook 'c++-mode-hook 'eye/add-irony-company-backends))
 
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package irony
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 ***** irony on windows
@@ -1222,16 +1244,20 @@ The exec-path is used for emacs itself to find programs.
 
 **** qml
 #+BEGIN_SRC emacs-lisp
-  (use-package qml-mode
+(use-package qml-mode
+  :ensure t
+  :init
+  (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
+  (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
+  :config
+  (use-package company-qml
     :ensure t
     :init
-    (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
-    (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
-    :config
-    (use-package company-qml
-      :ensure t
-      :init
-      (add-to-list 'company-backends 'company-qml)))
+    (defun eye/add-qml-company-backends ()
+      "If company-qml not exists in company-backends list, then add it to list."
+      (unless (memq 'company-qml company-backends)
+        (add-to-list 'company-backends 'company-qml)))
+    (add-hook 'qml-mode-hook 'eye/add-qml-company-backends)))
 #+END_SRC
 
 **** Change .h file to c++ mode
@@ -1435,7 +1461,12 @@ smart compile
 
 **** company
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+(add-hook 'emacs-lisp-mode-hook 'company-mode)
+(defun eye/add-elisp-company-backends ()
+  "If company-elisp not exists in company-backends list, then add it to list."
+  (unless (memq 'company-elisp company-backends)
+    (add-to-list 'company-backends 'company-elisp)))
+(add-hook 'emacs-lisp-mode-hook 'eye/add-elisp-company-backends)
 #+END_SRC
 
 **** paredit
