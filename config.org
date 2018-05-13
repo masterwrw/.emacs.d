@@ -1777,15 +1777,13 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
   (interactive)
   (require 'deft)
   (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
-  (deft)
-  (rename-buffer "*deft-post*"))
+  (deft))
 
 (defun eye/deft-notes ()
   (interactive)
   (require 'deft)
   (setq deft-directory "~/notebook/notes")
-  (deft)
-  (rename-buffer "*deft-notes*"))
+  (deft))
 #+END_SRC 
 
 ** prodgy service manager
