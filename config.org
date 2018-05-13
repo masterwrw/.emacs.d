@@ -965,6 +965,12 @@ Mark 2 files in dired, and press "e" into ediff. if only marked one file, then a
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-o") 'dired)
 #+END_SRC
+*** wdired
+#+BEGIN_SRC emacs-lisp
+(use-package wdired
+  :ensure t)
+#+END_SRC
+
 *** Virtual directory
 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
 #+BEGIN_SRC emacs-lisp
