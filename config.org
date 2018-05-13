@@ -57,6 +57,10 @@
 ;;; Bootstrapping use-package
 (unless (package-installed-p 'use-package)
   (require-package 'use-package))
+
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
 #+END_SRC
 
 * Start up profiler
@@ -580,7 +584,7 @@ After split a window, let the focus in the new split window.
   :init
   (helm-mode 1)
   :config
-  (defun daedreth/helm-hide-minibuffer ()
+  (defun eye/helm-hide-minibuffer ()
     (when (with-helm-buffer helm-echo-input-in-header-line)
       (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
         (overlay-put ov 'window (selected-window))
@@ -588,7 +592,7 @@ After split a window, let the focus in the new split window.
                      (let ((bg-color (face-background 'default nil)))
                        `(:background ,bg-color :foreground ,bg-color)))
         (setq-local cursor-type nil))))
-  (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+  (add-hook 'helm-minibuffer-set-up-hook 'eye/helm-hide-minibuffer)
   (setq helm-autoresize-max-height 0
         helm-autoresize-min-height 40
         helm-M-x-fuzzy-match t
@@ -700,19 +704,19 @@ orgmode key map
 
 ** Improved copy-word
 #+BEGIN_SRC emacs-lisp
-  (defun daedreth/copy-whole-word ()
+  (defun eye/copy-whole-word ()
     (interactive)
     (save-excursion
       (forward-char 1)
       (backward-word)
       (kill-word 1)
       (yank)))
-  (global-set-key (kbd "C-c w c") 'daedreth/copy-whole-word)
+  (global-set-key (kbd "C-c w c") 'eye/copy-whole-word)
 #+END_SRC
 
 ** Copy a line
 #+BEGIN_SRC emacs-lisp
-  (defun daedreth/copy-whole-line ()
+  (defun eye/copy-whole-line ()
     "Copies a line without regard for cursor position."
     (interactive)
     (save-excursion
@@ -720,7 +724,7 @@ orgmode key map
        (buffer-substring
         (point-at-bol)
         (point-at-eol)))))
-  (global-set-key (kbd "C-c l c") 'daedreth/copy-whole-line)
+  (global-set-key (kbd "C-c l c") 'eye/copy-whole-line)
 #+END_SRC
 
 ** Kill a line
@@ -781,8 +785,9 @@ Default downcase-word must move cursor to the word beginning.
 
 ** Quick copy other word
 #+BEGIN_SRC emacs-lisp
-  (use-package eno
-    :ensure t)
+(use-package eno
+  :ensure t
+  :chords (("ew" . eno-word-copy)))
 #+END_SRC
 
 ** Mark whole buffer
