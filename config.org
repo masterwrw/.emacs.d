@@ -1115,6 +1115,15 @@ Set defer is for quickly startup.
   ;;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 #+END_SRC
 
+** navigate
+#+BEGIN_SRC emacs-lisp
+(use-package backward-forward
+  :ensure t
+  :config
+  (advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
+  (backward-forward-mode t))
+#+END_SRC
+
 ** cmd
 #+BEGIN_SRC emacs-lisp
   (defun eye/shell-cmd (buffer env)
