@@ -1547,6 +1547,12 @@ smart compile
   (add-hook 'sql-mode-hook 'yas-minor-mode)
 #+END_SRC
 
+*** autoit
+#+BEGIN_SRC emacs-lisp
+(require 'autoit-mode)
+(add-to-list 'auto-mode-alist '("\\.au3$" . autoit-mode))
+#+END_SRC
+
 * Git integration
 ** magit
 #+BEGIN_SRC emacs-lisp
