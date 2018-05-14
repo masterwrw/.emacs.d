@@ -537,8 +537,7 @@ After split a window, let the focus in the new split window.
   :ensure t
   :bind
   ("C-f"   . 'swiper)
-  ("M-f" . 'eye/grep)
-  ("C-S-f" . 'swiper-all))
+  ("M-f" . 'swiper-all))
 #+END_SRC
 
 ** Buffer
@@ -580,6 +579,7 @@ After split a window, let the focus in the new split window.
   ("<f2>" . 'helm-buffers-list)
   ("M-<f2>" . 'ibuffer)
   ("M-x" . 'helm-M-x)
+  ("C-S-f" . 'helm-do-grep-ag)
   ;;  ("<escape>" . helm-M-x)
   :init
   (helm-mode 1)
