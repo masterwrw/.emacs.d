@@ -382,6 +382,17 @@ File name is !drive_f!dirname!dirname!filename~
   (setq default-cursor-type 'bar)
 #+END_SRC
 
+** Text scale
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+    (progn
+      (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+      (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase))
+  (progn
+    (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
+    (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease)))
+#+END_SRC 
+
 * Site lisp
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
