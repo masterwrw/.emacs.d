@@ -1,4 +1,4 @@
-#+STARTUP: overview
+e#+STARTUP: overview
 * Garbage collection
 #+BEGIN_SRC emacs-lisp
   ;;; This fixed garbage collection, makes emacs start up faster ;;;;;;;
@@ -1096,7 +1096,7 @@ Set defer is for quickly startup.
 (with-eval-after-load 'counsel-etags
   ;; counsel-etags-ignore-directories does NOT support wildcast
   (add-to-list 'counsel-etags-ignore-directories ".git")
-  (add-to-list 'counsel-etags-ignore-diredtories ".svn")
+  (add-to-list 'counsel-etags-ignore-directories ".svn")
   ;; counsel-etags-ignore-filenames supports wildcast
   (add-to-list 'counsel-etags-ignore-filenames "TAGS")
   (add-to-list 'counsel-etags-ignore-filenames "*.json")
