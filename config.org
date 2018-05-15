@@ -1471,6 +1471,13 @@ smart compile
     (setq smart-compile-option-string "-w -s -j4"))
 #+END_SRC
 
+**** gdb
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<f5>") 'gud-go)
+(global-set-key (kbd "<f10>") 'gud-next)
+(global-set-key (kbd "<f11>") 'gud-step)
+#+END_SRC
+
 *** python
 **** yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -1702,7 +1709,6 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
   (find-file (concat org-directory "/todo.org"))
   )
 
-(global-set-key (kbd "<f10>") 'org-capture)
 #+END_SRC
 
 ** org crypt
