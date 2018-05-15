@@ -1146,6 +1146,11 @@ Set defer is for quickly startup.
                                          )))
 #+END_SRC
 
+** Code fold
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+#+END_SRC
+
 ** languages
 *** c/c++
 **** yasnippet
