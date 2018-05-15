@@ -241,8 +241,11 @@ Build-in function is M-x init-emacs-time.
 ** Hide fringe
 No fringe, see http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
 #+BEGIN_SRC emacs-lisp
+;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.    
+(when (eq system-type 'windows-nt)
   (set-window-fringes nil 0 0) ;; border side
   (fringe-mode '(0 . 0)) ;; middle of split frame
+  )
 #+END_SRC
 
 ** Disable bell
