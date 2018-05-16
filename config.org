@@ -1034,6 +1034,8 @@ use command: ls -lR > virtual.dired
 ** Buffer tab
 #+BEGIN_SRC emacs-lisp
 (require 'nerdtab)
+(add-to-list 'nerdtab-regex-blacklist "org-src-fontification")
+(add-to-list 'nerdtab-regex-blacklist "TAGS")
 (global-set-key (kbd "M-0") 'nerdtab-jump-0)
 (global-set-key (kbd "M-1") 'nerdtab-jump-1)
 (global-set-key (kbd "M-2") 'nerdtab-jump-2)

@@ -17,9 +17,9 @@
 
 ;; Author: Yuan Fu <casouri@gmail.com>
 ;; URL: https://github.com/casouri/nerdtab
-;; Version: 1.2
+;; Version: 1.2.2
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "25"))
+;; Package-Requires: ((emacs "24.5"))
 
 
 ;;; Commentary:
@@ -32,18 +32,8 @@
   
 ;; `nerdtab-mode' is a global minor mode.
 ;; Turn it on and it will open a side window and display buffers as tabs for you.
-  
-;; Update: OK so I actually can't bear the lag so I changed the behavior to activly update tab list.
-;;
-;; You may notice a slight delay between change in buffer list
-;; and update in nerdtab window.
-;; That is because I use a timer to invoke tab list updates
-;; because 1) you probably don't need the buffer to show up in list
-;; immediatly 2) it protects Emacs from crashing when it opens 10000 buffers at once.
 
-;; If there are people that actually use this package
-;; and someone actually cares about that lag,
-;; I can add a mode or an option.
+;; Checkout homepage for more information on usage and customizations.
   
 ;; Note that `nerdtab--' means private, `nerdtab-' means public / customizable (for variables)
 
@@ -98,28 +88,34 @@ Nerdtab does not list buffers that match any regex in this blacklist."
   :group 'nerdtab
   :type 'sexp)
 
-(defcustom nerdtab--update-interval 2
+(defcustom nerdtab-update-interval 2
   "Nerdtab checkes if it needs to update tab list in every this seconds."
   :group 'nerdtab
   :type 'number)
 
+(defcustom nerdtab-buffer-list-func #'buffer-list
+  "The function that provides a list of buffers to nerdtab.
+Change it to =projectile-project-buffers=
+to intergrate with projectile (not tested)"
+  :group 'nerdtab
+  :type 'function)
 
 ;;
 ;; Variables
 ;;
 
 (defface nerdtab-tab-face
-  '((t (:inherit default :underline nil)))
+  '((t (:inherit 'default :underline nil)))
   "Face of tabs in nerdtab buffer."
   :group 'nerdtab)
 
 (defface nerdtab-current-tab-face
-  '((t (:inherit highlight :underline nil)))
+  '((t (:inherit 'highlight :underline nil)))
   "Face of current tab in nerdtab buffer."
   :group 'nerdtab)
 
 (defface nerdtab-tab-mouse-face
-  '((t (:inherit highlight :underline nil)))
+  '((t (:inherit 'highlight :underline nil)))
   "Face of tabs under mouse in nerdtab buffer."
   :group 'nerdtab)
 
@@ -151,7 +147,7 @@ So user can expect the index of a tab to not change very often.
 
 (defvar nerdtab--do-update nil
   "If non-nil, nerdtab will update tab list in next cycle.
-Time interval between to cycle is defined by `nerdtab--update-interval'.")
+Time interval between to cycle is defined by `nerdtab-update-interval'.")
 
 (defvar nerdtab--timer nil
   "The object that is used to disable timer.")
@@ -160,7 +156,7 @@ Time interval between to cycle is defined by `nerdtab--update-interval'.")
   "The function to open buffer.
 Used in tab button and `nerdtab-jump-xx' functions.
 
-The function should take a singgle buffer as argument.")
+The function should take a single buffer as argument.")
 
 (defvar nerdtab--last-buffer nil
   "Last buffer. Used to compare against current buffer to see if buffer changed.")
@@ -181,7 +177,7 @@ The function should take a singgle buffer as argument.")
         (nerdtab--show-ui)
         (nerdtab-full-refresh)
         (add-hook 'buffer-list-update-hook #'nerdtab--update-next-cycle)
-        (setq nerdtab--timer (run-with-timer 1 nerdtab--update-interval #'nerdtab--timer-update)))
+        (setq nerdtab--timer (run-with-timer 1 nerdtab-update-interval #'nerdtab--timer-update)))
     (cancel-timer nerdtab--timer)
     (remove-hook 'buffer-list-update-hook #'nerdtab--update-next-cycle)
     (kill-buffer nerdtab--buffer)
@@ -201,7 +197,8 @@ The function should take a singgle buffer as argument.")
     (remove-hook 'post-command-hook #'nerdtab--active-update)
     (kill-buffer nerdtab--buffer)
     (setq nerdtab--buffer nil)
-    (delete-window nerdtab--window)
+    (when (window-live-p nerdtab--window)
+      (delete-window nerdtab--window))
     (setq nerdtab--window nil)))
 
 ;;
@@ -279,7 +276,7 @@ This function makes sure both buffer and window are present."
       (nerdtab-major-mode)
       (setq mode-line-format nerdtab-mode-line-format)
       (nerdtab--h-this-v-that|
-       ((setq-local line-spacing 5))
+       ((setq-local line-spacing 3))
        ((setq-local line-spacing 3)))
       (when (featurep 'linum) (linum-mode -1))
       (when (featurep 'nlinum) (nlinum-mode -1))
@@ -298,34 +295,45 @@ The button lookes like: 1 *Help*.
                       'nerdtab-current-tab-face
                     'nerdtab-tab-face)))
     (insert-text-button (format "%d %s" index tab-name)
-                   'action
-                   `(lambda (_)
-                     (funcall nerdtab-open-func ,buffer))
-                   'help-echo
-                   (buffer-name buffer)
-                   'follow-link
-                   t
-                   'face
-                   tab-face
-                   'mouse-face
-                   'nerdtab-tab-mouse-face)))
+                        ;; 'action
+                        ;; `(lambda (_)
+                        ;;   (funcall nerdtab-open-func ,buffer))
+                        'keymap
+                        (let ((keymap (make-sparse-keymap)))
+                          (define-key keymap [mouse-2]
+                            `(lambda ()
+                               (interactive)
+                               (funcall nerdtab-open-func ,buffer)))
+                          (define-key keymap [mouse-3]
+                            `(lambda ()
+                               (interactive)
+                               (kill-buffer ,buffer)
+                               (nerdtab-update)))
+                          keymap)
+                        'help-echo
+                        (buffer-name buffer)
+                        'follow-link
+                        t
+                        'face
+                        tab-face
+                        'mouse-face
+                        'nerdtab-tab-mouse-face)))
 
 (defun nerdtab--redraw-all-tab ()
   "Redraw every tab in `nerdtab-buffer'."
   (interactive)
-  (let ((original-window (selected-window))
-        (current-buffer (current-buffer)))
-    (select-window nerdtab--window)
-    (setq buffer-read-only nil)
-    (erase-buffer)
-    (let ((index 0))
-      (dolist (tab nerdtab--tab-list)
-        (nerdtab--draw-tab tab index current-buffer)
-        (setq index (1+ index))
-        (insert (nerdtab--h-this-v-that| ("  ") ("\n"))))
-      (goto-char 0))
-    (setq buffer-read-only t)
-    (select-window original-window)))
+  (let ((current-buffer (current-buffer)))
+    (with-current-buffer nerdtab--buffer
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (let ((index 0))
+        (dolist (tab nerdtab--tab-list)
+          (nerdtab--draw-tab tab index current-buffer)
+          (setq index (1+ index))
+          (insert (nerdtab--h-this-v-that| ("  ") ("\n"))))
+        (goto-char 0))
+      (setq buffer-read-only t)
+      )))
 
 (defun nerdtab--make-tab-list ()
   "Make a tab list from `nerdtab--tab-list'."
@@ -335,7 +343,7 @@ The button lookes like: 1 *Help*.
                   (nerdtab-max-tab-vertical)))
         (count 0))
     (catch 'max-num
-      (dolist (buffer (buffer-list))
+      (dolist (buffer (funcall nerdtab-buffer-list-func))
         (when (nerdtab--if-valid-buffer buffer)
           (when (>= count max-tab-num)
             (throw 'max-num count))
@@ -359,7 +367,7 @@ The button lookes like: 1 *Help*.
 
 (defun nerdtab-full-refresh ()
   "Refresh nerdtab buffer.
-This function syncs tab list and (buffer-list),
+This function syncs tab list and list returned by `nerdtab-buffer-list-func',
 which most likely will change the order of your tabs.
 So don't use it too often."
   (interactive)
@@ -371,9 +379,8 @@ So don't use it too often."
   "Update nerdtab tab list.
 Similar to `nerdtab-full-refresh' but do not change the order of tabs."
   (nerdtab--show-ui)
-  (when (nerdtab--if-valid-buffer (current-buffer))
-    (nerdtab--update-tab-list)
-    (nerdtab--redraw-all-tab))
+  (nerdtab--update-tab-list)
+  (nerdtab--redraw-all-tab)
   (nerdtab--update-next-cycle -1))
 
 ;;
@@ -418,6 +425,22 @@ If DO is non-nil, make it not to."
              (nerdtab-jump ,index)))))
 
 (define-nerdtab-jump-func 50)
+
+(defun nerdtab-kill (index)
+  "Kill the INDEX th buffer."
+  (interactive "nIndex of tab: ")
+  (kill-buffer (nth 1 (nth index nerdtab--tab-list)))
+  (nerdtab-update))
+
+(defun define-nerdtab-kill-func (max)
+  "Make `nerdtab-kill-n' functions from 1 to MAX."
+  (dolist (index (number-sequence 0 max))
+    (fset (intern (format "nerdtab-kill-%d" index))
+          `(lambda () ,(format "Kill the  %sth tab." index)
+             (interactive)
+             (nerdtab-kill ,index)))))
+
+(define-nerdtab-kill-func 50)
 
 (provide 'nerdtab)
 
