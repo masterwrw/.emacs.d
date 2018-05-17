@@ -1,4 +1,4 @@
-e#+STARTUP: overview
+#+STARTUP: overview
 * Garbage collection
 #+BEGIN_SRC emacs-lisp
   ;;; This fixed garbage collection, makes emacs start up faster ;;;;;;;
