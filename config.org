@@ -524,7 +524,7 @@ Show current line and column on modeline.
 ** Delete window
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f3>") 'delete-other-windows)
-(global-set-key (kbd "C-<f3>") 'delete-window)
+(global-set-key (kbd "C-<f3>") 'delete-frame) ;; when pop up new window, use this to close it.
 #+END_SRC
  
 ** Following window splits
