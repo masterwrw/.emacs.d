@@ -1520,6 +1520,24 @@ smart compile
 (global-set-key (kbd "<f11>") 'gud-step)
 #+END_SRC
 
+**** Query help document
+#+BEGIN_SRC emacs-lisp
+(defun eye/cpp-help ()
+  "Find cpp reference document."
+  (interactive)
+  (let ((url "http://zh.cppreference.com/mwiki/index.php?search="))
+    (setq url (concat url (read-string "Query cpp document: ")))
+    (browse-url-default-browser url)))
+
+(defun eye/qt5-help ()
+  "Find Qt5 document."
+  (interactive)
+  (let ((url "http://doc.qt.io/qt-5/search-results.html?q="))
+    (setq url (concat url (read-string "Query Qt5 document: ")))
+    (browse-url-default-browser url)))
+
+#+END_SRC
+
 *** python
 **** yasnippet
 #+BEGIN_SRC emacs-lisp
@@ -1538,6 +1556,16 @@ smart compile
     (interactive)
     (eye/shell-cmd "shell-python3" "C:\\Python\\Python36;C:\\Python\\Python36\\Scripts;")
     )
+#+END_SRC
+
+**** Query help document
+#+BEGIN_SRC emacs-lisp
+(defun eye/python-help ()
+  "Find python online document."
+  (interactive)
+  (let ((url "https://docs.python.org/3.5/search.html?q="))
+    (setq url (concat url (read-string "Query python document: ")))
+    (browse-url-default-browser url)))
 #+END_SRC
 
 *** emacs-lisp
@@ -1974,6 +2002,9 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
     ("b" hs-toggle-hiding "toggle block hs")
     ("c" hs-hide-all "hide all block")
     ("s" hs-show-all "show all block")
+    ("f" eye/cpp-help "cpp doc")
+    ("g" eye/qt5-help "qt5 doc")
+    ("p" eye/python-help "python doc")
     ("q" nil "quit"))
   (global-set-key (kbd "<f6>") 'hydra-programming/body)
   )
