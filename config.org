@@ -684,6 +684,17 @@ orgmode key map
 (global-set-key (kbd "M-p") 'eye/new-previous-line)
 #+END_SRC
 
+** Move to the begging of line ignore tab
+#+BEGIN_SRC emacs-lisp
+(defun eye/move-beginniing-of-line ()
+  "移动到行首时，忽略最前面的空白字符"
+  (interactive)
+  (move-beginning-of-line 1)
+  (forward-word 1)
+  (backward-word 1))
+(global-set-key (kbd "C-a") 'eye/move-beginniing-of-line)
+#+END_SRC
+
 * Text manipulation
 ** cua-mode
 #+BEGIN_SRC emacs-lisp
