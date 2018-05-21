@@ -730,20 +730,22 @@ orgmode key map
 
 ** Copy a line
 #+BEGIN_SRC emacs-lisp
-  (defun eye/copy-whole-line ()
-    "Copies a line without regard for cursor position."
-    (interactive)
-    (save-excursion
-      (kill-new
-       (buffer-substring
-        (point-at-bol)
-        (point-at-eol)))))
-  (global-set-key (kbd "C-c l c") 'eye/copy-whole-line)
+(defun eye/copy-whole-line ()
+  "Copies a line without regard for cursor position."
+  (interactive)
+  (save-excursion
+    (kill-new
+     (buffer-substring
+      (point-at-bol)
+      (point-at-eol)))))
+(global-set-key (kbd "C-c l c") 'eye/copy-whole-line)
+(key-chord-define-global "cl" 'eye/copy-whole-line)
 #+END_SRC
 
 ** Kill a line
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c l k") 'kill-whole-line)
+(global-set-key (kbd "C-c l k") 'kill-whole-line)
+(key-chord-define-global "dd" 'kill-whole-line)
 #+END_SRC
 
 ** Copy a paragraph
@@ -1953,9 +1955,16 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
     ("g" magit-status "magit")
     ("=" text-scale-increase "scale add")
     ("-" text-scale-decrease "scale sub")
-    ("q" nil "cancel"))
-
+    ("q" nil "quit"))
   (global-set-key (kbd "<f12>") 'hydra-function/body)
+
+  (defhydra hydra-programming (:color red :exit t)
+    ("a" helm-imenu "imenu") ;; imenu/helm-imenu/counsel-imenu
+    ("b" hs-toggle-hiding "toggle block hs")
+    ("c" hs-hide-all "hide all block")
+    ("s" hs-show-all "show all block")
+    ("q" nil "quit"))
+  (global-set-key (kbd "<f6>") 'hydra-programming/body)
   )
 #+END_SRC
 
