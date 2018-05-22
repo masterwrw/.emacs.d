@@ -879,9 +879,11 @@ Show color of #hex format string.
 
 ** Expand region
 #+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind ("C-q" . er/expand-region))
+(use-package expand-region
+  :ensure t
+  :bind ("C-q" . er/expand-region)
+  :config
+  (key-chord-define-global "ee" 'er/expand-region))
 #+END_SRC
 
 ** Indent region or buffer
@@ -1992,6 +1994,7 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
     ("e" youdao-dictionary-search-from-input "dict input")
     ("m" mpg123 "music")
     ("g" magit-status "magit")
+    ("p" package-list-packages "packages")
     ("=" text-scale-increase "scale add")
     ("-" text-scale-decrease "scale sub")
     ("q" nil "quit"))
