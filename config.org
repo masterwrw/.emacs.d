@@ -233,9 +233,10 @@ Build-in function is M-x init-emacs-time.
 
 ** Disable menus and scrollbars
 #+BEGIN_SRC emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode 1)
-  (scroll-bar-mode -1)
+(tool-bar-mode -1)
+(if (display-graphic-p)
+    (scroll-bar-mode -1) ;; emacs26 -nw will be error
+  (menu-bar-mode -1))
 #+END_SRC
 
 ** Hide fringe
