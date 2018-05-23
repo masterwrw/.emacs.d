@@ -1282,7 +1282,7 @@ The exec-path is used for emacs itself to find programs.
     (setq default-tab-width 4)
     (setq tab-width 4)
     (setq c-basic-offset 4) ;; tab 缩进量
-    (setq c-default-style "linux") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
+    (setq c-default-style "stroustrup") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
     (setq tab-stop-list ()))
   (add-hook 'c-mode-common-hook 'set-tab-width-hook)
   (add-hook 'c++-mode-common-hook 'set-tab-width-hook)
