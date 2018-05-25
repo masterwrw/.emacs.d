@@ -1844,7 +1844,7 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
   :ensure t
   :bind ("<f8>" . deft)
   :config
-  (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
+  (setq deft-directory "~/projects/python/blog/soeye.github.io/posts")
   (setq deft-extensions '("org"))
   (setq deft-recursive t)
   (setq deft-text-mode 'org-mode)
@@ -1874,7 +1874,7 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (defun eye/deft-posts ()
   (interactive)
   (require 'deft)
-  (setq deft-directory "d:/projects/python/nikola/eye.github.io/posts")
+  (setq deft-directory "~/projects/python/blog/soeye.github.io/posts")
   (deft))
 
 (defun eye/deft-notes ()
