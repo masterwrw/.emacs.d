@@ -1217,46 +1217,47 @@ Requires libclang to be installed.
 
 **** irony
 #+BEGIN_SRC emacs-lisp
-(use-package company-irony
-  :ensure t
-  :config
-  (defun eye/add-irony-company-backends ()
-    "If company-irony not exists in company-backends list, then add it to list."
-    (unless (memq 'company-irony company-backends)
-      (add-to-list 'company-backends 'company-irony))
-    (unless (memq 'company-c-headers company-backends)
-      (add-to-list 'company-backends 'company-c-headers)))
-  
-  (add-hook 'c-mode-hook 'eye/add-irony-company-backends)
-  (add-hook 'c++-mode-hook 'eye/add-irony-company-backends))
-
-
-(use-package irony
-  :ensure t
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+;;(use-package company-irony
+;;  :ensure t
+;;  :config
+;;  (defun eye/add-irony-company-backends ()
+;;    "If company-irony not exists in company-backends list, then add it to list."
+;;    (unless (memq 'company-irony company-backends)
+;;      (add-to-list 'company-backends 'company-irony))
+;;    (unless (memq 'company-c-headers company-backends)
+;;      (add-to-list 'company-backends 'company-c-headers)))
+;;  
+;;  (add-hook 'c-mode-hook 'eye/add-irony-company-backends)
+;;  (add-hook 'c++-mode-hook 'eye/add-irony-company-backends))
+;;
+;;
+;;(use-package irony
+;;  :ensure t
+;;  :config
+;;  (add-hook 'c++-mode-hook 'irony-mode)
+;;  (add-hook 'c-mode-hook 'irony-mode)
+;;  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 ***** irony on windows
 The PATH is used for a shell in emacs.
 The exec-path is used for emacs itself to find programs.
 #+BEGIN_SRC emacs-lisp
-  (when (eq system-type 'windows-nt)
-    ;; Windows performance tweaks
-    (when (boundp 'w32-pipe-read-delay)
-      (setq w32-pipe-read-delay 0))
-    ;; Set the buffer size to 64K on Windows (from the original 4K)
-    (when (boundp 'w32-pipe-buffer-size)
-      (setq irony-server-w32-pipe-buffer-size (* 64 1024)))
-    ;; irony-server path
-    (setq irony--server-executable "d\:/home/.emacs.d/irony/bin/irony-server.exe")
-    ;; clang path
-    (setenv "PATH"
-            (concat "C:\\msys32\\mingw64\\bin" ";"
-                    (getenv "PATH")))
-    (setq exec-path (append exec-path '("c:/msys32/mingw64/bin"))))
+(when (eq system-type 'windows-nt)
+  ;; Windows performance tweaks
+  (when (boundp 'w32-pipe-read-delay)
+    (setq w32-pipe-read-delay 0))
+  ;; Set the buffer size to 64K on Windows (from the original 4K)
+  (when (boundp 'w32-pipe-buffer-size)
+    (setq irony-server-w32-pipe-buffer-size (* 64 1024)))
+  ;; irony-server path
+  (setq irony--server-executable "d\:/home/.emacs.d/irony/bin/irony-server.exe")
+  ;; clang path
+  ;;(setenv "PATH"
+  ;;        (concat "C:\\msys32\\mingw64\\bin" ";"
+  ;;                (getenv "PATH")))
+  ;;(setq exec-path (append exec-path '("c:/msys32/mingw64/bin")))
+  )
 #+END_SRC
 
 **** rtags
