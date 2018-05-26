@@ -1039,7 +1039,17 @@ use command: ls -lR > virtual.dired
 (global-set-key (kbd "C-s") 'save-buffer)
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
 #+END_SRC
-
+** Delete file and buffer
+#+BEGIN_SRC emacs-lisp
+(defun eye/delete-file-and-buffer ()
+  "Kill the current buffer and delete the file."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (delete-file filename)
+      (message"Deleted file %s" filename)
+      (kill-buffer))))
+#+END_SRC
 ** Quick help
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "<f1>") 'describe-variable)
