@@ -1104,6 +1104,7 @@ Set defer is for quickly startup.
   (setq company-dabbrev-minimum-length 3)
   (setq company-dabbrev-other-buffers 'all)
   (setq company-dabbrev-downcase nil)
+  (set-face-attribute 'company-tooltip nil :foreground "magenta")
 
   (use-package company-statistics
     :ensure t
