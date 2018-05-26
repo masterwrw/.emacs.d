@@ -719,13 +719,16 @@ orgmode key map
 
 ** Improved kill-word
 #+BEGIN_SRC emacs-lisp
-  (defun eye/kill-inner-word ()
-    "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
-    (interactive)
-    ;;(forward-char 1) 
-    (backward-word)
-    (kill-word 1))
-  (global-set-key (kbd "<M-backspace>") 'eye/kill-inner-word)
+(defun eye/kill-inner-word ()
+  "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
+  (interactive)
+  ;;(forward-char 1) 
+  (backward-word)
+  (kill-word 1))
+(defalias 'backward-kill-word 'eye/kill-inner-word)
+(global-set-key (kbd "<M-backspace>") 'eye/kill-inner-word)
+(global-set-key (kbd "<C-backspace>") 'eye/kill-inner-word)
+
 #+END_SRC
 
 ** Improved copy-word
