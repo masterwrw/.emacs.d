@@ -1079,13 +1079,14 @@ use command: ls -lR > virtual.dired
 ** yasnippet
 Set defer is for quickly startup.
 #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :config
-    (use-package yasnippet-snippets
-      :ensure t)
-    (yas-reload-all)
-    )
+(use-package yasnippet
+  :ensure t
+  :config
+  (set-face-attribute 'yas-field-highlight-face nil :foreground "black" :background nil)
+  (use-package yasnippet-snippets
+    :ensure t)
+  (yas-reload-all)
+  )
 #+END_SRC
 
 ** flycheck
