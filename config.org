@@ -694,17 +694,23 @@ orgmode key map
 (defun eye/new-next-line ()
   "在当前行下方快速添加新的一行。"
   (interactive)
-  (move-end-of-line 1)
+  (end-of-line)
   (newline)
   (indent-for-tab-command))
 
 (defun eye/new-previous-line ()
   "在当前行上方快速添加新的一行。"
   (interactive)
-  (previous-line)
-  (move-end-of-line 1)
-  (newline)
-  (indent-for-tab-command))
+  (beginning-of-line)
+  (if (eq 1 (point))
+      (progn
+	(newline)
+	(previous-line))
+    (progn
+      (previous-line)
+      (move-end-of-line 1)
+      (newline)
+      (indent-for-tab-command))))
 
 (global-set-key (kbd "M-n") 'eye/new-next-line)
 (global-set-key (kbd "M-p") 'eye/new-previous-line)
