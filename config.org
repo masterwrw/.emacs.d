@@ -596,6 +596,13 @@ After split a window, let the focus in the new split window.
   (switch-to-buffer (get-buffer-create "*scratch*"))
   (lisp-interaction-mode))
 #+END_SRC
+*** Show buffer file full path
+#+BEGIN_SRC emacs-lisp
+(defun eye/show-full-path ()
+  "Show the file full path with current buffer."
+  (interactive)
+  (message (expand-file-name (buffer-file-name))))
+#+END_SRC
 *** Do not ask
 #+BEGIN_SRC emacs-lisp
   (setq ibuffer-expert t)
@@ -2038,9 +2045,10 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
   (defhydra hydra-programming (:color red :exit t)
     ("a" helm-imenu "imenu") ;; imenu/helm-imenu/counsel-imenu
     ("b" hs-toggle-hiding "toggle block hs")
-    ("c" hs-hide-all "hide all block")
+    ("h" hs-hide-all "hide all block")
     ("s" hs-show-all "show all block")
-    ("f" eye/cpp-help "cpp doc")
+    ("f" eye/show-full-path "full path")
+    ("c" eye/cpp-help "cpp doc")
     ("g" eye/qt5-help "qt5 doc")
     ("p" eye/python-help "python doc")
     ("q" nil "quit"))
