@@ -589,7 +589,13 @@ After split a window, let the focus in the new split window.
     (mapc 'kill-buffer (buffer-list)))
   (global-set-key (kbd "C-M-s-k") 'close-all-buffers)
 #+END_SRC
-
+*** Recreate scratch buffer
+#+BEGIN_SRC emacs-lisp
+(defun eye/create-scratch-buffer ()
+  (interactive)
+  (switch-to-buffer (get-buffer-create "*scratch*"))
+  (lisp-interaction-mode))
+#+END_SRC
 *** Do not ask
 #+BEGIN_SRC emacs-lisp
   (setq ibuffer-expert t)
