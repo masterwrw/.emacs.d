@@ -19,16 +19,16 @@
 
 # Fn 功能键
 
-| Key    | Description           |
-| ------ | --------------------- |
-| <f1>   | help variable         |
-| C-<f1> | help function         |
-| M-<f1> | help key              |
-| <f2>   | switch to buffer      |
-| M-<f2> | ibuffer               |
-| C-<f2> | kill current buffer   |
-| <f3>   | delete other window   |
-| C-<f3> | delete current window |
-| M-<f3> | switch window         |
-| <f6>   | programming hydra     |
-| <f12>  | utils function        |
+| Key   | Description           |
+| ----- | --------------------- |
+| f1    | help variable         |
+| C-f1  | help function         |
+| M-f1  | help key              |
+| f2    | switch to buffer      |
+| M-f2  | ibuffer               |
+| C-f2  | kill current buffer   |
+| f3>   | delete other window   |
+| C-f3  | delete current window |
+| M-f3  | switch window         |
+| f6    | programming hydra     |
+| f12   | utils function        |
