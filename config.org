@@ -2104,21 +2104,3 @@ Disable auto added stuff, see https://www.reddit.com/r/emacs/comments/4q4ixw/how
   (load custom-file 'noerror)
 #+END_SRC
 
-* Custom key bindings
-| key    | describle             |
-|--------+-----------------------|
-| C-f    | swiper                |
-| M-f    | grep                  |
-| C-s    | save                  |
-| M-o    | open file             |
-| C-o    | dired                 |
-| C-q    | expand region         |
-| M-y    | popup kill ring       |
-| M-g    | go to char            |
-| <f2>   | switch to buffer      |
-| M-<f2> | ibuffer               |
-| C-<f2> | kill current buffer   |
-| <f3>   | delete other window   |
-| C-<f3> | delete current window |
-| M-<f3> | switch window         |
-| <f12>  | hydra function        |
