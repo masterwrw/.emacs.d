@@ -1,6 +1,6 @@
 # 自定义的常用快捷键
 | key | describle         |
-|-----+-------------------|
+| ----------------------- |
 | C-f | swiper            |
 | C-s | save              |
 | M-o | open file         |
@@ -18,7 +18,7 @@
 
 # Fn 功能键
 | Key    | Description           |
-|--------+-----------------------|
+| ------------------------------ |
 | <f1>   | help variable         |
 | C-<f1> | help function         |
 | M-<f1> | help key              |
