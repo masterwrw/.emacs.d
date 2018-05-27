@@ -326,11 +326,13 @@ https://github.com/tumashu/cnfonts
 ** Backup directory
 File name is !drive_f!dirname!dirname!filename~
 #+BEGIN_SRC emacs-lisp
-(if (eq system-type 'windows-nt)
-    (setq backup-directory-alist (quote (("." . "d:/cache/backups"))))
-  (setq backup-directory-alist (quote (("." . "~/cache/backups")))))
+(setq backup-by-copying t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq version-control t)
+(setq backup-directory-alist '(("." . "~/cache/backups")))
 #+END_SRC
-
 ** Change yes-or-no questions into y-or-n questions
 #+BEGIN_SRC emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
