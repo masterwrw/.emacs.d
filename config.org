@@ -1080,13 +1080,16 @@ use command: ls -lR > virtual.dired
       (message"Deleted file %s" filename)
       (kill-buffer))))
 #+END_SRC
-** Quick help
+** Help
+helpful
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "<f1>") 'describe-variable)
-(global-set-key (kbd "C-<f1>") 'describe-function)
-(global-set-key (kbd "M-<f1>") 'describe-key)
+(use-package helpful
+  :ensure t
+  :bind
+  ("<f1>" . 'helpful-variable)
+  ("C-<f1>" . 'helpful-function)
+  ("M-<f1>" . 'helpful-key))
 #+END_SRC
-
 ** Buffer tab
 #+BEGIN_SRC emacs-lisp
 (require 'nerdtab)
