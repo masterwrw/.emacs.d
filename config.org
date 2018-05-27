@@ -716,7 +716,7 @@ orgmode key map
 (global-set-key (kbd "M-p") 'eye/new-previous-line)
 #+END_SRC
 
-** Enhance beginning of line
+** Improved beginning-of-line
 #+BEGIN_SRC emacs-lisp
 (defun eye/beginniing-of-line ()
   "移动到行首加强版，重复按 C-a，在忽略空白的行首和真实行首来回切换。"
@@ -728,7 +728,20 @@ orgmode key map
 (global-set-key (kbd "C-a") 'eye/beginniing-of-line)
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 #+END_SRC
+** Improved goto-line
+#+BEGIN_SRC emacs-lisp
+(defun eye/goto-line ()
+  "Auto enable and disable linum-mode."
+  (interactive)
+  (unless (bound-and-true-p linum-mode)
+      (linum-mode))
+  (let ((num (read-string "Goto line: ")))
+    (goto-line (string-to-number num))
+    (end-of-line))
+  (linum-mode -1))
 
+(global-set-key (kbd "M-l") 'eye/goto-line)
+#+END_SRC
 * Text manipulation
 ** cua-mode
 #+BEGIN_SRC emacs-lisp
@@ -833,13 +846,12 @@ Default upcase-word must move cursor to the word beginning.
 ** Improved downcase-word
 Default downcase-word must move cursor to the word beginning.
 #+BEGIN_SRC emacs-lisp
-  (defun eye/downcase-word ()
-    (interactive)
-    (save-excursion
-      (forward-char 1)
-      (backward-word)
-      (downcase-word 1)))
-  (global-set-key (kbd "M-l") 'eye/downcase-word)
+(defun eye/downcase-word ()
+  (interactive)
+  (save-excursion
+    (forward-char 1)
+    (backward-word)
+    (downcase-word 1)))
 #+END_SRC
 
 ** Delete selection when yank
