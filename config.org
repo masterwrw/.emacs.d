@@ -508,8 +508,18 @@ Show current line and column on modeline.
     (which-key-mode))
 #+END_SRC
 
-** switch-window
+** Switch window
 #+BEGIN_SRC emacs-lisp
+(define-key global-map (kbd "S-<left>") 'windmove-left)
+(define-key global-map (kbd "S-<right>") 'windmove-right)
+(define-key global-map (kbd "S-<up>") 'windmove-up)
+(define-key global-map (kbd "S-<down>") 'windmove-down)
+
+(define-key org-mode-map (kbd "S-<left>") 'windmove-left)
+(define-key org-mode-map (kbd "S-<right>") 'windmove-right)
+(define-key org-mode-map (kbd "S-<up>") 'windmove-up)
+(define-key org-mode-map (kbd "S-<down>") 'windmove-down)
+
 (use-package switch-window
   :ensure t
   :config
