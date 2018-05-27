@@ -799,13 +799,11 @@ orgmode key map
      (buffer-substring
       (point-at-bol)
       (point-at-eol)))))
-(global-set-key (kbd "C-c l c") 'eye/copy-whole-line)
 (key-chord-define-global "cl" 'eye/copy-whole-line)
 #+END_SRC
 
 ** Kill a line
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c l k") 'kill-whole-line)
 (key-chord-define-global "dd" 'kill-whole-line)
 #+END_SRC
 
