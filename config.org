@@ -779,14 +779,14 @@ orgmode key map
 
 ** Improved copy-word
 #+BEGIN_SRC emacs-lisp
-  (defun eye/copy-whole-word ()
-    (interactive)
-    (save-excursion
-      (forward-char 1)
-      (backward-word)
-      (kill-word 1)
-      (yank)))
-  (global-set-key (kbd "C-c w c") 'eye/copy-whole-word)
+(defun eye/copy-whole-word ()
+  (interactive)
+  (save-excursion
+    (forward-char 1)
+    (backward-word)
+    (kill-word 1)
+    (yank)))
+(key-chord-define-global "cc" 'eye/copy-whole-word)
 #+END_SRC
 
 ** Copy a line
