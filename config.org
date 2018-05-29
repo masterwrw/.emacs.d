@@ -1153,41 +1153,67 @@ Set defer is for quickly startup.
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
+  :bind (("M-/" . company-complete)
+	 ("C-c C-y" . company-yasnippet)
+	 :map company-active-map
+	 ("C-p" . company-select-previous)
+	 ("C-n" . company-select-next)
+	 :map company-search-map
+	 ("C-p" . company-select-previous)
+	 ("C-n" . company-select-next))
+  :init
+  (add-hook 'after-init-hook #'global-company-mode)
   :config
-  (setq company-idle-delay 0.5)
-  (setq company-minimum-prefix-length 3)
+  (setq company-idle-delay 0.2)
+  (setq company-minimum-prefix-length 2)
   (setq company-show-numbers t)
+  (setq company-echo-delay 0)
+  (setq company-require-match nil)
+
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-minimum-length 2)
+  (setq company-dabbrev-other-buffers 'all)
+  (setq company-dabbrev-downcase nil)
   ;; make previous/next selection in the popup cycles
-  (setq company-selection-wrap-around t)
+  ;; (setq company-selection-wrap-around t)
+
+  ;; aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+  ;; bigger popup window
+  (setq company-tooltip-limit 20)
+  (set-face-attribute 'company-tooltip nil :foreground "magenta")
+
+  ;; backends
   (setq company-backends nil)
   (add-to-list 'company-backends 'company-files)
   (add-to-list 'company-backends 'company-etags)
   ;; company-dabbrev config, it is for current buffer string auto complete
   (add-to-list 'company-backends 'company-dabbrev)
   (add-to-list 'company-backends 'company-dabbrev-code)
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-minimum-length 3)
-  (setq company-dabbrev-other-buffers 'all)
-  (setq company-dabbrev-downcase nil)
-  (set-face-attribute 'company-tooltip nil :foreground "magenta")
+  
+  ;; Support yas in commpany
+  ;; Note: Must be the last to involve all backends
+  (defvar company-enable-yas t
+    "Enable yasnippet for all backends.")
+
+  (defun company-backend-with-yas (backend)
+    (if (or (not company-enable-yas)
+            (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+  (setq company-backends (mapcar #'company-backend-with-yas company-backends))
+
 
   (use-package company-statistics
     :ensure t
     :init
     (let ((dir "~/cache"))
-      (if (eq system-type 'windows-nt)
-          (setq dir "d:/cache"))
       (if (not (file-exists-p dir))
           (make-directory dir))
       (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
     (company-statistics-mode)))
-
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous)
-  (define-key company-active-map (kbd "SPC") #'company-abort))
 #+END_SRC
 
 ** ctags
@@ -1273,12 +1299,8 @@ Set defer is for quickly startup.
 **** company
 Requires libclang to be installed.
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'company
-    (add-hook 'c++-mode-hook 'company-mode)
-    (add-hook 'c-mode-hook 'company-mode))
-
-  (use-package company-c-headers
-    :ensure t)
+(use-package company-c-headers
+  :ensure t)
 #+END_SRC
 
 **** irony
@@ -1614,12 +1636,6 @@ smart compile
   (add-hook 'python-mode-hook 'yas-minor-mode)
 #+END_SRC
 
-**** company
-#+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'company
-      (add-hook 'python-mode-hook 'company-mode))
-#+END_SRC
-
 **** cmd shell
 #+BEGIN_SRC emacs-lisp
   (defun eye/shell-python3 ()
@@ -1651,7 +1667,6 @@ smart compile
 
 **** company
 #+BEGIN_SRC emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'company-mode)
 (defun eye/add-elisp-company-backends ()
   "If company-elisp not exists in company-backends list, then add it to list."
   (unless (memq 'company-elisp company-backends)
