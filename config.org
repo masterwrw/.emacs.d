@@ -962,8 +962,11 @@ If selected a region, indent region, otherwise indent buffer.
       (global-hungry-delete-mode))
 #+END_SRC
 
-** popup-kill-ring
+** Kill ring
 #+BEGIN_SRC emacs-lisp
+;; save clipboard contents into kill-ring before replace theme
+(setq save-interprogram-paste-before-kill t)
+
 (if (display-graphic-p)
     (progn
       (use-package popup-kill-ring
