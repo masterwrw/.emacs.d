@@ -558,15 +558,6 @@ After split a window, let the focus in the new split window.
   (global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
 #+END_SRC
 
-** swiper to search
-#+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :ensure t
-  :bind
-  ("C-f"   . 'swiper)
-  ("M-f" . 'swiper-all))
-#+END_SRC
-
 ** Buffer
 *** Always kill current buffer
 #+BEGIN_SRC emacs-lisp
@@ -619,8 +610,6 @@ After split a window, let the focus in the new split window.
   ("<f2>" . 'helm-buffers-list)
   ("M-<f2>" . 'ibuffer)
   ("M-x" . 'helm-M-x)
-  ("C-S-f" . 'helm-do-grep-ag)
-  ;;  ("<escape>" . helm-M-x)
   :init
   (helm-mode 1)
   :config
@@ -864,23 +853,54 @@ Default downcase-word must move cursor to the word beginning.
   :chords (("ew" . eno-word-copy)))
 #+END_SRC
 
-* Grep
+* Search and replace
+** swiper
 #+BEGIN_SRC emacs-lisp
-  (defun eye/grep ()
-    (interactive)
-    (let* ((cur-word (thing-at-point 'word))
-           (cmd (concat "grep --color -irHn " cur-word " *.h")))
-      (setq cmd (read-from-minibuffer "command:" cmd))
-      (grep-apply-setting 'grep-command cmd)
-      (grep cmd)))
+(use-package swiper
+  :ensure t
+  :bind
+  ("C-f"   . 'swiper))
 #+END_SRC
-
-** wgrep
+** Grep and wgrep
 #+BEGIN_SRC emacs-lisp
-  (use-package wgrep
+(defun eye/grep ()
+  (interactive)
+  (let* ((cur-word (thing-at-point 'word))
+         (cmd (concat "grep --color -irHn " cur-word " " (buffer-file-name))))
+    (setq cmd (read-from-minibuffer "command:" cmd))
+    (grep-apply-setting 'grep-command cmd)
+    (grep cmd)))
+
+(use-package wgrep
     :ensure t)
 #+END_SRC
+  
+** ag rg
+#+BEGIN_SRC emacs-lisp
+;; Use faster search tools: ripgrep or the silver search
+(use-package counsel
+  :ensure t
+  :config
+  (let ((command
+	 (cond
+          ((executable-find "rg")
+           "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+          ((executable-find "ag")
+           "ag -i --noheading --nocolor --nofilename --numbers '%s' %s"))))
+    (setq counsel-grep-base-command command))
 
+  (global-set-key (kbd "M-f")
+		  (lambda ()
+		    (interactive)
+		    (counsel-M-x "^counsel ")))
+  )
+#+END_SRC
+** occur
+#+BEGIN_SRC emacs-lisp
+(define-key helm-command-map (kbd "M-o") 'helm-occur)
+(define-key helm-command-prefix (kbd "M-o") 'helm-occur)
+(define-key ivy-minibuffer-map (kbd "M-o") 'ivy-occur)
+#+END_SRC
 * Minor conveniences
 ** Visiting the configuration
 #+BEGIN_SRC emacs-lisp
@@ -1931,7 +1951,6 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 #+BEGIN_SRC emacs-lisp
 (use-package deft
   :ensure t
-  :bind ("<f8>" . deft)
   :config
   (setq deft-directory "~/projects/python/blog/soeye.github.io/posts")
   (setq deft-extensions '("org"))
@@ -2067,10 +2086,7 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 * Dictionary
 #+BEGIN_SRC emacs-lisp
 (use-package youdao-dictionary
-  :ensure t
-  :bind
-  ("<f8>" . 'youdao-dictionary-search)
-  ("M-<f8>" . 'youdao-dictionary-search-from-input))
+  :ensure t)
 #+END_SRC
 
 * hydra
