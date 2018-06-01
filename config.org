@@ -474,22 +474,29 @@ Show current line and column on modeline.
 #+END_SRC
 
 * Shell
-** Linux use bash
-#+BEGIN_SRC emacs-lisp
-  (when (featurep 'x)
-    (defvar my-term-shell "/bin/bash")
-    (defadvice ansi-term (before force-bash)
-      (interactive (list my-term-shell)))
-    (ad-activate 'ansi-term)
-    (global-set-key (kbd "<s-return>") 'ansi-term))
-#+END_SRC
-
 ** Windows shell
 #+BEGIN_SRC emacs-lisp
   (when (eq system-type 'windows-nt)
     (global-set-key (kbd "<S-return>") 'shell))
 #+END_SRC
-
+** multi-term
+#+BEGIN_SRC emacs-lisp
+(when (not (eq system-type 'windows-nt))
+  (use-package multi-term
+    :ensure t
+    :bind
+    (("S-<return>" . 'multi-term)
+     :map term-mode-map
+     ("M-[" . 'multi-term-preve)
+     ("M-]" . 'multi-term-next))
+    :config
+    ;; no limit buffer length
+    (setq term-buffer-maximum-size 0)
+    ;; use bash or zsh
+    (if (executable-find "zsh")
+	(setq multi-term-program "/bin/zsh")
+      (setq multi-term-program "/bin/bash"))))
+#+END_SRC
 * Efficient edit
 ** Prerequisite
 #+BEGIN_SRC emacs-lisp
