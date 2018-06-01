@@ -497,6 +497,19 @@ Show current line and column on modeline.
 	(setq multi-term-program "/bin/zsh")
       (setq multi-term-program "/bin/bash"))))
 #+END_SRC
+** eshell
+#+BEGIN_SRC emacs-lisp
+(defun eye/eshell-clear ()
+  "Clear eshell buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook
+	  '(lambda ()
+	     (local-set-key (kbd "C-l") 'eye/eshell-clear)))
+#+END_SRC
 * Efficient edit
 ** Prerequisite
 #+BEGIN_SRC emacs-lisp
@@ -1146,19 +1159,6 @@ helpful
     (global-set-key (kbd "<f1>") 'helpful-variable)
     (global-set-key (kbd "C-<f1>") 'helpful-function)
     (global-set-key (kbd "M-<f1>") 'helpful-key)))
-#+END_SRC
-** eshell
-#+BEGIN_SRC emacs-lisp
-(defun eye/eshell-clear ()
-  "Clear eshell buffer."
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-
-(add-hook 'eshell-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "C-l") 'eye/eshell-clear)))
 #+END_SRC
 ** Buffer tab
 #+BEGIN_SRC emacs-lisp
