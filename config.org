@@ -398,6 +398,11 @@ https://github.com/tumashu/cnfonts
     (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease)))
 #+END_SRC 
 
+** Not use these commands
+#+BEGIN_SRC emacs-lisp
+(put 'suspend-frame 'disabled t)
+#+END_SRC
+
 * Site lisp
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
