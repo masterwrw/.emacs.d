@@ -756,9 +756,9 @@ orgmode key map
 * Text manipulation
 ** cua-mode
 #+BEGIN_SRC emacs-lisp
-(cua-mode t)
-(global-set-key (kbd "C-<down>") 'scroll-up-command)
-(global-set-key (kbd "C-<up>") 'scroll-down-command)
+;; (cua-mode t)
+;; (global-set-key (kbd "C-<down>") 'scroll-up-command)
+;; (global-set-key (kbd "C-<up>") 'scroll-down-command)
 #+END_SRC
 
 ** multiple-cursors
