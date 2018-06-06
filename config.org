@@ -1207,8 +1207,7 @@ Set defer is for quickly startup.
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
-  :bind (("M-/" . company-complete)
-	 ("C-c C-y" . company-yasnippet)
+  :bind (("C-c C-y" . company-yasnippet)
 	 :map company-active-map
 	 ("C-p" . company-select-previous)
 	 ("C-n" . company-select-next)
@@ -1285,7 +1284,7 @@ Set defer is for quickly startup.
               (add-hook 'after-save-hook
                         'counsel-etags-virtual-update-tags 'append 'local)))
   :bind
-  ("M-." . 'counsel-etags-find-tag-at-point))
+  ("M-/" . 'counsel-etags-find-tag-at-point))
 
 (with-eval-after-load 'counsel-etags
   ;; counsel-etags-ignore-directories does NOT support wildcast
@@ -1306,12 +1305,24 @@ Set defer is for quickly startup.
 #+END_SRC
 
 ** navigate
+*** backward-forward
 #+BEGIN_SRC emacs-lisp
 (use-package backward-forward
   :ensure t
   :config
   (advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
   (backward-forward-mode t))
+#+END_SRC
+
+*** dumb-jump
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+  :ensure t
+  :bind
+  ("M-," . 'dumb-jump-back)
+  ("M-." . 'dumb-jump-go)
+  :config
+  (advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper))
 #+END_SRC
 
 ** cmd
