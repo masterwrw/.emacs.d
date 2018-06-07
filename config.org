@@ -1019,10 +1019,7 @@ If selected a region, indent region, otherwise indent buffer.
       (use-package popup-kill-ring
 	:ensure t
 	:bind
-	("M-y" . popup-kill-ring)
-	("C-S-v" . popup-kill-ring)))
-  (progn
-    (global-set-key (kbd "M-v") 'yank-pop)))
+	("M-y" . popup-kill-ring))))
 #+END_SRC
 
 ** Quick ediff files from dired
