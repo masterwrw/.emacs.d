@@ -1676,19 +1676,30 @@ smart compile
 
 **** Query help document
 #+BEGIN_SRC emacs-lisp
+(defun eye/current-word ()
+  (interactive)
+  (let (p1 p2 w)
+    (save-excursion
+      (skip-chars-backward "-_A-Za-z0-9")
+      (setq p1 (point))
+      (skip-chars-forward "-_A-Za-z0-9")
+      (setq p2 (point)))
+    (copy-region-as-kill p1 p2)
+    (substring-no-properties (car kill-ring))))
+
 (defun eye/cpp-help ()
   "Find cpp reference document."
   (interactive)
   (let ((url "http://zh.cppreference.com/mwiki/index.php?search="))
-    (setq url (concat url (read-string "Query cpp document: ")))
-    (browse-url-default-browser url)))
+    (setq url (concat url (read-string "Query cpp document: " (eye/current-word))))
+    (browse-url-firefox url)))
 
 (defun eye/qt5-help ()
   "Find Qt5 document."
   (interactive)
   (let ((url "http://doc.qt.io/qt-5/search-results.html?q="))
-    (setq url (concat url (read-string "Query Qt5 document: ")))
-    (browse-url-default-browser url)))
+    (setq url (concat url (read-string "Query Qt5 document: " (eye/current-word))))
+    (browse-url-firefox url)))
 
 #+END_SRC
 
@@ -1712,8 +1723,8 @@ smart compile
   "Find python online document."
   (interactive)
   (let ((url "https://docs.python.org/3.5/search.html?q="))
-    (setq url (concat url (read-string "Query python document: ")))
-    (browse-url-default-browser url)))
+    (setq url (concat url (read-string "Query python document: " (eye/current-word))))
+    (browse-url-firefox url)))
 #+END_SRC
 
 *** emacs-lisp
