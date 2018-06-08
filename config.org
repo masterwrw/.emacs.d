@@ -371,7 +371,7 @@ https://github.com/tumashu/cnfonts
   (defun post-load-stuff ()
     (interactive)
     (maximize-frame)
-    (set-cursor-color "#40FF40"))
+    (set-cursor-color "#AA0000"))
 
   (add-hook 'window-setup-hook 'post-load-stuff t)
   (add-hook 'window-setup-hook 'toggle-frame-maximized t)
@@ -2141,8 +2141,13 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
   :config
   (xah-fly-keys-set-layout "qwerty")
   (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
-  (global-set-key (kbd "<f4>") 'xah-fly-command-mode-activate)
+  (define-key xah-fly-key-map (kbd "a") 'helm-M-x)
+  (defun eye/insert-mode-style () (global-hl-line-mode 0))
+  (defun eye/command-mode-style () (global-hl-line-mode 1))
+  (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-style)
+  (add-hook 'xah-fly-command-mode-activate-hook 'eye/command-mode-style)
   (xah-fly-keys 1))
+
 #+END_SRC
 * hydra
 #+BEGIN_SRC emacs-lisp
