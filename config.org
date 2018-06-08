@@ -2134,7 +2134,16 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 (use-package youdao-dictionary
   :ensure t)
 #+END_SRC
-
+* xah-fly-keys
+#+BEGIN_SRC emacs-lisp
+(use-package xah-fly-keys
+  :ensure t
+  :config
+  (xah-fly-keys-set-layout "qwerty")
+  (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
+  (global-set-key (kbd "<f4>") 'xah-fly-command-mode-activate)
+  (xah-fly-keys 1))
+#+END_SRC
 * hydra
 #+BEGIN_SRC emacs-lisp
 (use-package hydra
