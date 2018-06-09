@@ -1796,6 +1796,22 @@ smart compile
 (add-to-list 'auto-mode-alist '("\\.au3$" . autoit-mode))
 #+END_SRC
 
+* Document
+#+BEGIN_SRC emacs-lisp
+(use-package helm-dash
+  :ensure t
+  :config
+  (setq helm-dash-browser-func 'eww)
+  (setq helm-dash-docsets-path "~/.docsets")
+  (setq helm-dash-common-docsets '("C" "C++" "Qt" "x86_64_asm")))
+
+(use-package zeal-at-point
+  :ensure t
+  :config
+  (setq zeal-at-point-mode-alist '(c++-mode . ("c" "cpp" "qt")))
+  (setq zeal-at-point-mode-alist '(c-mode . ("c")))
+#+END_SRC
+
 * Git integration
 ** magit
 #+BEGIN_SRC emacs-lisp
