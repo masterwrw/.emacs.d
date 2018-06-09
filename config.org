@@ -537,15 +537,15 @@ Show current line and column on modeline.
 
 ** Switch window
 #+BEGIN_SRC emacs-lisp
-(define-key global-map (kbd "S-<left>") 'windmove-left)
-(define-key global-map (kbd "S-<right>") 'windmove-right)
-(define-key global-map (kbd "S-<up>") 'windmove-up)
-(define-key global-map (kbd "S-<down>") 'windmove-down)
+;; (define-key global-map (kbd "S-<left>") 'windmove-left)
+;; (define-key global-map (kbd "S-<right>") 'windmove-right)
+;; (define-key global-map (kbd "S-<up>") 'windmove-up)
+;; (define-key global-map (kbd "S-<down>") 'windmove-down)
 
-(define-key org-mode-map (kbd "S-<left>") 'windmove-left)
-(define-key org-mode-map (kbd "S-<right>") 'windmove-right)
-(define-key org-mode-map (kbd "S-<up>") 'windmove-up)
-(define-key org-mode-map (kbd "S-<down>") 'windmove-down)
+;; (define-key org-mode-map (kbd "S-<left>") 'windmove-left)
+;; (define-key org-mode-map (kbd "S-<right>") 'windmove-right)
+;; (define-key org-mode-map (kbd "S-<up>") 'windmove-up)
+;; (define-key org-mode-map (kbd "S-<down>") 'windmove-down)
 
 (use-package switch-window
   :ensure t
@@ -699,10 +699,10 @@ After split a window, let the focus in the new split window.
 
 orgmode key map
 #+BEGIN_SRC emacs-lisp
-  (define-key org-mode-map (kbd "<M-left>") 'backward-word)
-  (define-key org-mode-map (kbd "<M-right>") 'forward-word)
-  (define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
-  (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
+;; (define-key org-mode-map (kbd "<M-left>") 'backward-word)
+;; (define-key org-mode-map (kbd "<M-right>") 'forward-word)
+;; (define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
+;; (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
 #+END_SRC 
 
 ** Quick insert new line
@@ -774,9 +774,9 @@ orgmode key map
 
 ** edit-at-Point
 #+BEGIN_SRC emacs-lisp
-  (use-package edit-at-point
-    :ensure t
-    :bind ("C-c a" . 'edit-at-point-line-copy))
+;; (use-package edit-at-point
+  ;; :ensure t
+  ;; :bind ("C-c a" . 'edit-at-point-line-copy))
 #+END_SRC
 
 ** Improved kill-word
@@ -815,12 +815,12 @@ orgmode key map
      (buffer-substring
       (point-at-bol)
       (point-at-eol)))))
-(key-chord-define-global "cl" 'eye/copy-whole-line)
+;; (key-chord-define-global "cl" 'eye/copy-whole-line)
 #+END_SRC
 
 ** Kill a line
 #+BEGIN_SRC emacs-lisp
-(key-chord-define-global "dd" 'kill-whole-line)
+;; (key-chord-define-global "dd" 'kill-whole-line)
 #+END_SRC
 
 ** Copy a paragraph
@@ -977,7 +977,8 @@ Show color of #hex format string.
   :ensure t
   :bind ("C-q" . er/expand-region)
   :config
-  (key-chord-define-global "ee" 'er/expand-region))
+  ;; (key-chord-define-global "ee" 'er/expand-region)
+  )
 #+END_SRC
 
 ** Indent region or buffer
@@ -1177,7 +1178,7 @@ helpful
 (global-set-key (kbd "M-7") 'nerdtab-jump-7)
 (global-set-key (kbd "M-8") 'nerdtab-jump-8)
 (global-set-key (kbd "M-9") 'nerdtab-jump-9)
-(global-set-key (kbd "<M-SPC>") 'nerdtab-jump)
+;; (global-set-key (kbd "<M-SPC>") 'nerdtab-jump)
 #+END_SRC
 
 * Programming
@@ -1809,7 +1810,7 @@ smart compile
   :ensure t
   :config
   (setq zeal-at-point-mode-alist '(c++-mode . ("c" "cpp" "qt")))
-  (setq zeal-at-point-mode-alist '(c-mode . ("c")))
+  (setq zeal-at-point-mode-alist '(c-mode . ("c"))))
 #+END_SRC
 
 * Git integration
@@ -2150,6 +2151,7 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
 (use-package youdao-dictionary
   :ensure t)
 #+END_SRC
+
 * xah-fly-keys
 #+BEGIN_SRC emacs-lisp
 (use-package xah-fly-keys
@@ -2163,8 +2165,8 @@ https://github.com/bbatsov/prelude/blob/master/core/prelude-core.el
   (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-style)
   (add-hook 'xah-fly-command-mode-activate-hook 'eye/command-mode-style)
   (xah-fly-keys 1))
-
 #+END_SRC
+
 * hydra
 #+BEGIN_SRC emacs-lisp
 (use-package hydra
