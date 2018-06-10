@@ -126,7 +126,7 @@ Build-in function is M-x init-emacs-time.
 * Interface
 ** Title
 #+BEGIN_SRC emacs-lisp
-  (setq frame-title-format "-- master -- %f -- %b")
+  (setq frame-title-format "%b -- %f")
 #+END_SRC
 
 ** Remove default startup screen
