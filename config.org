@@ -705,7 +705,7 @@ orgmode key map
     (backward-word)
     (kill-word 1)
     (yank)))
-(key-chord-define-global "cc" 'eye/copy-whole-word)
+;; (key-chord-define-global "cc" 'eye/copy-whole-word)
 #+END_SRC
 
 ** Copy a line
@@ -1818,47 +1818,6 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
       (org-edit-src-code)))
 
 #+END_SRC
-
-** org capture
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/notebook/notes/gtd")
-(setq org-default-notes-file (concat org-directory "/inbox.org"))
-
-(setq org-agenda-files (list (concat org-directory "/inbox.org")
-                             (concat org-directory "/todo.org")
-			     (concat org-directory "/note.org")
-                             ))
-
-(setq org-capture-templates
-      '(
-	("n" "New" entry (file "~/notebook/notes/gtd/inbox.org")
-         "* %?\n%i\n" :prepend t :empty-lines 1)
-	("t" "Todo" entry (file+headline "~/notebook/notes/gtd/todo.org" "Todo")
-         "* %?\n%i\n")
-        ))
-
-(setq org-refile-targets
-      '(
-	("~/notebook/notes/gtd/note.org" :level . 1)
-        ("~/notebook/notes/gtd/finished.org" :level . 1)
-        ("~/notebook/notes/gtd/trash.org" :level . 1)
-	))
-
-(setq org-archive-location "~/notebook/notes/gtd/finished.org::")
-
-
-(defun eye/inbox ()
-  (interactive)
-  (find-file org-default-notes-file)
-  )
-
-(defun eye/todo ()
-  (interactive)
-  (find-file (concat org-directory "/todo.org"))
-  )
-
-#+END_SRC
-
 ** org crypt
 #+BEGIN_SRC emacs-lisp
   ;; Advise set auto-save-default to nil
@@ -1879,9 +1838,9 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
     :config
     (setq org-id-track-globally t)
     (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
-    (push '("b" "Brain" plain (function org-brain-goto-end)
-            "* %i%?" :empty-lines 1)
-          org-capture-templates)
+    ;;(push '("b" "Brain" plain (function org-brain-goto-end)
+    ;;        "* %i%?" :empty-lines 1)
+    ;;      org-capture-templates)
     (setq org-brain-visualize-default-choices 'all)
     (setq org-brain-title-max-length 64)
     ;; If org-brain is slow, set this!, if this value is t, the title can not contain slashes(/)
@@ -1889,29 +1848,61 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
     ))
 #+END_SRC
 
-** org agenda
+** gtd
 #+BEGIN_SRC emacs-lisp
+(require 'org-agenda)
+(require 'org-capture)
+(require 'find-lisp)
+(setq eye/org-agenda-directory "~/notebook/gtd/")
+(setq org-agenda-files
+      (find-lisp-find-files eye/org-agenda-directory "\.org$"))
+
+(setq org-default-notes-file (concat eye/org-agenda-directory "/inbox.org"))
+
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
 	))
 
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-	      ("WAITING" :foreground "orange" :weight bold)
-	      ("SOMEDAY" :foreground "magenta" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("ABORT" :foreground "forest green" :weight bold))))
+(setq org-capture-templates
+      '(
+	("n" "New" entry (file "~/notebook/gtd/inbox.org")
+         "* %?\n%i\n" :prepend t :empty-lines 1)
+	("t" "Task" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+         "* %?\n%i\n")
+        ))
 
+(setq org-refile-targets
+      '(
+	("~/notebook/gtd/note.org" :level . 1)
+        ("~/notebook/gtd/task.org" :level . 1)
+        ("~/notebook/gtd/finished.org" :level . 1)
+        ("~/notebook/gtd/trash.org" :level . 1)
+	))
+
+(setq org-archive-location "~/notebook/gtd/finished.org::")
+
+
+
+(defun eye/inbox ()
+  (interactive)
+  (find-file org-default-notes-file)
+  )
+
+(defun eye/todo ()
+  (interactive)
+  (find-file (concat eye/org-agenda-directory "/todo.org"))
+  )
 #+END_SRC
-
-** org babel execute
+*** org-pomodoro
 #+BEGIN_SRC emacs-lisp
-;;(org-babel-do-load-languages
-;; 'org-babel-load-languages
-;; '((lua . t))) ;; can not open ob-lua
+(use-package org-pomodoro
+  :ensure t
+  :bind
+  (:map org-agenda-mode-map
+	(("I" . org-pomodoro)))
+  :config
+  (setq org-pomodoro-format "%s"))
 #+END_SRC
-
 * Blog
 ** deft
 #+BEGIN_SRC emacs-lisp
@@ -2064,13 +2055,14 @@ https://github.com/xahlee/xah-fly-keys
   (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
   (setq xah-fly-user-meta-key nil)
   :config
-  (xah-fly-keys-set-layout "qwerty")
+  (xah-fly-keys-set-layout "programer-dvorak")
   (defun eye/insert-mode-setup ()
     (global-hl-line-mode 1))
   (defun eye/command-mode-setup ()
     (global-hl-line-mode 0)
     (define-key xah-fly-key-map (kbd "a") 'counsel-M-x) ;; must come after loading xah-fly-keys
     (define-key xah-fly-c-keymap (kbd "e") 'counsel-find-file))
+  (define-key xah-fly-dot-keymap (kbd "a") 'org-agenda)
   (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-setup)
   (add-hook 'xah-fly-command-mode-activate-hook 'eye/command-mode-setup)
   (xah-fly-keys 1))
