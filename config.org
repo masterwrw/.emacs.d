@@ -1271,26 +1271,26 @@ Requires libclang to be installed.
 
 **** irony
 #+BEGIN_SRC emacs-lisp
-;;(use-package company-irony
-;;  :ensure t
-;;  :config
-;;  (defun eye/add-irony-company-backends ()
-;;    "If company-irony not exists in company-backends list, then add it to list."
-;;    (unless (memq 'company-irony company-backends)
-;;      (add-to-list 'company-backends 'company-irony))
-;;    (unless (memq 'company-c-headers company-backends)
-;;      (add-to-list 'company-backends 'company-c-headers)))
-;;  
-;;  (add-hook 'c-mode-hook 'eye/add-irony-company-backends)
-;;  (add-hook 'c++-mode-hook 'eye/add-irony-company-backends))
-;;
-;;
-;;(use-package irony
-;;  :ensure t
-;;  :config
-;;  (add-hook 'c++-mode-hook 'irony-mode)
-;;  (add-hook 'c-mode-hook 'irony-mode)
-;;  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+(use-package company-irony
+ :ensure t
+ :config
+ (defun eye/add-irony-company-backends ()
+   "If company-irony not exists in company-backends list, then add it to list."
+   (unless (memq 'company-irony company-backends)
+     (add-to-list 'company-backends 'company-irony))
+   (unless (memq 'company-c-headers company-backends)
+     (add-to-list 'company-backends 'company-c-headers)))
+ 
+ (add-hook 'c-mode-hook 'eye/add-irony-company-backends)
+ (add-hook 'c++-mode-hook 'eye/add-irony-company-backends))
+
+
+(use-package irony
+ :ensure t
+ :config
+ (add-hook 'c++-mode-hook 'irony-mode)
+ (add-hook 'c-mode-hook 'irony-mode)
+ (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 #+END_SRC
 
 ***** irony on windows
@@ -2115,7 +2115,6 @@ https://github.com/xahlee/xah-fly-keys
     (diminish 'hungry-delete-mode)
     (diminish 'visual-line-mode)
     (diminish 'subword-mode)
-    (diminish 'irony-mode)
     (diminish 'page-break-lines-mode)
     (diminish 'auto-revert-mode)
     (diminish 'rainbow-delimiters-mode)

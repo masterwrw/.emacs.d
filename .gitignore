@@ -12,7 +12,6 @@ semanticdb
 eshell/
 places
 diary
-irony/
 projectile.cache
 projectile-bookmarks.eld
 ede-projects.el
