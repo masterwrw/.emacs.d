@@ -926,6 +926,13 @@ If selected a region, indent region, otherwise indent buffer.
 	("M-y" . popup-kill-ring))))
 #+END_SRC
 
+** undo-tree
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+#+END_SRC
 ** Quick ediff files from dired
 Mark 2 files in dired, and press "e" into ediff. if only marked one file, then ask second file in prompt.
 #+BEGIN_SRC emacs-lisp
