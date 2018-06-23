@@ -2062,7 +2062,7 @@ https://github.com/xahlee/xah-fly-keys
   (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
   (setq xah-fly-user-meta-key nil)
   :config
-  (xah-fly-keys-set-layout "programer-dvorak")
+  (xah-fly-keys-set-layout "dvorak")
   (defun eye/insert-mode-setup ()
     (interactive)
     (global-hl-line-mode 1)
