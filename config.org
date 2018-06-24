@@ -1706,7 +1706,14 @@ smart compile
 (require 'autoit-mode)
 (add-to-list 'auto-mode-alist '("\\.au3$" . autoit-mode))
 #+END_SRC
-
+*** html
+#+BEGIN_SRC emacs-lisp
+;; jinja2
+(use-package jinja2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.tmpl$" . jinja2-mode)))
+#+END_SRC
 * Document
 #+BEGIN_SRC emacs-lisp
 (use-package helm-dash
