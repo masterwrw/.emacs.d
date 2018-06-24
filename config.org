@@ -917,7 +917,8 @@ If selected a region, indent region, otherwise indent buffer.
 #+BEGIN_SRC emacs-lisp
 ;; save clipboard contents into kill-ring before replace theme
 (setq save-interprogram-paste-before-kill t)
-
+;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
+(setq x-select-enable-clipboard-manager nil)
 (if (display-graphic-p)
     (progn
       (use-package popup-kill-ring
