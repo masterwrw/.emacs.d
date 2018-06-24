@@ -1062,6 +1062,7 @@ helpful
 ** Buffer tab
 #+BEGIN_SRC emacs-lisp
 (require 'nerdtab)
+(setq nerdtab-tab-width 30)
 (add-to-list 'nerdtab-regex-blacklist "org-src-fontification")
 (add-to-list 'nerdtab-regex-blacklist "TAGS")
 (global-set-key (kbd "M-0") 'nerdtab-jump-0)
