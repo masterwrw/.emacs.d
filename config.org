@@ -2056,7 +2056,7 @@ https://github.com/xahlee/xah-fly-keys
   (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
   (setq xah-fly-user-meta-key nil)
   :config
-  (xah-fly-keys-set-layout "dvorak")
+  (xah-fly-keys-set-layout "qwerty")
   (defun eye/insert-mode-setup ()
     (interactive)
     (global-hl-line-mode 1)
@@ -2067,7 +2067,7 @@ https://github.com/xahlee/xah-fly-keys
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
   (define-key xah-fly-key-map (kbd "a") 'helm-M-x)
   (define-key xah-fly-leader-key-map (kbd "<return>") 'helm-M-x)
-  (define-key xah-fly-c-keymap (kbd ".") 'counsel-find-file)
+  (define-key xah-fly-c-keymap (kbd "e") 'counsel-find-file)
   (define-key xah-fly-dot-keymap (kbd "a") 'org-agenda)
   (define-key xah-fly-dot-keymap (kbd "g") 'magit-status)
   (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-setup)
