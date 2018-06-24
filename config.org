@@ -290,7 +290,12 @@ https://github.com/tumashu/cnfonts
 #+BEGIN_SRC emacs-lisp
 (put 'suspend-frame 'disabled t)
 #+END_SRC
-
+** emacsclient
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (server-start)))
+#+END_SRC
 * Site lisp
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
