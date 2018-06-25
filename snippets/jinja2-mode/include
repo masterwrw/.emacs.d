@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: include with
+# key: include
+# --
+{% include "$1" ignore missing with context %}
