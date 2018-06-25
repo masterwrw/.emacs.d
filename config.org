@@ -778,8 +778,7 @@ Default downcase-word must move cursor to the word beginning.
 ** Quick copy other word
 #+BEGIN_SRC emacs-lisp
 (use-package eno
-  :ensure t
-  :chords (("ew" . eno-word-copy)))
+  :ensure t)
 #+END_SRC
 
 * Search and replace
