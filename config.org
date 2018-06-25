@@ -296,6 +296,15 @@ https://github.com/tumashu/cnfonts
 	  (lambda ()
 	    (server-start)))
 #+END_SRC
+** Thunar file manager
+#+BEGIN_SRC emacs-lisp
+(defun eye/open-file-manager ()
+  "Open external file manager."
+  (interactive)
+  (when (and (executable-find "thunar")
+	     (not (null default-directory)))
+    (shell-command (concat "thunar " default-directory))))
+#+END_SRC
 * Site lisp
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
