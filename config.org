@@ -1045,6 +1045,13 @@ use command: ls -lR > virtual.dired
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-s") 'save-buffer)
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
+
+;; sudo save
+(defun eye/sudo-save ()
+  (interactive)
+  (if (not buffer-file-name)
+      (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
+    (write-file (concat "/sudo:root@localhost:" buffer-file-name))))
 #+END_SRC
 ** Delete file and buffer
 #+BEGIN_SRC emacs-lisp
