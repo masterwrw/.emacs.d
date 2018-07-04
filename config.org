@@ -1916,23 +1916,57 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
       '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
 	))
 
+(require 'org-protocol)
+
+(defun transform-square-brackets-to-round-ones(string-to-transform)
+  "Transforms [ into ( and ] into ), other chars left unchanged."
+  (concat 
+  (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+  )
+
+
 (setq org-capture-templates
       '(
-	("n" "New" entry
-	 (file (concat eye/org-agenda-directory "inbox.org"))
-         "* %?\n%i\n" :prepend t :empty-lines 1)
+	("n"
+	 "New" entry (file "~/notebook/gtd/inbox.org")
+         "* %?\n%i\n"
+	 :empty-lines 1)
 	
-	("t" "Task" entry
-	 (file+headline (concat eye/org-agenda-directory "task.org") "Tasks")
-         "* %?\n%i\n")
-        ))
+	("t"
+	 "Task" entry (file+headline  "~/notebook/gtd/task.org" "Tasks")
+         "* %?\n%i\n"
+	 :empty-lines 1
+	 :create t)
 
+	;; org-protocol: https://github.com/sprig/org-capture-extension
+
+	("p" 
+	 "Protocol" entry (file "~/notebook/gtd/inbox.org")
+	 "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
+		%^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+	 :empty-lines 1  
+	 :create t)
+		
+	("L" 
+	 "Protocol link" entry (file+headline  "~/notebook/gtd/inbox.org" "Urls")
+         "* [[%:link][%:description]]\n%?\n"
+	 :empty-lines 1
+	 :create t)
+	
+	))
+
+
+;; 目标路径不能使用 concat
+(setq eye-org-inbox-path (concat eye/org-agenda-directory "inbox.org"))
+(setq eye-org-task-path (concat eye/org-agenda-directory "task.org"))
+(setq eye-org-finished-path (concat eye/org-agenda-directory "finished.org"))
+(setq eye-org-trash-path (concat eye/org-agenda-directory "trash.org"))
 (setq org-refile-targets
       '(
-	((concat eye/org-agenda-directory "inbox.org") :level . 1)
-        ((concat eye/org-agenda-directory "task.org") :level . 1)
-        ((concat eye/org-agenda-directory "finished.org") :level . 1)
-        ((concat eye/org-agenda-directory "trash.org") :level . 1)
+	(eye-org-inbox-path :level . 1)
+        (eye-org-task-path :level . 1)
+        (eye-org-finished-path :level . 1)
+        (eye-org-trash-path :level . 1)
 	))
 
 (setq org-archive-location (concat eye/org-agenda-directory "finished.org::"))
