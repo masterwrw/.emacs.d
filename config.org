@@ -1721,6 +1721,27 @@ smart compile
   :config
   (add-to-list 'auto-mode-alist '("\\.tmpl$" . jinja2-mode)))
 #+END_SRC
+*** php
+#+BEGIN_SRC emacs-lisp
+(use-package php-mode
+  :ensure t
+  (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+  (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+  (defun eye/switch-php-html-mode ()
+    "Switch the php-mode and html-mode"
+    (interactive)
+    (cond ((string= mode-name "html")
+	   (php-mode))
+	  ((string= mode-name "php")
+	   (html-mode)))))
+#+END_SRC
+**** company
+#+BEGIN_SRC emacs-lisp
+(use-package company-php
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-php))
+#+END_SRC
 * Document
 #+BEGIN_SRC emacs-lisp
 (use-package helm-dash
