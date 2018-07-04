@@ -290,21 +290,31 @@ https://github.com/tumashu/cnfonts
 #+BEGIN_SRC emacs-lisp
 (put 'suspend-frame 'disabled t)
 #+END_SRC
+
+* External program  
 ** emacsclient
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook
 	  (lambda ()
 	    (server-start)))
 #+END_SRC
-** Thunar file manager
+** File manager
 #+BEGIN_SRC emacs-lisp
 (defun eye/open-file-manager ()
   "Open external file manager."
   (interactive)
   (when (and (executable-find "thunar")
 	     (not (null default-directory)))
-    (shell-command (concat "thunar " default-directory))))
+    (start-process "File manager" nil "thunar" default-directory)))
 #+END_SRC
+** Terminal 
+#+BEGIN_SRC emacs-lisp
+(defun eye/open-terminal ()
+  (interactive)
+  (when (executable-find "xfce4-terminal")
+    (start-process "Terminal" nil "xfce4-terminal")))
+#+END_SRC
+
 * Site lisp
 #+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'cl))
