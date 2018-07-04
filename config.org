@@ -1910,7 +1910,7 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (setq org-agenda-files
       (find-lisp-find-files eye/org-agenda-directory "\.org$"))
 
-(setq org-default-notes-file (concat eye/org-agenda-directory "/inbox.org"))
+(setq org-default-notes-file (concat eye/org-agenda-directory "inbox.org"))
 
 (setq org-todo-keywords
       '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
@@ -1918,21 +1918,24 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 
 (setq org-capture-templates
       '(
-	("n" "New" entry (file "~/notebook/gtd/inbox.org")
+	("n" "New" entry
+	 (file (concat eye/org-agenda-directory "inbox.org"))
          "* %?\n%i\n" :prepend t :empty-lines 1)
-	("t" "Task" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+	
+	("t" "Task" entry
+	 (file+headline (concat eye/org-agenda-directory "task.org") "Tasks")
          "* %?\n%i\n")
         ))
 
 (setq org-refile-targets
       '(
-	("~/notebook/gtd/note.org" :level . 1)
-        ("~/notebook/gtd/task.org" :level . 1)
-        ("~/notebook/gtd/finished.org" :level . 1)
-        ("~/notebook/gtd/trash.org" :level . 1)
+	((concat eye/org-agenda-directory "inbox.org") :level . 1)
+        ((concat eye/org-agenda-directory "task.org") :level . 1)
+        ((concat eye/org-agenda-directory "finished.org") :level . 1)
+        ((concat eye/org-agenda-directory "trash.org") :level . 1)
 	))
 
-(setq org-archive-location "~/notebook/gtd/finished.org::")
+(setq org-archive-location (concat eye/org-agenda-directory "finished.org::"))
 
 
 
@@ -1941,9 +1944,9 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
   (find-file org-default-notes-file)
   )
 
-(defun eye/todo ()
+(defun eye/task ()
   (interactive)
-  (find-file (concat eye/org-agenda-directory "/todo.org"))
+  (find-file (concat eye/org-agenda-directory "task.org"))
   )
 #+END_SRC
 *** org-pomodoro
