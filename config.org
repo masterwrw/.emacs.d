@@ -1725,6 +1725,7 @@ smart compile
 #+BEGIN_SRC emacs-lisp
 (use-package php-mode
   :ensure t
+  :config
   (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
   (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
   (defun eye/switch-php-html-mode ()
