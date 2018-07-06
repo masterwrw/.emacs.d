@@ -1817,7 +1817,7 @@ smart compile
 ;; hides blank lines between headings
 (setq org-cycle-separator-lines 0)
 ;; always require new line in header below
-(setq require-final-newline t)
+;;(setq require-final-newline t)
 ;; calendar start at monday
 (setq calendar-week-start-day 1)
 
@@ -1918,6 +1918,10 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (require 'org-agenda)
 (require 'org-capture)
 (require 'find-lisp)
+
+;; full frame show
+(setq org-agenda-window-setup 'only-window)
+
 (setq eye/org-agenda-directory "~/notebook/gtd/")
 (setq org-agenda-files
       (find-lisp-find-files eye/org-agenda-directory "\.org$"))
@@ -1925,7 +1929,8 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (setq org-default-notes-file (concat eye/org-agenda-directory "inbox.org"))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t!)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
+      '((sequence "TODO(t)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
+	(sequence "REPORT(r)" "BUG(b)" "|" "FIXED(f)")
 	))
 
 (require 'org-protocol)
