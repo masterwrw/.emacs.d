@@ -1107,7 +1107,19 @@ helpful
 (global-set-key (kbd "M-9") 'nerdtab-jump-9)
 ;; (global-set-key (kbd "<M-SPC>") 'nerdtab-jump)
 #+END_SRC
-
+** page-break-lines
+#+BEGIN_SRC emacs-lisp
+;; 默认的线段不会占满屏幕，设置语言环境为 utf-8 的线段才会占满 (set-language-environment 'utf-8)
+;; M-x quoted-insert C-l 输入 ，不能直接输入 l
+(use-package page-break-lines
+  :ensure t
+  :config
+  (turn-on-page-break-lines-mode))
+#+END_SRC
+** subword
+#+BEGIN_SRC emacs-lisp
+(subword-mode)
+#+END_SRC
 * Programming
 ** yasnippet
 Set defer is for quickly startup.
