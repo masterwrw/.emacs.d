@@ -2007,6 +2007,22 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
   :config
   (setq org-pomodoro-format "%s"))
 #+END_SRC
+* Notes manager
+#+BEGIN_SRC emacs-lisp
+(defvar my-notes-directory "~/notebook/notes/tecnology/")
+
+(defun eye/notes-search(str)
+  "Notes search"
+  (interactive
+   (list
+    (moccur-grep-read-regexp moccur-grep-default-mask)))
+  (moccur-grep-find my-notes-directory str))
+
+(defun eye/notes-new (str)
+  "Create a new notes."
+  (interactive "sNotes name: ")
+  (find-file (concat my-notes-directory str ".org")))
+#+END_SRC
 * Blog
 ** deft
 #+BEGIN_SRC emacs-lisp
