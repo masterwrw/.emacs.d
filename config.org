@@ -1946,12 +1946,12 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 	
 	("d"
 	 "Task" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
-         "* %?\n%i\n"
+         "* TODO %?\n%i\n"
 	 :create t)
 
 	("f"
 	 "Project" entry (file+headline "~/notebook/gtd/task.org" "Projects")
-         "* %?\n%i\n"
+         "* TODO %?\n%i\n"
 	 :create t)
 
 	;; org-protocol: https://github.com/sprig/org-capture-extension
