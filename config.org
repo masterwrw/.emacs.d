@@ -1939,30 +1939,32 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 
 (setq org-capture-templates
       '(
-	("n"
-	 "New" entry (file "~/notebook/gtd/inbox.org")
+	("k"
+	 "New" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
          "* %?\n%i\n"
-	 :empty-lines 1)
+	 :create t)
 	
-	("t"
-	 "Task" entry (file+headline  "~/notebook/gtd/task.org" "Tasks")
+	("d"
+	 "Task" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
          "* %?\n%i\n"
-	 :empty-lines 1
+	 :create t)
+
+	("f"
+	 "Project" entry (file+headline "~/notebook/gtd/task.org" "Projects")
+         "* %?\n%i\n"
 	 :create t)
 
 	;; org-protocol: https://github.com/sprig/org-capture-extension
 
 	("p" 
-	 "Protocol" entry (file "~/notebook/gtd/inbox.org")
+	 "Protocol" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
 	 "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
 		%^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
-	 :empty-lines 1  
 	 :create t)
 		
 	("L" 
-	 "Protocol link" entry (file+headline  "~/notebook/gtd/inbox.org" "Urls")
+	 "Protocol link" entry (file+headline "~/notebook/gtd/inbox.org" "Urls")
          "* [[%:link][%:description]]\n%?\n"
-	 :empty-lines 1
 	 :create t)
 	
 	))
@@ -2170,6 +2172,7 @@ https://github.com/xahlee/xah-fly-keys
   (define-key xah-fly-leader-key-map (kbd "<return>") 'helm-M-x)
   (define-key xah-fly-c-keymap (kbd "e") 'counsel-find-file)
   (define-key xah-fly-dot-keymap (kbd "a") 'org-agenda)
+  (define-key xah-fly-dot-keymap (kbd "c") 'org-capture)
   (define-key xah-fly-dot-keymap (kbd "g") 'magit-status)
   (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-setup)
   (add-hook 'xah-fly-command-mode-activate-hook 'eye/command-mode-setup)
