@@ -101,7 +101,7 @@ Build-in function is M-x init-emacs-time.
 
 ** Custome faces
 #+BEGIN_SRC emacs-lisp
-  (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
+  (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
   (make-face 'font-lock-fixme-face)
   (make-face 'font-lock-study-face)
   (make-face 'font-lock-important-face)
