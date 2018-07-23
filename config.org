@@ -2022,10 +2022,8 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 
 (defun eye/notes-search(str)
   "Notes search"
-  (interactive
-   (list
-    (moccur-grep-read-regexp moccur-grep-default-mask)))
-  (moccur-grep-find my-notes-directory str))
+  (interactive"sSearch: ")
+  (counsel-ag str my-notes-directory))
 
 (defun eye/notes-new (str)
   "Create a new notes."
