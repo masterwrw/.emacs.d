@@ -1916,8 +1916,7 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (setq org-agenda-window-setup 'only-window)
 
 (setq eye/org-agenda-directory "~/notebook/gtd/")
-(setq org-agenda-files
-      (find-lisp-find-files eye/org-agenda-directory "\.org$"))
+(setq org-agenda-files (list (concat eye/org-agenda-directory "task.org")))
 
 (setq org-default-notes-file (concat eye/org-agenda-directory "inbox.org"))
 
@@ -1938,30 +1937,40 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (setq org-capture-templates
       '(
 	("k"
-	 "New" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
+	 "收集" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
          "* %?\n%i\n"
 	 :create t)
 	
+	("s"
+	 "重要紧急任务" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+         "* TODO [#A] %?\n%i\n"
+	 :create t)
+
 	("d"
-	 "Task" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
-         "* TODO %?\n%i\n"
+	 "重要不紧急任务" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+         "* TODO [#B] %?\n%i\n"
 	 :create t)
 
 	("f"
-	 "Project" entry (file+headline "~/notebook/gtd/task.org" "Projects")
-         "* TODO %?\n%i\n"
+	 "项目任务重要紧急" entry (file+headline "~/notebook/gtd/task.org" "Projects")
+         "* TODO [#A] %?\n%i\n"
+	 :create t)
+
+	("g"
+	 "项目任务重要不紧急" entry (file+headline "~/notebook/gtd/task.org" "Projects")
+         "* TODO [#B] %?\n%i\n"
 	 :create t)
 
 	;; org-protocol: https://github.com/sprig/org-capture-extension
 
 	("p" 
-	 "Protocol" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
+	 "收集网页内容（自动调用）" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
 	 "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
 		%^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
 	 :create t)
 		
 	("L" 
-	 "Protocol link" entry (file+headline "~/notebook/gtd/inbox.org" "Urls")
+	 "收集网页链接（自动调用）" entry (file+headline "~/notebook/gtd/inbox.org" "Urls")
          "* [[%:link][%:description]]\n%?\n"
 	 :create t)
 	
@@ -1973,12 +1982,14 @@ Hitting tab after an "<el" in an org-mode file will create a template for elisp 
 (setq eye-org-task-path (concat eye/org-agenda-directory "task.org"))
 (setq eye-org-finished-path (concat eye/org-agenda-directory "finished.org"))
 (setq eye-org-trash-path (concat eye/org-agenda-directory "trash.org"))
+(setq eye-org-someday-path (concat eye/org-agenda-directory "someday.org"))
 (setq org-refile-targets
       '(
 	(eye-org-inbox-path :level . 1)
         (eye-org-task-path :level . 1)
         (eye-org-finished-path :level . 1)
         (eye-org-trash-path :level . 1)
+        (eye-org-someday-path :level . 1)
 	))
 
 (setq org-archive-location (concat eye/org-agenda-directory "finished.org::"))
