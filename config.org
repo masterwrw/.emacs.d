@@ -189,6 +189,7 @@ https://github.com/tumashu/cnfonts
 #+END_SRC
 
 *** Windows shell
+
 #+BEGIN_SRC emacs-lisp
   (when (not (featurep 'x))
     (defun eye/change-shell-mode-coding ()
@@ -204,6 +205,20 @@ https://github.com/tumashu/cnfonts
     (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
     (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
+#+END_SRC
+*** Auto transcode
+#+BEGIN_SRC emacs-lisp
+(defun eye/dos2unix (buffer)
+  "Automate M-% C-q C-m RET C-q C-j RET"
+  (interactive "*b")
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward (string ?\C-m) nil t)
+      (replace-match (string ?\C-j) nil t))))
+
+(defun eye/buffer2unix ()
+  (interactive)
+  (set-buffer-file-coding-system 'unix 't))
 #+END_SRC
 
 ** Highlight current line
