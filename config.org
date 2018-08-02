@@ -347,11 +347,12 @@ https://github.com/tumashu/cnfonts
 
 * Projectile
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-    (setq projectile-enable-caching 1)
-    (projectile-mode 1))
+(use-package projectile
+  :ensure t
+  :bind ("<f3>" . 'projectile-find-file)
+  :init
+  (setq projectile-enable-caching 1)
+  (projectile-mode 1))
 #+END_SRC
 
 * Dashboard
@@ -831,6 +832,7 @@ Default downcase-word must move cursor to the word beginning.
 ** ag rg
 #+BEGIN_SRC emacs-lisp
 ;; Use faster search tools: ripgrep or the silver search
+(use-package ag :ensure t) ;; for projectile ag search
 (use-package counsel
   :ensure t
   :config
