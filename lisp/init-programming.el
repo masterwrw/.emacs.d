@@ -33,10 +33,6 @@
 (require 'smartparens)
 
 
-;; paredit
-(require-package 'paredit)
-(require 'paredit)
-
 
 ;; Indent configuration
 (setq tab-width 4 indent-tabs-mode nil)
@@ -57,15 +53,7 @@
 (indent-guide-global-mode)
 
 
-;; multiple-cursors
-(require-package 'multiple-cursors)
-(require 'multiple-cursors)
-(defhydra multiple-cursors-hydra (:color blue :hint nil)
-  ("a" mc/mark-all-like-this "all like this")
-  ("b" mc/edit-lines "edit lines")
-  ("c" mc/mark-next-like-this "next like this")
-  ("d" mc/mark-previous-like-this "previous like this")
-  ("q" nil "quit"))
+
 
 ;; auto-highlight-symbol
 (require-package 'auto-highlight-symbol)
@@ -75,11 +63,7 @@
 (diminish 'auto-highlight-symbol-mode)
 
 
-;; undo-tree
-(require-package 'undo-tree)
-(require 'undo-tree)
-(global-undo-tree-mode 1)
-(diminish 'undo-tree-mode "undo")
+
 
 
 ;; ws-butler, Unobtrusively remove trailing whitespace.
@@ -111,51 +95,8 @@
 (diminish 'volatile-highlights-mode)
 
 
-;; wgrep-ag, Writable grep buffer and apply the changes to files
-(require-package 'wgrep)
-(require-package 'wgrep-ag)
-(require 'wgrep)
-
-
 ;; iedit, Edit multiple regions in the same way simultaneously.
 (require-package 'iedit)
-
-
-;; company, auto complete
-(require-package 'company)
-(require 'company)
-(setq company-show-numbers t) ; use alt+number to quick select
-(setq company-idle-delay 0.2) ; immediately company complete
-(setq company-selection-wrap-around t) ; make previous/next selection in the popup cycles
-(setq company-minimum-prefix-length 2)
-(setq company-tooltip-limit 20)
-
-(setq company-backends nil)
-(add-to-list 'company-backends 'company-elisp 'company-files 'company-etags)
-
-(add-hook 'after-init-hook 'global-company-mode)
-
-;; company-dabbrev config, it is for current buffer string auto complete.
-(add-to-list 'company-backends 'company-dabbrev)
-(add-to-list 'company-backends 'company-dabbrev-code)
-(setq company-dabbrev-code-everywhere t)
-(setq company-dabbrev-minimum-length 2)
-(setq company-dabbrev-other-buffers 'all)
-(setq company-dabbrev-downcase nil)
-
-
-;; company-statistics, Sort candidates using completion history
-(require-package 'company-statistics)
-(require 'company-statistics)
-(company-statistics-mode)
-
-
-(require-package 'company-c-headers)
-(add-hook 'after-init-hook 'global-company-mode)
-(eval-after-load 'company
-  '(progn
-     (add-to-list 'company-backends 'company-c-headers)
-     (diminish 'company-mode "com")))
 
 
 ;; yasnippet
@@ -165,70 +106,13 @@
 
 (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
 
-;; helm-ag, Need install the_silver_searcher, https://github.com/ggreer/the_silver_searcher
-(require-package 'helm-ag)
-
-
 
 ;; Jump to previous position on current buffer.
 (require 'jtpp)
 
 
-;; eno, Goto/copy/cut any word/symbol/line in view, similar to ace-jump/easymotion
-(require-package 'eno)
-(require 'eno)
-
-(defhydra eno-hydra (:color pink :hint nil)
-"
-^Word^          ^Symbol         ^Str^          ^Paren^
-^^^^^^^^----------------------------------------------
-_a_: jump       _e_: jump       _i_: jump      _m_: jump
-_b_: copy       _f_: copy       _j_: copy      _n_: copy
-_c_: cut        _g_: cut        _k_: cut       _o_: cut
-_d_: paste      _h_: paste      _l_: paste     _p_: paste
-"
-  ("a" eno-word-jump)
-  ("b" eno-word-copy)
-  ("c" eno-word-cut)
-  ("d" eno-word-paste)
-  ("e" eno-symbol-jump)
-  ("f" eno-symbol-copy)
-  ("g" eno-symbol-cut)
-  ("h" eno-symbol-paste)
-  ("i" eno-str-jump)
-  ("j" eno-str-copy)
-  ("k" eno-str-cut)
-  ("l" eno-str-paste)
-  ("m" eno-paren-jump)
-  ("n" eno-paren-copy)
-  ("o" eno-paren-cut)
-  ("p" eno-paren-paste)
-  ("q" nil "quit" :color blue))
 
 
-;;=================================================================
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode))
-(make-face 'font-lock-fixme-face)
-(make-face 'font-lock-study-face)
-(make-face 'font-lock-important-face)
-(make-face 'font-lock-improve-face)
-(make-face 'font-lock-note-face)
-(mapc (lambda (mode)
-	(font-lock-add-keywords
-	 mode
-	 '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
-	   ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
-	   ("\\<\\(IMPROVE\\)" 1 'font-lock-improve-face t)
-	   ("\\<\\(IMPORTANT\\)" 1 'font-lock-important-face t)
-	   ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
-      fixme-modes)
-(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "Yellow" nil nil t nil t nil nil)
-(modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-important-face "Yellow" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "Dark Green" nil nil t nil t nil nil)
-
-					; Accepted file extensions and their appropriate modes
 (setq auto-mode-alist
       (append
        '(("\\.cpp$"    . c++-mode)
