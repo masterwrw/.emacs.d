@@ -123,12 +123,12 @@
 	))
 
 (setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-	      ("WAITING" :foreground "orange" :weight bold)
-	      ("SOMEDAY" :foreground "magenta" :weight bold)
+      (quote (("TODO" :foreground "#9ff048" :weight bold)
+              ("NEXT" :foreground "#ee5555" :weight bold)
+	      ("WAITING" :foreground "#999933" :weight bold)
+	      ("SOMEDAY" :foreground "#6e6e6e" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
-              ("ABORT" :foreground "forest green" :weight bold))))
+              ("ABORT" :foreground "#000000" :weight bold))))
 
 
 (require 'org-protocol)
