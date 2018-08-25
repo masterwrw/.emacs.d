@@ -11,28 +11,7 @@
   :hook (c++-mode . (lambda ()
 		      (add-to-list 'company-backends 'company-irony))))
 
-(use-package irony
-  :ensure t
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-(when (eq system-type 'windows-nt)
-  ;; Windows performance tweaks
-  (when (boundp 'w32-pipe-read-delay)
-    (setq w32-pipe-read-delay 0))
-  ;; Set the buffer size to 64K on Windows (from the original 4K)
-  (when (boundp 'w32-pipe-buffer-size)
-    (setq irony-server-w32-pipe-buffer-size (* 64 1024)))
-  ;; irony-server path
-  (setq irony--server-executable "d\:/home/.emacs.d/irony/bin/irony-server.exe")
-  ;; clang path
-  ;;(setenv "PATH"
-  ;;        (concat "C:\\msys32\\mingw64\\bin" ";"
-  ;;                (getenv "PATH")))
-  ;;(setq exec-path (append exec-path '("c:/msys32/mingw64/bin")))
-  )
+;; (require 'cpp-irony-config)
 
 ;;(use-package rtags
 ;;  :ensure t)
@@ -266,6 +245,64 @@
   (eye/shell-cmd "shell-cmake" (concat "C:\\green-soft\\git\\bin;"
                                        "C:\\green-soft\\cmake-3.11.0-rc4-win64-x64\\bin;"
                                        )))
+
+
+;;; auto insert
+(require 'autoinsert)
+(define-auto-insert '(c++-mode . "C++ skeleton")
+  '(
+    (upcase (concat "_"
+		    (replace-regexp-in-string
+		     "[^A-Za-z0-9]" "_"
+		     (file-name-nondirectory buffer-file-name))))
+    "/*******************************************************************************" \n
+    "Copyright: GR.Tec" \n
+    "Author: WRW" \n
+    "Description: " \n
+    "*******************************************************************************/" \n
+    "#ifndef " str \n "#define " str "\n\n\n"
+    "#endif"
+    ))
+
+
+
+(defun eye/create-class ()
+  "Create a class based qt"
+  (interactive)
+  (let (class base-class filename)
+    (setq class (read-string "Class name: "))  ;; input class name
+    (setq base-class (read-string "Based: " "QWidget"))  ;; input base class
+    (insert
+     (with-temp-buffer
+       (if (string-empty-p base-class)
+	   (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
+       (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.h"))))
+       (beginning-of-buffer)
+       (replace-string "name" class)
+       (beginning-of-buffer)
+       (replace-string "base" base-class)
+       (buffer-string)
+       ))
+    (setq filename (file-name-nondirectory (buffer-file-name)))
+    (with-temp-buffer
+      (insert
+       (with-temp-buffer
+	 (if (string-empty-p base-class)
+	     (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
+	   (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.cpp"))))
+	 (beginning-of-buffer)
+	 (replace-string "name" class)
+	 (beginning-of-buffer)
+	 (replace-string "base" base-class)
+	 (beginning-of-buffer)
+	 (replace-string "header" (file-name-sans-extension filename))
+	 (buffer-string)
+	 ))
+      (write-file (concat (file-name-sans-extension filename) ".cpp")))
+    ))
+
+
+
 
 
 (provide 'init-cpp)
