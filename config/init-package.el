@@ -1,4 +1,8 @@
-(package-initialize)
+;; Emacs27 warning Unnecessary call to package-initialize in init file)
+(if (< emacs-major-version 27)    
+    (package-initialize)
+  (unless package--initialized (package-initialize)))
+
 (require 'package)
 (setq package-enable-at-startup nil) ;; not activat installed packages
 
