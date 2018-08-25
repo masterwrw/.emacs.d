@@ -5,6 +5,8 @@
   :bind ("<f3>" . 'projectile-find-file)
   :init
   (setq projectile-enable-caching 1)
+  (setq projectile-globally-ignored-file-suffixes '(".sdf" ".opensdf" ".ffs_db" ".user" ".obj" "*.suo" "*.dll" ".pdb"))
+  (setq projectile-globally-ignored-directories '(".vs" ".git" "ipch" "tmp"))
   (projectile-mode 1))
 
 
