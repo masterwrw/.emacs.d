@@ -3,19 +3,13 @@
 
 (use-package company-c-headers
   :ensure t
-  :config
-  (add-hook 'c++-mode-hook
-	    '(lambda ()
-	       (eye/push-to-list 'company-c-headers company-backends)))
-  )
+  :hook (c++-mode . (lambda ()
+		      (add-to-list 'company-backends 'company-c-headers))))
 
 (use-package company-irony
   :ensure t
-  :config
-  (add-hook 'c++-mode-hook
-	    '(lambda ()
-	       (eye/push-to-list 'company-irony company-backends)))
-  )
+  :hook (c++-mode . (lambda ()
+		      (add-to-list 'company-backends 'company-irony))))
 
 (use-package irony
   :ensure t
