@@ -7,6 +7,7 @@
 (require 'init-gui)
 (require 'init-encoding)
 (require 'init-backup)
+(require 'init-history)
 (require 'init-dired)
 (require 'init-external)
 (require 'init-git)
