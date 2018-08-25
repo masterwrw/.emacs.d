@@ -13,7 +13,7 @@
   (defun eye/command-mode-setup ()
     (interactive)
     (global-hl-line-mode 0))
-  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+  (define-key key-translation-map (kbd "ESC") (kbd "<menu>"))
   (define-key xah-fly-key-map (kbd "a") 'helm-M-x)
   (define-key xah-fly-leader-key-map (kbd "<return>") 'helm-M-x)
   (define-key xah-fly-c-keymap (kbd "e") 'counsel-find-file)
