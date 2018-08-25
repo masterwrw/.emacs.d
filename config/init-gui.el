@@ -4,7 +4,7 @@
     (scroll-bar-mode -1) ;; 禁用滚动条 emacs26 -nw will be error
   )
 
-(setq frame-title-format "%b -- %f") ;; 自定义标题栏
+(setq frame-title-format "Editor %b -- %f") ;; 自定义标题栏
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
 
@@ -23,6 +23,20 @@
 (use-package cnfonts
   :ensure t)
 
+;; 全屏
+(defun fullscreen ()
+  "Fullscreen."
+  (interactive)
+  (set-frame-parameter nil 'fullscreen 'fullboth))
+
+(defun fullscreen-toggle ()
+  "Toggle fullscreen status."
+  (interactive)
+  (set-frame-parameter
+   nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+(fullscreen)
 
 ;; 最大化
 (defun maximize-frame ()
@@ -33,16 +47,9 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 
-(defun post-load-stuff ()
-  (interactive)
-  (maximize-frame)
-  (set-cursor-color "#AA0000"))
-
-(add-hook 'window-setup-hook 'post-load-stuff t)
-(add-hook 'window-setup-hook 'toggle-frame-maximized t)
-
 
 (setq default-cursor-type 'bar) ;; 光标形状
+(set-cursor-color "#AA0000") ;; 光标颜色
 
 ;; 鼠标滚轮缩放文本大小
 (if (eq system-type 'windows-nt)
@@ -62,9 +69,9 @@
 
 
 ;; 使用 emacsclient 需要先启动服务
-(add-hook 'after-init-hook
-	  (lambda ()
-	    (server-start)))
+(use-package server
+  :ensure nil
+  :hook (after-init . server-mode))
 
 
 (provide 'init-gui)
