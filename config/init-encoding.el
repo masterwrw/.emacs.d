@@ -33,7 +33,7 @@
   (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 
-(defun eye/dos2unix (buffer)
+(defun eye/remove-big-M (buffer)
   "Automate M-% C-q C-m RET C-q C-j RET"
   (interactive "*b")
   (save-excursion
@@ -41,9 +41,14 @@
     (while (search-forward (string ?\C-m) nil t)
       (replace-match (string ?\C-j) nil t))))
 
-(defun eye/buffer2unix ()
+(defun eye/convert-to-utf8-unix ()
   (interactive)
   (set-buffer-file-coding-system 'unix 't))
+
+;; vs2015默认文件编码
+(defun eye/convert-to-chinese-iso-8bit-dos ()
+  (interactive)
+  (set-buffer-file-coding-system 'chinese-iso-8bit-dos 't))
 
 
 
