@@ -81,7 +81,7 @@
 
 (defun eye/idea-light-theme ()
   (interactive)
-  (set-face-attribute 'default nil :background "#black" :foreground "black")
+  (set-face-attribute 'default nil :background "#efefef" :foreground "black")
   (set-face-attribute 'region nil :background "#3399ff" :foreground "white") ;; 选中区域
   (set-face-attribute 'mode-line nil :background "#2e2f30" :foreground "#a8abb0")
   (set-face-attribute 'hl-line nil :background "#e3f6d2")
