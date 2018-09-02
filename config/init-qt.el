@@ -4,6 +4,11 @@
   :config
   (add-hook 'qt-pro-mode 'yas-minor-mode))
 
+(use-package css-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode)))
+
 (use-package qml-mode
   :ensure t
   :init
