@@ -359,7 +359,17 @@ _d_: paste      _h_: paste      _l_: paste     _p_: paste
     (writeroom-mode -1))
   )
 
+(use-package change-inner
+  :ensure t)
 
+(use-package vimish-fold
+  :ensure t)
+
+
+(use-package electric-spacing
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'electric-spacing-mode))
 
 
 (provide 'init-edit)
