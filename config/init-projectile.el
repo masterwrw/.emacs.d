@@ -1,3 +1,6 @@
+(use-package find-file-in-project
+  :ensure t)
+
 (use-package ag :ensure t) ;; for projectile ag search
 
 (use-package projectile
