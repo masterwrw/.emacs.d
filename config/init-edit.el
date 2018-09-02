@@ -10,6 +10,8 @@
   ;;(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
   )
 
+;; 安装了 smex 后，counsel-M-x 才会按照使用频率排序
+(use-package smex :ensure t)
 
 (use-package ivy
   :ensure t)
@@ -50,6 +52,10 @@
   ([remap other-window] . switch-window)
   ("M-<f3>" . switch-window))
 
+;;https://www.emacswiki.org/emacs/SwitchingBuffers
+(defun eye/quick-switch-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 ;; Following window splits
 ;; After split a window, let the focus in the new split window.
@@ -93,13 +99,13 @@
 
 (use-package helm
   :ensure t
-  :bind
-  ("C-x C-f" . 'helm-find-files)
-  ("M-o" . 'helm-find-files)
-  ("C-x C-b" . 'ibuffer)
-  ("<f2>" . 'helm-buffers-list)
-  ("M-<f2>" . 'ibuffer)
-  ("M-x" . 'helm-M-x)
+;;  :bind
+;;  ("C-x C-f" . 'helm-find-files)
+;;  ("M-o" . 'helm-find-files)
+;;  ("C-x C-b" . 'ibuffer)
+;;  ("<f2>" . 'helm-buffers-list)
+;;  ("M-<f2>" . 'ibuffer)
+;;  ("M-x" . 'helm-M-x)
   :init
   (helm-mode 1)
   :config
