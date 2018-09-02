@@ -53,6 +53,11 @@
 		      python-mode-hook)))
     (dolist (var mode-hooks)
       (add-hook var 'ryo-modal-mode)))
+
+  (let ((excludes '(magit-status-mode-hook)))
+    (dolist (var excludes)
+      (add-hook var 'ryo-modal-mode-off))
+    )
   
   )
 
