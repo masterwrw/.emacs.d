@@ -1,62 +1,197 @@
-(use-package xah-fly-keys
-  :ensure t
-  :init
-  (setq xah-fly-use-control-key nil) ;; must before enable xah-fly-keys
-  (setq xah-fly-user-meta-key nil)
-  :config
-  (xah-fly-keys-set-layout "qwerty")
-  (defun eye/insert-mode-setup ()
-    (interactive)
-    (global-hl-line-mode 1)
-    (define-key xah-fly-key-map (kbd "M-SPC") 'xah-fly-command-mode-activate)
-    (define-key xah-fly-key-map (kbd "<f1>") 'xah-fly-command-mode-activate)) ;; must here) ;; must here
-  (defun eye/command-mode-setup ()
-    (interactive)
-    (global-hl-line-mode 0))
-  (define-key key-translation-map (kbd "ESC") (kbd "<menu>"))
-  (define-key xah-fly-key-map (kbd "a") 'helm-M-x)
-  (define-key xah-fly-leader-key-map (kbd "<return>") 'helm-M-x)
-  (define-key xah-fly-c-keymap (kbd "e") 'counsel-find-file)
-  (define-key xah-fly-dot-keymap (kbd "a") 'org-agenda)
-  (define-key xah-fly-dot-keymap (kbd "c") 'org-capture)
-  (define-key xah-fly-dot-keymap (kbd "g") 'magit-status)
-  (define-key xah-fly-h-keymap (kbd "l") 'helpful-variable)
-  (define-key xah-fly-h-keymap (kbd "j") 'helpful-function)
-  (define-key xah-fly-h-keymap (kbd "v") 'helpful-key)
-  (add-hook 'xah-fly-insert-mode-activate-hook 'eye/insert-mode-setup)
-  (add-hook 'xah-fly-command-mode-activate-hook 'eye/command-mode-setup)
-  (global-set-key (kbd "<f1>") 'xah-fly-command-mode-activate)
-  (xah-fly-keys 1))
+;;; Custom key binding
+;; M-x
+;; magit status
+;; hide block/ show block
+;; org-capture, org-agenda
+;; save file
+;; indent region or buffer
+;;;
 
+(require 'xah-functions)
 
+(defun eye/ryo-insert-space ()
+  (interactive)
+  (insert " "))
 
-(use-package hydra
-  :ensure t
-  :config
-  (defhydra hydra-function (:color red :exit t)
-    ("c" org-capture "capture")
-    ("d" youdao-dictionary-search "dict")
-    ("e" youdao-dictionary-search-from-input "dict input")
-    ("m" mpg123 "music")
-    ("g" magit-status "magit")
-    ("p" package-list-packages "packages")
-    ("=" text-scale-increase "scale add")
-    ("-" text-scale-decrease "scale sub")
-    ("q" nil "quit"))
-  (global-set-key (kbd "<f12>") 'hydra-function/body)
+(defun eye/ryo-move-up ()
+  (interactive)
+  (previous-line 3))
 
-  (defhydra hydra-programming (:color red :exit t)
-    ("a" helm-imenu "imenu") ;; imenu/helm-imenu/counsel-imenu
-    ("b" hs-toggle-hiding "toggle block hs")
-    ("h" hs-hide-all "hide all block")
-    ("s" hs-show-all "show all block")
-    ("f" eye/show-full-path "full path")
-    ("c" eye/cpp-help "cpp doc")
-    ("g" eye/qt5-help "qt5 doc")
-    ("p" eye/python-help "python doc")
-    ("q" nil "quit"))
-  (global-set-key (kbd "<f6>") 'hydra-programming/body)
+(defun eye/ryo-move-down ()
+  (interactive)
+  (next-line 3))
+
+(global-set-key (kbd "<M-wheel-up>") 'eye/ryo-move-up)
+(global-set-key (kbd "<M-wheel-down>") 'eye/ryo-move-down)
+
+(defun ryo-modal-mode-on ()
+  (interactive)
+  (ryo-modal-mode 1))
+
+(defun ryo-modal-mode-off ()
+  (interactive)
+  (ryo-modal-mode -1))
+
+(defun setup-ryo-key ()
+  ;; use ',' as a leader key
+  (global-unset-key (kbd ","))
+  (global-set-key (kbd "C-,") (lambda () (interactive) (insert ",")))
+  (global-set-key (kbd ",") 'ryo-modal-mode-on)
+  (define-key c++-mode-map (kbd ",") 'ryo-modal-mode-on)
+  (global-unset-key (kbd "`"))
+  (global-set-key (kbd "`") #'ryo-modal-mode)
+  (global-set-key (kbd "C-`") (lambda () (interactive) (insert "`")))
+
+  ;;TODO: use dolist
+  (let ((mode-hooks '(text-mode-hook
+		      prog-mode-hook
+		      c++-mode-hook
+		      emacs-lisp-mode-hook
+		      org-mode-hook
+		      helpful-mode-hook
+		      css-mode-hook
+		      python-mode-hook)))
+    (dolist (var mode-hooks)
+      (add-hook var 'ryo-modal-mode)))
+  
   )
+
+(use-package ryo-modal
+  :ensure t
+  :config
+  (setup-ryo-key)
+  (set-cursor-color "#ee44a3")
+  (setq ryo-modal-cursor-type 'box)
+  (setq ryo-modal-cursor-color "#44aa33")
+  (setq ryo-modal-default-cursor-color "#ee44a3")
+  
+  (ryo-modal-keys
+   ("mm" counsel-M-x)
+   ("SPC" ryo-modal-mode-off)
+
+   
+   ;; quick move
+   ("j" left-char)
+   ("l" right-char)
+   ("u" left-word)  
+   ("o" right-word)
+   ("i" previous-line)
+   ("k" next-line)
+   ("p" eye/ryo-move-up)
+   ("n" eye/ryo-move-down)
+   
+   ;; region/select
+   ("rr" set-mark-command)
+   ("re" xah-extend-selection)
+   ("r9" xah-select-text-in-quote)
+   ("rl" xah-select-line)
+
+   ;; copy/paste
+   ("cc" xah-copy-line-or-region)
+   ("cw" eno-word-copy)
+   ("cl" eno-line-copy) ;;invalid
+   ("cx" xah-cut-line-or-region)   
+   ("cv" yank)
+   ("vv" popup-kill-ring)
+
+   ;; move
+   ("ma" eye/beginniing-of-line)
+   ("me" move-end-of-line)
+   ("mc" avy-goto-char)
+   ("ml" avy-goto-line)
+   ("mfa" beginning-of-defun)
+   ("mfb" beginning-of-defun)
+   ("mfe" end-of-defun)
+   ("mi" imenu)
+   ("m," backward-forward-previous-location)
+   ("m." backward-forward-next-location)
+   ("mg" dumb-jump-go)
+   ("mt" counsel-etags-find-tag-at-point)
+   ("md" dired-jump)
+   ("mn" eye/new-next-line)
+   ("mp" eye/new-previous-line)
+   ("mb" bookmark-bmenu-list)
+
+   ;; delete
+   ("dc" delete-char)
+   ("dw" kill-word)   
+   ("dl" kill-line :exit t)
+   ("dd" eye/kill-inner-word)
+
+   ;; buffer
+   ("bb" mode-line-other-buffer) ;;快速切换两个buffer
+   ("bs" save-buffer)
+   ("bl" counsel-ibuffer)
+   ("bk" kill-current-buffer)
+   ("ba" beginning-of-buffer)
+   ("be" end-of-buffer)
+   
+   ;; window
+   ("ww" switch-window)
+   ("wd" delete-other-windows)
+   ("wc" delete-window)
+   ("wr" split-window-right)
+   ("wb" split-window-below)
+
+   ;; search
+   ;;TODO:quick search current word
+   ("ss" swiper)
+   ("sa" counsel-ag)
+   ("sr" query-replace)
+   ("sg" eye/grep)
+   ("sf" counsel-find-file)
+   ("so" find-file-other-window)
+   ;; find current buffer h/cpp file, use hydra define mode map key
+
+   ("hv" helpful-variable)
+   ("hf" helpful-function)
+   ("hk" helpful-key)
+
+   ("ee" eval-last-sexp)
+
+   ;; if press other key, auto exit ryo-modal-mode
+   ("a" self-insert-command :exit t)
+   ("f" self-insert-command :exit t)
+   ("g" self-insert-command :exit t)
+   ("q" self-insert-command :exit t)
+   ("t" self-insert-command :exit t)
+   ("x" self-insert-command :exit t)
+   ("y" self-insert-command :exit t)
+   ("z" self-insert-command :exit t)
+   (";" self-insert-command :exit t)
+   ("'" self-insert-command :exit t)
+   ("\\" self-insert-command :exit t)
+   ("[" self-insert-command :exit t)
+   ("]" self-insert-command :exit t)
+   ("." self-insert-command :exit t)
+   ("/" self-insert-command :exit t)
+   ("-" self-insert-command :exit t)
+   ("=" self-insert-command :exit t)
+   ("_" self-insert-command :exit t)
+   ("+" self-insert-command :exit t)
+   ("~" self-insert-command :exit t)
+   ("1" self-insert-command :exit t)
+   ("2" self-insert-command :exit t)
+   ("3" self-insert-command :exit t)
+   ("4" self-insert-command :exit t)
+   ("5" self-insert-command :exit t)
+   ("6" self-insert-command :exit t)
+   ("7" self-insert-command :exit t)
+   ("8" self-insert-command :exit t)
+   ("9" self-insert-command :exit t)
+   ("0" self-insert-command :exit t)
+   ("!" self-insert-command :exit t)
+   ("@" self-insert-command :exit t)
+   ("#" self-insert-command :exit t)
+   ("$" self-insert-command :exit t)
+   ("%" self-insert-command :exit t)
+   ("^" self-insert-command :exit t)
+   ("&" self-insert-command :exit t)
+   ("*" self-insert-command :exit t)
+   ("(" self-insert-command :exit t)
+   (")" self-insert-command :exit t)
+   
+   ))
 
 
 (provide 'init-key)

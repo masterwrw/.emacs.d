@@ -36,7 +36,7 @@
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-(fullscreen)
+;;(fullscreen)
 
 ;; 最大化
 (defun maximize-frame ()
@@ -47,9 +47,6 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 
-
-(setq default-cursor-type 'bar) ;; 光标形状
-(set-cursor-color "#AA0000") ;; 光标颜色
 
 ;; 鼠标滚轮缩放文本大小
 (if (eq system-type 'windows-nt)
