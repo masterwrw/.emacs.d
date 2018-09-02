@@ -335,5 +335,31 @@ _d_: paste      _h_: paste      _l_: paste     _p_: paste
 (diminish 'undo-tree-mode "undo")
 
 
+;; writeroom
+
+(use-package writeroom-mode
+  :ensure t
+  :config
+  (setq writeroom-width 120)
+
+  (defun writeroom-mode-on ()
+    (interactive)
+    (add-hook 'c++-mode-hook 'writeroom-mode)
+    (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+    (add-hook 'org-mode-hook 'writeroom-mode)
+    (add-hook 'css-mode-hook 'writeroom-mode)
+    (writeroom-mode))
+
+  (defun writeroom-mode-off ()
+    (interactive)
+    (remove-hook 'c++-mode-hook 'writeroom-mode)
+    (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+    (remove-hook 'org-mode-hook 'writeroom-mode)
+    (remove-hook 'css-mode-hook 'writeroom-mode)
+    (writeroom-mode -1))
+  )
+
+
+
 
 (provide 'init-edit)
