@@ -14,7 +14,10 @@
 (use-package smex :ensure t)
 
 (use-package ivy
-  :ensure t)
+  :ensure t
+  :config
+  (define-key ivy-minibuffer-map (kbd ",") 'ivy-previous-line)
+  (define-key ivy-minibuffer-map (kbd ".") 'ivy-next-line))
 
 ;;; 按行滚动
 ;; scroll one line at a time (less "jumpy" than defaults)

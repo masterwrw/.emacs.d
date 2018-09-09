@@ -1,28 +1,16 @@
 ;;; Custom key binding
-;; M-x
-;; magit status
-;; hide block/ show block
-;; org-capture, org-agenda
-;; save file
-;; indent region or buffer
-;;;
-
 (require 'xah-functions)
 
-(defun eye/ryo-insert-space ()
+(defun eye/scroll-up ()
   (interactive)
-  (insert " "))
+  (previous-line 5))
 
-(defun eye/ryo-move-up ()
+(defun eye/scroll-down ()
   (interactive)
-  (previous-line 3))
+  (next-line 5))
 
-(defun eye/ryo-move-down ()
-  (interactive)
-  (next-line 3))
-
-(global-set-key (kbd "<M-wheel-up>") 'eye/ryo-move-up)
-(global-set-key (kbd "<M-wheel-down>") 'eye/ryo-move-down)
+(global-set-key (kbd "<M-wheel-up>") 'eye/scroll-up)
+(global-set-key (kbd "<M-wheel-down>") 'eye/scroll-down)
 
 (defun ryo-modal-mode-on ()
   (interactive)
@@ -33,18 +21,9 @@
   (ryo-modal-mode -1))
 
 (defun setup-ryo-key ()
-  ;; use ',' as a leader key
-  (global-unset-key (kbd ","))
-  (global-set-key (kbd "C-,") (lambda () (interactive) (insert ",")))
-  (global-set-key (kbd ",") 'ryo-modal-mode-on)
-  (define-key c++-mode-map (kbd ",") 'ryo-modal-mode-on)
-  (global-unset-key (kbd "`"))
-  (global-set-key (kbd "`") #'ryo-modal-mode)
-  (global-set-key (kbd "C-`") (lambda () (interactive) (insert "`")))
-
-  ;;TODO: use dolist
-  (let ((mode-hooks '(text-mode-hook
-		      prog-mode-hook
+  (global-set-key (kbd "C-,") 'ryo-modal-mode-on)
+  
+  (let ((mode-hooks '(prog-mode-hook
 		      c++-mode-hook
 		      emacs-lisp-mode-hook
 		      org-mode-hook
@@ -54,13 +33,13 @@
     (dolist (var mode-hooks)
       (add-hook var 'ryo-modal-mode)))
 
-  (let ((excludes '(magit-status-mode-hook)))
+  (let ((excludes '(magit-status-mode-hook text-mode)))
     (dolist (var excludes)
       (add-hook var 'ryo-modal-mode-off))
     )
-  
   )
 
+;; 会影响 eno copy 的选中
 (use-package ryo-modal
   :ensure t
   :config
@@ -71,9 +50,8 @@
   (setq ryo-modal-default-cursor-color "#ee44a3")
   
   (ryo-modal-keys
-   ("mm" counsel-M-x)
+   ("," counsel-M-x)
    ("SPC" ryo-modal-mode-off)
-
    
    ;; quick move
    ("j" left-char)
@@ -82,8 +60,9 @@
    ("o" right-word)
    ("i" previous-line)
    ("k" next-line)
-   ("p" eye/ryo-move-up)
-   ("n" eye/ryo-move-down)
+   ("p" eye/scroll-up)
+   ("n" eye/scroll-down)
+   (";" recenter-top-bottom)
    
    ;; region/select
    ("rr" set-mark-command)
@@ -95,10 +74,11 @@
    ("cc" xah-copy-line-or-region)
    ("cw" eno-word-copy)
    ("cl" eno-line-copy) ;;invalid
-   ("cx" xah-cut-line-or-region)   
-   ("cv" yank)
-   ("vv" popup-kill-ring)
+   ("cv" popup-kill-ring)
+   ("x" xah-cut-line-or-region)
+   ("v" yank)
 
+   
    ;; move
    ("ma" eye/beginniing-of-line)
    ("me" move-end-of-line)
@@ -120,12 +100,11 @@
    ;; delete
    ("dc" delete-char)
    ("dw" kill-word)   
-   ("dl" kill-line :exit t)
+   ("dl" kill-line)
    ("dd" eye/kill-inner-word)
 
    ;; buffer
    ("bb" mode-line-other-buffer) ;;快速切换两个buffer
-   ("bs" save-buffer)
    ("bl" counsel-ibuffer)
    ("bk" kill-current-buffer)
    ("ba" beginning-of-buffer)
@@ -140,7 +119,8 @@
 
    ;; search
    ;;TODO:quick search current word
-   ("ss" swiper)
+   ("ss" save-buffer)
+   ("sw" swiper)
    ("sa" counsel-ag)
    ("sr" query-replace)
    ("sg" eye/grep)
@@ -151,50 +131,14 @@
    ("hv" helpful-variable)
    ("hf" helpful-function)
    ("hk" helpful-key)
+   ("hm" describe-mode)
+   ("hi" info)
 
    ("ee" eval-last-sexp)
 
-   ;; if press other key, auto exit ryo-modal-mode
-   ("a" self-insert-command :exit t)
-   ("f" self-insert-command :exit t)
-   ("g" self-insert-command :exit t)
-   ("q" self-insert-command :exit t)
-   ("t" self-insert-command :exit t)
-   ("x" self-insert-command :exit t)
-   ("y" self-insert-command :exit t)
-   ("z" self-insert-command :exit t)
-   (";" self-insert-command :exit t)
-   ("'" self-insert-command :exit t)
-   ("\\" self-insert-command :exit t)
-   ("[" self-insert-command :exit t)
-   ("]" self-insert-command :exit t)
-   ("." self-insert-command :exit t)
-   ("/" self-insert-command :exit t)
-   ("-" self-insert-command :exit t)
-   ("=" self-insert-command :exit t)
-   ("_" self-insert-command :exit t)
-   ("+" self-insert-command :exit t)
-   ("~" self-insert-command :exit t)
-   ("1" self-insert-command :exit t)
-   ("2" self-insert-command :exit t)
-   ("3" self-insert-command :exit t)
-   ("4" self-insert-command :exit t)
-   ("5" self-insert-command :exit t)
-   ("6" self-insert-command :exit t)
-   ("7" self-insert-command :exit t)
-   ("8" self-insert-command :exit t)
-   ("9" self-insert-command :exit t)
-   ("0" self-insert-command :exit t)
-   ("!" self-insert-command :exit t)
-   ("@" self-insert-command :exit t)
-   ("#" self-insert-command :exit t)
-   ("$" self-insert-command :exit t)
-   ("%" self-insert-command :exit t)
-   ("^" self-insert-command :exit t)
-   ("&" self-insert-command :exit t)
-   ("*" self-insert-command :exit t)
-   ("(" self-insert-command :exit t)
-   (")" self-insert-command :exit t)
+   ("g" magit-status)
+   ("a" org-agenda)
+   ("t" org-capture)
    
    ))
 
