@@ -371,5 +371,12 @@ _d_: paste      _h_: paste      _l_: paste     _p_: paste
   :config
   (add-hook 'c++-mode-hook 'electric-spacing-mode))
 
+(use-package centered-cursor-mode
+  :ensure t
+  :config
+  (add-hook 'c++-mode-hook 'centered-cursor-mode)
+  (add-hook 'emacs-lisp-mode-hook 'centered-cursor-mode)
+  (add-hook 'org-mode-hook 'centered-cursor-mode)
+  (add-hook 'css-mode-hook 'centered-cursor-mode))
 
 (provide 'init-edit)
