@@ -16,7 +16,6 @@
 (require 'init-flycheck)
 (require 'init-projectile)
 (require 'init-edit)
-(require 'init-auto-sudoedit)
 (require 'init-yasnippet)
 (require 'init-company-mode)
 (require 'init-python)
