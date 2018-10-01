@@ -1,12 +1,13 @@
-(tool-bar-mode -1) ;; 禁用工具栏
-(menu-bar-mode -1) ;; 禁用菜单栏
-(if (display-graphic-p)
+;; Fix load slow, https://github.com/raxod502/radian/issues/180
+(when tool-bar-mode
+  (tool-bar-mode -1)) ;; 禁用工具栏
+(when menu-bar-mode
+  (menu-bar-mode -1)) ;; 禁用菜单栏
+(if (and (display-graphic-p) scroll-bar-mode)
     (scroll-bar-mode -1) ;; 禁用滚动条 emacs26 -nw will be error
   )
 
 (setq frame-title-format "Editor %b -- %f") ;; 自定义标题栏
-(setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
-(setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
 
 
 ;; 去掉窗口边缘和分割窗口时分割条的边缘
@@ -18,10 +19,6 @@
   )
 
 (setq ring-bell-function 'ignore) ;; 禁止出现烦人的响铃
-
-;; 中文字体
-(use-package cnfonts
-  :ensure t)
 
 ;; 全屏
 (defun fullscreen ()
@@ -36,7 +33,7 @@
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-;;(fullscreen)
+;; (fullscreen)
 
 ;; 最大化
 (defun maximize-frame ()
@@ -47,22 +44,6 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 
-
-;; 鼠标滚轮缩放文本大小
-(if (eq system-type 'windows-nt)
-    (progn
-      (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
-      (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase))
-  (progn
-    (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
-    (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease)))
-
-
-(put 'suspend-frame 'disabled t) ;; 禁止 Ctrl+z 时挂起 emacs
-
-;; 用 y/n 代替 yes/no 的回答
-;; (fset 'yes-or-no-p 'y-or-n-p) 相同的效果
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 
 ;; 使用 emacsclient 需要先启动服务

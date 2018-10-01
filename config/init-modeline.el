@@ -1,47 +1,61 @@
-(use-package spaceline
-  :ensure t
-  :config
-  (require 'spaceline-config)
-  ;; 默认的 buffer-encoding-abbrev 会把 utf-8-dos 直接显示成 dos，这里重新定义，用于显示完整的编码
-  (spaceline-define-segment buffer-encoding-abbrev
-    "The full `buffer-file-coding-system'."
-    (format "%s" buffer-file-coding-system))
-  
-  (setq spaceline-buffer-encoding-p t)
-  (setq spaceline-buffer-encoding-abbrev-p t)
-  (setq spaceline-line-column-p t)
-  (setq spaceline-line-p nil)
-  (setq powerline-default-separator (quote arrow))
-  (spaceline-spacemacs-theme))
+;;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
+;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
+;; But I need global-mode-string,
+;; @see http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_360.html
+;; use setq-default to set it for /all/ modes
+(setq-default mode-line-format
+	      (list
+	       ;; the buffer name; the file name as a tool tip
+	       '(:eval (propertize "%b " 'face nil
+				   'help-echo (buffer-file-name)))
 
-;; 不显示分隔符
-(setq powerline-default-separator nil)
+	       ;; line and column
+	       "(" ;; '%02' to set to 2 chars at least; prevents flickering
+	       "%02l" "," "%01c"
+	       ;; (propertize "%02l" 'face 'font-lock-type-face) ","
+	       ;; (propertize "%02c" 'face 'font-lock-type-face)
+	       ") "
 
-;; 显示光标所在行号和列号
-(setq line-number-mode t)
-(setq column-number-mode t)
+	       '(:eval (format "%s" buffer-file-coding-system))
+	       
+	       " "
+	       
+	       ;; the current major mode for the buffer.
+	       "["
 
-;; 显示时间格式
-(setq display-time-24hr-format t)
-(setq display-time-format "%Y-%m-%d %H:%M")
-(display-time-mode 1)
+	       '(:eval (propertize "%m" 'face nil
+				   'help-echo buffer-file-coding-system))
+	       " "
 
-;; 不显示一些模式名称
-(use-package diminish
-  :ensure t
-  :init
-  (diminish 'which-key-mode)
-  (diminish 'linum-relative-mode)
-  (diminish 'hungry-delete-mode)
-  (diminish 'visual-line-mode)
-  (diminish 'subword-mode)
-  (diminish 'page-break-lines-mode)
-  (diminish 'auto-revert-mode)
-  (diminish 'rainbow-delimiters-mode)
-  (diminish 'rainbow-mode)
-  (diminish 'indent-guide-mode)
-  (diminish 'org-indent-mode)
-  (diminish 'helm-mode))
+
+	       ;; insert vs overwrite mode, input-method in a tooltip
+	       '(:eval (propertize (if overwrite-mode "Ovr" "Ins")
+				   'face nil
+				   'help-echo (concat "Buffer is in "
+						      (if overwrite-mode "overwrite" "insert") " mode")))
+
+	       ;; was this buffer modified since the last save?
+	       '(:eval (when (buffer-modified-p)
+			 (concat ","  (propertize "Mod"
+						  'face nil
+						  'help-echo "Buffer has been modified"))))
+
+	       ;; is this buffer read-only?
+	       '(:eval (when buffer-read-only
+			 (concat ","  (propertize "RO"
+						  'face nil
+						  'help-echo "Buffer is read-only"))))
+	       "] "
+
+	       ;;global-mode-string, org-timer-set-timer in org-mode need this
+	       (propertize "%M" 'face nil)
+
+	       " --"
+	       ;; i don't want to see minor-modes; but if you want, uncomment this:
+	       ;; minor-mode-alist  ;; list of minor modes
+	       "%-" ;; fill with '-'
+	       ))
+
 
 
 (provide 'init-modeline)

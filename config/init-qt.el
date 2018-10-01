@@ -22,7 +22,7 @@
   (add-hook 'qml-mode
 		 '(lambda ()
 		    (require 'company-qml)
-		    (eye/push-to-list 'company-qml company-backends)))
+		    (add-to-list 'company-backends 'company-qml)))
   )
 
 

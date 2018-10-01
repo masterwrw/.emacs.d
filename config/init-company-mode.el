@@ -1,33 +1,28 @@
-(defun eye/push-to-list (member lst)
-  "添加成员到列表，如果已经有了，则不重复添加"
-  (unless (memq member lst)
-    (push member lst)))
-
-
-
 (use-package company
   :ensure t
   :bind (("C-c C-y" . company-yasnippet)
 	 :map company-active-map
-	 ("C-p" . company-select-previous)
-	 ("C-n" . company-select-next)
+	 ("C-i" . company-select-previous)
+	 ("C-k" . company-select-next)
 	 :map company-search-map
-	 ("C-p" . company-select-previous)
-	 ("C-n" . company-select-next))
-  ;;:init
-  ;;(add-hook 'after-init-hook #'global-company-mode)
+	 ("C-i" . company-select-previous)
+	 ("C-k" . company-select-next))
+  :init
+  (add-hook 'after-init-hook #'global-company-mode)
   :config
   (require 'company-yasnippet)
   (require 'company-dabbrev)
   (require 'company-css)
   (require 'company-files)
   (require 'desktop)
-  (use-package company-posframe :ensure t
-    :config
-    (company-posframe-mode 1)
-    ;; Let desktop.el not record the company-posframe-mode
-    (push '(company-posframe-mode . nil)
-	  desktop-minor-mode-table))
+  (if (>= emacs-major-version 26)
+      (use-package company-posframe :ensure t
+	:config
+	(company-posframe-mode 1)
+	;; Let desktop.el not record the company-posframe-mode
+	(push '(company-posframe-mode . nil)
+	      desktop-minor-mode-table))
+    )
   
   (global-company-mode)
   
@@ -56,18 +51,12 @@
   ;; backends
   (setq company-backends nil)
   
-  (eye/push-to-list 'company-css company-backends)
-  (eye/push-to-list 'company-files company-backends)
-  (eye/push-to-list 'company-etags company-backends)
+  (add-to-list 'company-backends 'company-css)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'company-etags)
   ;; company-dabbrev config, it is for current buffer string auto complete
-  (eye/push-to-list 'company-dabbrev company-backends)
-  (eye/push-to-list 'company-dabbrev-code company-backends)
-
-  (add-hook 'emacs-lisp-mode-hook
-		 '(lambda ()
-		    (require 'company-elisp)
-		    (eye/push-to-list 'company-lisp company-backends)))
-
+  (add-to-list 'company-backends 'company-dabbrev)
+  (add-to-list 'company-backends 'company-dabbrev-code)
   
   ;; Support yas in commpany
   ;; Note: Must be the last to involve all backends
@@ -83,16 +72,15 @@
 
   (setq company-backends (mapcar #'company-backend-with-yas company-backends))
 
-  
-  
-  (use-package company-statistics
-    :ensure t
-    :init
-    (let ((dir "~/cache"))
-      (if (not (file-exists-p dir))
-          (make-directory dir))
-      (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
-    (company-statistics-mode)))
+  ;; (use-package company-statistics
+    ;; :ensure t
+    ;; :init
+    ;; (let ((dir "~/cache"))
+      ;; (if (not (file-exists-p dir))
+          ;; (make-directory dir))
+      ;; (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
+    ;; (company-statistics-mode))
+  )
 
 
 

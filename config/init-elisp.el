@@ -6,5 +6,9 @@
 	    (add-to-list 'company-backends 'company-elisp)))
 
 
+(define-key emacs-lisp-mode-map (kbd "<M-up>") 'beginning-of-defun)
+(define-key emacs-lisp-mode-map (kbd "<M-down>") 'end-of-defun)
+
+
 
 (provide 'init-elisp)

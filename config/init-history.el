@@ -19,6 +19,7 @@
   (add-to-list 'recentf-exclude "bookmarks")
   (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'"))
 
+;; save minibuffer history
 (use-package savehist
   :ensure nil
   :hook (after-init . savehist-mode)

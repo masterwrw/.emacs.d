@@ -44,5 +44,13 @@
 (setq x-select-enable-clipboard-manager nil)
 
 
+(setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
+(setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
+(put 'suspend-frame 'disabled t) ;; 禁止 Ctrl+z 时挂起 emacs
+
+;; 用 y/n 代替 yes/no 的回答
+;; (fset 'yes-or-no-p 'y-or-n-p) 相同的效果
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 
 (provide 'init-begin)

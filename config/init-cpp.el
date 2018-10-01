@@ -1,31 +1,15 @@
 (add-hook 'c++-mode-hook 'yas-minor-mode)
 (add-hook 'c-mode-hook 'yas-minor-mode)
 
+(define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
+(define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
+
+
+
 (use-package company-c-headers
   :ensure t
   :hook (c++-mode . (lambda ()
 		      (add-to-list 'company-backends 'company-c-headers))))
-
-(use-package company-irony
-  :ensure t
-  :hook (c++-mode . (lambda ()
-		      (add-to-list 'company-backends 'company-irony))))
-
-;; (require 'cpp-irony-config)
-
-;;(use-package rtags
-;;  :ensure t)
-;;
-;;(defun eye/rtags-goto-symbol ()
-;;  (interactive)
-;;  (deactivate-mark)
-;;  (ring-insert find-tag-marker-ring (point-marker))
-;;  (or (and (require 'rtags nil t)
-;;           (rtags-find-symbol-at-point))
-;;      (error nil)))
-;;
-;;(define-key c++-mode-map (kbd "M-.") 'eye/rtags-goto-symbol)
-;;(define-key c++-mode-map (kbd "M-,") 'pop-tag-mark)
 
 (defun set-tab-width-hook ()
   (setq indent-tabs-mode nil)

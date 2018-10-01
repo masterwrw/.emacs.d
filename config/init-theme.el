@@ -1,13 +1,8 @@
-;; dark theme
-;; (use-package zerodark-theme :ensure t)
-;; (use-package dracula-theme :ensure t)
-;; light theme
-
 ;; load theme after init
-;; (defvar eye/color-theme 'dracula)
-;; (add-hook 'after-init-hook
-          ;; (lambda () (when (display-graphic-p)
-		       ;; (load-theme eye/color-theme t))))
+(use-package tao-theme
+  :ensure t
+  :config
+  (if (display-graphic-p) (load-theme 'tao-yin t)))
 
 ;; cnfont generated
 (set-face-attribute
@@ -100,6 +95,6 @@
 
 
 ;; 加载完成后再修改颜色，避免出现 hl-line 错误
-(add-hook 'after-init-hook 'eye/qtcreator-dark-theme)
+;; (add-hook 'after-init-hook 'eye/qtcreator-dark-theme)
 
 (provide 'init-theme)

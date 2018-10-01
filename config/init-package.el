@@ -39,15 +39,5 @@
 (unless (package-installed-p 'use-package)
   (require-package 'use-package))
 
-(use-package use-package-chords
-  :ensure t
-  :config (key-chord-mode 1))
-
-
-;;; el-get
-(use-package el-get
-  :ensure t)
-
-
 
 (provide 'init-package)

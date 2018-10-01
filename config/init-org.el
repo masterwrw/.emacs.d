@@ -20,15 +20,6 @@
 
 (setq org-support-shift-select 1)
 
-;; org-bullets
-;;(when (not (eq system-type 'windows-nt))
-;;  (use-package org-bullets
-;;    :ensure t
-;;    :config
-;;    (add-hook 'org-mode-hook (lambda ()
-;;                               (org-bullets-mode 1)))))
-
-
 
 ;; Exported to HTML
 (use-package htmlize
@@ -223,23 +214,13 @@
   :config
   (setq org-pomodoro-format "%s"))
 
+(defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
 
-(defhydra org-mode-hydra (:colur blue)
-  "
-_a_ Agenda
-_s_ Store link   _d_ Toggle link display  _c_ Schedule
-_l_ Insert link
-_w_ Switch
-_q_ quit
-"
-  ("a" org-agenda)
-  ("s" org-store-link)
-  ("d" org-toggle-link-display)
-  ("c" org-schedule)
-  ("l" org-insert-link)
-  ("w" org-iswitchb)
-  ("q" nil))
+(define-key org-mode-map (kbd "<M-left>") 'backward-word)
+(define-key org-mode-map (kbd "<M-right>") 'forward-word)
+(define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
+(define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
 
 
 
