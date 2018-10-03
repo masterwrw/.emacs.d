@@ -39,7 +39,7 @@
 (ryo-modal-mode-on)
 
 (ryo-modal-keys
- ("SPC SPC" ryo-modal-mode-off)
+ ("SPC" ryo-modal-mode-off)
  ("q" ryo-modal-mode-off)
  
  ("j" left-char)
@@ -64,7 +64,7 @@
  ("m" set-mark-command)
 
  ;; copy/paste
- ("SPC "
+ ("C-. "
   (("3" find-file-other-window)
    ("d" dired-jump)
    ("k" eye/new-next-line)

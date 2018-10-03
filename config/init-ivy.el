@@ -7,8 +7,8 @@
 (require 'counsel)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (ryo-modal-set-key "a" 'counsel-M-x)
-(ryo-modal-set-key (kbd "SPC v") 'counsel-yank-pop)
-(ryo-modal-set-key (kbd "SPC o") 'counsel-find-file)
+(ryo-modal-set-key (kbd "C-. v") 'counsel-yank-pop)
+(ryo-modal-set-key (kbd "C-. o") 'counsel-find-file)
 (ryo-modal-set-key "bl" 'counsel-ibuffer)
 (ryo-modal-set-key "fa" 'counsel-ag)
 
