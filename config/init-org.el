@@ -1,3 +1,5 @@
+(require 'init-note)
+
 (require 'org)
 (setq org-ellipsis " ")
 (setq org-src-fontify-natively t) ;; 代码块内语法高亮
@@ -22,8 +24,7 @@
 
 
 ;; Exported to HTML
-(use-package htmlize
-  :ensure t)
+(require 'htmlize)
 
 ;; Line wrapping
 (add-hook 'org-mode-hook
@@ -74,15 +75,12 @@
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote("crypt")))
-(setq org-crypt-key nil)
-					;(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
+(setq org-crypt-key nil);(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
 
 (when (> emacs-major-version 25)
-  (use-package org-brain
-    :ensure t
-    :init
+  (progn
+    (require 'org-brain)
     (setq org-brain-path "~/notebook/notes/brain")
-    :config
     (setq org-id-track-globally t)
     (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
     ;;(push '("b" "Brain" plain (function org-brain-goto-end)
@@ -206,13 +204,8 @@
   (find-file (concat eye/org-agenda-directory "task.org"))
   )
 
-(use-package org-pomodoro
-  :ensure t
-  :bind
-  (:map org-agenda-mode-map
-	(("I" . org-pomodoro)))
-  :config
-  (setq org-pomodoro-format "%s"))
+;;(require 'org-pomodoro)
+;;(setq org-pomodoro-format "%s")
 
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
@@ -221,6 +214,7 @@
 (define-key org-mode-map (kbd "<M-right>") 'forward-word)
 (define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
 (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
+(define-key org-mode-map (kbd "C-,") 'ryo-modal-mode-on)
 
 
 

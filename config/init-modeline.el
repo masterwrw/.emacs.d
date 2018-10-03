@@ -6,7 +6,10 @@
 (setq-default mode-line-format
 	      (list
 	       ;; the buffer name; the file name as a tool tip
-	       '(:eval (propertize "%b " 'face nil
+	       '(:eval (propertize (if (buffer-modified-p)
+								   "%b* "
+								 "%b ")
+							   'face nil
 				   'help-echo (buffer-file-name)))
 
 	       ;; line and column
@@ -34,12 +37,6 @@
 				   'help-echo (concat "Buffer is in "
 						      (if overwrite-mode "overwrite" "insert") " mode")))
 
-	       ;; was this buffer modified since the last save?
-	       '(:eval (when (buffer-modified-p)
-			 (concat ","  (propertize "Mod"
-						  'face nil
-						  'help-echo "Buffer has been modified"))))
-
 	       ;; is this buffer read-only?
 	       '(:eval (when buffer-read-only
 			 (concat ","  (propertize "RO"
@@ -55,6 +52,7 @@
 	       ;; minor-mode-alist  ;; list of minor modes
 	       "%-" ;; fill with '-'
 	       ))
+
 
 
 

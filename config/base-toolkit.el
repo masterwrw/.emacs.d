@@ -183,24 +183,10 @@
     (delete-region p1 p2)
 	(delete-forward-char 1)))
 
-;; https://emacs.stackexchange.com/questions/31646/how-to-paste-with-indent
 (defun yank-with-indent ()
   (interactive)
-  (let ((indent
-         (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-    (message indent)
-    (yank)
-    (narrow-to-region (mark t) (point))
-    (pop-to-mark-command)
-    (replace-string "\n" (concat "\n" indent))
-    (widen)))
-	
-;; https://emacs.wordpress.com/2007/01/22/killing-yanking-and-copying-lines/
-;;	(defadvice yank (after indent-region activate)
-;;  (if (member major-mode '(emacs-lisp-mode scheme-mode lisp-mode
-;;                           c-mode c++-mode objc-mode
-;;                           LaTeX-mode TeX-mode))
-;;      (indent-region (region-beginning) (region-end) nil)))
+  (yank)
+  (call-interactively 'indent-region))	
 
 (defun eye/scroll-up ()
   (interactive)

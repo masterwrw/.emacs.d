@@ -1,17 +1,70 @@
-(use-package paredit
-  :ensure t
-  :config
-  ;;(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-  ;;(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-  ;;(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-  ;;(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-  ;;(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-  ;;(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-  ;;(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-  )
+(setq electric-pair-pairs '(
+							(?\{ . ?\})
+							(?\( . ?\))
+							(?\[ . ?\])
+							(?\" . ?\")
+							))
+(electric-pair-mode t)
+(show-paren-mode 1)
 
-(use-package wgrep :ensure t)
-(use-package wgrep-ag :ensure t)
+;; Show color of #hex format string.
+(require 'rainbow-mode)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-mode)
+
+;; fix warning: ad-handle-definition: ‘er/expand-region’ got redefined
+;; (setq ad-redefinition-action 'accept)
+;; (use-package expand-region
+  ;; :ensure t
+  ;; :bind ("C-q" . er/expand-region)
+  ;; )
+
+(require 'hungry-delete)
+(global-hungry-delete-mode)
+
+;; save clipboard contents into kill-ring before replace theme
+(setq save-interprogram-paste-before-kill t)
+
+(require 'wdired)
+
+;; 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
+(require 'dired-x)
+(setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
+                            auto-mode-alist))
+
+;; 如果开启了全局 global-auto-revert，则 dired-virtual-mode 模式下经常会弹出提示，所以只在编程模式下开启。
+(add-hook 'prog-mode-hook
+		  '(lambda ()
+			 (auto-revert-mode 1)))
+
+
+(require 'nerdtab)
+(setq nerdtab-tab-width 30)
+(add-to-list 'nerdtab-regex-blacklist "org-src-fontification")
+(add-to-list 'nerdtab-regex-blacklist "TAGS")
+(global-set-key (kbd "M-0") 'nerdtab-jump-0)
+(global-set-key (kbd "M-1") 'nerdtab-jump-1)
+(global-set-key (kbd "M-2") 'nerdtab-jump-2)
+(global-set-key (kbd "M-3") 'nerdtab-jump-3)
+(global-set-key (kbd "M-4") 'nerdtab-jump-4)
+(global-set-key (kbd "M-5") 'nerdtab-jump-5)
+(global-set-key (kbd "M-6") 'nerdtab-jump-6)
+(global-set-key (kbd "M-7") 'nerdtab-jump-7)
+(global-set-key (kbd "M-8") 'nerdtab-jump-8)
+(global-set-key (kbd "M-9") 'nerdtab-jump-9)
+
+
+(require 'paredit)
+;;(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+;;(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+;;(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+;;(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+;;(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+;;(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+;;(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
+
+(require 'wgrep)
+(require 'wgrep-ag)
 
 ;;; Kill buffers without asking
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
@@ -29,57 +82,50 @@
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
 
-(use-package which-key
-  :ensure t
-  :config
-  (which-key-mode))
+(require 'which-key)
+(which-key-mode)
 
 
-(use-package helm
-  :ensure t
-  :init
-  (helm-mode 1)
-  :config
-  (defun eye/helm-hide-minibuffer ()
-    (when (with-helm-buffer helm-echo-input-in-header-line)
-      (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-        (overlay-put ov 'window (selected-window))
-        (overlay-put ov 'face
-                     (let ((bg-color (face-background 'default nil)))
-                       `(:background ,bg-color :foreground ,bg-color)))
-        (setq-local cursor-type nil))))
-  (add-hook 'helm-minibuffer-set-up-hook 'eye/helm-hide-minibuffer)
-  (setq helm-autoresize-max-height 0
-        helm-autoresize-min-height 40
-        helm-M-x-fuzzy-match t
-        helm-buffers-fuzzy-matching t
-        helm-recentf-fuzzy-match t
-        helm-semantic-fuzzy-match t
-        helm-imenu-fuzzy-match t
-        helm-split-window-in-side-p nil
-        helm-move-to-line-cycle-in-source nil
-        helm-ff-search-library-in-sexp t
-        helm-scroll-amount 8 
-        helm-echo-input-in-header-line t))
+(require 'helm)
+(require 'helm-mode)
+(helm-mode 1)
 
-(require 'helm-config)    
-(helm-autoresize-mode 1)
-(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
-(define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+(defun eye/helm-hide-minibuffer ()
+  (when (with-helm-buffer helm-echo-input-in-header-line)
+    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+      (overlay-put ov 'window (selected-window))
+      (overlay-put ov 'face
+		   (let ((bg-color (face-background 'default nil)))
+		     `(:background ,bg-color :foreground ,bg-color)))
+      (setq-local cursor-type nil))))
+(add-hook 'helm-minibuffer-set-up-hook 'eye/helm-hide-minibuffer)
+(setq helm-autoresize-max-height 0
+      helm-autoresize-min-height 40
+      helm-M-x-fuzzy-match t
+      helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match t
+      helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match t
+      helm-split-window-in-side-p nil
+      helm-move-to-line-cycle-in-source nil
+      helm-ff-search-library-in-sexp t
+      helm-scroll-amount 8 
+      helm-echo-input-in-header-line t)
 
-(use-package avy
-  :ensure t
-  :bind
-  ("M-g" . avy-goto-char)
-  :config
-  (ryo-modal-keys
-   ("gg" avy-goto-char)
-   ("gk" avy-goto-line)
-   )
+;;(require 'helm-config)    
+;;(helm-autoresize-mode 1)
+;;(define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+;;(define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
+
+(require 'avy)
+(ryo-modal-keys
+ ("gg" avy-goto-char)
+ ("gk" avy-goto-line)
+ )
   
-  (global-set-key (kbd "<C-up>") 'avy-goto-char-2-above)
-  (global-set-key (kbd "<C-down>") 'avy-goto-char-2-below)
-  )
+(global-set-key (kbd "<C-up>") 'avy-goto-char-2-above)
+(global-set-key (kbd "<C-down>") 'avy-goto-char-2-below)
+
 
 ;; 自动保存书签
 (add-hook 'kill-emacs-hook
@@ -87,52 +133,46 @@
              (bookmark-save)))
 
 
-(use-package multiple-cursors
-  :ensure t)
+(require 'multiple-cursors)
 
 
 (delete-selection-mode 1)
 
 ;; 快速复制/剪切/移动其它位置的单词/行
-(use-package eno
-  :ensure t)
+(require 'eno)
 
 ;; writeroom
-(use-package writeroom-mode
-  :ensure t
-  :config
-  (setq writeroom-width 120)
+(require 'writeroom-mode)
+(setq writeroom-width 120)
 
-  (defun writeroom-mode-on ()
-    (interactive)
-    (add-hook 'c++-mode-hook 'writeroom-mode)
-    (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-    (add-hook 'org-mode-hook 'writeroom-mode)
-    (add-hook 'css-mode-hook 'writeroom-mode)
-    (writeroom-mode))
+(defun writeroom-mode-on ()
+  (interactive)
+  (add-hook 'c++-mode-hook 'writeroom-mode)
+  (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+  (add-hook 'org-mode-hook 'writeroom-mode)
+  (add-hook 'css-mode-hook 'writeroom-mode)
+  (writeroom-mode))
 
-  (defun writeroom-mode-off ()
-    (interactive)
-    (remove-hook 'c++-mode-hook 'writeroom-mode)
-    (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-    (remove-hook 'org-mode-hook 'writeroom-mode)
-    (remove-hook 'css-mode-hook 'writeroom-mode)
-    (writeroom-mode -1))
-  )
+(defun writeroom-mode-off ()
+  (interactive)
+  (remove-hook 'c++-mode-hook 'writeroom-mode)
+  (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+  (remove-hook 'org-mode-hook 'writeroom-mode)
+  (remove-hook 'css-mode-hook 'writeroom-mode)
+  (writeroom-mode -1))
 
-(use-package change-inner
-  :ensure t)
+;;(use-package change-inner
+;;  :ensure t)
 
-(use-package vimish-fold
-  :ensure t)
+(require 'vimish-fold)
 
 
-(use-package centered-cursor-mode
-  :ensure t
-  :config
-  (add-hook 'c++-mode-hook 'centered-cursor-mode)
-  (add-hook 'emacs-lisp-mode-hook 'centered-cursor-mode)
-  (add-hook 'org-mode-hook 'centered-cursor-mode)
-  (add-hook 'css-mode-hook 'centered-cursor-mode))
+;; (use-package centered-cursor-mode
+  ;; :ensure t
+  ;; :config
+  ;; (add-hook 'c++-mode-hook 'centered-cursor-mode)
+  ;; (add-hook 'emacs-lisp-mode-hook 'centered-cursor-mode)
+  ;; (add-hook 'org-mode-hook 'centered-cursor-mode)
+  ;; (add-hook 'css-mode-hook 'centered-cursor-mode))
 
 (provide 'init-edit)

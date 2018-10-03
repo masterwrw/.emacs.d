@@ -1,29 +1,19 @@
-(use-package qt-pro-mode
-  :ensure t
-  :mode ("\\.pro\\'" "\\.pri\\'")
-  :config
-  (add-hook 'qt-pro-mode 'yas-minor-mode))
+(require 'qt-pro-mode)
+;;  :mode ("\\.pro\\'" "\\.pri\\'")
+(add-hook 'qt-pro-mode 'yas-minor-mode)
 
-(use-package css-mode
-  :ensure t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode)))
+(require 'css-mode)
+;;  (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode)))
 
-(use-package qml-mode
-  :ensure t
-  :init
-  (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
-  (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
-  )
+(require 'qml-mode)
+;;  (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
+;;(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
 
-(use-package company-qml
-  :ensure t
-  :config
-  (add-hook 'qml-mode
-		 '(lambda ()
-		    (require 'company-qml)
-		    (add-to-list 'company-backends 'company-qml)))
-  )
+(require 'company-qml)
+(add-hook 'qml-mode
+	  '(lambda ()
+	     (require 'company-qml)
+	     (add-to-list 'company-backends 'company-qml)))
 
 
 

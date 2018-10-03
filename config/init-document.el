@@ -1,15 +1,12 @@
-(use-package helm-dash
-  :ensure t
-  :config
-  (setq helm-dash-browser-func 'eww)
-  (setq helm-dash-docsets-path "~/.docset")
-  (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp")))
+(require 'helm-dash)
+(setq helm-dash-browser-func 'eww)
+(setq helm-dash-docsets-path "~/.docset")
+(setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
 
 
 (if (>= emacs-major-version 26)
-    (use-package helpful
-      :ensure t
-      :config
+    (progn
+      (require 'helpful)
       (global-set-key (kbd "<f1> v") 'helpful-variable)
       (global-set-key (kbd "<f1> f") 'helpful-function)
       (global-set-key (kbd "<f1> k") 'helpful-key)

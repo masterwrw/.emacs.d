@@ -1,17 +1,13 @@
-(use-package counsel-etags
-  :ensure t
-  :config
-  ;; Don't ask before rereading the TAGS files if they have changed
-  (setq tags-revert-without-query t)
-  ;; Don't warn when TAGS files are large
-  (setq large-file-warning-threshold nil)
-  ;; Setup auto update now
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (add-hook 'after-save-hook
-                        'counsel-etags-virtual-update-tags 'append 'local)))
-  :bind
-  ("M-/" . 'counsel-etags-find-tag-at-point))
+(require 'counsel-etags)
+;; Don't ask before rereading the TAGS files if they have changed
+(setq tags-revert-without-query t)
+;; Don't warn when TAGS files are large
+(setq large-file-warning-threshold nil)
+;; Setup auto update now
+(add-hook 'prog-mode-hook
+	  (lambda ()
+	    (add-hook 'after-save-hook
+		      'counsel-etags-virtual-update-tags 'append 'local)))
 
 (with-eval-after-load 'counsel-etags
   ;; counsel-etags-ignore-directories does NOT support wildcast
@@ -30,28 +26,20 @@
 ;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
 ;;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 
-(use-package backward-forward
-  :ensure t
-  :config
-  (advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
-  (backward-forward-mode t)
-  (global-set-key (kbd "<C-left>") 'backward-forward-previous-location)
-  (global-set-key (kbd "<C-right>") 'backward-forward-next-location)
-  (ryo-modal-keys
-   ("," backward-forward-previous-location)
-   ("." backward-forward-next-location)
-   )
-  )
+(require 'backward-forward)
+(advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
+(backward-forward-mode t)
+(global-set-key (kbd "<C-left>") 'backward-forward-previous-location)
+(global-set-key (kbd "<C-right>") 'backward-forward-next-location)
+(ryo-modal-keys
+ ("," backward-forward-previous-location)
+ ("." backward-forward-next-location)
+ )
 
-(use-package dumb-jump
-  :ensure t
-  :bind
-  ("M-," . 'dumb-jump-back)
-  ("M-." . 'dumb-jump-go)
-  :config
-  (advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper)
-  (ryo-modal-set-key "gs" 'dumb-jump-go) ;;goto symbol
-  )
+
+(require 'dumb-jump)
+(advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper)
+(ryo-modal-set-key "gs" 'dumb-jump-go) ;;goto symbol
 
 
 (provide 'init-navigation)

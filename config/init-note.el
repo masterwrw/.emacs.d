@@ -1,4 +1,4 @@
-(defvar my-notes-directory "~/notebook/notes/tecnology/")
+(defvar my-notes-directory "~/notebook/notes/technology/")
 
 (defun search-notes (str)
   "Notes search"
@@ -12,29 +12,26 @@
 
 
 ;;; deft
-(use-package deft
-  :ensure t
-  :config
-  (setq deft-directory my-notes-directory);;"~/projects/python/blog/soeye.github.io/posts")
-  (setq deft-extensions '("org"))
-  (setq deft-recursive t)
-  (setq deft-text-mode 'org-mode)
-  (setq deft-incremental-search nil)
-  (setq deft-use-filename-as-title t)
-  (setq deft-strip-summary-regexp (concat "\\("
-                                          "^#\\+OPTIONS:.*"
-                                          "\\|^#\\+BEGIN.*"
-                                          "\\|^\.+ title: "
-                                          "\\|^\.+ slug.*"
-                                          "\\|^\.+ date.*"
-                                          "\\|^\.+ tags.*"
-                                          "\\|^\.+ category.*"
-                                          "\\|^\.+ link.*"
-                                          "\\|^\.+ desc.*"
-                                          "\\|^\.+ type.*"
-                                          "\\|^#\\+END.*"
-                                          "\\)"))
-  )
+(require 'deft)
+(setq deft-directory my-notes-directory)
+(setq deft-extensions '("org"))
+(setq deft-recursive t)
+(setq deft-text-mode 'org-mode)
+(setq deft-incremental-search nil)
+(setq deft-use-filename-as-title t)
+(setq deft-strip-summary-regexp (concat "\\("
+					"^#\\+OPTIONS:.*"
+					"\\|^#\\+BEGIN.*"
+					"\\|^\.+ title: "
+					"\\|^\.+ slug.*"
+					"\\|^\.+ date.*"
+					"\\|^\.+ tags.*"
+					"\\|^\.+ category.*"
+					"\\|^\.+ link.*"
+					"\\|^\.+ desc.*"
+					"\\|^\.+ type.*"
+					"\\|^#\\+END.*"
+					"\\)"))
 
 (defun deft-other-dir ()
   (interactive)

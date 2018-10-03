@@ -18,7 +18,6 @@
   (fringe-mode '(0 . 0)) ;; middle of split frame
   )
 
-(setq ring-bell-function 'ignore) ;; 禁止出现烦人的响铃
 
 ;; 全屏
 (defun fullscreen ()
@@ -47,9 +46,7 @@
 
 
 ;; 使用 emacsclient 需要先启动服务
-(use-package server
-  :ensure nil
-  :hook (after-init . server-mode))
+(server-start)
 
 
 (provide 'init-gui)

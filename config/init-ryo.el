@@ -29,95 +29,91 @@
     )
   )
 
-(use-package ryo-modal
-  :ensure t
-  :config
-  (setup-ryo-key)
-  (set-cursor-color "#ee44a3")
-  (setq ryo-modal-cursor-type 'box)
-  (setq ryo-modal-cursor-color "#44aa33")
-  (setq ryo-modal-default-cursor-color "#ee44a3")
+(require 'ryo-modal)
+(setup-ryo-key)
+(set-cursor-color "#ee44a3")
+(setq ryo-modal-cursor-type 'box)
+(setq ryo-modal-cursor-color "#44aa33")
+(setq ryo-modal-default-cursor-color "#ee44a3")
 
-  (ryo-modal-mode-on)
-  
-  (ryo-modal-keys
-   ("SPC SPC" ryo-modal-mode-off)
-   ("q" ryo-modal-mode-off)
-   
-   ("j" left-char)
-   ("l" right-char)
-   ("u" left-word)  
-   ("o" right-word)
-   ("i" previous-line)
-   ("k" next-line)
-   ("h" eye/beginniing-of-line)
-   (";" end-of-line)
-   ("p" eye/scroll-up)
-   ("n" eye/scroll-down)
-   ("'" recenter-top-bottom)
-   ("/" xah-comment-dwim)
-   ("s" save-buffer)
+(ryo-modal-mode-on)
 
-   ("`" indent-for-tab-command)
-   ("t" nil)
-   ("8" xah-extend-selection)
-   
-   ;; region/select
-   ("m" set-mark-command)
+(ryo-modal-keys
+ ("SPC SPC" ryo-modal-mode-off)
+ ("q" ryo-modal-mode-off)
+ 
+ ("j" left-char)
+ ("l" right-char)
+ ("u" left-word)  
+ ("o" right-word)
+ ("i" previous-line)
+ ("k" next-line)
+ ("h" eye/beginniing-of-line)
+ (";" end-of-line)
+ ("p" eye/scroll-up)
+ ("n" eye/scroll-down)
+ ("'" recenter-top-bottom)
+ ("/" xah-comment-dwim)
+ ("s" save-buffer)
 
-   ;; copy/paste
-   ("SPC "
-    (("c" eno-word-copy)
-     ("v" popup-kill-ring)
-     ("3" find-file-other-window)
-     ("d" dired-jump)
-     ("k" eye/new-next-line)
-     ("i" eye/new-previous-line)
-     ("w" other-window)
-     ))
+ ("`" indent-for-tab-command)
+ ("t" nil)
+ ("8" xah-extend-selection)
+ 
+ ;; region/select
+ ("m" set-mark-command)
 
-   ("w"
-    (("l" windmove-right)
-     ("j" windmove-left)
-     ("i" windmove-up)
-     ("k" windmove-down)))
-   
-   ;; move
-   ("gh" beginning-of-defun)
-   ("gl" end-of-defun)
-   ("gi" imenu)
-   ("gb" bookmark-bmenu-list)
-
-   ;; buffer
-   ("bb" mode-line-other-buffer) ;;快速切换两个buffer
-   ("bk" kill-current-buffer)
-   ("ba" beginning-of-buffer)
-   ("be" end-of-buffer)
-   ("bs" save-buffer)
-   
-   ("c" xah-copy-line-or-region)
-   ("x" xah-cut-line-or-region)
-   ("v" yank-with-indent)
-   ("z" undo)
-
-   ;; delete
-   ("dd" delete-line-no-copy)
-   ("dl" delete-char)
-   ("du" delete-inner-word-no-copy)
-   ("do" delete-forward-word-no-copy)   
-   ("d;" delete-end-of-line-no-copy)
-   ("dh" delete-beginning-of-line-no-copy)
-   ("dj" delete-backward-char)
-
-   ;; find
-   ("fr" query-replace)
-   ("fg" eye/grep)
-
-   ;; open
-   ("1" delete-other-windows)
-   ("2" split-window-below)
-   ("3" split-window-right)
+ ;; copy/paste
+ ("SPC "
+  (("3" find-file-other-window)
+   ("d" dired-jump)
+   ("k" eye/new-next-line)
+   ("i" eye/new-previous-line)
+   ("w" other-window)
    ))
+
+ ("w"
+  (("l" windmove-right)
+   ("j" windmove-left)
+   ("i" windmove-up)
+   ("k" windmove-down)))
+ 
+ ;; move
+ ("gh" beginning-of-defun)
+ ("gl" end-of-defun)
+ ("gi" imenu)
+ ("gb" bookmark-bmenu-list)
+
+ ;; buffer
+ ("bb" mode-line-other-buffer) ;;快速切换两个buffer
+ ("bk" kill-current-buffer)
+ ("ba" beginning-of-buffer)
+ ("be" end-of-buffer)
+ ("bs" save-buffer)
+ 
+ ("c" xah-copy-line-or-region)
+ ("x" xah-cut-line-or-region)
+ ("v" yank-with-indent)
+ ("z" undo)
+
+ ;; delete
+ ("dd" delete-line-no-copy)
+ ("dl" delete-char)
+ ("du" delete-inner-word-no-copy)
+ ("do" delete-forward-word-no-copy)   
+ ("d;" delete-end-of-line-no-copy)
+ ("dh" delete-beginning-of-line-no-copy)
+ ("dj" delete-backward-char)
+
+ ;; find
+ ("fr" query-replace)
+ ("fg" eye/grep)
+
+ ;; open
+ ("1" delete-other-windows)
+ ("2" split-window-below)
+ ("3" split-window-right)
+ )
 
 
 (global-set-key (kbd "<M-up>") 'eye/scroll-up)

@@ -1,0 +1,171 @@
+[submodule "site-lisp/nerdtab"]
+	path = site-lisp/nerdtab
+	url = https://github.com/casouri/nerdtab
+[submodule "site-lisp/idle-require"]
+	path = site-lisp/idle-require
+	url = https://github.com/nschum/idle-require.el
+[submodule "site-lisp/ryo-modal"]
+	path = site-lisp/ryo-modal
+	url = https://github.com/Kungsgeten/ryo-modal
+[submodule "site-lisp/lua-mode"]
+	path = site-lisp/lua-mode
+	url = https://github.com/immerrr/lua-mode
+[submodule "site-lisp/yasnippet"]
+	path = site-lisp/yasnippet
+	url = https://github.com/joaotavora/yasnippet
+[submodule "site-lisp/backward-forward"]
+	path = site-lisp/backward-forward
+	url = https://gitlab.com/vancan1ty/emacs-backward-forward
+[submodule "site-lisp/dash"]
+	path = site-lisp/dash
+	url = https://github.com/magnars/dash.el
+[submodule "site-lisp/helm"]
+	path = site-lisp/helm
+	url = https://github.com/emacs-helm/helm
+[submodule "site-lisp/helm-dash"]
+	path = site-lisp/helm-dash
+	url = https://github.com/areina/helm-dash
+[submodule "site-lisp/helpful"]
+	path = site-lisp/helpful
+	url = https://github.com/Wilfred/helpful
+[submodule "site-lisp/magit"]
+	path = site-lisp/magit
+	url = https://github.com/magit/magit
+[submodule "site-lisp/flycheck"]
+	path = site-lisp/flycheck
+	url = https://github.com/flycheck/flycheck
+[submodule "site-lisp/php-mode"]
+	path = site-lisp/php-mode
+	url = https://github.com/emacs-php/php-mode
+[submodule "site-lisp/youdao-dictionary"]
+	path = site-lisp/youdao-dictionary
+	url = https://github.com/xuchunyang/youdao-dictionary.el
+[submodule "site-lisp/deft"]
+	path = site-lisp/deft
+	url = https://github.com/jrblevin/deft
+[submodule "site-lisp/multi-term"]
+	path = site-lisp/multi-term
+	url = https://github.com/emacsorphanage/multi-term
+[submodule "site-lisp/qt-pro-mode"]
+	path = site-lisp/qt-pro-mode
+	url = https://github.com/EricCrosson/qt-pro-mode
+[submodule "site-lisp/qml-mode"]
+	path = site-lisp/qml-mode
+	url = https://github.com/cataska/qml-mode
+[submodule "site-lisp/company-qml"]
+	path = site-lisp/company-qml
+	url = https://github.com/cute-jumper/company-qml
+[submodule "site-lisp/org-brain"]
+	path = site-lisp/org-brain
+	url = https://github.com/Kungsgeten/org-brain
+[submodule "site-lisp/org-pomodoro"]
+	path = site-lisp/org-pomodoro
+	url = https://github.com/lolownia/org-pomodoro
+[submodule "site-lisp/counsel-etags"]
+	path = site-lisp/counsel-etags
+	url = https://github.com/redguardtoo/counsel-etags
+[submodule "site-lisp/dumb-jump"]
+	path = site-lisp/dumb-jump
+	url = https://github.com/jacktasia/dumb-jump
+[submodule "site-lisp/jinja2-mode"]
+	path = site-lisp/jinja2-mode
+	url = https://github.com/paradoxxxzero/jinja2-mode
+[submodule "site-lisp/rainbow-mode"]
+	path = site-lisp/rainbow-mode
+	url = https://github.com/emacsmirror/rainbow-mode
+[submodule "site-lisp/hungry-delete"]
+	path = site-lisp/hungry-delete
+	url = https://github.com/nflath/hungry-delete
+[submodule "site-lisp/paredit"]
+	path = site-lisp/paredit
+	url = https://github.com/emacsmirror/paredit
+[submodule "site-lisp/wgrep"]
+	path = site-lisp/wgrep
+	url = https://github.com/mhayashi1120/Emacs-wgrep
+[submodule "site-lisp/which-key"]
+	path = site-lisp/which-key
+	url = https://github.com/justbur/emacs-which-key
+[submodule "site-lisp/avy"]
+	path = site-lisp/avy
+	url = https://github.com/abo-abo/avy
+[submodule "site-lisp/multiple-cursors"]
+	path = site-lisp/multiple-cursors
+	url = https://github.com/magnars/multiple-cursors.el
+[submodule "site-lisp/eno"]
+	path = site-lisp/eno
+	url = https://github.com/enoson/eno.el
+[submodule "site-lisp/writeroom-mode"]
+	path = site-lisp/writeroom-mode
+	url = https://github.com/joostkremers/writeroom-mode
+[submodule "site-lisp/vimish-fold"]
+	path = site-lisp/vimish-fold
+	url = https://github.com/mrkkrp/vimish-fold
+[submodule "site-lisp/async"]
+	path = site-lisp/async
+	url = https://github.com/jwiegley/emacs-async
+[submodule "site-lisp/swiper-counsel-ivy"]
+	path = site-lisp/swiper-counsel-ivy
+	url = https://github.com/abo-abo/swiper
+[submodule "site-lisp/smex"]
+	path = site-lisp/smex
+	url = https://github.com/nonsequitur/smex
+[submodule "site-lisp/find-file-in-project"]
+	path = site-lisp/find-file-in-project
+	url = https://github.com/technomancy/find-file-in-project
+[submodule "site-lisp/company"]
+	path = site-lisp/company
+	url = https://github.com/company-mode/company-mode
+[submodule "site-lisp/company-c-headers"]
+	path = site-lisp/company-c-headers
+	url = https://github.com/randomphrase/company-c-headers
+[submodule "site-lisp/smart-compile"]
+	path = site-lisp/smart-compile
+	url = https://github.com/zenitani/elisp
+[submodule "site-lisp/yasnippet-snippets"]
+	path = site-lisp/yasnippet-snippets
+	url = https://github.com/AndreaCrotti/yasnippet-snippets
+[submodule "site-lisp/pos-tip"]
+	path = site-lisp/pos-tip
+	url = https://github.com/pitkali/pos-tip
+[submodule "site-lisp/chinese-word-at-point"]
+	path = site-lisp/chinese-word-at-point
+	url = https://github.com/xuchunyang/chinese-word-at-point.el
+[submodule "site-lisp/popup"]
+	path = site-lisp/popup
+	url = https://github.com/auto-complete/popup-el
+[submodule "site-lisp/names"]
+	path = site-lisp/names
+	url = https://github.com/Malabarba/names
+[submodule "site-lisp/htmlize"]
+	path = site-lisp/htmlize
+	url = https://github.com/hniksic/emacs-htmlize.git
+[submodule "site-lisp/s"]
+	path = site-lisp/s
+	url = https://github.com/magnars/s.el.git
+[submodule "site-lisp/f"]
+	path = site-lisp/f
+	url = https://github.com/rejeep/f.el
+[submodule "site-lisp/edit-at-point"]
+	path = site-lisp/edit-at-point
+	url = https://github.com/enoson/edit-at-point.el
+[submodule "site-lisp/visual-fill-column"]
+	path = site-lisp/visual-fill-column
+	url = https://github.com/joostkremers/visual-fill-column
+[submodule "site-lisp/ghub"]
+	path = site-lisp/ghub
+	url = https://github.com/magit/ghub
+[submodule "site-lisp/graphql"]
+	path = site-lisp/graphql
+	url = https://github.com/vermiculus/graphql.el
+[submodule "site-lisp/treepy"]
+	path = site-lisp/treepy
+	url = https://github.com/volrath/treepy.el
+[submodule "site-lisp/with-editor"]
+	path = site-lisp/with-editor
+	url = https://github.com/magit/with-editor
+[submodule "site-lisp/magit-popup"]
+	path = site-lisp/magit-popup
+	url = https://github.com/magit/magit-popup
+[submodule "site-lisp/company-php"]
+	path = site-lisp/company-php
+	url = https://github.com/xcwen/ac-php/

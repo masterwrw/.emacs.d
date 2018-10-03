@@ -1,15 +1,18 @@
+;;; c++ and qt configuration
+
+(require 'init-qt)
+(require 'cc-mode)
+
 (add-hook 'c++-mode-hook 'yas-minor-mode)
 (add-hook 'c-mode-hook 'yas-minor-mode)
 
 (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
 (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
 
-
-
-(use-package company-c-headers
-  :ensure t
-  :hook (c++-mode . (lambda ()
-		      (add-to-list 'company-backends 'company-c-headers))))
+(require 'company-c-headers)
+(add-hook 'c++-mode
+	  (lambda ()
+	    (add-to-list 'company-backends 'company-c-headers)))
 
 (defun set-tab-width-hook ()
   (setq indent-tabs-mode nil)
@@ -206,15 +209,8 @@
 
 (define-key c++-mode-map (kbd "<f5>") 'make-without-asking)
 
-(use-package smart-compile
-  :ensure t
-  :config
-  (setq smart-compile-option-string "-w -s -j4"))
-
-(global-set-key (kbd "<f5>") 'gud-go)
-(global-set-key (kbd "<f10>") 'gud-next)
-(global-set-key (kbd "<f11>") 'gud-step)
-
+(require 'smart-compile)
+(setq smart-compile-option-string "-w -s -j4")
 
 (defun eye/cpp-help ()
   "Find cpp reference document."

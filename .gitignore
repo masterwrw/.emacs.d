@@ -30,3 +30,6 @@ TAGS
 .mc-lists.el
 tramp
 history
+*.elc
+#*#
+abbrev_defs

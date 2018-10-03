@@ -1,25 +1,6 @@
-;; load theme after init
-(use-package tao-theme
-  :ensure t
-  :config
-  (if (display-graphic-p) (load-theme 'tao-yin t)))
+(add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
+(load-theme 'my-dark t)
 
-;; cnfont generated
-(set-face-attribute
- 'default nil
- :font (font-spec :name "-outline-Source Code Pro-normal-italic-normal-mono-*-*-*-*-c-*-iso10646-1"
-                  :weight 'normal
-                  :slant 'normal
-                  :size 16))
-(dolist (charset '(kana han symbol cjk-misc bopomofo))
-  (set-fontset-font
-   (frame-parameter nil 'font)
-   charset
-   (font-spec :family "Microsoft YaHei"
-              :weight 'normal
-              :slant 'normal
-              :size 12.0)))
- 
 
 ;; 自定义一些关键词高亮
 (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
@@ -29,7 +10,7 @@
 (make-face 'font-lock-improve-face)
 (make-face 'font-lock-note-face)
 (mapc (lambda (mode)
-	(font-lock-add-keywords
+		(font-lock-add-keywords
          mode
          '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
            ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
@@ -94,7 +75,5 @@
   )
 
 
-;; 加载完成后再修改颜色，避免出现 hl-line 错误
-;; (add-hook 'after-init-hook 'eye/qtcreator-dark-theme)
 
 (provide 'init-theme)

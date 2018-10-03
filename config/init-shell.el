@@ -2,20 +2,13 @@
   (global-set-key (kbd "<S-return>") 'shell))
 
 (when (not (eq system-type 'windows-nt))
-  (use-package multi-term
-    :ensure t
-    :bind
-    (("S-<return>" . 'multi-term)
-     :map term-mode-map
-     ("M-[" . 'multi-term-preve)
-     ("M-]" . 'multi-term-next))
-    :config
-    ;; no limit buffer length
-    (setq term-buffer-maximum-size 0)
-    ;; use bash or zsh
-    (if (executable-find "zsh")
-	(setq multi-term-program "/bin/zsh")
-      (setq multi-term-program "/bin/bash"))))
+  (require 'multi-term)
+  ;; no limit buffer length
+  (setq term-buffer-maximum-size 0)
+  ;; use bash or zsh
+  (if (executable-find "zsh")
+      (setq multi-term-program "/bin/zsh")
+    (setq multi-term-program "/bin/bash")))
 
 
 ;;; eshell
