@@ -60,6 +60,8 @@
        (require 'init-font)
        (require 'tab-init)
        (require 'init-modeline)
+       (require 'auto-save-init)
+	   (require 'watch-other-window)
        (require 'init-edit)
        (require 'init-dired)
        (require 'init-git)

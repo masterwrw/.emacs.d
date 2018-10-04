@@ -6,7 +6,8 @@
 (setq version-control t)
 (setq backup-directory-alist '(("." . "~/cache/backups")))
 ;; 临时文件 #file#
-(setq auto-save-file-name-transforms '((".*" "~/cache/backups" t)))
+(setq auto-save-default t) ;; 开启自动备份临时文件，auto-save.el 中会修改这个变量
+(setq auto-save-file-name-transforms '((".*" "~/cache/backups" t))) ;; 设置备份文件目录
 
 
 (provide 'init-backup)

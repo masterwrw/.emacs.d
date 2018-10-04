@@ -15,11 +15,14 @@
 
   (let ((mode-hooks '(find-file-hook
 		      message-mode-hook
-		      ;; prog-mode-hook
+		      dired-mode-hook
+		      help-mode-hook
+		      man-mode-hook
+		      prog-mode-hook
+		      helpful-mode-hook
 		      ;; c++-mode-hook
 		      ;; emacs-lisp-mode-hook
 		      ;; org-mode-hook
-		      ;; helpful-mode-hook
 		      ;; css-mode-hook
 		      ;; python-mode-hook
 		      )))
@@ -44,10 +47,10 @@
 (ryo-modal-keys
  ("SPC" ryo-modal-mode-off)
  ("q" ryo-modal-mode-off)
- 
+
  ("j" left-char)
  ("l" right-char)
- ("u" left-word)  
+ ("u" left-word)
  ("o" right-word)
  ("i" previous-line)
  ("k" next-line)
@@ -62,7 +65,7 @@
  ("`" indent-for-tab-command)
  ("t" nil)
  ("8" xah-extend-selection)
- 
+
  ;; region/select
  ("m" set-mark-command)
 
@@ -81,7 +84,7 @@
    ("j" windmove-left)
    ("i" windmove-up)
    ("k" windmove-down)))
- 
+
  ;; move
  ("gh" beginning-of-defun)
  ("gl" end-of-defun)
@@ -94,7 +97,7 @@
  ("ba" beginning-of-buffer)
  ("be" end-of-buffer)
  ("bs" save-buffer)
- 
+
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
  ("v" yank-with-indent)
@@ -104,7 +107,7 @@
  ("dd" delete-line-no-copy)
  ("dl" delete-char)
  ("du" delete-inner-word-no-copy)
- ("do" delete-forward-word-no-copy)   
+ ("do" delete-forward-word-no-copy)
  ("d;" delete-end-of-line-no-copy)
  ("dh" delete-beginning-of-line-no-copy)
  ("dj" delete-backward-char)
@@ -149,5 +152,3 @@
 
 
 (provide 'init-ryo)
-
-

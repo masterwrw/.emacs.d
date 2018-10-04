@@ -12,11 +12,16 @@
 
 ;; 去掉窗口边缘和分割窗口时分割条的边缘
 ;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
-;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.    
+;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.
 (when (eq system-type 'windows-nt)
   (set-window-fringes nil 0 0) ;; border side
   (fringe-mode '(0 . 0)) ;; middle of split frame
   )
+
+
+(blink-cursor-mode -1) ;; 取消光标闪烁
+(setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
+(setq split-width-threshold nil) ;; 屏幕宽度变化了也强制使用上下分屏
 
 
 ;; 全屏
