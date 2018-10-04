@@ -37,21 +37,6 @@
 			 (auto-revert-mode 1)))
 
 
-(require 'nerdtab)
-(setq nerdtab-tab-width 30)
-(add-to-list 'nerdtab-regex-blacklist "org-src-fontification")
-(add-to-list 'nerdtab-regex-blacklist "TAGS")
-(global-set-key (kbd "M-0") 'nerdtab-jump-0)
-(global-set-key (kbd "M-1") 'nerdtab-jump-1)
-(global-set-key (kbd "M-2") 'nerdtab-jump-2)
-(global-set-key (kbd "M-3") 'nerdtab-jump-3)
-(global-set-key (kbd "M-4") 'nerdtab-jump-4)
-(global-set-key (kbd "M-5") 'nerdtab-jump-5)
-(global-set-key (kbd "M-6") 'nerdtab-jump-6)
-(global-set-key (kbd "M-7") 'nerdtab-jump-7)
-(global-set-key (kbd "M-8") 'nerdtab-jump-8)
-(global-set-key (kbd "M-9") 'nerdtab-jump-9)
-
 
 (require 'paredit)
 ;;(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -119,13 +104,10 @@
 
 (require 'avy)
 (ryo-modal-keys
- ("gg" avy-goto-char)
- ("gk" avy-goto-line)
- )
+ ("C-. "
+  (("jj" avy-goto-char)
+  ("jl" avy-goto-line))))
   
-(global-set-key (kbd "<C-up>") 'avy-goto-char-2-above)
-(global-set-key (kbd "<C-down>") 'avy-goto-char-2-below)
-
 
 ;; 自动保存书签
 (add-hook 'kill-emacs-hook

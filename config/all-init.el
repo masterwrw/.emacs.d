@@ -58,6 +58,7 @@
        (require 'init-gui)
        (require 'init-theme)
        (require 'init-font)
+       (require 'tab-init)
        (require 'init-modeline)
        (require 'init-edit)
        (require 'init-dired)

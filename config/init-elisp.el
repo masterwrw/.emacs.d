@@ -6,9 +6,8 @@
 	    (add-to-list 'company-backends 'company-elisp)))
 
 
-(define-key emacs-lisp-mode-map (kbd "<M-up>") 'beginning-of-defun)
-(define-key emacs-lisp-mode-map (kbd "<M-down>") 'end-of-defun)
-
+(define-key emacs-lisp-mode-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
+(define-key emacs-lisp-mode-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
 
 
 (provide 'init-elisp)

@@ -12,21 +12,24 @@
   (global-set-key (kbd "<home>") 'ryo-modal-mode-on)
   (define-key key-translation-map (kbd "ESC") (kbd "<home>"))
   (global-set-key (kbd "<insert>") 'ryo-modal-mode-off)
-  
-  (let ((mode-hooks '(prog-mode-hook
-		      c++-mode-hook
-		      emacs-lisp-mode-hook
-		      org-mode-hook
-		      helpful-mode-hook
-		      css-mode-hook
-		      python-mode-hook)))
-    (dolist (var mode-hooks)
-      (add-hook var 'ryo-modal-mode)))
 
-  (let ((excludes '(magit-status-mode-hook text-mode)))
-    (dolist (var excludes)
-      (add-hook var 'ryo-modal-mode-off))
-    )
+  (let ((mode-hooks '(find-file-hook
+		      message-mode-hook
+		      ;; prog-mode-hook
+		      ;; c++-mode-hook
+		      ;; emacs-lisp-mode-hook
+		      ;; org-mode-hook
+		      ;; helpful-mode-hook
+		      ;; css-mode-hook
+		      ;; python-mode-hook
+		      )))
+    (dolist (var mode-hooks)
+      (add-hook var 'ryo-modal-mode-on)))
+
+  ;; (let ((excludes '(magit-status-mode-hook text-mode)))
+    ;; (dolist (var excludes)
+      ;; (add-hook var 'ryo-modal-mode-off))
+    ;; )
   )
 
 (require 'ryo-modal)
@@ -65,7 +68,8 @@
 
  ;; copy/paste
  ("C-. "
-  (("3" find-file-other-window)
+  (("b" bookmark-bmenu-list)
+   ("3" find-file-other-window)
    ("d" dired-jump)
    ("k" eye/new-next-line)
    ("i" eye/new-previous-line)
@@ -116,10 +120,14 @@
  )
 
 
-(global-set-key (kbd "<M-up>") 'eye/scroll-up)
-(global-set-key (kbd "<M-down>") 'eye/scroll-down)
+(global-set-key (kbd "<M-up>") 'scroll-up-defun-or-lines)
+(global-set-key (kbd "<M-down>") 'scroll-down-defun-or-lines)
 (global-set-key (kbd "<M-left>") 'backward-word)
 (global-set-key (kbd "<M-right>") 'forward-word)
+
+(global-set-key (kbd "<C-up>") 'scroll-down-command)
+(global-set-key (kbd "<C-down>") 'scroll-up-command)
+
 
 
 (global-set-key (kbd "<tab>") 'hippie-expand)

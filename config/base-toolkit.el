@@ -196,6 +196,29 @@
   (interactive)
   (next-line 5))
 
+(defun scroll-down-defun-or-lines ()
+  "移动到函数后面或者下移几行（当移动行数小于5行时）"
+  (interactive)
+  (let ((line (line-number-at-pos (point)))
+	(distance 0))
+    (end-of-defun)
+    (setq distance (- (line-number-at-pos (point)) line))
+    (if (<= distance 5)
+	(next-line 5)))
+  )
+
+
+(defun scroll-up-defun-or-lines ()
+  "移动到函数前面或者上移几行（当移动行数小于5行时）"
+  (interactive)
+  (let ((line (line-number-at-pos (point)))
+	(distance 0))
+    (beginning-of-defun)
+    (setq distance (- line (line-number-at-pos (point))))
+    (if (<= distance 5)
+	(previous-line 5)))
+  )
+
 
 (defun eye/indent-region-or-buffer ()
   (interactive)
