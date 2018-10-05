@@ -175,3 +175,9 @@
 [submodule "site-lisp/watch-other-window"]
 	path = site-lisp/watch-other-window
 	url = https://github.com/manateelazycat/watch-other-window.git
+[submodule "site-lisp/color-rg"]
+	path = site-lisp/color-rg
+	url = https://github.com/manateelazycat/color-rg.git
+[submodule "site-lisp/company-posframe"]
+	path = site-lisp/company-posframe
+	url = https://github.com/tumashu/company-posframe.git

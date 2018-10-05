@@ -78,6 +78,8 @@
        (require 'init-tramp)
        (require 'init-document)
        (require 'init-external)
+	   (when (equal system-type 'gnu/linux)
+		 (require 'eaf-init))
        )))
 
 

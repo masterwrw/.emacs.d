@@ -185,8 +185,19 @@
 
 (defun yank-with-indent ()
   (interactive)
-  (yank)
-  (call-interactively 'indent-region))	
+  (if (member major-mode
+	      '(emacs-lisp-mode
+		lisp-interaction-mode
+		c++-mode
+		org-mode
+		python-mode
+		c-mode
+		php-mode))
+      (progn
+	(yank)
+	(call-interactively 'indent-region))
+    (yank)
+    ))
 
 (defun eye/scroll-up ()
   (interactive)

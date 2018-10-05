@@ -33,3 +33,4 @@ history
 *.elc
 #*#
 abbrev_defs
+eaf/
