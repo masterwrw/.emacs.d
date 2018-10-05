@@ -181,3 +181,6 @@
 [submodule "site-lisp/company-posframe"]
 	path = site-lisp/company-posframe
 	url = https://github.com/tumashu/company-posframe.git
+[submodule "refactor"]
+	path = site-lisp/semantic-refactor
+	url = https://github.com/tuhdo/semantic-refactor.git

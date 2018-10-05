@@ -1,6 +1,7 @@
 ;;; c++ and qt configuration
 
 (require 'init-qt)
+
 (require 'cc-mode)
 
 (add-hook 'c++-mode-hook 'yas-minor-mode)
@@ -8,6 +9,9 @@
 
 (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
 (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
+
+
+(require 'semantic-refactor-init)
 
 (require 'company-c-headers)
 (add-hook 'c++-mode
