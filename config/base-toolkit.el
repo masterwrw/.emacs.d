@@ -105,6 +105,18 @@
   (interactive)
   (mapc 'kill-buffer (buffer-list)))
 
+
+(defun kill-unused-buffers ()
+  (interactive)
+  (ignore-errors
+    (save-excursion
+      (dolist (buf (buffer-list))
+        (set-buffer buf)
+        (if (and (string-prefix-p "*" (buffer-name)) (string-suffix-p "*" (buffer-name)))
+            (kill-buffer buf))
+        ))))
+
+
 (defun eye/create-scratch-buffer ()
   (interactive)
   (switch-to-buffer (get-buffer-create "*scratch*"))
@@ -145,6 +157,20 @@
   (if (bolp)
       (back-to-indentation)
     (beginning-of-line)))
+
+
+(defun cycle-line-position ()
+  "循环移动到行首或行尾或缩进处"
+  (interactive)
+  (cond
+   ;; 在行尾时移到缩进处
+   ((eq (point) (line-end-position))
+    (back-to-indentation))
+   ;; 在行首时移到行尾
+   ((eq (point) (line-beginning-position))
+    (end-of-line))
+   ;; 默认移到行首
+   (t (beginning-of-line))))
 
 ;; http://ergoemacs.org/emacs/emacs_kill-ring.html
 (defun delete-forward-word-no-copy (arg)

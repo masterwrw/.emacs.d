@@ -22,9 +22,15 @@
 (prelude-install-search-engine "github"     "https://github.com/search?q="                 "Search GitHub: ")
 (prelude-install-search-engine "duckduckgo" "https://duckduckgo.com/?t=lm&q="              "Search DuckDuckGo: ")
 (prelude-install-search-engine "bing"       "https://www.bing.com/search?q="               "Bing: ")
-(prelude-install-search-engine "github"     "https://github.com/search?q="                 "Github: ")
+(define-key global-map (kbd "<f7> ss") 'prelude-google)
+(define-key global-map (kbd "<f7> sb") 'prelude-bing)
+(define-key global-map (kbd "<f7> sd") 'prelude-duckduckgo)
+(define-key global-map (kbd "<f7> sg") 'prelude-github)
+(define-key global-map (kbd "<f7> sv") 'prelude-youtube)
 
 (require 'youdao-dictionary)
+(define-key global-map (kbd "<f7> qq") 'youdao-dictionary-search-from-input)
+(define-key global-map (kbd "<f7> qw") 'youdao-dictionary-search-at-point)
 
 
 (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)

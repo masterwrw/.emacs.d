@@ -9,5 +9,7 @@
 (define-key emacs-lisp-mode-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
 (define-key emacs-lisp-mode-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
 
+(define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
+
 
 (provide 'init-elisp)

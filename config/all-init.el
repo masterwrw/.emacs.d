@@ -51,6 +51,7 @@
   (require 'base-toolkit)
   (require 'init-ryo)
   (require 'init-ivy)
+  (require 'session-init)
   ;; 延后加载
   (run-with-idle-timer
    1 nil
@@ -61,7 +62,8 @@
        (require 'tab-init)
        (require 'init-modeline)
        (require 'auto-save-init)
-	   (require 'watch-other-window)
+       (require 'window-init)
+       (require 'watch-other-window)
        (require 'init-edit)
        (require 'init-dired)
        (require 'init-git)
@@ -78,8 +80,10 @@
        (require 'init-tramp)
        (require 'init-document)
        (require 'init-external)
-	   (when (equal system-type 'gnu/linux)
-		 (require 'eaf-init))
+       (when (equal system-type 'gnu/linux)
+	 (require 'eaf-init))
+       
+       (emacs-session-restore)
        )))
 
 

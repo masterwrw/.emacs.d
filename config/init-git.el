@@ -16,7 +16,14 @@
 
 (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
 
+(define-key global-map (kbd "<f7> g") 'magit-status)
+
 ;; 添加 magit-submodule-remove
 (require 'magit-extension)
+
+
+
+
+
 
 (provide 'init-git)

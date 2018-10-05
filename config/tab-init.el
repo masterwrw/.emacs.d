@@ -6,18 +6,20 @@
 (set-face-attribute 'awesome-tab-unselected nil :foreground "cyan4")
 
 (ryo-modal-keys
- ("tt" awesome-tab-switch-group)
- ("tj" awesome-tab-backward)
- ("tl" awesome-tab-forward)
- ("th" awesome-tab-select-beg-tab)
- ("t;" awesome-tab-select-end-tab)
- ("tk" awesome-tab-forward-group)
- ("ti" awesome-tab-backward-group)
+ ("ss" mode-line-other-buffer)  ;;快速切换两个buffer
+ ("sg" awesome-tab-switch-group)
+ ("sj" awesome-tab-backward)
+ ("sl" awesome-tab-forward)
+ ("sh" awesome-tab-select-beg-tab)
+ ("s;" awesome-tab-select-end-tab)
+ ("sk" awesome-tab-forward-group)
+ ("si" awesome-tab-backward-group)
  ("C-." 
-  (("tj" awesome-tab-move-current-tab-to-left)
-   ("tl" awesome-tab-move-current-tab-to-right)
-   ("tk" awesome-tab-kill-all-buffers-in-current-group)
-   ("to" awesome-tab-kill-other-buffers-in-current-group)))
+  (("sj" awesome-tab-move-current-tab-to-left)
+   ("sl" awesome-tab-move-current-tab-to-right)
+   ("sk" awesome-tab-kill-all-buffers-in-current-group)
+   ("so" awesome-tab-kill-other-buffers-in-current-group)))
  )
+
 
 (provide 'tab-init)

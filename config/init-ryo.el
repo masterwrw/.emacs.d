@@ -1,10 +1,12 @@
 (defun ryo-modal-mode-on ()
   (interactive)
-  (ryo-modal-mode 1))
+  (ryo-modal-mode 1)
+  (set-cursor-color "#44aa33"))
 
 (defun ryo-modal-mode-off ()
   (interactive)
-  (ryo-modal-mode -1))
+  (ryo-modal-mode -1)
+  (set-cursor-color "#ee44a3"))
 
 (defun setup-ryo-key ()
   (global-set-key (kbd "<M-SPC>") 'ryo-modal-mode-on)
@@ -29,11 +31,27 @@
     (dolist (var mode-hooks)
       (add-hook var 'ryo-modal-mode-on)))
 
+  
   ;; (let ((excludes '(magit-status-mode-hook text-mode)))
     ;; (dolist (var excludes)
       ;; (add-hook var 'ryo-modal-mode-off))
     ;; )
   )
+
+(run-with-idle-timer 10 0
+		     #'(lambda ()
+			 (when (member major-mode
+				     '(dired-mode
+				       help-mode
+				       man-mode
+				       woman-mode
+				       c++-mode
+				       python-mode
+				       php-mode
+				       emacs-lisp-mode
+				       helpful-mode))
+			     (ryo-modal-mode-on))))
+
 
 (require 'ryo-modal)
 (setup-ryo-key)
@@ -54,13 +72,12 @@
  ("o" right-word)
  ("i" previous-line)
  ("k" next-line)
- ("h" eye/beginniing-of-line)
+ ("h" cycle-line-position)
  (";" end-of-line)
  ("p" eye/scroll-up)
  ("n" eye/scroll-down)
  ("'" recenter-top-bottom)
  ("/" xah-comment-dwim)
- ("s" save-buffer)
 
  ("`" indent-for-tab-command)
  ("t" nil)
@@ -92,11 +109,9 @@
  ("gb" bookmark-bmenu-list)
 
  ;; buffer
- ("bb" mode-line-other-buffer) ;;快速切换两个buffer
  ("bk" kill-current-buffer)
  ("ba" beginning-of-buffer)
  ("be" end-of-buffer)
- ("bs" save-buffer)
 
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
@@ -122,6 +137,19 @@
  ("3" split-window-right)
  )
 
+(global-unset-key (kbd "<f1>"))
+(global-unset-key (kbd "<f2>"))
+(global-unset-key (kbd "<f3>"))
+(global-unset-key (kbd "<f4>"))
+(global-unset-key (kbd "<f5>"))
+(global-unset-key (kbd "<f6>"))
+(global-unset-key (kbd "<f7>"))
+(global-unset-key (kbd "<f8>"))
+(global-unset-key (kbd "<f9>"))
+(global-unset-key (kbd "<f10>"))
+(global-unset-key (kbd "<f11>"))
+(global-unset-key (kbd "<f12>"))
+
 
 (global-set-key (kbd "<M-up>") 'scroll-up-defun-or-lines)
 (global-set-key (kbd "<M-down>") 'scroll-down-defun-or-lines)
@@ -137,9 +165,6 @@
 (define-key prog-mode-map (kbd "<C-tab>") 'mode-line-other-buffer)
 (global-set-key (kbd "<C-tab>") 'mode-line-other-buffer)
 (global-set-key (kbd "<backtab>") 'indent-for-tab-command)
-
-
-(global-set-key (kbd "<f5>") 'eval-last-sexp)
 
 (global-set-key (kbd "<f9> b") 'bookmark-bmenu-list)
 

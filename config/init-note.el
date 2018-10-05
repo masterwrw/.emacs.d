@@ -61,5 +61,8 @@
 		(deft-refresh))))
 
 
+(define-key global-map (kbd "<f7> d") 'deft)
+
+
 
 (provide 'init-note)

@@ -26,6 +26,7 @@
 ;; Exported to HTML
 (require 'htmlize)
 
+
 ;; Line wrapping
 (add-hook 'org-mode-hook
           '(lambda ()
@@ -216,6 +217,9 @@
 (define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
 (define-key org-mode-map (kbd "C-,") 'ryo-modal-mode-on)
 
+
+(define-key global-map (kbd "<f7> c") 'org-capture)
+(define-key global-map (kbd "<f7> a") 'org-agenda)
 
 
 (provide 'init-org)
