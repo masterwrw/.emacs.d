@@ -30,7 +30,7 @@
 
 
 (global-set-key (kbd "<f3> d") 'emacs-session-save)
-
+(global-set-key (kbd "C-x C-c") 'emacs-session-save)
 
 
 (provide 'session-init)

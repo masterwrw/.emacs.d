@@ -14,7 +14,7 @@
 ;;; deft
 (require 'deft)
 (setq deft-directory my-notes-directory)
-(setq deft-extensions '("org"))
+(setq deft-extensions '("org" "h" "cpp"))
 (setq deft-recursive t)
 (setq deft-text-mode 'org-mode)
 (setq deft-incremental-search nil)

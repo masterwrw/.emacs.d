@@ -32,7 +32,7 @@
 (setq ring-bell-function 'ignore) ;; 禁止出现烦人的响铃
 
 
-(defvar user-cache-directory (expand-file-name "~/cache/"))
+(defvar user-cache-directory (expand-file-name "~/tmp/emacs_cache/"))
 (unless (file-exists-p user-cache-directory)
   (mkdir user-cache-directory))
 
@@ -60,6 +60,7 @@
        (require 'init-theme)
        (require 'init-font)
        (require 'tab-init)
+       (require 'awesome-tray-init)
        (require 'init-modeline)
        (require 'auto-save-init)
        (require 'window-init)
@@ -68,6 +69,7 @@
        (require 'init-dired)
        (require 'init-git)
        (require 'init-org)
+       (require 'org-wiki-init)
        (require 'init-company-mode)
        (require 'init-python)
        (require 'init-cpp)
@@ -81,7 +83,7 @@
        (require 'init-document)
        (require 'init-external)
        (when (equal system-type 'gnu/linux)
-	 (require 'eaf-init))
+		 (require 'eaf-init))
        
        (emacs-session-restore)
        )))

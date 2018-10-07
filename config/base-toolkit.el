@@ -225,6 +225,16 @@
     (yank)
     ))
 
+(defun indent-or-expand ()
+  "当光标前面是空白时,缩进,否则执行展开"
+  (interactive)
+  (if (or
+       (eq (point) (line-beginning-position))
+       (char-equal (char-before (point)) ?\s)
+       (char-equal (char-before (point)) ?\t))
+      (indent-for-tab-command)
+    (hippie-expand)))
+
 (defun eye/scroll-up ()
   (interactive)
   (previous-line 5))

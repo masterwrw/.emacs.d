@@ -184,3 +184,21 @@
 [submodule "refactor"]
 	path = site-lisp/semantic-refactor
 	url = https://github.com/tuhdo/semantic-refactor.git
+[submodule "site-lisp/awesome-tray"]
+	path = site-lisp/awesome-tray
+	url = https://github.com/manateelazycat/awesome-tray.git
+[submodule "site-lisp/org-wiki"]
+	path = site-lisp/org-wiki
+	url = https://github.com/caiorss/org-wiki.git
+[submodule "site-lisp/posframe"]
+	path = site-lisp/posframe
+	url = https://github.com/tumashu/posframe.git
+[submodule "site-lisp/elisp-refs"]
+	path = site-lisp/elisp-refs
+	url = https://github.com/Wilfred/elisp-refs.git
+[submodule "site-lisp/loop"]
+	path = site-lisp/loop
+	url = https://github.com/Wilfred/loop.el.git
+[submodule "site-lisp/shut-up"]
+	path = site-lisp/shut-up
+	url = https://github.com/cask/shut-up.git
