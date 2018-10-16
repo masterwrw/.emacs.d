@@ -48,6 +48,8 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 
+;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
+(setq split-window-preferred-function nil)
 
 
 ;; 使用 emacsclient 需要先启动服务

@@ -160,8 +160,8 @@
 (global-set-key (kbd "<C-down>") 'scroll-up-command)
 
 ;; 不设置为全局,否则影响minibuffer输入
-(define-key prog-mode-map (kbd "<tab>") 'indent-or-expand)
-
+;; (define-key prog-mode-map (kbd "<tab>") 'indent-or-expand)
+(define-key prog-mode-map (kbd "<tab>") 'hippie-expand)
 (define-key prog-mode-map (kbd "<C-tab>") 'mode-line-other-buffer)
 
 (global-set-key (kbd "<C-tab>") 'mode-line-other-buffer)

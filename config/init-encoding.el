@@ -1,7 +1,11 @@
 (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
 (set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
 (set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
-(set-selection-coding-system 'utf-8)
+(if (eq system-type 'windows-nt)
+    (progn
+      (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
+      )
+  (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
 ;; 文件默认保存为 utf-8
 (set-buffer-file-coding-system 'utf-8)
@@ -23,7 +27,7 @@
     (progn
       (set-terminal-coding-system 'gbk)
       (set-keyboard-coding-system 'gbk)
-      (set-selection-coding-system 'gbk)
+      ;; (set-selection-coding-system 'gbk)
       (set-buffer-file-coding-system 'gbk)
       (set-file-name-coding-system 'gbk)
       (modify-coding-system-alist 'process "*" 'gbk)

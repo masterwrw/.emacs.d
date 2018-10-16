@@ -25,8 +25,8 @@
   (setq c-basic-offset 4) ;; tab 缩进量
   (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
   (setq tab-stop-list ()))
-(add-hook 'c-mode-common-hook 'set-tab-width-hook)
-(add-hook 'c++-mode-common-hook 'set-tab-width-hook)
+(add-hook 'c-mode-hook 'set-tab-width-hook)
+(add-hook 'c++-mode-hook 'set-tab-width-hook)
 
 (defun eye/find-corresponding-file ()
   "Find the file that corresponds to this one."

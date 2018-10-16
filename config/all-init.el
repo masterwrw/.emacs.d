@@ -42,54 +42,51 @@
 (load custom-file 'noerror)
 
 ;;; 开始初始化配置
-(with-temp-message "" ;;不显示启动时的输出
-  (require 'init-benchmark)
-  (require 'init-encoding)
-  (require 'init-backup)
-  (require 'init-history)
-  (require 'init-shell)
-  (require 'base-toolkit)
-  (require 'init-ryo)
-  (require 'init-ivy)
-  (require 'session-init)
-  ;; 延后加载
-  (run-with-idle-timer
-   1 nil
-   #'(lambda ()
-       (require 'init-gui)
-       (require 'init-theme)
-       (require 'init-font)
-       (require 'tab-init)
-       (require 'awesome-tray-init)
-       (require 'init-modeline)
-       (require 'auto-save-init)
-       (require 'window-init)
-       (require 'watch-other-window)
-       (require 'init-edit)
-       (require 'init-dired)
-       (require 'init-git)
-       (require 'init-org)
-       (require 'org-wiki-init)
-       (require 'init-company-mode)
-       (require 'init-python)
-       (require 'init-cpp)
-       (require 'init-elisp)
-       (require 'init-php)
-       (require 'init-flycheck)
-       (require 'init-sql)
-       (require 'init-navigation)
-       (require 'init-yasnippet)
-       (require 'init-tramp)
-       (require 'init-document)
-       (require 'init-external)
-       (when (equal system-type 'gnu/linux)
-		 (require 'eaf-init))
-       
-       (emacs-session-restore)
-       )))
+;;(with-temp-message "" ;;不显示启动时的输出
+(require 'init-benchmark)
+(require 'init-encoding)
+(require 'init-backup)
+(require 'init-history)
+(require 'init-shell)
+(require 'base-toolkit)
+(require 'init-ryo)
+(require 'init-ivy)
+(require 'session-init)
 
+;; 延后加载
+(require 'idle-require)
+(setq idle-require-idle-delay 1)
 
-
+(setq idle-require-symbols
+      '(init-gui
+	init-theme
+	init-font
+	neotree-init
+	tab-init
+	awesome-tray-init
+	init-modeline
+	auto-save-init
+	window-init
+	watch-other-window-init
+	init-edit
+	init-dired
+	init-git
+	init-org
+	org-wiki-init
+	init-company-mode
+	init-python
+	init-cpp
+	init-elisp
+	init-php
+	init-flycheck
+	init-sql
+	init-navigation
+	init-yasnippet
+	init-tramp
+	init-document
+	init-external
+	))
+(idle-require-mode 1) ;; start loading
 
 
 (provide 'all-init)

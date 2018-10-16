@@ -25,9 +25,17 @@
 ;; (require 'srefactor-lisp)
 ;; (setq srefactor-ui-menu-show-help nil)
 
+(setq semantic-idle-scheduler-idle-time 3)
+
+;; maybe set semanticdb-find-default-throttle, https://emacs-china.org/t/topic/5728/6
+
 (add-hook 'c++-mode-hook
 		  (lambda ()
-			(semantic-mode 1)))
+		    (semantic-mode 1)
+		    (semantic-idle-scheduler-mode 1)
+		    (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
+		    (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
+		    (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
 
 (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
