@@ -61,12 +61,10 @@
       '(init-gui
 	init-theme
 	init-font
-	tab-init
 	awesome-tray-init
 	init-modeline
 	auto-save-init
 	window-init
-	watch-other-window-init
 	init-edit
 	init-dired
 	init-git
@@ -84,6 +82,7 @@
 	init-tramp
 	init-document
 	init-external
+	custom-keys
 	))
 (idle-require-mode 1) ;; start loading
 

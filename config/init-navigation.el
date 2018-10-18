@@ -29,17 +29,9 @@
 (require 'backward-forward)
 (advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
 (backward-forward-mode t)
-(global-set-key (kbd "<C-left>") 'backward-forward-previous-location)
-(global-set-key (kbd "<C-right>") 'backward-forward-next-location)
-(ryo-modal-keys
- ("," backward-forward-previous-location)
- ("." backward-forward-next-location)
- )
-
 
 (require 'dumb-jump)
 (advice-add 'dumb-jump-go :before #'backward-forward-push-mark-wrapper)
-(ryo-modal-set-key "gs" 'dumb-jump-go) ;;goto symbol
 
 
 ;; ibuffer

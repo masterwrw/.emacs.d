@@ -1,6 +1,12 @@
 (require 'ryo-modal)
+(require 'which-key)
+
+(setq which-key-enable-extended-define-key t)
+(which-key-mode)
+
 ;; for replace which key tip: +prefix
 (push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+
 
 (defun ryo-modal-mode-on ()
   (interactive)
@@ -13,11 +19,8 @@
   (set-cursor-color "#ee44a3"))
 
 (defun setup-ryo-key ()
-  (global-set-key (kbd "<M-SPC>") 'ryo-modal-mode-on)
-  (global-set-key (kbd "C-,") 'ryo-modal-mode-on)
-  (global-set-key (kbd "<home>") 'ryo-modal-mode-on)
+  (global-set-key (kbd "<home>") 'ryo-modal-mode)
   (define-key key-translation-map (kbd "ESC") (kbd "<home>"))
-  (global-set-key (kbd "<insert>") 'ryo-modal-mode-off)
 
   (let ((mode-hooks '(find-file-hook
 		      message-mode-hook
@@ -67,78 +70,43 @@
 (ryo-modal-mode-on)
 
 (ryo-modal-keys
- ("SPC" ryo-modal-mode-off)
- ("q" ryo-modal-mode-off)
-
  ("j" left-char)
  ("l" right-char)
  ("u" left-word)
  ("o" right-word)
  ("i" previous-line)
  ("k" next-line)
- ("h" cycle-line-position)
- (";" end-of-line)
- ("p" eye/scroll-up)
- ("n" eye/scroll-down)
+ ("h" xah-beginning-of-line-or-block)
+ (";" xah-end-of-line-or-block)
  ("'" recenter-top-bottom)
+ ("n" scroll-up-command)
+ ("p" scroll-down-command)
  ("/" xah-comment-dwim)
 
- ("`" indent-for-tab-command)
- ("t" nil)
- ("8" xah-extend-selection)
-
- ;; region/select
  ("m" set-mark-command)
+ ("w" other-window)
+ ("r" query-replace)
 
- ;; copy/paste
- ("C-. "
-  (("b" bookmark-bmenu-list)
-   ("3" find-file-other-window)
-   ("d" dired-jump)
-   ("k" eye/new-next-line)
-   ("i" eye/new-previous-line)
-   ("w" other-window)
-   ))
-
- ("w"
-  (("l" windmove-right)
-   ("j" windmove-left)
-   ("i" windmove-up)
-   ("k" windmove-down)))
-
- ;; move
- ("gh" beginning-of-defun)
- ("gl" end-of-defun)
- ("gi" imenu)
- ("gb" bookmark-bmenu-list)
-
- ;; buffer
- ("bk" kill-current-buffer)
- ("ba" beginning-of-buffer)
- ("be" end-of-buffer)
-
+ ("8" xah-extend-selection)
+ 
+ ("s" switch-to-buffer)
+ ("e" execute-extended-command)
+ ("q" mode-line-other-buffer)
+ 
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
  ("v" yank-with-indent)
  ("z" undo)
 
  ;; delete
- ("dd" delete-line-no-copy)
- ("dl" delete-char)
- ("du" delete-inner-word-no-copy)
- ("do" delete-forward-word-no-copy)
- ("d;" delete-end-of-line-no-copy)
- ("dh" delete-beginning-of-line-no-copy)
- ("dj" delete-backward-char)
-
- ;; find
- ("fr" query-replace)
- ("fg" eye/grep)
-
- ;; open
- ("1" delete-other-windows)
- ("2" split-window-below)
- ("3" split-window-right)
+ ("dd" delete-line-no-copy :name "Delete Line")
+ ("dl" delete-char :name "Delete Forward Char")
+ ("du" delete-inner-word-no-copy :name "Delete Backword Word")
+ ("do" delete-forward-word-no-copy :name "Delete Forward Word")
+ ("d;" delete-end-of-line-no-copy :name "Delete Line End")
+ ("dh" delete-beginning-of-line-no-copy :name "Delete Line Begin")
+ ("dj" delete-backward-char :name "Delete Backword Char")
+ ("dw" delete-window)
  )
 
 (global-unset-key (kbd "<f1>"))
@@ -155,30 +123,32 @@
 (global-unset-key (kbd "<f12>"))
 
 
-(global-set-key (kbd "<M-up>") 'scroll-up-defun-or-lines)
-(global-set-key (kbd "<M-down>") 'scroll-down-defun-or-lines)
-(global-set-key (kbd "<M-left>") 'backward-word)
-(global-set-key (kbd "<M-right>") 'forward-word)
+(define-key global-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
+(define-key global-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
+(define-key global-map (kbd "<M-left>") 'backward-word)
+(define-key global-map (kbd "<M-right>") 'forward-word)
 
-(global-set-key (kbd "<C-up>") 'scroll-down-command)
-(global-set-key (kbd "<C-down>") 'scroll-up-command)
+(define-key global-map (kbd "<C-up>") 'scroll-down-command)
+(define-key global-map (kbd "<C-down>") 'scroll-up-command)
 
 ;; 不设置为全局,否则影响minibuffer输入
 ;; (define-key prog-mode-map (kbd "<tab>") 'indent-or-expand)
 (define-key prog-mode-map (kbd "<tab>") 'hippie-expand)
 (define-key prog-mode-map (kbd "<C-tab>") 'mode-line-other-buffer)
 
-(global-set-key (kbd "<C-tab>") 'mode-line-other-buffer)
-(global-set-key (kbd "<backtab>") 'indent-for-tab-command)
+(define-key global-map (kbd "<C-tab>") 'mode-line-other-buffer)
+(define-key global-map (kbd "<backtab>") 'indent-for-tab-command)
 
-(global-set-key (kbd "<f9> b") 'bookmark-bmenu-list)
+(define-key global-map (kbd "<f9> b") 'bookmark-bmenu-list)
 
 (defalias 'backward-kill-word 'eye/kill-inner-word)
-(global-set-key (kbd "<M-backspace>") 'eye/kill-inner-word)
-(global-set-key (kbd "<C-backspace>") 'eye/kill-inner-word)
+(define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
+(define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
 
-(global-set-key (kbd "M-c") 'eye/capitalize-word)
-(global-set-key (kbd "M-u") 'eye/upcase-word)
+(define-key global-map (kbd "M-c") 'eye/capitalize-word)
+(define-key global-map (kbd "M-u") 'eye/upcase-word)
+
+(define-key global-map (kbd "C-,") 'other-window)
 
 
 (provide 'init-ryo)

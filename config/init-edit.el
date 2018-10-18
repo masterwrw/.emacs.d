@@ -67,9 +67,6 @@
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
 
-(require 'which-key)
-(setq which-key-enable-extended-define-key t)
-(which-key-mode)
 
 
 (require 'helm)
@@ -104,11 +101,6 @@
 ;;(define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 
 (require 'avy)
-(ryo-modal-keys
- ("C-. "
-  (("jj" avy-goto-char)
-  ("jl" avy-goto-line))))
-  
 
 ;; 自动保存书签
 (add-hook 'kill-emacs-hook
@@ -144,18 +136,5 @@
   (remove-hook 'css-mode-hook 'writeroom-mode)
   (writeroom-mode -1))
 
-;;(use-package change-inner
-;;  :ensure t)
-
-(require 'vimish-fold)
-
-
-;; (use-package centered-cursor-mode
-  ;; :ensure t
-  ;; :config
-  ;; (add-hook 'c++-mode-hook 'centered-cursor-mode)
-  ;; (add-hook 'emacs-lisp-mode-hook 'centered-cursor-mode)
-  ;; (add-hook 'org-mode-hook 'centered-cursor-mode)
-  ;; (add-hook 'css-mode-hook 'centered-cursor-mode))
 
 (provide 'init-edit)
