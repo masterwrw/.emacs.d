@@ -94,9 +94,6 @@
 [submodule "site-lisp/writeroom-mode"]
 	path = site-lisp/writeroom-mode
 	url = https://github.com/joostkremers/writeroom-mode.git
-[submodule "site-lisp/vimish-fold"]
-	path = site-lisp/vimish-fold
-	url = https://github.com/mrkkrp/vimish-fold.git
 [submodule "site-lisp/async"]
 	path = site-lisp/async
 	url = https://github.com/jwiegley/emacs-async.git
