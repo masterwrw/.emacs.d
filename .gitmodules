@@ -169,9 +169,6 @@
 [submodule "site-lisp/projectile"]
 	path = site-lisp/projectile
 	url = https://github.com/bbatsov/projectile.git
-[submodule "site-lisp/awesome-tab"]
-	path = site-lisp/awesome-tab
-	url = https://github.com/manateelazycat/awesome-tab.git
 [submodule "site-lisp/watch-other-window"]
 	path = site-lisp/watch-other-window
 	url = https://github.com/manateelazycat/watch-other-window.git

@@ -61,7 +61,6 @@
       '(init-gui
 	init-theme
 	init-font
-	neotree-init
 	tab-init
 	awesome-tray-init
 	init-modeline
