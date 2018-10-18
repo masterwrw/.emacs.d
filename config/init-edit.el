@@ -68,6 +68,7 @@
 (setq auto-window-vscroll nil)
 
 (require 'which-key)
+(setq which-key-enable-extended-define-key t)
 (which-key-mode)
 
 

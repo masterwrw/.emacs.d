@@ -1,3 +1,7 @@
+(require 'ryo-modal)
+;; for replace which key tip: +prefix
+(push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
+
 (defun ryo-modal-mode-on ()
   (interactive)
   (ryo-modal-mode 1)
