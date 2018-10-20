@@ -1,3 +1,4 @@
+(require 'helm-org)
 (require 'init-note)
 
 (require 'org)
