@@ -193,3 +193,6 @@
 [submodule "site-lisp/shut-up"]
 	path = site-lisp/shut-up
 	url = https://github.com/cask/shut-up.git
+[submodule "site-lisp/moe-theme"]
+	path = site-lisp/moe-theme
+	url = https://github.com/kuanyui/moe-theme.el.git

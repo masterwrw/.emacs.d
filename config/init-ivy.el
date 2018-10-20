@@ -9,7 +9,6 @@
 		(swiper str))
 	(swiper)))
 
-(ryo-modal-set-key "ff" 'swiper-dwim)
 
 ;; 安装了 smex 后，counsel-M-x 才会按照使用频率排序
 (require 'smex)
@@ -24,12 +23,6 @@
 		(counsel-ag str))
 	(counsel-ag)))
 
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(ryo-modal-set-key "a" 'counsel-M-x)
-(ryo-modal-set-key (kbd "C-. v") 'counsel-yank-pop)
-(ryo-modal-set-key (kbd "C-. o") 'counsel-find-file)
-(ryo-modal-set-key "bl" 'counsel-ibuffer)
-(ryo-modal-set-key "fa" 'counsel-ag-dwim)
 
 (let ((command
        (cond

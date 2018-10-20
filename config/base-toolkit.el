@@ -158,6 +158,28 @@
       (back-to-indentation)
     (beginning-of-line)))
 
+(defun eye/beginning-of-line-or-block ()
+  "不在行首时，移到行首或缩进处，在行首时，移到上一段落
+Move cursor to beginning of line or previous paragraph.
+
+• When called first time, move cursor to beginning of char in current line. (if already, move to beginning of line.)
+• When called again, move cursor backward by jumping over any sequence of whitespaces containing 2 blank lines.
+
+URL `http://ergoemacs.org/emacs/emacs_keybinding_design_beginning-of-line-or-block.html'
+Version 2018-06-04"
+  (interactive)
+  (let (($p (point)))
+    (if (equal (point) (line-beginning-position))
+        (if (re-search-backward "\n[\t\n ]*\n+" nil "move")
+            (progn
+	      (skip-chars-backward "\n\t ")
+	      ;; (forward-char )
+	      )
+          (goto-char (point-min)))
+      (progn
+	(if (eq last-command this-command)
+	    (beginning-of-line)
+          (back-to-indentation))))))
 
 (defun cycle-line-position ()
   "循环移动到行首或行尾或缩进处"

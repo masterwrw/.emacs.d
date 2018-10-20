@@ -7,17 +7,21 @@
 (if (>= emacs-major-version 26)
     (progn
       (require 'helpful)
-      (global-set-key (kbd "<f1> v") 'helpful-variable)
-      (global-set-key (kbd "<f1> f") 'helpful-function)
-      (global-set-key (kbd "<f1> k") 'helpful-key)
-      (global-set-key (kbd "<f1> m") 'describe-mode)
-      (global-set-key (kbd "<f1> i") 'info))
+      (define-key global-map (kbd "<f1> v") 'helpful-variable)
+      (define-key global-map (kbd "<f1> f") 'helpful-function)
+      (define-key global-map (kbd "<f1> k") 'helpful-key)
+      (define-key global-map (kbd "<f1> m") 'describe-mode)
+      (define-key global-map (kbd "<f1> i") 'info))
   (progn
-    (global-set-key (kbd "<f1> v") 'describe-variable)
-    (global-set-key (kbd "<f1> f") 'describe-function)
-    (global-set-key (kbd "<f1> k") 'describe-key)
-    (global-set-key (kbd "<f1> m") 'describe-mode)
-    (global-set-key (kbd "<f1> i") 'info)))
+    (define-key global-map (kbd "<f1> v") 'describe-variable)
+    (define-key global-map (kbd "<f1> f") 'describe-function)
+    (define-key global-map (kbd "<f1> k") 'describe-key)
+    (define-key global-map (kbd "<f1> m") 'describe-mode)
+    (define-key global-map (kbd "<f1> i") 'info)))
+
+
+(define-key global-map (kbd "<f1> d") 'find-function)
+(define-key global-map (kbd "<f1> l") 'find-library)
 
 
 (provide 'init-document)

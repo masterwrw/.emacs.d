@@ -76,7 +76,7 @@
  ("o" right-word)
  ("i" previous-line)
  ("k" next-line)
- ("h" xah-beginning-of-line-or-block)
+ ("h" eye/beginning-of-line-or-block)
  (";" xah-end-of-line-or-block)
  ("'" recenter-top-bottom)
  ("n" scroll-up-command)
@@ -84,14 +84,11 @@
  ("/" xah-comment-dwim)
 
  ("m" set-mark-command)
- ("w" other-window)
+ ("w" xah-next-window-or-frame)
  ("r" query-replace)
 
  ("8" xah-extend-selection)
- 
- ("s" switch-to-buffer)
- ("e" execute-extended-command)
- ("q" mode-line-other-buffer)
+ ("s" mode-line-other-buffer)
  
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
@@ -150,5 +147,7 @@
 
 (define-key global-map (kbd "C-,") 'other-window)
 
+(define-key global-map (kbd "<C-wheel-up>") 'text-scale-decrease)
+(define-key global-map (kbd "<C-wheel-down>") 'text-scale-increase)
 
 (provide 'init-ryo)

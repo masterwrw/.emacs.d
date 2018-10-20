@@ -59,31 +59,29 @@
 
 (setq idle-require-symbols
       '(init-gui
-	init-theme
-	init-font
-	awesome-tray-init
-	init-modeline
-	auto-save-init
-	window-init
-	init-edit
-	init-dired
-	init-git
-	init-org
-	org-wiki-init
-	init-company-mode
-	init-python
-	init-cpp
-	init-elisp
-	init-php
-	init-flycheck
-	init-sql
-	init-navigation
-	init-yasnippet
-	init-tramp
-	init-document
-	init-external
-	custom-keys
-	))
+		init-theme
+		init-modeline
+		auto-save-init
+		window-init
+		init-edit
+		init-dired
+		init-git
+		init-org
+		org-wiki-init
+		init-company-mode
+		init-python
+		init-cpp
+		init-elisp
+		init-php
+		init-flycheck
+		init-sql
+		init-navigation
+		init-yasnippet
+		init-tramp
+		init-document
+		init-external
+		custom-keys
+		))
 (idle-require-mode 1) ;; start loading
 
 
