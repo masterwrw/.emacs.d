@@ -88,14 +88,14 @@
  ("r" query-replace)
 
  ("8" xah-extend-selection)
- ("s" mode-line-other-buffer)
+ ("s" eye/save-buffer)
  
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
  ("v" yank-with-indent)
  ("z" undo)
 
- ("q" eye/save-buffer)
+ ("q" mode-line-other-buffer)
 
  ;; delete
  ("dd" delete-line-no-copy :name "Delete Line")

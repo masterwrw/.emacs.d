@@ -2,8 +2,8 @@
 
 (setq org-wiki-location-list
       '(
-        "~/notebook/notes/technology"    ;; First wiki (root directory) is the default. 
-        "~/notebook/notes/private"
+        "~/cloud/notebook/tec"    ;; First wiki (root directory) is the default. 
+        "~/notebook/private"
         ))
 
 (setq org-wiki-location (car org-wiki-location-list))

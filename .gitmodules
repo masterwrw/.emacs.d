@@ -37,12 +37,6 @@
 [submodule "site-lisp/youdao-dictionary"]
 	path = site-lisp/youdao-dictionary
 	url = https://github.com/xuchunyang/youdao-dictionary.el.git
-[submodule "site-lisp/deft"]
-	path = site-lisp/deft
-	url = https://github.com/jrblevin/deft.git
-[submodule "site-lisp/multi-term"]
-	path = site-lisp/multi-term
-	url = https://github.com/emacsorphanage/multi-term.git
 [submodule "site-lisp/qt-pro-mode"]
 	path = site-lisp/qt-pro-mode
 	url = https://github.com/EricCrosson/qt-pro-mode.git
@@ -199,3 +193,9 @@
 [submodule "site-lisp/aweshell"]
 	path = site-lisp/aweshell
 	url = https://github.com/manateelazycat/aweshell.git
+[submodule "site-lisp/ox-hugo"]
+	path = site-lisp/ox-hugo
+	url = https://github.com/kaushalmodi/ox-hugo.git
+[submodule "site-lisp/super-save"]
+	path = site-lisp/super-save
+	url = https://github.com/bbatsov/super-save.git

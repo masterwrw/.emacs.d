@@ -1,15 +1,4 @@
-(when (eq system-type 'windows-nt)
-  (global-set-key (kbd "<S-return>") 'shell))
-
-(when (not (eq system-type 'windows-nt))
-  (require 'multi-term)
-  ;; no limit buffer length
-  (setq term-buffer-maximum-size 0)
-  ;; use bash or zsh
-  (if (executable-find "zsh")
-      (setq multi-term-program "/bin/zsh")
-    (setq multi-term-program "/bin/bash")))
-
+(require 'aweshell)
 
 ;;; eshell
 (defun eye/eshell-clear ()
@@ -20,8 +9,8 @@
     (eshell-send-input)))
 
 (add-hook 'eshell-mode-hook
-	  '(lambda ()
-	     (local-set-key (kbd "C-l") 'eye/eshell-clear)))
+          '(lambda ()
+             (local-set-key (kbd "C-l") 'eye/eshell-clear)))
 
 
 (defun eye/shell-cmd (buffer env)

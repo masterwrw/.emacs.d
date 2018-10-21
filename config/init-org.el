@@ -1,5 +1,4 @@
 (require 'helm-org)
-(require 'init-note)
 
 (require 'org)
 (setq org-ellipsis " ")
@@ -66,9 +65,9 @@
             "scheme" "sqlite")))
      (list (ido-completing-read "Source code type: " src-code-types))))
   (progn
-					;(newline-and-indent) ; no auto indent space
+                                        ;(newline-and-indent) ; no auto indent space
     (insert (format "#+BEGIN_SRC %s\n" src-code-type)) ; use lower string
-					;(newline-and-indent)
+                                        ;(newline-and-indent)
     (insert "#+END_SRC\n")
     (previous-line 2)
     (org-edit-src-code)))
@@ -82,7 +81,7 @@
 (when (> emacs-major-version 25)
   (progn
     (require 'org-brain)
-    (setq org-brain-path "~/notebook/notes/brain")
+    (setq org-brain-path "~/cloud/notebook/map")
     (setq org-id-track-globally t)
     (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
     ;;(push '("b" "Brain" plain (function org-brain-goto-end)
@@ -103,21 +102,21 @@
 ;; full frame show
 (setq org-agenda-window-setup 'only-window)
 
-(setq eye/org-agenda-directory "~/notebook/gtd/")
+(setq eye/org-agenda-directory "~/cloud/notebook/gtd/")
 (setq org-agenda-files (list (concat eye/org-agenda-directory "task.org")))
 
 (setq org-default-notes-file (concat eye/org-agenda-directory "inbox.org"))
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
-	(sequence "REPORT(r)" "BUG(b)" "|" "FIXED(f)")
-	))
+        (sequence "REPORT(r)" "BUG(b)" "|" "FIXED(f)")
+        ))
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "#9ff048" :weight bold)
               ("NEXT" :foreground "#ee5555" :weight bold)
-	      ("WAITING" :foreground "#999933" :weight bold)
-	      ("SOMEDAY" :foreground "#6e6e6e" :weight bold)
+              ("WAITING" :foreground "#999933" :weight bold)
+              ("SOMEDAY" :foreground "#6e6e6e" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
               ("ABORT" :foreground "#000000" :weight bold))))
 
@@ -133,45 +132,45 @@
 
 (setq org-capture-templates
       '(
-	("k"
-	 "收集" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
+        ("k"
+         "收集" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Inbox")
          "* %?\n%i\n"
-	 :create t)
-	
-	("s"
-	 "重要紧急任务" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+         :create t)
+        
+        ("s"
+         "重要紧急任务" entry (file+headline "~/cloud/notebook/gtd/task.org" "Tasks")
          "* TODO [#A] %?\n%i\n"
-	 :create t)
+         :create t)
 
-	("d"
-	 "重要不紧急任务" entry (file+headline "~/notebook/gtd/task.org" "Tasks")
+        ("d"
+         "重要不紧急任务" entry (file+headline "~/cloud/notebook/gtd/task.org" "Tasks")
          "* TODO [#B] %?\n%i\n"
-	 :create t)
+         :create t)
 
-	("f"
-	 "项目任务重要紧急" entry (file+headline "~/notebook/gtd/task.org" "Projects")
+        ("f"
+         "项目任务重要紧急" entry (file+headline "~/cloud/notebook/gtd/task.org" "Projects")
          "* TODO [#A] %?\n%i\n"
-	 :create t)
+         :create t)
 
-	("g"
-	 "项目任务重要不紧急" entry (file+headline "~/notebook/gtd/task.org" "Projects")
+        ("g"
+         "项目任务重要不紧急" entry (file+headline "~/cloud/notebook/gtd/task.org" "Projects")
          "* TODO [#B] %?\n%i\n"
-	 :create t)
+         :create t)
 
-	;; org-protocol: https://github.com/sprig/org-capture-extension
+        ;; org-protocol: https://github.com/sprig/org-capture-extension
 
-	("p" 
-	 "收集网页内容（自动调用）" entry (file+headline "~/notebook/gtd/inbox.org" "Inbox")
-	 "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
-		%^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
-	 :create t)
-	
-	("L" 
-	 "收集网页链接（自动调用）" entry (file+headline "~/notebook/gtd/inbox.org" "Urls")
+        ("p" 
+         "收集网页内容（自动调用）" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Inbox")
+         "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
+                %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+         :create t)
+        
+        ("L" 
+         "收集网页链接（自动调用）" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Urls")
          "* [[%:link][%:description]]\n%?\n"
-	 :create t)
-	
-	))
+         :create t)
+        
+        ))
 
 
 ;; 目标路径不能使用 concat
@@ -182,19 +181,15 @@
 (setq eye-org-someday-path (concat eye/org-agenda-directory "someday.org"))
 (setq org-refile-targets
       '(
-	(eye-org-inbox-path :level . 1)
+        (eye-org-inbox-path :level . 1)
         (eye-org-task-path :level . 1)
         (eye-org-finished-path :level . 1)
         (eye-org-trash-path :level . 1)
         (eye-org-someday-path :level . 1)
-	))
+        ))
 
 (setq org-archive-location (concat eye/org-agenda-directory "finished.org::"))
 
-
-
-(define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
-(define-key org-src-mode-map (kbd "C-<tab>") 'eye/indent-region-or-buffer)
 
 (defun eye/inbox ()
   (interactive)
@@ -206,21 +201,25 @@
   (find-file (concat eye/org-agenda-directory "task.org"))
   )
 
+
+(defvar my-notes-directory "~/cloud/notebook/tec/")
+
+(defun search-notes (str)
+  "Notes search"
+  (interactive"sSearch: ")
+  (counsel-ag str my-notes-directory))
+
+(defun new-note (str)
+  "Create a new notes."
+  (interactive "sNotes name: ")
+  (find-file (concat my-notes-directory str ".org")))
+
+
+
 ;;(require 'org-pomodoro)
 ;;(setq org-pomodoro-format "%s")
 
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
-
-
-(define-key org-mode-map (kbd "<M-left>") 'backward-word)
-(define-key org-mode-map (kbd "<M-right>") 'forward-word)
-(define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
-(define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
-(define-key org-mode-map (kbd "C-,") 'ryo-modal-mode-on)
-
-
-(define-key global-map (kbd "<f7> c") 'org-capture)
-(define-key global-map (kbd "<f7> a") 'org-agenda)
 
 
 (provide 'init-org)
