@@ -396,6 +396,15 @@ use command: ls -lR > virtual.dired
     (grep cmd)))
 
 
+(defun eye/save-buffer ()
+  "Save the buffer after untabifying it."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (untabify (point-min) (point-max))))
+  (save-buffer))
+
 
 
 (provide 'base-toolkit)

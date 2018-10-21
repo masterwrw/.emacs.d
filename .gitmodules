@@ -196,3 +196,6 @@
 [submodule "site-lisp/moe-theme"]
 	path = site-lisp/moe-theme
 	url = https://github.com/kuanyui/moe-theme.el.git
+[submodule "site-lisp/aweshell"]
+	path = site-lisp/aweshell
+	url = https://github.com/manateelazycat/aweshell.git

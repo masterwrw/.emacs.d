@@ -23,18 +23,18 @@
   (define-key key-translation-map (kbd "ESC") (kbd "<home>"))
 
   (let ((mode-hooks '(find-file-hook
-		      message-mode-hook
-		      dired-mode-hook
-		      help-mode-hook
-		      man-mode-hook
-		      prog-mode-hook
-		      helpful-mode-hook
-		      ;; c++-mode-hook
-		      ;; emacs-lisp-mode-hook
-		      ;; org-mode-hook
-		      ;; css-mode-hook
-		      ;; python-mode-hook
-		      )))
+              message-mode-hook
+              dired-mode-hook
+              help-mode-hook
+              man-mode-hook
+              prog-mode-hook
+              helpful-mode-hook
+              ;; c++-mode-hook
+              ;; emacs-lisp-mode-hook
+              ;; org-mode-hook
+              ;; css-mode-hook
+              ;; python-mode-hook
+              )))
     (dolist (var mode-hooks)
       (add-hook var 'ryo-modal-mode-on)))
 
@@ -46,18 +46,18 @@
   )
 
 (run-with-idle-timer 10 0
-		     #'(lambda ()
-			 (when (member major-mode
-				     '(dired-mode
-				       help-mode
-				       man-mode
-				       woman-mode
-				       c++-mode
-				       python-mode
-				       php-mode
-				       emacs-lisp-mode
-				       helpful-mode))
-			     (ryo-modal-mode-on))))
+             #'(lambda ()
+             (when (member major-mode
+                     '(dired-mode
+                       help-mode
+                       man-mode
+                       woman-mode
+                       c++-mode
+                       python-mode
+                       php-mode
+                       emacs-lisp-mode
+                       helpful-mode))
+                 (ryo-modal-mode-on))))
 
 
 (require 'ryo-modal)
@@ -94,6 +94,8 @@
  ("x" xah-cut-line-or-region)
  ("v" yank-with-indent)
  ("z" undo)
+
+ ("q" eye/save-buffer)
 
  ;; delete
  ("dd" delete-line-no-copy :name "Delete Line")

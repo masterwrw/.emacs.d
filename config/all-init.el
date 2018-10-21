@@ -61,7 +61,7 @@
       '(init-gui
 		init-theme
 		init-modeline
-		auto-save-init
+		;; auto-save-init
 		window-init
 		init-edit
 		init-dired
