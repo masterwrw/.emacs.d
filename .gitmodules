@@ -199,3 +199,6 @@
 [submodule "site-lisp/super-save"]
 	path = site-lisp/super-save
 	url = https://github.com/bbatsov/super-save.git
+[submodule "site-lisp/xah-html-mode"]
+	path = site-lisp/xah-html-mode
+	url = https://github.com/xahlee/xah-html-mode.el.git
