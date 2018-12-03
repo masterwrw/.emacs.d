@@ -112,9 +112,12 @@
 (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
 (set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
 (set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
+;; 解决粘贴中文出现乱码的问题
 (if (eq system-type 'windows-nt)
     (progn
-      (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
+      ;; (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
+      ;; (set-default selection-coding-system 'utf-16le-dos)
+      (set-selection-coding-system 'utf-16le-dos) ;; 别名set-clipboard-coding-system
       )
   (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
@@ -122,8 +125,6 @@
 (set-buffer-file-coding-system 'utf-8)
 (set-default buffer-file-coding-system 'utf8)
 (set-default-coding-systems 'utf-8)
-;; 解决粘贴中文出现乱码的问题
-(set-clipboard-coding-system 'utf-8)
 ;; 防止终端中文乱码
 (set-terminal-coding-system 'utf-8)
 (modify-coding-system-alist 'process "*" 'utf-8)
@@ -197,10 +198,10 @@
 
 (require 'recentf)
 (add-hook 'find-file-hook
-	  (lambda ()
-	    (unless recentf-mode
-	      (recentf-mode)
-	      (recentf-track-opened-file))))
+          (lambda ()
+            (unless recentf-mode
+              (recentf-mode)
+              (recentf-track-opened-file))))
 
 (setq recentf-max-saved-items 200)
 ;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
@@ -215,10 +216,10 @@
 (setq enable-recursive-minibuffers t ; Allow commands in minibuffers
       history-length 1000
       savehist-additional-variables '(mark-ring
-				      global-mark-ring
-				      search-ring
-				      regexp-search-ring
-				      extended-command-history)
+                                      global-mark-ring
+                                      search-ring
+                                      regexp-search-ring
+                                      extended-command-history)
       savehist-autosave-interval 60)
 #+END_SRC
 
@@ -269,7 +270,7 @@
   "Open external file manager."
   (interactive)
   (when (and (executable-find "thunar")
-	     (not (null default-directory)))
+             (not (null default-directory)))
     (start-process "File manager" nil "thunar" default-directory)))
 
 (defun eye/open-terminal ()
@@ -391,7 +392,7 @@
                ))
 
 
-(require 'awesome-tray)
+;;(require 'awesome-tray)
 ;; add to show file coding
 (defun awesome-tray-build-info ()
   (let ((info ""))
@@ -411,15 +412,15 @@
     (put-text-property 0 (length info) 'face 'awesome-tray-info-face info)
     info))
 
-(if (display-graphic-p)
-    (awesome-tray-mode 1))
+;;(if (display-graphic-p)
+;;    (awesome-tray-mode 1))
 
 
 ;;; Custom theme configuration
 
 (require 'moe-theme)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
-;; (load-theme 'moe-dark t)
+(load-theme 'moe-dark t)
 (show-paren-mode t)                     ;高亮括号
 ;; (setq show-paren-style 'expression)     ;高亮括号整体内容
 
@@ -477,10 +478,10 @@
   "Search input word or current select string"
   (interactive)
   (if (region-active-p)
-	  (let ((str (buffer-substring (region-beginning) (region-end))))
-		(pop-mark)
-		(swiper str))
-	(swiper)))
+          (let ((str (buffer-substring (region-beginning) (region-end))))
+                (pop-mark)
+                (swiper str))
+        (swiper)))
 
 
 ;; 安装了 smex 后，counsel-M-x 才会按照使用频率排序
@@ -491,18 +492,18 @@
   "Search input word or current select string"
   (interactive)
   (if (region-active-p)
-	  (let ((str (buffer-substring (region-beginning) (region-end))))
-		(pop-mark)
-		(counsel-ag str))
-	(counsel-ag)))
+          (let ((str (buffer-substring (region-beginning) (region-end))))
+                (pop-mark)
+                (counsel-ag str))
+        (counsel-ag)))
 
 
 (let ((command
        (cond
-	((executable-find "rg")
-	 "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
-	((executable-find "ag")
-	 "ag -i --noheading --nocolor --nofilename --numbers '%s' %s"))))
+        ((executable-find "rg")
+         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+        ((executable-find "ag")
+         "ag -i --noheading --nocolor --nofilename --numbers '%s' %s"))))
   (setq counsel-grep-base-command command))
 
 (require 'ivy)
@@ -540,27 +541,27 @@
 #+END_SRC
 * project
 #+BEGIN_SRC emacs-lisp
-(require 'find-file-in-project)
+  (require 'find-file-in-project)
 
-;; 目录有变化时及时更新
-(require 'async)
-(require 'dired)
-(setq dired-async-mode 1)
+  ;; 目录有变化时及时更新
+  (require 'async)
+  (require 'dired)
+  (setq dired-async-mode 1)
 
-(defun dired-dotfiles-toggle ()
-  "Show/hide dot-files"
-  (interactive)
-  (when (equal major-mode 'dired-mode)
-	(if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
-		(progn 
-		  (set (make-local-variable 'dired-dotfiles-show-p) nil)
-		  (message "h")
-		  (dired-mark-files-regexp "^\\\.")
-		  (dired-do-kill-lines))
-	  (progn (revert-buffer) ; otherwise just revert to re-show
-			 (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+  (defun dired-dotfiles-toggle ()
+    "Show/hide dot-files"
+    (interactive)
+    (when (equal major-mode 'dired-mode)
+          (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
+                  (progn 
+                    (set (make-local-variable 'dired-dotfiles-show-p) nil)
+                    (message "h")
+                    (dired-mark-files-regexp "^\\\.")
+                    (dired-do-kill-lines))
+            (progn (revert-buffer) ; otherwise just revert to re-show
+                           (set (make-local-variable 'dired-dotfiles-show-p) t)))))
 
-(define-key dired-mode-map (kbd "<f12>s") 'dired-dotfiles-toggle)
+  (define-key dired-mode-map (kbd "<f12>s") 'dired-dotfiles-toggle)
 
   ;; 使用 windows 程序打开文件
   ;;(when (eq system-type 'windows-nt)
@@ -576,11 +577,11 @@
     ;; 在新 frame 中打开 magit-status
     (defun magit-display-buffer-pop-up-frame (buffer)
       (if (with-current-buffer buffer (eq major-mode 'magit-status-mode))
-	  (display-buffer buffer
-			  '((display-buffer-reuse-window
-			     display-buffer-pop-up-frame) ;; 在新的 frame 中显示
-			    (reusable-frames . t)))
-	(magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
+          (display-buffer buffer
+                          '((display-buffer-reuse-window
+                             display-buffer-pop-up-frame) ;; 在新的 frame 中显示
+                            (reusable-frames . t)))
+        (magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
 
     ;; 设置显示 magit buffer 的函数
     (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
@@ -623,11 +624,11 @@
 * buffer
 #+BEGIN_SRC emacs-lisp
 (setq electric-pair-pairs '(
-							(?\{ . ?\})
-							(?\( . ?\))
-							(?\[ . ?\])
-							(?\" . ?\")
-							))
+                                                        (?\{ . ?\})
+                                                        (?\( . ?\))
+                                                        (?\[ . ?\])
+                                                        (?\" . ?\")
+                                                        ))
 (electric-pair-mode t)
 (show-paren-mode 1)
 
@@ -657,8 +658,8 @@
 
 ;; 如果开启了全局 global-auto-revert，则 dired-virtual-mode 模式下经常会弹出提示，所以只在编程模式下开启。
 (add-hook 'prog-mode-hook
-		  '(lambda ()
-			 (auto-revert-mode 1)))
+                  '(lambda ()
+                         (auto-revert-mode 1)))
 
 
 
@@ -702,8 +703,8 @@
     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
       (overlay-put ov 'window (selected-window))
       (overlay-put ov 'face
-		   (let ((bg-color (face-background 'default nil)))
-		     `(:background ,bg-color :foreground ,bg-color)))
+                   (let ((bg-color (face-background 'default nil)))
+                     `(:background ,bg-color :foreground ,bg-color)))
       (setq-local cursor-type nil))))
 (add-hook 'helm-minibuffer-set-up-hook 'eye/helm-hide-minibuffer)
 (setq helm-autoresize-max-height 0
@@ -791,7 +792,7 @@
       (company-posframe-mode 1)
       ;; Let desktop.el not record the company-posframe-mode
       (push '(company-posframe-mode . nil)
-	    desktop-minor-mode-table)))
+            desktop-minor-mode-table)))
 
 (global-company-mode)
 
@@ -834,10 +835,10 @@
 
 (defun company-backend-with-yas (backend)
   (if (or (not company-enable-yas)
-	  (and (listp backend) (member 'company-yasnippet backend)))
+          (and (listp backend) (member 'company-yasnippet backend)))
       backend
     (append (if (consp backend) backend (list backend))
-	    '(:with company-yasnippet))))
+            '(:with company-yasnippet))))
 
 (setq company-backends (mapcar #'company-backend-with-yas company-backends))
 
@@ -887,8 +888,8 @@
 
 (require 'company-c-headers)
 (add-hook 'c++-mode
-	  (lambda ()
-	    (add-to-list 'company-backends 'company-c-headers)))
+          (lambda ()
+            (add-to-list 'company-backends 'company-c-headers)))
 
 (defun set-tab-width-hook ()
   (setq indent-tabs-mode nil)
@@ -1108,9 +1109,9 @@
 (define-auto-insert '(c++-mode . "C++ skeleton")
   '(
     (upcase (concat "_"
-		    (replace-regexp-in-string
-		     "[^A-Za-z0-9]" "_"
-		     (file-name-nondirectory buffer-file-name))))
+                    (replace-regexp-in-string
+                     "[^A-Za-z0-9]" "_"
+                     (file-name-nondirectory buffer-file-name))))
     "/*******************************************************************************" \n
     "Copyright: GR.Tec" \n
     "Author: WRW" \n
@@ -1131,7 +1132,7 @@
     (insert
      (with-temp-buffer
        (if (string-empty-p base-class)
-	   (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
+           (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
        (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.h"))))
        (beginning-of-buffer)
        (replace-string "name" class)
@@ -1143,17 +1144,17 @@
     (with-temp-buffer
       (insert
        (with-temp-buffer
-	 (if (string-empty-p base-class)
-	     (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
-	   (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.cpp"))))
-	 (beginning-of-buffer)
-	 (replace-string "name" class)
-	 (beginning-of-buffer)
-	 (replace-string "base" base-class)
-	 (beginning-of-buffer)
-	 (replace-string "header" (file-name-sans-extension filename))
-	 (buffer-string)
-	 ))
+         (if (string-empty-p base-class)
+             (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
+           (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.cpp"))))
+         (beginning-of-buffer)
+         (replace-string "name" class)
+         (beginning-of-buffer)
+         (replace-string "base" base-class)
+         (beginning-of-buffer)
+         (replace-string "header" (file-name-sans-extension filename))
+         (buffer-string)
+         ))
       (write-file (concat (file-name-sans-extension filename) ".cpp")))
     ))
 
@@ -1189,12 +1190,12 @@
 ;; maybe set semanticdb-find-default-throttle, https://emacs-china.org/t/topic/5728/6
 
 (add-hook 'c++-mode-hook
-		  (lambda ()
-		    (semantic-mode 1)
-		    (semantic-idle-scheduler-mode 1)
-		    (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
-		    (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
-		    (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
+                  (lambda ()
+                    (semantic-mode 1)
+                    (semantic-idle-scheduler-mode 1)
+                    (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
+                    (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
+                    (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
 
 (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
@@ -1215,9 +1216,9 @@
 
 (require 'company-qml)
 (add-hook 'qml-mode
-	  '(lambda ()
-	     (require 'company-qml)
-	     (add-to-list 'company-backends 'company-qml)))
+          '(lambda ()
+             (require 'company-qml)
+             (add-to-list 'company-backends 'company-qml)))
 
 
 
@@ -1268,9 +1269,9 @@
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (require 'company-elisp)
-	    (add-to-list 'company-backends 'company-elisp)))
+          (lambda ()
+            (require 'company-elisp)
+            (add-to-list 'company-backends 'company-elisp)))
 
 
 (define-key emacs-lisp-mode-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
@@ -1290,7 +1291,7 @@
   (interactive)
   (let ((dir (read-directory-name "Package dir:" "~/emacs-config/site-lisp")))
     (mapc (lambda (x) (byte-compile-file x))
-	  (directory-files-recursively dir "\.el$" ))))
+          (directory-files-recursively dir "\.el$" ))))
 
 #+END_SRC
 ** php
@@ -1304,14 +1305,14 @@
   "Switch the php-mode and html-mode"
   (interactive)
   (cond ((string= mode-name "html")
-	 (php-mode))
-	((string= mode-name "php")
-	 (html-mode))))
+         (php-mode))
+        ((string= mode-name "php")
+         (html-mode))))
 
 (require 'company-php)
 (add-hook 'php-mode
-	  '(lambda ()
-	     (add-to-list 'company-backends 'company-php)))
+          '(lambda ()
+             (add-to-list 'company-backends 'company-php)))
 
 #+END_SRC
 ** lua
@@ -1339,9 +1340,9 @@
 (setq large-file-warning-threshold nil)
 ;; Setup auto update now
 (add-hook 'prog-mode-hook
-	  (lambda ()
-	    (add-hook 'after-save-hook
-		      'counsel-etags-virtual-update-tags 'append 'local)))
+          (lambda ()
+            (add-hook 'after-save-hook
+                      'counsel-etags-virtual-update-tags 'append 'local)))
 
 (with-eval-after-load 'counsel-etags
   ;; counsel-etags-ignore-directories does NOT support wildcast
@@ -1388,14 +1389,14 @@
          ("Go"  (mode . go-mode))
          ("Python"  (mode . python-mode))
          ("EL"  (or (mode . emacs-lisp-mode) (mode . lisp-interaction-mode)))
-	 ("C++" (mode . c++-mode))
-	 ("Text" (name . ".txt"))
+         ("C++" (mode . c++-mode))
+         ("Text" (name . ".txt"))
          )))
 
 (add-hook 'ibuffer-mode-hook
-	    '(lambda ()
-		(ibuffer-auto-mode 1)
-		(ibuffer-switch-to-saved-filter-groups "EL")))
+            '(lambda ()
+                (ibuffer-auto-mode 1)
+                (ibuffer-switch-to-saved-filter-groups "EL")))
 (setq ibuffer-show-empty-filter-groups nil)
 
 #+END_SRC
@@ -1404,11 +1405,11 @@
 ;; 不使用 global-flycheck-mode
 (require 'flycheck)
 (dolist (hook (list
-	       'ruby-mode-hook
-	       'python-mode-hook
-	       'go-mode-hook
-	       'c++-mode-hook
-	       ))
+               'ruby-mode-hook
+               'python-mode-hook
+               'go-mode-hook
+               'c++-mode-hook
+               ))
   (add-hook hook '(lambda () (flycheck-mode 1))))
 
 ;; Use posframe as flycheck UI.
@@ -1428,6 +1429,32 @@
 (yas-global-mode 1)
 (yas-reload-all)
 #+END_SRC
+* web
+#+BEGIN_SRC emacs-lisp
+(require 'web-mode)
+
+
+(defun eye/html-char-to-ltgt()
+  (interactive)
+  (if (use-region-p)
+      (let ((start (region-beginning))
+            (end (region-end)))
+        (replace-string "<" "&lt;" nil start end)
+        (goto-char start)
+        (replace-string ">" "&gt;" nil start end)
+        )))
+
+(defun eye/html-ltgt-to-char()
+  (interactive)
+  (if (use-region-p)
+      (let ((start (region-beginning))
+            (end (region-end)))
+        (replace-string "&lt;" "<" nil start end)
+        (goto-char start)
+        (replace-string "&gt;" ">" nil start end)
+        )))
+
+#+END_SRC
 * org
 #+BEGIN_SRC emacs-lisp
 (require 'helm-org)
@@ -1438,8 +1465,8 @@
 (setq org-src-tab-acts-natively t)
 (setq org-src-fontify-natively t) ;; code block highlight
 (setq org-src-window-setup 'current-window)
-(add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'yas-minor-mode)
+;; (add-hook 'org-mode-hook 'org-indent-mode)
+;; (add-hook 'org-mode-hook 'yas-minor-mode)
 
 ;; indent content
 (setq org-edit-src-content-indentation 0) ;; 默认不缩进
@@ -1513,7 +1540,6 @@
 (when (> emacs-major-version 25)
   (progn
     (require 'org-brain)
-    (setq org-brain-path "~/cloud/notebook/map")
     (setq org-id-track-globally t)
     (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
     ;;(push '("b" "Brain" plain (function org-brain-goto-end)
@@ -1657,16 +1683,10 @@
 * wiki
 #+BEGIN_SRC emacs-lisp
 (require 'org-wiki)
-
-(setq org-wiki-location-list
-      '(
-        "~/cloud/notebook/tec"    ;; First wiki (root directory) is the default. 
-        "~/notebook/private"
-        ))
-
+(require 'init-system)
 (setq org-wiki-location (car org-wiki-location-list))
 
-;; (setq org-wiki-default-read-only t) ;; 默认是否只读模式
+(setq org-wiki-default-read-only t) ;; 默认是否只读模式
 (setq org-wiki-close-root-switch nil) ;; 切换wiki时是否关闭所有当前wiki页面
 
 (setq org-wiki-backup-location "~/archive/backups") ;; Set backup directory
@@ -1879,7 +1899,7 @@
  ("r" query-replace)
 
  ("8" xah-extend-selection)
- ("s" eye/save-buffer)
+ ("s" save-buffer)
  
  ("c" xah-copy-line-or-region)
  ("x" xah-cut-line-or-region)
@@ -2001,7 +2021,7 @@
           (define-key modmap (kbd "M-/") 'xah-comment-dwim)
           (define-key modmap (kbd "M-w") 'xah-next-window-or-frame)
           (define-key modmap (kbd "M-q") 'mode-line-other-buffer)
-          (define-key modmap (kbd "M-s") 'eye/save-buffer)
+          (define-key modmap (kbd "M-s") 'save-buffer)
           ))
 
 

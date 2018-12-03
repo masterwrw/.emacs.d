@@ -202,3 +202,6 @@
 [submodule "site-lisp/xah-html-mode"]
 	path = site-lisp/xah-html-mode
 	url = https://github.com/xahlee/xah-html-mode.el.git
+[submodule "site-lisp/web-mode"]
+	path = site-lisp/web-mode
+	url = https://github.com/fxbois/web-mode.git
