@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: dui-image
+# key: dui-image
+# --
+<Label pos="0,0,0,0" width="48" height="48" float="true" bkimage="image\logo.png" />

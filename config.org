@@ -1113,7 +1113,7 @@
                      "[^A-Za-z0-9]" "_"
                      (file-name-nondirectory buffer-file-name))))
     "/*******************************************************************************" \n
-    "Copyright: GR.Tec" \n
+    "Copyright: WRW.Tec" \n
     "Author: WRW" \n
     "Description: " \n
     "*******************************************************************************/" \n
@@ -1785,27 +1785,6 @@
 (setq helm-dash-browser-func 'eww)
 (setq helm-dash-docsets-path "~/.docset")
 (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
-
-
-(if (>= emacs-major-version 26)
-    (progn
-      (require 'helpful)
-      (define-key global-map (kbd "<f1> v") 'helpful-variable)
-      (define-key global-map (kbd "<f1> f") 'helpful-function)
-      (define-key global-map (kbd "<f1> k") 'helpful-key)
-      (define-key global-map (kbd "<f1> m") 'describe-mode)
-      (define-key global-map (kbd "<f1> i") 'info))
-  (progn
-    (define-key global-map (kbd "<f1> v") 'describe-variable)
-    (define-key global-map (kbd "<f1> f") 'describe-function)
-    (define-key global-map (kbd "<f1> k") 'describe-key)
-    (define-key global-map (kbd "<f1> m") 'describe-mode)
-    (define-key global-map (kbd "<f1> i") 'info)))
-
-
-(define-key global-map (kbd "<f1> d") 'find-function)
-(define-key global-map (kbd "<f1> l") 'find-library)
-
 #+END_SRC
 * keys
 #+BEGIN_SRC emacs-lisp
@@ -1834,41 +1813,41 @@
   (define-key key-translation-map (kbd "ESC") (kbd "<home>"))
 
   (let ((mode-hooks '(find-file-hook
-              message-mode-hook
-              dired-mode-hook
-              help-mode-hook
-              man-mode-hook
-              prog-mode-hook
-              helpful-mode-hook
-              ;; c++-mode-hook
-              ;; emacs-lisp-mode-hook
-              ;; org-mode-hook
-              ;; css-mode-hook
-              ;; python-mode-hook
-              )))
+		      message-mode-hook
+		      dired-mode-hook
+		      help-mode-hook
+		      man-mode-hook
+		      prog-mode-hook
+		      helpful-mode-hook
+		      ;; c++-mode-hook
+		      ;; emacs-lisp-mode-hook
+		      ;; org-mode-hook
+		      ;; css-mode-hook
+		      ;; python-mode-hook
+		      )))
     (dolist (var mode-hooks)
       (add-hook var 'ryo-modal-mode-on)))
 
   
   ;; (let ((excludes '(magit-status-mode-hook text-mode)))
-    ;; (dolist (var excludes)
-      ;; (add-hook var 'ryo-modal-mode-off))
-    ;; )
+  ;; (dolist (var excludes)
+  ;; (add-hook var 'ryo-modal-mode-off))
+  ;; )
   )
 
 (run-with-idle-timer 10 0
-             #'(lambda ()
-             (when (member major-mode
-                     '(dired-mode
-                       help-mode
-                       man-mode
-                       woman-mode
-                       c++-mode
-                       python-mode
-                       php-mode
-                       emacs-lisp-mode
-                       helpful-mode))
-                 (ryo-modal-mode-on))))
+		     #'(lambda ()
+			 (when (member major-mode
+				       '(dired-mode
+					 help-mode
+					 man-mode
+					 woman-mode
+					 c++-mode
+					 python-mode
+					 php-mode
+					 emacs-lisp-mode
+					 helpful-mode))
+			   (ryo-modal-mode-on))))
 
 
 (require 'ryo-modal)
@@ -1960,10 +1939,28 @@
 
 (define-key global-map (kbd "C-,") 'other-window)
 
-(define-key global-map (kbd "<C-wheel-up>") 'text-scale-decrease)
-(define-key global-map (kbd "<C-wheel-down>") 'text-scale-increase)
+(define-key global-map (kbd "<C-wheel-up>") 'text-scale-increase)
+(define-key global-map (kbd "<C-wheel-down>") 'text-scale-decrease)
 
 ;;; Custom keys
+(if (>= emacs-major-version 26)
+    (progn
+      (require 'helpful)
+      (define-key global-map (kbd "<f1> v") 'helpful-variable)
+      (define-key global-map (kbd "<f1> f") 'helpful-function)
+      (define-key global-map (kbd "<f1> k") 'helpful-key)
+      (define-key global-map (kbd "<f1> m") 'describe-mode)
+      (define-key global-map (kbd "<f1> i") 'info))
+  (progn
+    (define-key global-map (kbd "<f1> v") 'describe-variable)
+    (define-key global-map (kbd "<f1> f") 'describe-function)
+    (define-key global-map (kbd "<f1> k") 'describe-key)
+    (define-key global-map (kbd "<f1> m") 'describe-mode)
+    (define-key global-map (kbd "<f1> i") 'info)))
+
+
+(define-key global-map (kbd "<f1> d") 'find-function)
+(define-key global-map (kbd "<f1> l") 'find-library)
 
 (global-set-key (kbd "<f3> u") 'winner-undo)
 (global-set-key (kbd "<f3> i") 'winner-redo)
@@ -1990,6 +1987,8 @@
          ("wu" winner-undo)
          ("i" counsel-imenu)
          ("bl" bookmark-bmenu-list)
+	 ("bs" bookmark-set)
+	 ("bj" bookmark-jump)
          ("fa" beginning-of-defun :name "Begin Fun")
          ("fe" end-of-defun :name "End Fun")
          ("bb" beginning-of-buffer)
@@ -2006,23 +2005,23 @@
 
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
 (dolist (modmap (list global-map c++-mode-map org-mode-map))
-        (progn
-          (define-key modmap (kbd "M-j") 'left-char)
-          (define-key modmap (kbd "M-l") 'right-char)
-          (define-key modmap (kbd "M-u") 'left-word)
-          (define-key modmap (kbd "M-o") 'right-word)
-          (define-key modmap (kbd "M-i") 'previous-line)
-          (define-key modmap (kbd "M-k") 'next-line)
-          (define-key modmap (kbd "M-h") 'eye/beginning-of-line-or-block)
-          (define-key modmap (kbd "M-;") 'xah-end-of-line-or-block)
-          (define-key modmap (kbd "M-'") 'recenter-top-bottom)
-          (define-key modmap (kbd "M-n") 'scroll-up-command)
-          (define-key modmap (kbd "M-p") 'scroll-down-command)
-          (define-key modmap (kbd "M-/") 'xah-comment-dwim)
-          (define-key modmap (kbd "M-w") 'xah-next-window-or-frame)
-          (define-key modmap (kbd "M-q") 'mode-line-other-buffer)
-          (define-key modmap (kbd "M-s") 'save-buffer)
-          ))
+  (progn
+    (define-key modmap (kbd "M-j") 'left-char)
+    (define-key modmap (kbd "M-l") 'right-char)
+    (define-key modmap (kbd "M-u") 'left-word)
+    (define-key modmap (kbd "M-o") 'right-word)
+    (define-key modmap (kbd "M-i") 'previous-line)
+    (define-key modmap (kbd "M-k") 'next-line)
+    (define-key modmap (kbd "M-h") 'eye/beginning-of-line-or-block)
+    (define-key modmap (kbd "M-;") 'xah-end-of-line-or-block)
+    (define-key modmap (kbd "M-'") 'recenter-top-bottom)
+    (define-key modmap (kbd "M-n") 'scroll-up-command)
+    (define-key modmap (kbd "M-p") 'scroll-down-command)
+    (define-key modmap (kbd "M-/") 'xah-comment-dwim)
+    (define-key modmap (kbd "M-w") 'xah-next-window-or-frame)
+    (define-key modmap (kbd "M-q") 'mode-line-other-buffer)
+    (define-key modmap (kbd "M-s") 'save-buffer)
+    ))
 
 
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)

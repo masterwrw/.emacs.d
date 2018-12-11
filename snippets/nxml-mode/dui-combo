@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: dui-combo
+# key: dui-combo
+# --
+<Combo name="" pos="0,0,0,0" width="100" height="30" float="true" textcolor="#FF333333" bordercolor="#FFCCCCCC" bordersize="1" borderround="3,3" itemtextcolor="#FF333333" font="16" itemfont="16" itemtextpadding="5,2,5,2" textpadding="5,2,5,2" />

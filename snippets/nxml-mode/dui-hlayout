@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dui-hlayout
+# key: dui-hlayout
+# --
+<HorizontalLayout bkcolor="#FFFFFFFF" bordercolor="#FFD2D2D2" leftbordersize="1" rightbordersize="1" bottombordersize="1" topbordersize="1" >
+$0
+</HorizontalLayout>

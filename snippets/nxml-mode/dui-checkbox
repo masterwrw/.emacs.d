@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: dui-checkbox
+# key: dui-checkbox
+# --
+<CheckBox name="" text="" pos="320,70,0,0" height="20" float="true" textpadding="24,0,0,0" normalimage="common\unchecked.png" selectedimage="checked.png" font="14" textcolor="#FF333333" />

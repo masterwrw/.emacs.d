@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: dui-label
+# key: dui-label
+# --
+<Label text="" pos="0,0,0,0" width="100" height="30" float="true" textcolor="#FF333333" font="14" />
