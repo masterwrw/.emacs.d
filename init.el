@@ -1742,116 +1742,6 @@
 (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
 
 ;;; keys
-(require 'ryo-modal)
-(require 'which-key)
-
-(setq which-key-enable-extended-define-key t)
-(which-key-mode)
-
-;; for replace which key tip: +prefix
-(push '((nil . "ryo:.*:") . (nil . "")) which-key-replacement-alist)
-
-
-(defun ryo-modal-mode-on ()
-  (interactive)
-  (ryo-modal-mode 1)
-  (set-cursor-color "#44aa33"))
-
-(defun ryo-modal-mode-off ()
-  (interactive)
-  (ryo-modal-mode -1)
-  (set-cursor-color "#ee44a3"))
-
-(defun setup-ryo-key ()
-  (global-set-key (kbd "<home>") 'ryo-modal-mode)
-  (define-key key-translation-map (kbd "ESC") (kbd "<home>"))
-
-  (let ((mode-hooks '(find-file-hook
-		      message-mode-hook
-		      dired-mode-hook
-		      help-mode-hook
-		      man-mode-hook
-		      prog-mode-hook
-		      helpful-mode-hook
-		      ;; c++-mode-hook
-		      ;; emacs-lisp-mode-hook
-		      ;; org-mode-hook
-		      ;; css-mode-hook
-		      ;; python-mode-hook
-		      )))
-    (dolist (var mode-hooks)
-      (add-hook var 'ryo-modal-mode-on)))
-
-  
-  ;; (let ((excludes '(magit-status-mode-hook text-mode)))
-  ;; (dolist (var excludes)
-  ;; (add-hook var 'ryo-modal-mode-off))
-  ;; )
-  )
-
-;; (run-with-idle-timer 10 0
-;; 		     #'(lambda ()
-;; 			 (when (member major-mode
-;; 				       '(dired-mode
-;; 					 help-mode
-;; 					 man-mode
-;; 					 woman-mode
-;; 					 c++-mode
-;; 					 python-mode
-;; 					 php-mode
-;; 					 emacs-lisp-mode
-;; 					 helpful-mode))
-;; 			   (ryo-modal-mode-on))))
-
-
-(require 'ryo-modal)
-(setup-ryo-key)
-(set-cursor-color "#ee44a3")
-(setq ryo-modal-cursor-type 'box)
-(setq ryo-modal-cursor-color "#44aa33")
-(setq ryo-modal-default-cursor-color "#ee44a3")
-
-(ryo-modal-mode-on)
-
-(ryo-modal-keys
- ("j" left-char)
- ("l" right-char)
- ("u" left-word)
- ("o" right-word)
- ("i" previous-line)
- ("k" next-line)
- ("h" eye/beginning-of-line-or-block)
- (";" xah-end-of-line-or-block)
- ("'" recenter-top-bottom)
- ("n" scroll-up-command)
- ("p" scroll-down-command)
- ("/" xah-comment-dwim)
-
- ("m" set-mark-command)
- ("w" xah-next-window-or-frame)
- ("r" query-replace)
-
- ("8" xah-extend-selection)
- ("s" save-buffer)
- 
- ("c" xah-copy-line-or-region)
- ("x" xah-cut-line-or-region)
- ("v" yank-with-indent)
- ("z" undo)
-
- ("q" mode-line-other-buffer)
-
- ;; delete
- ("dd" delete-line-no-copy :name "Delete Line")
- ("dl" delete-char :name "Delete Forward Char")
- ("du" delete-inner-word-no-copy :name "Delete Backword Word")
- ("do" delete-forward-word-no-copy :name "Delete Forward Word")
- ("d;" delete-end-of-line-no-copy :name "Delete Line End")
- ("dh" delete-beginning-of-line-no-copy :name "Delete Line Begin")
- ("dj" delete-backward-char :name "Delete Backword Char")
- ("dw" delete-window)
- )
-
 (global-unset-key (kbd "<f1>"))
 (global-unset-key (kbd "<f2>"))
 (global-unset-key (kbd "<f3>"))
@@ -1865,11 +1755,6 @@
 (global-unset-key (kbd "<f11>"))
 (global-unset-key (kbd "<f12>"))
 
-
-(define-key global-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
-(define-key global-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
-(define-key global-map (kbd "<M-left>") 'backward-word)
-(define-key global-map (kbd "<M-right>") 'forward-word)
 
 (define-key global-map (kbd "<C-up>") 'scroll-down-command)
 (define-key global-map (kbd "<C-down>") 'scroll-up-command)
@@ -1888,9 +1773,6 @@
 (define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
 (define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
 
-(define-key global-map (kbd "M-c") 'eye/capitalize-word)
-(define-key global-map (kbd "M-u") 'eye/upcase-word)
-
 (define-key global-map (kbd "C-,") 'other-window)
 
 (define-key global-map (kbd "<C-wheel-up>") 'text-scale-increase)
@@ -1900,21 +1782,19 @@
 (if (>= emacs-major-version 26)
     (progn
       (require 'helpful)
-      (define-key global-map (kbd "<f1> v") 'helpful-variable)
-      (define-key global-map (kbd "<f1> f") 'helpful-function)
-      (define-key global-map (kbd "<f1> k") 'helpful-key)
-      (define-key global-map (kbd "<f1> m") 'describe-mode)
-      (define-key global-map (kbd "<f1> i") 'info))
+      (define-key global-map (kbd "C-h v") 'helpful-variable)
+      (define-key global-map (kbd "C-h f") 'helpful-function)
+      (define-key global-map (kbd "C-h k") 'helpful-key)
+      (define-key global-map (kbd "C-h m") 'describe-mode)
+      (define-key global-map (kbd "C-h i") 'info))
   (progn
-    (define-key global-map (kbd "<f1> v") 'describe-variable)
-    (define-key global-map (kbd "<f1> f") 'describe-function)
-    (define-key global-map (kbd "<f1> k") 'describe-key)
-    (define-key global-map (kbd "<f1> m") 'describe-mode)
-    (define-key global-map (kbd "<f1> i") 'info)))
-
-
-(define-key global-map (kbd "<f1> d") 'find-function)
-(define-key global-map (kbd "<f1> l") 'find-library)
+    (define-key global-map (kbd "C-h v") 'describe-variable)
+    (define-key global-map (kbd "C-h f") 'describe-function)
+    (define-key global-map (kbd "C-h k") 'describe-key)
+    (define-key global-map (kbd "C-h m") 'describe-mode)
+    (define-key global-map (kbd "C-h i") 'info)))
+(define-key global-map (kbd "C-h d") 'find-function)
+(define-key global-map (kbd "C-h l") 'find-library)
 
 (global-set-key (kbd "<f3> u") 'winner-undo)
 (global-set-key (kbd "<f3> i") 'winner-redo)
@@ -1927,35 +1807,6 @@
 (define-key global-map (kbd "<f7> c") 'org-capture)
 (define-key global-map (kbd "<f7> a") 'org-agenda)
 (define-key global-map (kbd "<f7> r") 'aweshell-toggle)
-
-(ryo-modal-keys
- ("SPC "(
-         ("SPC" ryo-modal-mode-off)
-         ("c" eye/eno-copy)
-         ("v" counsel-yank-pop)
-         ("d" dired-jump)
-         ("k" kill-current-buffer)
-         ("gc" avy-goto-char :name "Goto Char")
-         ("gl" avy-goto-line :name "Goto Line")
-         ("jd" dumb-jump-go)
-         ("wu" winner-undo)
-         ("i" counsel-imenu)
-         ("bl" bookmark-bmenu-list)
-	 ("bs" bookmark-set)
-	 ("bj" bookmark-jump)
-         ("fa" beginning-of-defun :name "Begin Fun")
-         ("fe" end-of-defun :name "End Fun")
-         ("bb" beginning-of-buffer)
-         ("be" end-of-buffer)
-         )))
-
-(ryo-modal-key "a" 'counsel-M-x)
-(ryo-modal-key "e" 'counsel-ibuffer)
-(ryo-modal-key "ff" 'counsel-find-file)
-(ryo-modal-key "fo" 'find-file-other-window)
-(ryo-modal-key "," 'backward-forward-previous-location)
-(ryo-modal-key "." 'backward-forward-next-location)
-
 
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
 (dolist (modmap (list global-map c++-mode-map org-mode-map))
@@ -1972,16 +1823,52 @@
     (define-key modmap (kbd "M-n") 'scroll-up-command)
     (define-key modmap (kbd "M-p") 'scroll-down-command)
     (define-key modmap (kbd "M-/") 'xah-comment-dwim)
-    (define-key modmap (kbd "M-w") 'xah-next-window-or-frame)
     (define-key modmap (kbd "M-q") 'mode-line-other-buffer)
-    (define-key modmap (kbd "M-s") 'save-buffer)
+    (define-key modmap (kbd "<M-left>") 'backward-word)
+    (define-key modmap (kbd "<M-right>") 'forward-word)
+    (define-key modmap (kbd "<M-up>") 'backward-paragraph)
+    (define-key modmap (kbd "<M-down>") 'forward-paragraph)
+    (define-key modmap (kbd "M-,") 'backward-forward-previous-location)
+    (define-key modmap (kbd "M-.") 'backward-forward-next-location)
+    (define-key modmap (kbd "C-k") 'nil)
+    (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
+    (define-key modmap (kbd "C-k C-,") 'keyboard-escape-quit)
+    (define-key modmap (kbd "C-k m") 'set-mark-command)
+    (define-key modmap (kbd "C-k a") 'counsel-M-x)
+    (define-key modmap (kbd "C-k e") 'counsel-ibuffer)
+    (define-key modmap (kbd "C-k ff") 'counsel-find-file)
+    (define-key modmap (kbd "C-k fo") 'find-file-other-window)
+    (define-key modmap (kbd "C-k fk") 'kill-buffer)
+    (define-key modmap (kbd "C-k fd") 'dired-jump)
+    (define-key modmap (kbd "C-k q") 'swiper)
+    (define-key modmap (kbd "C-k rq") 'query-replace)
+    (define-key modmap (kbd "C-k rr") 'replace-rectangle)
+    (define-key modmap (kbd "C-k rk") 'kill-rectangle)
+    (define-key modmap (kbd "C-k v") 'yank)
+    (define-key modmap (kbd "C-k pv") 'counsel-yank-pop)
+    (define-key modmap (kbd "C-k c") 'xah-copy-line-or-region)
+    (define-key modmap (kbd "C-k pc") 'eye/eno-copy)
+    (define-key modmap (kbd "C-k x") 'xah-cut-line-or-region)
+    (define-key modmap (kbd "C-k w") 'xah-next-window-or-frame)
+    (define-key modmap (kbd "C-k 8") 'xah-extend-selection)
+    (define-key modmap (kbd "C-k s") 'save-buffer)
+    (define-key modmap (kbd "C-k z") 'undo)
+    (define-key modmap (kbd "C-k <tab>") 'mode-line-other-buffer)
+    (define-key modmap (kbd "C-k dd") 'delete-line-no-copy)
+    (define-key modmap (kbd "C-k dl") 'delete-char)
+    (define-key modmap (kbd "C-k du") 'delete-inner-word-no-copy)
+    (define-key modmap (kbd "C-k do") 'delete-forward-word-no-copy) 
+    (define-key modmap (kbd "C-k d;") 'delete-end-of-line-no-copy)
+    (define-key modmap (kbd "C-k dh") 'delete-beginning-of-line-no-copy)
+    (define-key modmap (kbd "C-k dj") 'delete-backward-char)
+    (define-key modmap (kbd "C-k dw") 'delete-window)
+    (define-key modmap (kbd "C-k jc") 'avy-goto-char)
+    (define-key modmap (kbd "C-k jl") 'avy-goto-line)
+    (define-key modmap (kbd "C-k jd") 'dumb-jump-go) ;; jump to define
+    (define-key modmap (kbd "C-k i") 'counsel-semantic-or-imenu)
+    (define-key modmap (kbd "C-k bl") 'bookmark-bmenu-list)
+    (define-key modmap (kbd "C-k bs") 'bookmark-set)
+    (define-key modmap (kbd "C-k bj") 'bookmark-jump)
     ))
-
-
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
 (define-key org-src-mode-map (kbd "C-<tab>") 'eye/indent-region-or-buffer)
-(define-key org-mode-map (kbd "<M-left>") 'backward-word)
-(define-key org-mode-map (kbd "<M-right>") 'forward-word)
-(define-key org-mode-map (kbd "<M-up>") 'backward-paragraph)
-(define-key org-mode-map (kbd "<M-down>") 'forward-paragraph)
-(define-key org-mode-map (kbd "C-,") 'ryo-modal-mode-on)

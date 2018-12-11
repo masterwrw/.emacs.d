@@ -1,9 +1,6 @@
 [submodule "site-lisp/idle-require"]
 	path = site-lisp/idle-require
 	url = https://github.com/nschum/idle-require.el.git
-[submodule "site-lisp/ryo-modal"]
-	path = site-lisp/ryo-modal
-	url = https://github.com/Kungsgeten/ryo-modal.git
 [submodule "site-lisp/lua-mode"]
 	path = site-lisp/lua-mode
 	url = https://github.com/immerrr/lua-mode.git
