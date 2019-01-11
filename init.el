@@ -322,7 +322,7 @@
 
 (winner-mode 1)
 
-;;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
+;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
 ;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
 ;; But I need global-mode-string,
 ;; @see http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_360.html
@@ -501,7 +501,7 @@
 (define-key ivy-minibuffer-map (kbd "M-o") 'ivy-occur)
 
 
-;;; 不想让分割左右窗口后还是在左下角弹出ivy @see https://emacs-china.org/t/topic/5754/9
+;; 不想让分割左右窗口后还是在左下角弹出ivy @see https://emacs-china.org/t/topic/5754/9
 (setq ivy-count-format "")
 (defvar maple/ivy-format-padding nil)
 
@@ -660,16 +660,16 @@
 (require 'wgrep)
 (require 'wgrep-ag)
 
-;;; Kill buffers without asking
+;; Kill buffers without asking
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
 
 ;;; Do not ask
 (setq ibuffer-expert t)
 
-;;; 按行滚动
+;; 按行滚动
 ;; scroll one line at a time (less "jumpy" than defaults)
-(setq mouse-wheel-scroll-amount '(10 ((shift) . 10))) ;; one line at a time
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
 ;; (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 ;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 ;; (setq scroll-step 5) ;; keyboard scroll one line at a time
@@ -753,83 +753,86 @@
   (writeroom-mode -1))
 
 ;;; Company
-(require 'company)
-(define-key company-active-map (kbd "C-i") 'company-select-previous)
-(define-key company-active-map (kbd "C-k") 'company-select-next)
-(define-key company-active-map (kbd "<tab>") 'company-select-next)
-(define-key company-search-map (kbd "C-i") 'company-select-previous)
-(define-key company-search-map (kbd "C-k") 'company-select-next)
-(add-hook 'after-init-hook #'global-company-mode)
+(unless (equal system-type 'windows-nt)
+  (require 'company)
+  (define-key company-active-map (kbd "C-i") 'company-select-previous)
+  (define-key company-active-map (kbd "C-k") 'company-select-next)
+  (define-key company-active-map (kbd "<tab>") 'company-select-next)
+  (define-key company-search-map (kbd "C-i") 'company-select-previous)
+  (define-key company-search-map (kbd "C-k") 'company-select-next)
+  (add-hook 'after-init-hook #'global-company-mode)
 
-(require 'company-yasnippet)
-(require 'company-dabbrev)
-(require 'company-css)
-(require 'company-files)
-(require 'desktop)
-(if (>= emacs-major-version 26)
-    (progn
-      (require 'company-posframe)
-      (company-posframe-mode 1)
-      ;; Let desktop.el not record the company-posframe-mode
-      (push '(company-posframe-mode . nil)
-            desktop-minor-mode-table)))
+  (require 'company-yasnippet)
+  (require 'company-dabbrev)
+  (require 'company-css)
+  (require 'company-files)
+  (require 'desktop)
+  (if (>= emacs-major-version 26)
+      (progn
+	(require 'company-posframe)
+	(company-posframe-mode 1)
+	;; Let desktop.el not record the company-posframe-mode
+	(push '(company-posframe-mode . nil)
+              desktop-minor-mode-table)))
 
-(global-company-mode)
+  (global-company-mode)
 
-(setq company-idle-delay 0.2)
-(setq company-minimum-prefix-length 2)
-(setq company-show-numbers t)
-(setq company-echo-delay 0)
-(setq company-require-match nil)
+  (setq company-idle-delay 0.2)
+  (setq company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (setq company-echo-delay 0)
+  (setq company-require-match nil)
 
-(setq company-dabbrev-code-everywhere t)
-(setq company-dabbrev-minimum-length 2)
-(setq company-dabbrev-other-buffers 'all)
-(setq company-dabbrev-downcase nil)
-;; make previous/next selection in the popup cycles
-;; (setq company-selection-wrap-around t)
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-minimum-length 2)
+  (setq company-dabbrev-other-buffers 'all)
+  (setq company-dabbrev-downcase nil)
+  ;; make previous/next selection in the popup cycles
+  ;; (setq company-selection-wrap-around t)
 
-(setq company-dabbrev-char-regexp "[\\.0-9a-z-_'/]") ;adjust regexp make `company-dabbrev' search words like `dabbrev-expand'
-(setq company-dabbrev-code-other-buffers 'all) ;search completion from all buffers, not just same mode buffers.
+  (setq company-dabbrev-char-regexp "[\\.0-9a-z-_'/]") ;adjust regexp make `company-dabbrev' search words like `dabbrev-expand'
+  (setq company-dabbrev-code-other-buffers 'all) ;search completion from all buffers, not just same mode buffers.
 
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-;; bigger popup window
-(setq company-tooltip-limit 20)
-(set-face-attribute 'company-tooltip nil :foreground "magenta")
+  ;; aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+  ;; bigger popup window
+  (setq company-tooltip-limit 20)
+  (set-face-attribute 'company-tooltip nil :foreground "magenta")
 
-;; backends
-(setq company-backends nil)
+  ;; backends
+  (setq company-backends nil)
 
-(add-to-list 'company-backends 'company-css)
-(add-to-list 'company-backends 'company-files)
-(add-to-list 'company-backends 'company-etags)
-;; company-dabbrev config, it is for current buffer string auto complete
-(add-to-list 'company-backends 'company-dabbrev)
-(add-to-list 'company-backends 'company-dabbrev-code)
+  (add-to-list 'company-backends 'company-css)
+  (add-to-list 'company-backends 'company-files)
+  (add-to-list 'company-backends 'company-etags)
+  ;; company-dabbrev config, it is for current buffer string auto complete
+  (add-to-list 'company-backends 'company-dabbrev)
+  (add-to-list 'company-backends 'company-dabbrev-code)
 
-;; Support yas in commpany
-;; Note: Must be the last to involve all backends
-(defvar company-enable-yas t
-  "Enable yasnippet for all backends.")
+  ;; Support yas in commpany
+  ;; Note: Must be the last to involve all backends
+  (defvar company-enable-yas t
+    "Enable yasnippet for all backends.")
 
-(defun company-backend-with-yas (backend)
-  (if (or (not company-enable-yas)
-          (and (listp backend) (member 'company-yasnippet backend)))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
+  (defun company-backend-with-yas (backend)
+    (if (or (not company-enable-yas)
+            (and (listp backend) (member 'company-yasnippet backend)))
+	backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
 
-(setq company-backends (mapcar #'company-backend-with-yas company-backends))
+  (setq company-backends (mapcar #'company-backend-with-yas company-backends))
+  
+  ;; (use-package company-statistics
+  ;; :ensure t
+  ;; :init
+  ;; (let ((dir "~/cache"))
+  ;; (if (not (file-exists-p dir))
+  ;; (make-directory dir))
+  ;; (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
+  ;; (company-statistics-mode))
 
-;; (use-package company-statistics
-;; :ensure t
-;; :init
-;; (let ((dir "~/cache"))
-;; (if (not (file-exists-p dir))
-;; (make-directory dir))
-;; (setq company-statistics-file (concat dir "/company-statistics-cache.el")))
-;; (company-statistics-mode))
+  ) ;; end company
 
 
 ;;; Python
@@ -862,10 +865,12 @@
 (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
 (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
 
-(require 'company-c-headers)
-(add-hook 'c++-mode
-          (lambda ()
-            (add-to-list 'company-backends 'company-c-headers)))
+(unless (equal system-type 'windows-nt)
+  (require 'company-c-headers)
+  (add-hook 'c++-mode
+            (lambda ()
+              (add-to-list 'company-backends 'company-c-headers)))
+  )
 
 (defun set-tab-width-hook ()
   (setq indent-tabs-mode nil)
@@ -1134,7 +1139,7 @@
       (write-file (concat (file-name-sans-extension filename) ".cpp")))
     ))
 
-;;; Auto generate c++ class implement, function implement, functipn prototype
+;; Auto generate c++ class implement, function implement, functipn prototype
 ;;
 ;; 1.Generate class implement:
 ;; Move cursor to class name, call srefactor-refactor-at-point,
@@ -1157,24 +1162,24 @@
 ;; Move cursor on variable name, call srefactor-refactor-at-point
 ;;
 
-(require 'srefactor)
+;; (require 'srefactor)
 ;; (require 'srefactor-lisp)
 ;; (setq srefactor-ui-menu-show-help nil)
 
-(setq semantic-idle-scheduler-idle-time 3)
+;; (setq semantic-idle-scheduler-idle-time 3)
 
 ;; maybe set semanticdb-find-default-throttle, https://emacs-china.org/t/topic/5728/6
 
-(add-hook 'c++-mode-hook
-                  (lambda ()
-                    (semantic-mode 1)
-                    (semantic-idle-scheduler-mode 1)
-                    (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
-                    (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
-                    (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
+;; (add-hook 'c++-mode-hook
+                  ;; (lambda ()
+                    ;; (semantic-mode 1)
+                    ;; (semantic-idle-scheduler-mode 1)
+                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
+                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
+                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
 
-(define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
-(define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
+;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
+;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
 ;;; Qt
 (require 'qt-pro-mode)
@@ -1187,13 +1192,13 @@
 (require 'qml-mode)
 ;;  (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
 ;;(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
-
-(require 'company-qml)
-(add-hook 'qml-mode
-          '(lambda ()
-             (require 'company-qml)
-             (add-to-list 'company-backends 'company-qml)))
-
+(unless (equal system-type 'windows-nt)
+  (require 'company-qml)
+  (add-hook 'qml-mode
+            '(lambda ()
+               (require 'company-qml)
+               (add-to-list 'company-backends 'company-qml)))
+  )
 
 
 (defun eye/qt5-help ()
@@ -1242,8 +1247,9 @@
 (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
-            (require 'company-elisp)
-            (add-to-list 'company-backends 'company-elisp)
+	    (unless (equal system-type 'windows-nt)
+              (require 'company-elisp)
+              (add-to-list 'company-backends 'company-elisp))
 	    (outline-minor-mode 1)
 	    (setq outline-regexp ";;;+")
 	    ))
@@ -1253,6 +1259,7 @@
 (define-key emacs-lisp-mode-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
 
 (define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
+;; (define-key lisp-interaction-mode (kbd "<f5>") 'eval-last-sexp)
 
 ;; http://ergoemacs.org/emacs/elisp_traverse_dir.html
 ;; (defun git-submodule-add ()
@@ -1283,10 +1290,12 @@
         ((string= mode-name "php")
          (html-mode))))
 
-(require 'company-php)
-(add-hook 'php-mode
-          '(lambda ()
-             (add-to-list 'company-backends 'company-php)))
+(unless (equal system-type 'windows-nt)
+  (require 'company-php)
+  (add-hook 'php-mode
+            '(lambda ()
+               (add-to-list 'company-backends 'company-php)))
+  )
 
 ;;; lua
 (defun install-lua-env ()
@@ -1301,6 +1310,9 @@
 
 ;;; sql
 (add-hook 'sql-mode-hook 'yas-minor-mode)
+
+;;; xml
+(require 'nxml-mode)
 
 ;;; Navigation
 (require 'counsel-etags)
@@ -1329,7 +1341,7 @@
   (add-to-list 'counsel-etags-ignore-filenames "*.user"))
 
 ;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
-;;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
+;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 
 (require 'backward-forward)
 (advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
@@ -1424,9 +1436,8 @@
 
 (require 'org)
 (setq org-ellipsis " ")
-(setq org-src-fontify-natively t) ;; 代码块内语法高亮
+(setq org-src-fontify-natively nil) ;; 代码块内语法高亮
 (setq org-src-tab-acts-natively t)
-(setq org-src-fontify-natively t) ;; code block highlight
 (setq org-src-window-setup 'current-window)
 ;; (add-hook 'org-mode-hook 'org-indent-mode)
 ;; (add-hook 'org-mode-hook 'yas-minor-mode)
@@ -1456,7 +1467,7 @@
 
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
 
-;;; 快速添加 src block，使用 <el 加 tab 键
+;; 快速添加 src block，使用 <el 加 tab 键
 ;; emacs-lisp
 (add-to-list 'org-structure-template-alist
              '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
@@ -1473,8 +1484,7 @@
 (add-to-list 'org-structure-template-alist
              '("py" "#+BEGIN_SRC python\n?\n#+END_SRC"))
 
-
-  ;;; Custom util function
+;; Custom util function
 ;; http://wenshanren.org/?p=327
 (defun eye/org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
@@ -1742,6 +1752,11 @@
 (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
 
 ;;; keys
+(require 'which-key)
+(which-key-mode)
+
+(set-cursor-color "#00A876")
+
 (global-unset-key (kbd "<f1>"))
 (global-unset-key (kbd "<f2>"))
 (global-unset-key (kbd "<f3>"))
@@ -1762,23 +1777,18 @@
 ;; 不设置为全局,否则影响minibuffer输入
 ;; (define-key prog-mode-map (kbd "<tab>") 'indent-or-expand)
 (define-key prog-mode-map (kbd "<tab>") 'hippie-expand)
-(define-key prog-mode-map (kbd "<C-tab>") 'mode-line-other-buffer)
 
-(define-key global-map (kbd "<C-tab>") 'mode-line-other-buffer)
-(define-key global-map (kbd "<backtab>") 'indent-for-tab-command)
-
-(define-key global-map (kbd "<f9> b") 'bookmark-bmenu-list)
+(define-key global-map (kbd "<backtab>") 'indent-for-tab-command) ;; shift-tab
 
 (defalias 'backward-kill-word 'eye/kill-inner-word)
 (define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
 (define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
 
-(define-key global-map (kbd "C-,") 'other-window)
+(define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
 
 (define-key global-map (kbd "<C-wheel-up>") 'text-scale-increase)
 (define-key global-map (kbd "<C-wheel-down>") 'text-scale-decrease)
 
-;;; Custom keys
 (if (>= emacs-major-version 26)
     (progn
       (require 'helpful)
@@ -1808,8 +1818,12 @@
 (define-key global-map (kbd "<f7> a") 'org-agenda)
 (define-key global-map (kbd "<f7> r") 'aweshell-toggle)
 
+(define-key global-map (kbd "<f9> s") 'outline-show-entry)
+(define-key global-map (kbd "<f9> h") 'outline-hide-entry)
+(define-key global-map (kbd "<f9> a") 'outline-hide-body)
+
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
-(dolist (modmap (list global-map c++-mode-map org-mode-map))
+(dolist (modmap (list global-map c++-mode-map org-mode-map org-src-mode-map nxml-mode-map))
   (progn
     (define-key modmap (kbd "M-j") 'left-char)
     (define-key modmap (kbd "M-l") 'right-char)
@@ -1823,7 +1837,8 @@
     (define-key modmap (kbd "M-n") 'scroll-up-command)
     (define-key modmap (kbd "M-p") 'scroll-down-command)
     (define-key modmap (kbd "M-/") 'xah-comment-dwim)
-    (define-key modmap (kbd "M-q") 'mode-line-other-buffer)
+    (define-key modmap (kbd "M-q") 'yank)
+    (define-key modmap (kbd "M-m") 'set-mark-command)
     (define-key modmap (kbd "<M-left>") 'backward-word)
     (define-key modmap (kbd "<M-right>") 'forward-word)
     (define-key modmap (kbd "<M-up>") 'backward-paragraph)
@@ -1833,12 +1848,13 @@
     (define-key modmap (kbd "C-k") 'nil)
     (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
     (define-key modmap (kbd "C-k C-,") 'keyboard-escape-quit)
-    (define-key modmap (kbd "C-k m") 'set-mark-command)
+    (define-key modmap (kbd "C-s") 'save-buffer)
+    (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer)
     (define-key modmap (kbd "C-k a") 'counsel-M-x)
-    (define-key modmap (kbd "C-k e") 'counsel-ibuffer)
+    (define-key modmap (kbd "C-k m") 'counsel-ibuffer)
     (define-key modmap (kbd "C-k ff") 'counsel-find-file)
     (define-key modmap (kbd "C-k fo") 'find-file-other-window)
-    (define-key modmap (kbd "C-k fk") 'kill-buffer)
+    (define-key modmap (kbd "C-k fk") 'kill-this-buffer)
     (define-key modmap (kbd "C-k fd") 'dired-jump)
     (define-key modmap (kbd "C-k q") 'swiper)
     (define-key modmap (kbd "C-k rq") 'query-replace)
@@ -1870,5 +1886,3 @@
     (define-key modmap (kbd "C-k bs") 'bookmark-set)
     (define-key modmap (kbd "C-k bj") 'bookmark-jump)
     ))
-(define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
-(define-key org-src-mode-map (kbd "C-<tab>") 'eye/indent-region-or-buffer)

@@ -2,4 +2,5 @@
 # name: dui-checkbox
 # key: dui-checkbox
 # --
-<CheckBox name="" text="" pos="320,70,0,0" height="20" float="true" textpadding="24,0,0,0" normalimage="common\unchecked.png" selectedimage="checked.png" font="14" textcolor="#FF333333" />
+<CheckBox name="" pos="447,52,0,0" height="16" width="16" float="true" textpadding="24,0,0,0" normalimage="common\unchecked.png" selectedimage="common\checked.png" font="14" textcolor="#FF666666" />
+<Button name="" text="加密文件" pos="455,43,0,0" width="80" height="30" float="true" textcolor="#FF666666" font="14" align="left" />

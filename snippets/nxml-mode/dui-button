@@ -2,4 +2,4 @@
 # name: dui-button
 # key: dui-button
 # --
-<Button name="" text="" pos="0,0,0,0" width="80" height="30" float="true" textcolor="#FF333333" bkcolor="#FFFFFFFF" hotbkcolor="#FFF0F0F0" borderrounde="3" bordercolor="#FFCCCCCC" bordersize="1" font="14" />
+<Button name="" text="" pos="0,0,0,0" width="80" height="30" float="true" textcolor="#FF333333" bkcolor="#FFFFFFFF" hotbkcolor="#FFF0F0F0" borderround="3,3" bordercolor="#FFCCCCCC" bordersize="1" font="14" />
