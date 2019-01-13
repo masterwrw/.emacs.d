@@ -32,7 +32,19 @@
 (setq custom-file (concat user-emacs-directory "custom.el"))
 ;;(load custom-file)
 
+;;; locale
+(setq locale-config-file (expand-file-name "locale.el" user-emacs-directory))
+(defun eye/load-locale-file()
+  "加载本地的一些配置，比如一些路径相关的变量"
+  (interactive)
+  (if (file-exists-p locale-config-file)
+      (load-file locale-config-file)))
 
+(eye/load-locale-file)
+
+(defun eye/open-locale-file ()
+  (interactive)
+  (find-file locale-config-file))
 
 ;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
 (setq x-select-enable-clipboard-manager nil)
@@ -471,25 +483,25 @@
 
 ;; 安装了 smex 后，counsel-M-x 才会按照使用频率排序
 (require 'smex)
-
 (require 'counsel)
-(defun counsel-ag-dwim ()
-  "Search input word or current select string"
-  (interactive)
+
+(defun execute-func-use-marked (func)
   (if (region-active-p)
-          (let ((str (buffer-substring (region-beginning) (region-end))))
-                (pop-mark)
-                (counsel-ag str))
-        (counsel-ag)))
+      (let ((str (buffer-substring (region-beginning) (region-end))))
+        (pop-mark)
+        (funcall func str))
+    (funcall func)))
 
+(defun counsel-rg-marked()
+  "Search input word or current select string use rg"
+  (interactive)
+  (execute-func-use-marked 'counsel-rg))
 
-(let ((command
-       (cond
-        ((executable-find "rg")
-         "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
-        ((executable-find "ag")
-         "ag -i --noheading --nocolor --nofilename --numbers '%s' %s"))))
-  (setq counsel-grep-base-command command))
+(defun counsel-ag-marked ()
+  "Search input word or current select string use ag"
+  (interactive)
+  (execute-func-use-marked 'counsel-ag))
+;; 如果需要输入长度小于3时不搜索，需要修改内部函数 counsel-ag-function
 
 (require 'ivy)
 (setq ivy-initial-inputs-alist nil) ;;不需要自动添加^符号
@@ -703,6 +715,8 @@
       helm-ff-search-library-in-sexp t
       helm-scroll-amount 8 
       helm-echo-input-in-header-line t)
+
+
 
 ;;(require 'helm-config)    
 ;;(helm-autoresize-mode 1)
@@ -1688,26 +1702,46 @@
 ;; "))
 
 ;;; blog
-;; ox-hugo require org version 9
 
-(require 'ox)
-(require 'ox-hugo)
-
-(setq org-hugo-default-section-directory "post")
-(setq org-hugo-front-matter-format "toml")
-(setq org-hugo-auto-set-lastmod t)
-(setq org-hugo-date-format "%Y-%m-%dT%T")
-
-(defun eye/hugo-export-directory ()
-  "导出一个org文件目录到hugo blog"
+;;; Notebook
+(defun eye/notes-search-keyword ()
   (interactive)
-  (let ((dir (read-directory-name "Select dir:")))
-    (mapc (lambda (file-name)
-            (if (not (file-directory-p (concat dir file-name)))
-                (find-file (concat dir file-name)
-                                  (org-hugo-export-to-md))))
-          (directory-files dir nil "\.org$" t))
+  (let ((keyword (read-string "Search keyword: " (eye/current-word))))
+    (counsel-rg keyword locale-notebook-dir)
     ))
+
+(defun eye/notes-search-file ()
+  (interactive)
+  (let ((keyword (read-string "Search file: " (eye/current-word))))
+    (dired locale-notebook-dir)
+    (swiper keyword)
+    ))
+
+(defun eye/notes-dired ()
+  (interactive)
+  (dired locale-notebook-dir))
+
+(defun eye/notes-new ()
+  (interactive)
+  (let ((name (read-string "New note(no suffix): ")))
+    (find-file (concat locale-notebook-dir name ".org"))
+    (set-buffer-file-coding-system 'utf-8-unix 't) ;; 设置编码
+    (insert (concat "* " name)) ;; 添加一级标题
+    ))
+
+(defun eye/notes-open-attachment ()
+  "打开与当前文件名相同的附件文件夹"
+  (interactive)
+  (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
+	 (dir (concat locale-notebook-attachment-dir "/" name)))
+    (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
+    (unless (f-directory? dir) ;; 创建附件子目录
+      (f-mkdir dir))
+    (shell-command (concat "explorer "
+			   (encode-coding-string
+			    (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))) ;; 转换为windows路径后再转换为gbk编码，否则无法打开中文目录
+    ))
+
 
 ;;; session
 (require 'base-toolkit)
