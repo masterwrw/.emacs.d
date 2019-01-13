@@ -169,6 +169,11 @@
   (interactive)
   (set-buffer-file-coding-system 'chinese-iso-8bit-dos 't))
 
+;; org笔记编码
+(defun eye/convert-to-utf-8-withsignature-unix ()
+  (interactive)
+  (set-buffer-file-coding-system 'utf-8-with-signature-unix 't))
+
 ;;; Backup
 (defvar user-cache-directory "~/tmp/emacs_cache")
 ;; 备份文件 file~，指定备份目录后，文件名为 !drive_f!dirname!dirname!filename~
@@ -1629,8 +1634,18 @@
   (interactive)
   (let ((name (read-string "New note(no suffix): ")))
     (find-file (concat locale-notebook-dir "/" name ".org"))
-    (set-buffer-file-coding-system 'utf-8-unix 't) ;; 设置编码
+    (set-buffer-file-coding-system 'utf-8-with-signature-unix 't) ;; 设置编码
     (insert (concat "* " name)) ;; 添加一级标题
+    ))
+
+(defun eye/notes-create-attachment ()
+  "创建文件对应的附件文件夹"
+  (interactive)
+  (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
+	 (dir (concat locale-notebook-attachment-dir "/" name)))
+    (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
+    (unless (f-directory? dir) ;; 创建附件子目录
+      (f-mkdir dir))
     ))
 
 (defun eye/notes-open-attachment ()
@@ -1638,13 +1653,14 @@
   (interactive)
   (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
 	 (dir (concat locale-notebook-attachment-dir "/" name)))
-    (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
-    (unless (f-directory? dir) ;; 创建附件子目录
-      (f-mkdir dir))
-    (shell-command (concat "explorer "
-			   (encode-coding-string
-			    (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))) ;; 转换为windows路径后再转换为gbk编码，否则无法打开中文目录
-    ))
+    (if (f-directory? dir)
+	(progn
+	  (shell-command (concat "explorer "
+				 (encode-coding-string
+				  (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))) ;; 转换为windows路径后再转换为gbk编码，否则无法打开中文目录
+	  )
+      (message "Attachment folder not exists!")	
+      )))
 
 
 ;;; session
