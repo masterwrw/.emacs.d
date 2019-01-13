@@ -49,29 +49,26 @@
 ;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
 (setq x-select-enable-clipboard-manager nil)
 
-
+;;; UI
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
 (put 'suspend-frame 'disabled t) ;; 禁止 Ctrl+z 时挂起 emacs
 
 ;; 用 y/n 代替 yes/no 的回答
-;; (fset 'yes-or-no-p 'y-or-n-p) 相同的效果
-(defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p) ;; (fset 'yes-or-no-p 'y-or-n-p) 相同的效果
 
 (setq ring-bell-function 'ignore) ;; 禁止出现烦人的响铃
-
 
 ;; Fix load slow, https://github.com/raxod502/radian/issues/180
 (when tool-bar-mode
   (tool-bar-mode -1)) ;; 禁用工具栏
-(when menu-bar-mode
-  (menu-bar-mode -1)) ;; 禁用菜单栏
+;; (when menu-bar-mode
+  ;; (menu-bar-mode -1)) ;; 禁用菜单栏
 (if (and (display-graphic-p) scroll-bar-mode)
     (scroll-bar-mode -1) ;; 禁用滚动条 emacs26 -nw will be error
   )
 
 (setq frame-title-format "Editor %b -- %f") ;; 自定义标题栏
-
 
 ;; 去掉窗口边缘和分割窗口时分割条的边缘
 ;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
@@ -278,62 +275,7 @@
   (when (executable-find "xfce4-terminal")
     (start-process "Terminal" nil "xfce4-terminal")))
 
-;;; UI
-;; Fix load slow, https://github.com/raxod502/radian/issues/180
-(when tool-bar-mode
-  (tool-bar-mode -1)) ;; 禁用工具栏
-;; (when menu-bar-mode
-  ;; (menu-bar-mode -1)) ;; 禁用菜单栏
-(if (and (display-graphic-p) scroll-bar-mode)
-    (scroll-bar-mode -1) ;; 禁用滚动条 emacs26 -nw will be error
-  )
-
-(setq frame-title-format "Editor %b -- %f") ;; 自定义标题栏
-
-
-;; 去掉窗口边缘和分割窗口时分割条的边缘
-;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
-;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.
-(when (eq system-type 'windows-nt)
-  (set-window-fringes nil 0 0) ;; border side
-  (fringe-mode '(0 . 0)) ;; middle of split frame
-  )
-
-
-(blink-cursor-mode -1) ;; 取消光标闪烁
-(setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
-(setq split-width-threshold nil) ;; 屏幕宽度变化了也强制使用上下分屏
-
-
-;; 全屏
-(defun fullscreen ()
-  "Fullscreen."
-  (interactive)
-  (set-frame-parameter nil 'fullscreen 'fullboth))
-
-(defun fullscreen-toggle ()
-  "Toggle fullscreen status."
-  (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-
-;; (fullscreen)
-
-;; 最大化
-(defun maximize-frame ()
-  "Maximizes the active frame in Windows"
-  (interactive)
-  ;; Send a `WM_SYSCOMMAND' message to the active frame with the
-  ;; `SC_MAXIMIZE' parameter.
-  (when (eq system-type 'windows-nt)
-    (w32-send-sys-command 61488)))
-
-;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
-(setq split-window-preferred-function nil)
-
-(winner-mode 1)
-
+;;; modeline
 ;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
 ;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
 ;; But I need global-mode-string,
