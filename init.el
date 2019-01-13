@@ -507,7 +507,7 @@
 ;;  (define-key dired-mode-map [f11] 'dired-w32-browser))
 
 ;;; magit
-(when (executable-find "git")
+(when (and (equal system-type 'windows-nt) (executable-find "git"))
   (require 'magit)
   (setq magit-push-always-verify nil)
   (setq git-commit-summary-max-length 80)
@@ -1642,9 +1642,6 @@
 ;; 
 ;; * %n
 ;; "))
-
-;;; blog
-
 ;;; Notebook
 (defun eye/notes-search-keyword ()
   (interactive)
