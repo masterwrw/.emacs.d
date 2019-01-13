@@ -109,7 +109,7 @@
     (w32-send-sys-command 61488)))
 
 ;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
-(setq split-window-preferred-function nil)
+;; (setq split-window-preferred-function nil)
 
 ;;; Encoding
 (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
