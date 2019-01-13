@@ -484,7 +484,8 @@
 (setq ivy-format-function 'maple/ivy-format-function)
 
 ;;; Project
-(require 'find-file-in-project)
+(unless (equal system-type 'windows-nt)
+  (require 'find-file-in-project))
 
 ;; 目录有变化时及时更新
 (require 'async)
