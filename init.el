@@ -1587,7 +1587,7 @@
 (defun eye/notes-new ()
   (interactive)
   (let ((name (read-string "New note(no suffix): ")))
-    (find-file (concat locale-notebook-dir name ".org"))
+    (find-file (concat locale-notebook-dir "/" name ".org"))
     (set-buffer-file-coding-system 'utf-8-unix 't) ;; 设置编码
     (insert (concat "* " name)) ;; 添加一级标题
     ))
