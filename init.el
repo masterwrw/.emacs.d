@@ -1296,6 +1296,13 @@
   (add-to-list 'counsel-etags-ignore-filenames "*.qrc")
   (add-to-list 'counsel-etags-ignore-filenames "*.user"))
 
+(defun eye/create-ctags-file ()
+  "Create tags file"
+  (interactive)
+  (let ((command (read-string "command: " "ctags -V -R")))
+    (async-shell-command command)
+    ))
+
 ;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
 ;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 
@@ -1730,9 +1737,8 @@
     (define-key modmap (kbd "M-k") 'next-line)
     (define-key modmap (kbd "M-h") 'eye/beginning-of-line-or-block)
     (define-key modmap (kbd "M-;") 'xah-end-of-line-or-block)
-    (define-key modmap (kbd "M-'") 'recenter-top-bottom)
-    (define-key modmap (kbd "M-n") 'scroll-up-command)
-    (define-key modmap (kbd "M-p") 'scroll-down-command)
+    (define-key modmap (kbd "M-n") 'eye/scroll-down)
+    (define-key modmap (kbd "M-p") 'eye/scroll-up)
     (define-key modmap (kbd "M-/") 'xah-comment-dwim)
     (define-key modmap (kbd "M-q") 'yank)
     (define-key modmap (kbd "M-m") 'set-mark-command)
@@ -1747,6 +1753,8 @@
     (define-key modmap (kbd "C-k C-,") 'keyboard-escape-quit)
     (define-key modmap (kbd "C-s") 'save-buffer)
     (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer)
+    (define-key modmap (kbd "C-l") 'recenter-top-bottom)
+
     (define-key modmap (kbd "C-k a") 'counsel-M-x)
     (define-key modmap (kbd "C-k m") 'counsel-ibuffer)
     (define-key modmap (kbd "C-k ff") 'counsel-find-file)
@@ -1762,7 +1770,13 @@
     (define-key modmap (kbd "C-k c") 'xah-copy-line-or-region)
     (define-key modmap (kbd "C-k pc") 'eye/eno-copy)
     (define-key modmap (kbd "C-k x") 'xah-cut-line-or-region)
-    (define-key modmap (kbd "C-k w") 'xah-next-window-or-frame)
+
+    (define-key modmap (kbd "C-k wh") 'split-window-horizontally)
+    (define-key modmap (kbd "C-k wv") 'split-window-vertically)
+    (define-key modmap (kbd "C-k ww") 'xah-next-window-or-frame)
+    (define-key modmap (kbd "C-k wo") 'delete-other-windows)
+    (define-key modmap (kbd "C-k wk") 'delete-window)
+    
     (define-key modmap (kbd "C-k 8") 'xah-extend-selection)
     (define-key modmap (kbd "C-k s") 'save-buffer)
     (define-key modmap (kbd "C-k z") 'undo)

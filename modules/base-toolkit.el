@@ -259,11 +259,11 @@ Version 2018-06-04"
 
 (defun eye/scroll-up ()
   (interactive)
-  (previous-line 5))
+  (previous-line 3))
 
 (defun eye/scroll-down ()
   (interactive)
-  (next-line 5))
+  (next-line 3))
 
 (defun scroll-down-defun-or-lines ()
   "移动到函数后面或者下移几行（当移动行数小于5行时）"
