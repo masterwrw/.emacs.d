@@ -1508,6 +1508,10 @@
          "收集" entry (file+headline locale-gtd-inbox "Inbox")
          "* %?\n%i\n"
          :create t)
+
+	("b" "Bookmark" entry (file+headline locale-gtd-inbox "Bookmarks")
+         "* %?\n%i\n"
+	 :create 1)
         
         ("s"
          "重要紧急任务" entry (file+headline locale-gtd-task "Tasks")
@@ -1538,7 +1542,7 @@
          :create t)
         
         ("L" 
-         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "Urls")
+         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "Bookmarks")
          "* [[%:link][%:description]]\n%?\n"
          :create t)
         
