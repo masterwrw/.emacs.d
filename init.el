@@ -1394,22 +1394,18 @@
 (setq org-ellipsis " ")
 (setq org-src-fontify-natively nil) ;; 代码块内语法高亮
 (setq org-src-tab-acts-natively t)
-(setq org-src-window-setup 'current-window)
-;; (add-hook 'org-mode-hook 'org-indent-mode)
+;; (setq org-src-window-setup 'current-window) ;; 在当前window打开
 ;; (add-hook 'org-mode-hook 'yas-minor-mode)
-
 ;; indent content
 (setq org-edit-src-content-indentation 0) ;; 默认不缩进
-(setq org-startup-indented t)
+(setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
 (setq org-startup-folded (quote overview))
 ;; hides blank lines between headings
 (setq org-cycle-separator-lines 0)
 ;; always require new line in header below
 ;;(setq require-final-newline t)
-;; calendar start at monday
-(setq calendar-week-start-day 1)
-
-(setq org-support-shift-select 1)
+(setq calendar-week-start-day 1) ;; 日历从周一开始显示
+(setq org-support-shift-select 1) ;; 是否支持shift+方向键选择
 
 
 ;; Exported to HTML
@@ -1440,8 +1436,7 @@
 (add-to-list 'org-structure-template-alist
              '("py" "#+BEGIN_SRC python\n?\n#+END_SRC"))
 
-;; Custom util function
-;; http://wenshanren.org/?p=327
+;; 交互式选择插入代码块 @See http://wenshanren.org/?p=327
 (defun eye/org-insert-src-block (src-code-type)
   "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
   (interactive
@@ -1466,33 +1461,13 @@
 (setq org-tags-exclude-from-inheritance (quote("crypt")))
 (setq org-crypt-key nil);(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
 
-(when (> emacs-major-version 25)
-  (progn
-    (require 'org-brain)
-    (setq org-id-track-globally t)
-    (setq org-id-locations-file "~/.emacs.d/.org-id-locations")
-    ;;(push '("b" "Brain" plain (function org-brain-goto-end)
-    ;;        "* %i%?" :empty-lines 1)
-    ;;      org-capture-templates)
-    (setq org-brain-visualize-default-choices 'all)
-    (setq org-brain-title-max-length 64)
-    ;; If org-brain is slow, set this!, if this value is t, the title can not contain slashes(/)
-    (setq org-brain-file-entries-use-title t)
-    ))
-
-
 ;;; gtd
 (require 'org-agenda)
 (require 'org-capture)
 (require 'find-lisp)
 
 ;; full frame show
-(setq org-agenda-window-setup 'only-window)
-
-(setq eye/org-agenda-directory "~/cloud/notebook/gtd/")
-(setq org-agenda-files (list (concat eye/org-agenda-directory "task.org")))
-
-(setq org-default-notes-file (concat eye/org-agenda-directory "inbox.org"))
+;; (setq org-agenda-window-setup 'only-window)
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
@@ -1516,132 +1491,77 @@
    (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
   )
 
+(setq locale-gtd-inbox (concat locale-gtd-dir "/inbox.org"))
+(setq locale-gtd-task (concat locale-gtd-dir "/task.org"))
+(setq locale-gtd-finished (concat locale-gtd-dir "/finished.org"))
+(setq locale-gtd-trash (concat locale-gtd-dir "/trash.org"))
+(setq locale-gtd-someday (concat locale-gtd-dir "/someday.org"))
 
+(setq org-agenda-files (list locale-gtd-task))
+(setq org-default-notes-file locale-gtd-inbox)
+(defun eye/open-inbox () (interactive) (find-file org-default-notes-file))
+
+;; capture 的目标路径不能直接使用 concat
 (setq org-capture-templates
       '(
         ("k"
-         "收集" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Inbox")
+         "收集" entry (file+headline locale-gtd-inbox "Inbox")
          "* %?\n%i\n"
          :create t)
         
         ("s"
-         "重要紧急任务" entry (file+headline "~/cloud/notebook/gtd/task.org" "Tasks")
+         "重要紧急任务" entry (file+headline locale-gtd-task "Tasks")
          "* TODO [#A] %?\n%i\n"
          :create t)
 
         ("d"
-         "重要不紧急任务" entry (file+headline "~/cloud/notebook/gtd/task.org" "Tasks")
+         "重要不紧急任务" entry (file+headline locale-gtd-task "Tasks")
          "* TODO [#B] %?\n%i\n"
          :create t)
 
         ("f"
-         "项目任务重要紧急" entry (file+headline "~/cloud/notebook/gtd/task.org" "Projects")
+         "项目任务重要紧急" entry (file+headline locale-gtd-task "Projects")
          "* TODO [#A] %?\n%i\n"
          :create t)
 
         ("g"
-         "项目任务重要不紧急" entry (file+headline "~/cloud/notebook/gtd/task.org" "Projects")
+         "项目任务重要不紧急" entry (file+headline locale-gtd-task "Projects")
          "* TODO [#B] %?\n%i\n"
          :create t)
 
         ;; org-protocol: https://github.com/sprig/org-capture-extension
 
         ("p" 
-         "收集网页内容（自动调用）" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Inbox")
+         "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "Inbox")
          "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
                 %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
          :create t)
         
         ("L" 
-         "收集网页链接（自动调用）" entry (file+headline "~/cloud/notebook/gtd/inbox.org" "Urls")
+         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "Urls")
          "* [[%:link][%:description]]\n%?\n"
          :create t)
         
         ))
 
 
-;; 目标路径不能使用 concat
-(setq eye-org-inbox-path (concat eye/org-agenda-directory "inbox.org"))
-(setq eye-org-task-path (concat eye/org-agenda-directory "task.org"))
-(setq eye-org-finished-path (concat eye/org-agenda-directory "finished.org"))
-(setq eye-org-trash-path (concat eye/org-agenda-directory "trash.org"))
-(setq eye-org-someday-path (concat eye/org-agenda-directory "someday.org"))
 (setq org-refile-targets
       '(
-        (eye-org-inbox-path :level . 1)
-        (eye-org-task-path :level . 1)
-        (eye-org-finished-path :level . 1)
-        (eye-org-trash-path :level . 1)
-        (eye-org-someday-path :level . 1)
+        (locale-gtd-inbox :level . 1)
+        (locale-gtd-task :level . 1)
+        (locale-gtd-finished :level . 1)
+        (locale-gtd-trash :level . 1)
+        (locale-gtd-someday :level . 1)
         ))
 
-(setq org-archive-location (concat eye/org-agenda-directory "finished.org::"))
-
-
-(defun eye/inbox ()
-  (interactive)
-  (find-file org-default-notes-file)
-  )
-
-(defun eye/task ()
-  (interactive)
-  (find-file (concat eye/org-agenda-directory "task.org"))
-  )
-
-
-(defvar my-notes-directory "~/cloud/notebook/tec/")
-
-(defun search-notes (str)
-  "Notes search"
-  (interactive"sSearch: ")
-  (counsel-ag str my-notes-directory))
-
-(defun new-note (str)
-  "Create a new notes."
-  (interactive "sNotes name: ")
-  (find-file (concat my-notes-directory str ".org")))
-
-
+(setq org-archive-location (concat locale-gtd-finished "::"))
 
 ;;(require 'org-pomodoro)
 ;;(setq org-pomodoro-format "%s")
 
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
-;;; wiki
-(require 'org-wiki)
-(require 'init-system)
-(setq org-wiki-location (car org-wiki-location-list))
 
-(setq org-wiki-default-read-only t) ;; 默认是否只读模式
-(setq org-wiki-close-root-switch nil) ;; 切换wiki时是否关闭所有当前wiki页面
-
-(setq org-wiki-backup-location "~/archive/backups") ;; Set backup directory
-
-;; Fix can't search, @see https://stackoverflow.com/questions/7014455/executing-rgrep-non-interactively/7016761#7016761
-(eval-after-load "grep"
-  '(grep-compute-defaults))
-
-;; (setq org-wiki-server-host "127.0.0.1")
-;; (setq org-wiki-server-port "8000")
-;; (setq org-wiki-emacs-path "c:/Users/arch/opt/emacs/bin/runemacs.exe") ;; 用于导出html时指定emacs路径
-
-;; 设置默认页面模板
-;; (setq org-wiki-template
-      ;; (string-trim
-;; "
-;; #+TITLE: %n
-;; #+DESCRIPTION:
-;; #+KEYWORDS:
-;; #+STARTUP:  content
-;; #+DATE: %d
-;; 
-;; - [[wiki:index][Index]]
-;; 
-;; - Related: 
-;; 
-;; * %n
-;; "))
 ;;; Notebook
 (defun eye/notes-search-keyword ()
   (interactive)

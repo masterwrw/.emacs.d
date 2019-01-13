@@ -43,9 +43,6 @@
 [submodule "site-lisp/company-qml"]
 	path = site-lisp/company-qml
 	url = https://github.com/cute-jumper/company-qml.git
-[submodule "site-lisp/org-brain"]
-	path = site-lisp/org-brain
-	url = https://github.com/Kungsgeten/org-brain.git
 [submodule "site-lisp/org-pomodoro"]
 	path = site-lisp/org-pomodoro
 	url = https://github.com/lolownia/org-pomodoro.git
@@ -169,9 +166,6 @@
 [submodule "site-lisp/awesome-tray"]
 	path = site-lisp/awesome-tray
 	url = https://github.com/manateelazycat/awesome-tray.git
-[submodule "site-lisp/org-wiki"]
-	path = site-lisp/org-wiki
-	url = https://github.com/caiorss/org-wiki.git
 [submodule "site-lisp/posframe"]
 	path = site-lisp/posframe
 	url = https://github.com/tumashu/posframe.git
@@ -190,9 +184,6 @@
 [submodule "site-lisp/aweshell"]
 	path = site-lisp/aweshell
 	url = https://github.com/manateelazycat/aweshell.git
-[submodule "site-lisp/ox-hugo"]
-	path = site-lisp/ox-hugo
-	url = https://github.com/kaushalmodi/ox-hugo.git
 [submodule "site-lisp/super-save"]
 	path = site-lisp/super-save
 	url = https://github.com/bbatsov/super-save.git
