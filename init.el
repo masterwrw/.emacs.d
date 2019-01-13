@@ -1452,6 +1452,11 @@
 ;;(setq require-final-newline t)
 (setq calendar-week-start-day 1) ;; 日历从周一开始显示
 (setq org-support-shift-select 1) ;; 是否支持shift+方向键选择
+(setq org-hide-emphasis-markers t) ;; 隐藏斜体标记/text/，如果要删除，则确保光标移到斜体文字最后
+;; 用圆形符号表示列表开头，匹配" - "
+(font-lock-add-keywords 'org-mode
+                        '(("^ +\\([-*]\\) "
+                           (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 
 ;; Exported to HTML
