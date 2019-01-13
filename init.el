@@ -81,7 +81,11 @@
 
 (blink-cursor-mode -1) ;; 取消光标闪烁
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
-(setq split-width-threshold nil) ;; 屏幕宽度变化了也强制使用上下分屏
+
+;; @see https://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
+;; (setq split-width-threshold nil) ;; 强制上下分屏
+(setq split-height-threshold nil) ;; 强制左右分屏
+(setq split-width-threshold 0) ;; 屏幕宽度变化了也强制左右分屏
 
 
 ;; 全屏
