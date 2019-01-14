@@ -258,16 +258,8 @@
 (prelude-install-search-engine "github"     "https://github.com/search?q="                 "Search GitHub: ")
 (prelude-install-search-engine "duckduckgo" "https://duckduckgo.com/?t=lm&q="              "Search DuckDuckGo: ")
 (prelude-install-search-engine "bing"       "https://www.bing.com/search?q="               "Bing: ")
-(define-key global-map (kbd "<f7> ss") 'prelude-google)
-(define-key global-map (kbd "<f7> sb") 'prelude-bing)
-(define-key global-map (kbd "<f7> sd") 'prelude-duckduckgo)
-(define-key global-map (kbd "<f7> sg") 'prelude-github)
-(define-key global-map (kbd "<f7> sv") 'prelude-youtube)
 
 (require 'youdao-dictionary)
-(define-key global-map (kbd "<f7> qq") 'youdao-dictionary-search-from-input)
-(define-key global-map (kbd "<f7> qw") 'youdao-dictionary-search-at-point)
-
 
 (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
 
@@ -535,9 +527,6 @@
   (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
 
   (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
-
-  (define-key global-map (kbd "<f7> g") 'magit-status)
-
   ;; 添加 magit-submodule-remove
   (require 'magit-extension))
 
@@ -1781,7 +1770,14 @@
 (define-key global-map (kbd "<f7> c") 'org-capture)
 (define-key global-map (kbd "<f7> a") 'org-agenda)
 (define-key global-map (kbd "<f7> r") 'aweshell-toggle)
-
+(define-key global-map (kbd "<f7> g") 'magit-status)
+(define-key global-map (kbd "<f7> ss") 'prelude-google)
+(define-key global-map (kbd "<f7> sb") 'prelude-bing)
+(define-key global-map (kbd "<f7> sd") 'prelude-duckduckgo)
+(define-key global-map (kbd "<f7> sg") 'prelude-github)
+(define-key global-map (kbd "<f7> sv") 'prelude-youtube)
+(define-key global-map (kbd "<f7> qq") 'youdao-dictionary-search-from-input)
+(define-key global-map (kbd "<f7> qw") 'youdao-dictionary-search-at-point)
 (define-key global-map (kbd "<f9> s") 'outline-show-entry)
 (define-key global-map (kbd "<f9> h") 'outline-hide-entry)
 (define-key global-map (kbd "<f9> a") 'outline-hide-body)
@@ -1856,4 +1852,13 @@
     (define-key modmap (kbd "C-k bl") 'bookmark-bmenu-list)
     (define-key modmap (kbd "C-k bs") 'bookmark-set)
     (define-key modmap (kbd "C-k bj") 'bookmark-jump)
+
+    (define-key modmap (kbd "C-.") nil)
+    (define-key modmap (kbd "C-. nd") 'eye/notes-dired)
+    (define-key modmap (kbd "C-. nn") 'eye/notes-new)
+    (define-key modmap (kbd "C-. na") 'eye/notes-create-attachment)
+    (define-key modmap (kbd "C-. no") 'eye/notes-open-attachment)
+    (define-key modmap (kbd "C-. ns") 'eye/notes-search-keyword)
+    (define-key modmap (kbd "C-. nf") 'eye/notes-search-file)
+
     ))
