@@ -588,8 +588,8 @@
 
 (require 'wdired)
 
+(require 'dired-x) ;; 支持 dired-jump 进入后自动定位到当前文件名位置
 ;; 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
-(require 'dired-x)
 (setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
                             auto-mode-alist))
 
@@ -598,7 +598,11 @@
                   '(lambda ()
                          (auto-revert-mode 1)))
 
-
+;; 隐藏 dired 中文件拥有者和文件权限等信息
+(defun eye-dired-mode-setup ()
+  "hide the file's unix owner and permission info"
+  (dired-hide-details-mode 1))
+(add-hook 'dired-mode-hook 'eye-dired-mode-setup)
 
 (require 'paredit)
 ;;(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
