@@ -1215,7 +1215,12 @@
                'c++-mode-hook
                'c-mode-common-hook
                ))
-  (add-hook hook '(lambda () (qt-mode-style-setup))))
+  (add-hook hook
+	    '(lambda ()
+	       (qt-mode-style-setup)
+	       (outline-minor-mode 1)
+	       (setq outline-regexp "^class\\|^struct\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
+	       )))
 
 ;;;;; Elisp
 (defun imenu-elisp-sections ()
