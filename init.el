@@ -83,10 +83,10 @@
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
 
 ;; @see https://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
-;; (setq split-width-threshold nil) ;; 强制上下分屏
-(setq split-height-threshold nil) ;; 强制左右分屏
-(setq split-width-threshold 0) ;; 屏幕宽度变化了也强制左右分屏
-
+;; (setq split-height-threshold nil) ;; 强制左右分屏
+;; (setq split-width-threshold t) ;; 屏幕宽度变化了则不强制左右分屏（当有两个windows时，使用另一个window）
+(setq split-width-threshold nil) ;; 强制上下分屏
+(setq split-height-threshold t)   ;; 屏幕高度变化了则不强制上下分屏（当有两个windows时，使用另一个window）
 
 ;; 全屏
 (defun fullscreen ()
