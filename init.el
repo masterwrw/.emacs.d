@@ -368,26 +368,44 @@
 ;;; Font
 (defvar en-font-name "Liberation Mono")
 (defvar cn-font-name "Microsoft YaHei")
-(defvar en-font-size 14)
-(defvar cn-font-size 9.5)
-;; English font
-(set-face-attribute
- 'default nil
- :font (font-spec :family en-font-name
-                  :weight 'normal
-                  :slant 'normal
-                  :size en-font-size))
-;; Chinese font
-(if (display-graphic-p)
-    (dolist (charset '(kana han symbol cjk-misc bopomofo))
-      (set-fontset-font
-       (frame-parameter nil 'font)
-       charset
-       (font-spec :family cn-font-name
-                  :weight 'normal
-                  :slant 'normal
-                  :size cn-font-size))))
+(setq en-font-size 14)
+(setq cn-font-size 11)
+(defun eye-update-font-size ()
+  ;; English font
+  (set-face-attribute
+   'default nil
+   :font (font-spec :family en-font-name
+                    :weight 'normal
+                    :slant 'normal
+                    :size en-font-size))
+  ;; Chinese font
+  (if (display-graphic-p)
+      (dolist (charset '(kana han symbol cjk-misc bopomofo))
+	(set-fontset-font
+	 (frame-parameter nil 'font)
+	 charset
+	 (font-spec :family cn-font-name
+                    :weight 'normal
+                    :slant 'normal
+                    :size cn-font-size))))
+  )
+(eye-update-font-size)
 
+(defun eye/increase-font-size ()
+  "Increase font size of english and chinese."
+  (interactive)
+  (setq en-font-size (+ en-font-size 1))
+  (setq cn-font-size (+ cn-font-size 1))
+  (eye-update-font-size)
+  )
+
+(defun eye/decrease-font-size ()
+  "Decrease font size of english and chinese."
+  (interactive)
+  (setq en-font-size (- en-font-size 1))
+  (setq cn-font-size (- cn-font-size 1))
+  (eye-update-font-size)
+  )
 
 ;; Custom keyword hightlight
 (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
@@ -1743,8 +1761,8 @@
 
 (define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
 
-(define-key global-map (kbd "<C-wheel-up>") 'text-scale-increase)
-(define-key global-map (kbd "<C-wheel-down>") 'text-scale-decrease)
+(define-key global-map (kbd "<C-wheel-up>") 'eye/increase-font-size)
+(define-key global-map (kbd "<C-wheel-down>") 'eye/decrease-font-size)
 
 (if (>= emacs-major-version 26)
     (progn
