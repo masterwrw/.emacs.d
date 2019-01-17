@@ -1229,13 +1229,6 @@
 	    (setq outline-regexp ";;;+")
 	    ))
 
-
-(define-key emacs-lisp-mode-map (kbd "<M-up>") 'scroll-up-defun-or-lines)
-(define-key emacs-lisp-mode-map (kbd "<M-down>") 'scroll-down-defun-or-lines)
-
-(define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
-;; (define-key lisp-interaction-mode (kbd "<f5>") 'eval-last-sexp)
-
 ;; http://ergoemacs.org/emacs/elisp_traverse_dir.html
 ;; (defun git-submodule-add ()
   ;; (interactive)
@@ -1787,6 +1780,9 @@
 (global-set-key (kbd "<f3> d") 'emacs-session-save)
 (global-set-key (kbd "C-x C-c") 'emacs-session-save)
 
+(define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
+(define-key lisp-interaction-mode-map (kbd "<f5>") 'eval-last-sexp)
+
 (define-key global-map (kbd "<f7> c") 'org-capture)
 (define-key global-map (kbd "<f7> a") 'org-agenda)
 (define-key global-map (kbd "<f7> r") 'aweshell-toggle)
@@ -1803,7 +1799,8 @@
 (define-key global-map (kbd "<f9> a") 'outline-hide-body)
 
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
-(dolist (modmap (list global-map c++-mode-map org-mode-map org-src-mode-map nxml-mode-map))
+(dolist (modmap (list global-map c++-mode-map org-mode-map
+		      org-src-mode-map nxml-mode-map emacs-lisp-mode-map lisp-interaction-mode-map))
   (progn
     (define-key modmap (kbd "M-j") 'left-char)
     (define-key modmap (kbd "M-l") 'right-char)
@@ -1818,10 +1815,12 @@
     (define-key modmap (kbd "M-/") 'xah-comment-dwim)
     (define-key modmap (kbd "M-q") 'yank)
     (define-key modmap (kbd "M-m") 'set-mark-command)
+    (define-key modmap (kbd "M-w") 'xah-copy-line-or-region)
+    (define-key modmap (kbd "M-q") 'xah-cut-line-or-region)
     (define-key modmap (kbd "<M-left>") 'backward-word)
     (define-key modmap (kbd "<M-right>") 'forward-word)
-    (define-key modmap (kbd "<M-up>") 'backward-paragraph)
-    (define-key modmap (kbd "<M-down>") 'forward-paragraph)
+    (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
+    (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
     (define-key modmap (kbd "M-,") 'backward-forward-previous-location)
     (define-key modmap (kbd "M-.") 'backward-forward-next-location)
     (define-key modmap (kbd "C-k") 'nil)
@@ -1841,11 +1840,8 @@
     (define-key modmap (kbd "C-k rq") 'query-replace)
     (define-key modmap (kbd "C-k rr") 'replace-rectangle)
     (define-key modmap (kbd "C-k rk") 'kill-rectangle)
-    (define-key modmap (kbd "C-k v") 'yank)
-    (define-key modmap (kbd "C-k pv") 'counsel-yank-pop)
-    (define-key modmap (kbd "C-k c") 'xah-copy-line-or-region)
-    (define-key modmap (kbd "C-k pc") 'eye/eno-copy)
-    (define-key modmap (kbd "C-k x") 'xah-cut-line-or-region)
+    (define-key modmap (kbd "C-k v") 'counsel-yank-pop)
+    (define-key modmap (kbd "C-k c") 'eye/eno-copy)
 
     (define-key modmap (kbd "C-k wh") 'split-window-horizontally)
     (define-key modmap (kbd "C-k wv") 'split-window-vertically)
