@@ -1,4 +1,4 @@
-;;; Startup
+;;;; Startup
 (setq gc-cons-threshold 402653184
       gc-cons-percentage 0.6)
 
@@ -32,7 +32,7 @@
 (setq custom-file (concat user-emacs-directory "custom.el"))
 ;;(load custom-file)
 
-;;; locale
+;;;; locale
 (setq locale-config-file (expand-file-name "locale.el" user-emacs-directory))
 (defun eye/load-locale-file()
   "加载本地的一些配置，比如一些路径相关的变量"
@@ -49,7 +49,7 @@
 ;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
 (setq x-select-enable-clipboard-manager nil)
 
-;;; UI
+;;;; UI
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
 (put 'suspend-frame 'disabled t) ;; 禁止 Ctrl+z 时挂起 emacs
@@ -113,7 +113,7 @@
 ;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
 ;; (setq split-window-preferred-function nil)
 
-;;; Encoding
+;;;; Encoding
 (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
 (set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
 (set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
@@ -176,7 +176,7 @@
   (interactive)
   (set-buffer-file-coding-system 'utf-8-with-signature-unix 't))
 
-;;; Backup
+;;;; Backup
 (defvar user-cache-directory "~/tmp/emacs_cache")
 ;; 备份文件 file~，指定备份目录后，文件名为 !drive_f!dirname!dirname!filename~
 (setq backup-by-copying t)
@@ -198,7 +198,7 @@
 (super-save-mode +1)
 (setq super-save-remote-files nil)
 
-;;; History
+;;;; History
 (require 'saveplace)
 (add-hook 'after-init-hook 'save-place-mode)
 
@@ -228,7 +228,7 @@
                                       extended-command-history)
       savehist-autosave-interval 60)
 
-;;; External
+;;;; External
 ;; 使用 emacsclient 需要先启动服务
 (require 'server)
 (unless (server-running-p) (server-start))
@@ -274,7 +274,7 @@
   (when (executable-find "xfce4-terminal")
     (start-process "Terminal" nil "xfce4-terminal")))
 
-;;; modeline
+;;;; modeline
 ;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
 ;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
 ;; But I need global-mode-string,
@@ -355,7 +355,7 @@
 ;;    (awesome-tray-mode 1))
 
 
-;;; Custom theme configuration
+;;;; Custom theme configuration
 
 (require 'moe-theme)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
@@ -363,7 +363,7 @@
 (show-paren-mode t)                     ;高亮括号
 ;; (setq show-paren-style 'expression)     ;高亮括号整体内容
 
-;;; Font
+;;;; Font
 (defvar en-font-name "Liberation Mono")
 (defvar cn-font-name "Microsoft YaHei")
 (setq en-font-size 14)
@@ -427,7 +427,7 @@
 
 ;; (setq truncate-lines t) ;; 不自动折行
 
-;;; ivy
+;;;; ivy
 (require 'swiper)
 
 (defun swiper-dwim ()
@@ -495,7 +495,7 @@
 
 (setq ivy-format-function 'maple/ivy-format-function)
 
-;;; Project
+;;;; Project
 (unless (equal system-type 'windows-nt)
   (require 'find-file-in-project))
 
@@ -524,7 +524,7 @@
 ;;  (require 'w32-browser)
 ;;  (define-key dired-mode-map [f11] 'dired-w32-browser))
 
-;;; magit
+;;;; magit
 (when (and (equal system-type 'windows-nt) (executable-find "git"))
   (require 'magit)
   (setq magit-push-always-verify nil)
@@ -546,7 +546,7 @@
   ;; 添加 magit-submodule-remove
   (require 'magit-extension))
 
-;;; Shell
+;;;; Shell
 (require 'aweshell)
 
 (defun eye/eshell-clear ()
@@ -572,7 +572,7 @@
     ;; restore path
     (setenv "PATH" shell-path-bak)))
 
-;;; Buffer
+;;;; Buffer
 (setq electric-pair-pairs '(
                                                         (?\{ . ?\})
                                                         (?\( . ?\))
@@ -637,7 +637,7 @@
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
 
-;;; Do not ask
+;;;; Do not ask
 (setq ibuffer-expert t)
 
 ;; 按行滚动
@@ -727,7 +727,7 @@
   (remove-hook 'css-mode-hook 'writeroom-mode)
   (writeroom-mode -1))
 
-;;; Company
+;;;; Company
 (unless (equal system-type 'windows-nt)
   (require 'company)
   (define-key company-active-map (kbd "C-i") 'company-select-previous)
@@ -810,7 +810,7 @@
   ) ;; end company
 
 
-;;; Python
+;;;; Python
 (defun install-python-env ()
   (require 'jinja2-mode)
   ;;    (add-to-list 'auto-mode-alist '("\\.tmpl$" . jinja2-mode)))
@@ -831,7 +831,7 @@
 
 (add-hook 'python-mode-hook 'yas-minor-mode)
 
-;;; c++ and qt configuration
+;;;;; cpp and qt configuration
 (require 'cc-mode)
 
 (add-hook 'c++-mode-hook 'yas-minor-mode)
@@ -1060,7 +1060,7 @@
                                        )))
 
 
-;;; auto insert
+;;;; auto insert
 (require 'autoinsert)
 (define-auto-insert '(c++-mode . "C++ skeleton")
   '(
@@ -1156,7 +1156,7 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
-;;; Qt
+;;;; Qt
 (require 'qt-pro-mode)
 ;;  :mode ("\\.pro\\'" "\\.pri\\'")
 (add-hook 'qt-pro-mode 'yas-minor-mode)
@@ -1226,7 +1226,7 @@
               (require 'company-elisp)
               (add-to-list 'company-backends 'company-elisp))
 	    (outline-minor-mode 1)
-	    (setq outline-regexp ";;;+")
+	    (setq outline-regexp ";;;;+")
 	    ))
 
 ;; http://ergoemacs.org/emacs/elisp_traverse_dir.html
@@ -1244,7 +1244,7 @@
           (directory-files-recursively dir "\.el$" ))))
 
 
-;;; php
+;;;; php
 (require 'php-mode)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
@@ -1265,7 +1265,7 @@
                (add-to-list 'company-backends 'company-php)))
   )
 
-;;; lua
+;;;; lua
 (defun install-lua-env ()
   (require 'lua-mode)
   (setq lua-indent-level 4))
@@ -1276,13 +1276,13 @@
 ;; (setq default-directory "d:/projects/lua")
 ;; (eye/shell-cmd "lua-shell" "c:\\Lua5.1;"))
 
-;;; sql
+;;;; sql
 (add-hook 'sql-mode-hook 'yas-minor-mode)
 
-;;; xml
+;;;; xml
 (require 'nxml-mode)
 
-;;; Navigation
+;;;; Navigation
 (require 'counsel-etags)
 ;; Don't ask before rereading the TAGS files if they have changed
 (setq tags-revert-without-query t)
@@ -1390,7 +1390,7 @@
                 (ibuffer-switch-to-saved-filter-groups "EL")))
 (setq ibuffer-show-empty-filter-groups nil)
 
-;;; flycheck
+;;;; flycheck
 ;; 不使用 global-flycheck-mode
 (require 'flycheck)
 (dolist (hook (list
@@ -1407,7 +1407,7 @@
       (require 'flycheck-posframe)
       (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)))
 
-;;; yasnippet
+;;;; yasnippet
 (require 'yasnippet)
 ;; (require 'yasnippet-snippets) ;; can not found in load-path?? 
 
@@ -1416,7 +1416,7 @@
 (yas-global-mode 1)
 (yas-reload-all)
 
-;;; web
+;;;; web
 (require 'web-mode)
 
 
@@ -1440,7 +1440,7 @@
         (replace-string "&gt;" ">" nil start end)
         )))
 
-;;; orgmode
+;;;; orgmode
 (require 'helm-org)
 
 (require 'org)
@@ -1519,7 +1519,7 @@
 (setq org-tags-exclude-from-inheritance (quote("crypt")))
 (setq org-crypt-key nil);(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
 
-;;; gtd
+;;;; gtd
 (require 'org-agenda)
 (require 'org-capture)
 (require 'find-lisp)
@@ -1624,7 +1624,7 @@
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
 
-;;; Notebook
+;;;; Notebook
 (defun eye/notes-search-keyword ()
   (interactive)
   (let ((keyword (read-string "Search keyword: " (eye/current-word))))
@@ -1675,7 +1675,7 @@
       )))
 
 
-;;; session
+;;;; session
 (require 'base-toolkit)
 (setq desktop-load-locked-desktop t) ;don't popup dialog ask user, load anyway
 
@@ -1706,18 +1706,18 @@
   (kill-emacs))
 
 
-;;; remote
+;;;; remote
 (if (eq system-type 'windows-nt)
     (setq tramp-default-method "plink")
   (setq tramp-default-method "ssh"))
 
-;;; docs
+;;;; docs
 (require 'helm-dash)
 (setq helm-dash-browser-func 'eww)
 (setq helm-dash-docsets-path "~/.docset")
 (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
 
-;;; keys
+;;;; keys
 (require 'which-key)
 (which-key-mode)
 
