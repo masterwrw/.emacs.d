@@ -352,7 +352,6 @@
 (require 'moe-theme)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
 (load-theme 'moe-dark t)
-(show-paren-mode t)                     ;高亮括号
 ;; (setq show-paren-style 'expression)     ;高亮括号整体内容
 
 ;;;; Font
