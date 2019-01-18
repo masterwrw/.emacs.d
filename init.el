@@ -1220,6 +1220,28 @@
   (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
 
 (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
+
+;; @See http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong
+(defun eye/init-imenu (p)
+  (interactive "P")
+  (find-file-existing "~/.emacs.d/init.el")
+  (widen)
+  (counsel-imenu)
+  (if p (init-narrow-to-section)))
+
+(defun init-narrow-to-section ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (unless (looking-at "^;;;;")
+      (re-search-backward "^;;;;" nil t))
+    (push-mark)
+    (next-line)
+    (re-search-forward "^;;;;" nil t)
+    (previous-line)
+    (narrow-to-region (region-beginning) (region-end))))
+
+
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'yas-minor-mode)
 (add-hook 'emacs-lisp-mode-hook
@@ -1870,6 +1892,7 @@
     (define-key modmap (kbd "C-k bl") 'bookmark-bmenu-list)
     (define-key modmap (kbd "C-k bs") 'bookmark-set)
     (define-key modmap (kbd "C-k bj") 'bookmark-jump)
+    (define-key modmap (kbd "C-k ei") 'eye/init-imenu)
 
     (define-key modmap (kbd "C-.") nil)
     (define-key modmap (kbd "C-. nd") 'eye/notes-dired)
