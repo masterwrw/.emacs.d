@@ -406,5 +406,13 @@ use command: ls -lR > virtual.dired
   (save-buffer))
 
 
+(defun eye/remove-big-M (buffer)
+  "Automate M-% C-q C-m RET RET"
+  (interactive "*b")
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward (string ?\C-m) nil t)
+      (replace-match ""))))
+
 
 (provide 'base-toolkit)

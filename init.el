@@ -154,14 +154,6 @@
   (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 
-(defun eye/remove-big-M (buffer)
-  "Automate M-% C-q C-m RET C-q C-j RET"
-  (interactive "*b")
-  (save-excursion
-    (goto-char (point-min))
-    (while (search-forward (string ?\C-m) nil t)
-      (replace-match (string ?\C-j) nil t))))
-
 (defun eye/convert-to-utf8-unix ()
   (interactive)
   (set-buffer-file-coding-system 'unix 't))
