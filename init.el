@@ -627,9 +627,7 @@
 ;; Kill buffers without asking
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
-
-;;;; Do not ask
-(setq ibuffer-expert t)
+(setq ibuffer-expert t) ;;don't ask when delete
 
 ;; 按行滚动
 ;; scroll one line at a time (less "jumpy" than defaults)
