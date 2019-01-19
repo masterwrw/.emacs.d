@@ -820,7 +820,7 @@
 
 (add-hook 'python-mode-hook 'yas-minor-mode)
 
-;;;;; cpp and qt configuration
+;;;; cpp and qt configuration
 (require 'cc-mode)
 
 (add-hook 'c++-mode-hook 'yas-minor-mode)
@@ -1211,7 +1211,7 @@
 	       (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
 	       )))
 
-;;;;; Elisp
+;;;; Elisp
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
   (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
