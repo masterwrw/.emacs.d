@@ -1613,8 +1613,6 @@
 
 (setq org-archive-location (concat locale-gtd-finished "::"))
 
-;;(require 'org-pomodoro)
-;;(setq org-pomodoro-format "%s")
 
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 

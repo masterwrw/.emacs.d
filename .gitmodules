@@ -40,9 +40,6 @@
 [submodule "site-lisp/company-qml"]
 	path = site-lisp/company-qml
 	url = https://github.com/cute-jumper/company-qml.git
-[submodule "site-lisp/org-pomodoro"]
-	path = site-lisp/org-pomodoro
-	url = https://github.com/lolownia/org-pomodoro.git
 [submodule "site-lisp/counsel-etags"]
 	path = site-lisp/counsel-etags
 	url = https://github.com/redguardtoo/counsel-etags.git
