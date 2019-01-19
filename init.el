@@ -266,6 +266,11 @@
   (when (executable-find "xfce4-terminal")
     (start-process "Terminal" nil "xfce4-terminal")))
 
+;;;; theme
+(require 'moe-theme)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
+(load-theme 'moe-dark t)
+
 ;;;; modeline
 ;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
 ;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
@@ -323,7 +328,7 @@
                ))
 
 
-;;(require 'awesome-tray)
+(require 'awesome-tray)
 ;; add to show file coding
 (defun awesome-tray-build-info ()
   (let ((info ""))
@@ -332,27 +337,20 @@
             (list
              (buffer-name)
              ;; Current mode.
-             ;;(format "[%s]" major-mode)
+             (format "[%s]" major-mode)
              ;; Location.
              (format "(%s:%s)" (line-number-at-pos) (current-column))
              ;; Coding
              (format "%s" buffer-file-coding-system) ;; added by custom
              ;; Date.
-             (format-time-string "[%m-%d %H:%M]")))
+             ;; (format-time-string "[%m-%d %H:%M]")
+	     ))
     ;; Add color property.
     (put-text-property 0 (length info) 'face 'awesome-tray-info-face info)
     info))
 
-;;(if (display-graphic-p)
-;;    (awesome-tray-mode 1))
-
-
-;;;; Custom theme configuration
-
-(require 'moe-theme)
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
-(load-theme 'moe-dark t)
-;; (setq show-paren-style 'expression)     ;高亮括号整体内容
+(when (display-graphic-p)
+  (add-hook 'after-init-hook 'awesome-tray-mode))
 
 ;;;; Font
 (defvar en-font-name "Liberation Mono")
@@ -572,6 +570,8 @@
                                                         ))
 (electric-pair-mode t)
 (show-paren-mode 1)
+;; (setq show-paren-style 'expression)     ;高亮括号整体内容
+
 
 ;; Show color of #hex format string.
 (require 'rainbow-mode)
