@@ -110,6 +110,8 @@
   (when (eq system-type 'windows-nt)
     (w32-send-sys-command 61488)))
 
+(add-hook 'after-init-hook 'maximize-frame)
+
 ;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
 ;; (setq split-window-preferred-function nil)
 
