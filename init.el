@@ -1679,7 +1679,6 @@
 (require 'desktop)
 
 ;; use only one desktop
-(setq desktop-path '(user-cache-directory))
 (setq desktop-dirname user-cache-directory)
 (setq desktop-base-file-name "emacs-desktop")
 
@@ -1721,6 +1720,7 @@
 		 (if (y-or-n-p "Restore desktop? ")
 		     (session-restore)))))
 
+(add-hook 'kill-emacs-hook 'session-save)
 
 ;;;; remote
 (if (eq system-type 'windows-nt)
