@@ -1364,37 +1364,6 @@
 ;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
 ;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 
-(require 'ggtags)
-(defun eye/create-gtags-file ()
-  "Create gtags file"
-  (interactive)
-  (let ((command (read-string "command: " "gtags")))
-    (async-shell-command command)
-    ))
-
-(defun gtags-root-dir ()
-  "Returns GTAGS root directory or nil if doesn't exist."
-  (with-temp-buffer
-    (if (zerop (call-process "global" nil t nil "-pr"))
-        (buffer-substring (point-min) (1- (point-max)))
-      nil)))
-(defun gtags-update ()
-  "Make GTAGS incremental update"
-  (call-process "global" nil nil nil "-u"))
-(defun gtags-update-hook ()
-    (when (gtags-root-dir)
-      (gtags-update)))
-
-(defun gtags-enable-auto-update ()
-  (interactive)
-  (add-hook 'after-save-hook #'gtags-update-hook))
-(defun gtags-disable-auto-update ()
-  (interactive)
-  (remove-hook 'after-save-hook #'gtags-update-hook))
-(define-key ggtags-mode-map (kbd "M-[") 'ggtags-find-definition)
-(define-key ggtags-mode-map (kbd "M-]") 'ggtags-find-reference)
-
-
 (require 'backward-forward)
 '(advice-add 'counsel-etags-find-tag-at-point :before #'backward-forward-push-mark-wrapper)
 (backward-forward-mode t)
