@@ -171,7 +171,9 @@
   (set-buffer-file-coding-system 'utf-8-with-signature-unix 't))
 
 ;;;; Backup
+(require 'f)
 (defvar user-cache-directory "~/tmp/emacs_cache")
+(unless (f-directory? user-cache-directory) (make-directory user-cache-directory))
 ;; 备份文件 file~，指定备份目录后，文件名为 !drive_f!dirname!dirname!filename~
 (setq backup-by-copying t)
 (setq delete-old-versions t)
@@ -1672,33 +1674,52 @@
 
 ;;;; session
 (require 'base-toolkit)
-(setq desktop-load-locked-desktop t) ;don't popup dialog ask user, load anyway
 
-(defun emacs-session-restore ()
-  "Restore emacs session."
-  (interactive)
-  (ignore-errors
-    ;; Kill unused buffers.
-    (kill-unused-buffers)
-    ;; Restore session.
-    (desktop-read user-cache-directory)
-    ))
+;; desktop save
+(require 'desktop)
 
-(defun emacs-session-save ()
-  "Save emacs session."
+;; use only one desktop
+(setq desktop-path '(user-cache-directory))
+(setq desktop-dirname user-cache-directory)
+(setq desktop-base-file-name "emacs-desktop")
+
+;; remove desktop after it's been read
+(add-hook 'desktop-after-read-hook
+	  '(lambda ()
+	     ;; desktop-remove clears desktop-dirname
+	     (setq desktop-dirname-tmp desktop-dirname)
+	     (desktop-remove)
+	     (setq desktop-dirname desktop-dirname-tmp)))
+
+(defun saved-session ()
+  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+
+;; use session-restore to restore the desktop manually
+(defun session-restore ()
+  "Restore a saved emacs session."
   (interactive)
-  (ignore-errors
-    ;; Kill all buffers if with prefix argument.
-    (mapc 'kill-buffer (buffer-list))
-    ;; Kill unused buffers.
-    (kill-unused-buffers)
-    ;; Save all buffers before exit.
-    (auto-save-buffers))
-  ;; Save session.
-  (make-directory user-cache-directory t)
-  (desktop-save user-cache-directory)
-  ;; Exit emacs.
-  (kill-emacs))
+  (if (saved-session)
+      (desktop-read user-cache-directory)
+    (message "No desktop found.")))
+
+(require 'auto-save)
+;; use session-save to save the desktop manually
+(defun session-save ()
+  "Save an emacs session."
+  (interactive)
+  (auto-save-buffers)
+  (if (saved-session)
+      (if (y-or-n-p "Overwrite existing desktop? ")
+	  (desktop-save-in-desktop-dir)
+	(message "Session not saved."))
+  (desktop-save-in-desktop-dir)))
+
+;; ask user whether to restore desktop at start-up
+(add-hook 'after-init-hook
+	  '(lambda ()
+	     (if (saved-session)
+		 (if (y-or-n-p "Restore desktop? ")
+		     (session-restore)))))
 
 
 ;;;; remote
@@ -1772,8 +1793,6 @@
 (global-set-key (kbd "<f3> n") 'new-frame)
 (global-set-key (kbd "<f3> k") 'delete-frame)
 
-(global-set-key (kbd "<f3> d") 'emacs-session-save)
-(global-set-key (kbd "C-x C-c") 'emacs-session-save)
 
 (define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
 (define-key lisp-interaction-mode-map (kbd "<f5>") 'eval-last-sexp)
