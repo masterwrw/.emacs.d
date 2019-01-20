@@ -1,14 +1,19 @@
 ;;;; Startup
-(setq gc-cons-threshold 50000000
-      gc-cons-percentage 0.6)
-
-(defvar eye-file-name-handler-alist file-name-handler-alist)
+;; Speed up startup
+(setq gc-cons-threshold 80000000) ;;80MB
+(defvar default-file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
-
-(defun eye/revert-file-name-handler-alist ()
-  (setq file-name-handler-alist eye-file-name-handler-alist))
-(add-hook 'emacs-startup-hook 'eye/revert-file-name-handler-alist)
-
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            "Restore defalut values after init."
+            (setq file-name-handler-alist default-file-name-handler-alist)
+            (setq gc-cons-threshold 800000) ;;800KB
+            (if (boundp 'after-focus-change-function)
+                (add-function :after after-focus-change-function
+                              (lambda ()
+                                (unless (frame-focus-state)
+                                  (garbage-collect))))
+              (add-hook 'focus-out-hook 'garbage-collect))))
 
 ;;
 ;; 启动时间统计
