@@ -94,9 +94,6 @@
 [submodule "site-lisp/smart-compile"]
 	path = site-lisp/smart-compile
 	url = https://github.com/zenitani/elisp.git
-[submodule "site-lisp/yasnippet-snippets"]
-	path = site-lisp/yasnippet-snippets
-	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
 [submodule "site-lisp/pos-tip"]
 	path = site-lisp/pos-tip
 	url = https://github.com/pitkali/pos-tip.git

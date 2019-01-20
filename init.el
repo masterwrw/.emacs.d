@@ -1130,6 +1130,8 @@
 
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
+;;;; yasnippet
+(require 'yasnippet)
 
 ;; yankpad
 (require 'yankpad)
@@ -1392,15 +1394,6 @@
                 (ibuffer-auto-mode 1)
                 (ibuffer-switch-to-saved-filter-groups "EL")))
 (setq ibuffer-show-empty-filter-groups nil)
-
-;;;; yasnippet
-(require 'yasnippet)
-;; (require 'yasnippet-snippets) ;; can not found in load-path?? 
-
-;; (set-face-attribute 'yas-field-highlight-face nil :foreground "black" :background nil)
-;;(add-to-list `yas/root-directory (concat eye-emacs-extension-dir "/yasnippet/snippets"))
-(yas-global-mode 1)
-(yas-reload-all)
 
 ;;;; web
 (require 'web-mode)
