@@ -333,30 +333,6 @@
                ))
 
 
-(require 'awesome-tray)
-;; add to show file coding
-(defun awesome-tray-build-info ()
-  (let ((info ""))
-    ;; Collection information.
-    (mapcar '(lambda (i) (setq info (format " %s %s" info i)))
-            (list
-             (buffer-name)
-             ;; Current mode.
-             (format "[%s]" major-mode)
-             ;; Location.
-             (format "(%s:%s)" (line-number-at-pos) (current-column))
-             ;; Coding
-             (format "%s" buffer-file-coding-system) ;; added by custom
-             ;; Date.
-             ;; (format-time-string "[%m-%d %H:%M]")
-	     ))
-    ;; Add color property.
-    (put-text-property 0 (length info) 'face 'awesome-tray-info-face info)
-    info))
-
-(when (display-graphic-p)
-  (add-hook 'after-init-hook 'awesome-tray-mode))
-
 ;;;; Font
 (defvar en-font-name "Liberation Mono")
 (defvar cn-font-name "Microsoft YaHei")

@@ -157,9 +157,6 @@
 [submodule "refactor"]
 	path = site-lisp/semantic-refactor
 	url = https://github.com/tuhdo/semantic-refactor.git
-[submodule "site-lisp/awesome-tray"]
-	path = site-lisp/awesome-tray
-	url = https://github.com/manateelazycat/awesome-tray.git
 [submodule "site-lisp/posframe"]
 	path = site-lisp/posframe
 	url = https://github.com/tumashu/posframe.git
