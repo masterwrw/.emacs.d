@@ -1,5 +1,5 @@
 ;;;; Startup
-(setq gc-cons-threshold 402653184
+(setq gc-cons-threshold 50000000
       gc-cons-percentage 0.6)
 
 (defvar eye-file-name-handler-alist file-name-handler-alist)
@@ -216,13 +216,14 @@
 (require 'savehist)
 (add-hook 'after-init-hook 'savehist-mode)
 (setq enable-recursive-minibuffers t ; Allow commands in minibuffers
-      history-length 1000
+      history-length 100
       savehist-additional-variables '(mark-ring
                                       global-mark-ring
                                       search-ring
                                       regexp-search-ring
                                       extended-command-history)
-      savehist-autosave-interval 60)
+      savehist-autosave-interval nil ;;不开启自动保存，否则会不断的分配内存
+      )
 
 ;;;; External
 ;; 使用 emacsclient 需要先启动服务
