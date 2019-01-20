@@ -510,7 +510,7 @@
 ;;  (define-key dired-mode-map [f11] 'dired-w32-browser))
 
 ;;;; magit
-(when (and (equal system-type 'windows-nt) (executable-find "git"))
+(when (and (not (equal system-type 'windows-nt)) (executable-find "git"))
   (require 'magit)
   (setq magit-push-always-verify nil)
   (setq git-commit-summary-max-length 80)
