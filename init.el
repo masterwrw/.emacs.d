@@ -15,6 +15,17 @@
                                   (garbage-collect))))
               (add-hook 'focus-out-hook 'garbage-collect))))
 
+;; Do not use garbage-collect when use minibuffer
+;; @see http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
+(defun eye-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun eye-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+
+(add-hook 'minibuffer-setup-hook #'eye-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'eye-minibuffer-exit-hook)
+
 ;;
 ;; 启动时间统计
 ;;
