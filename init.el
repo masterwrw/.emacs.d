@@ -289,7 +289,6 @@
 
 ;;;; theme
 (require 'moe-theme)
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/moe-theme/")
 (load-theme 'moe-dark t)
 
 ;;;; modeline
@@ -1142,6 +1141,11 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
+;; yankpad
+(require 'yankpad)
+(setq yankpad-file (concat locale-notebook-dir "/yankpad.org"))
+(add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
+
 ;;;; Qt
 (require 'qt-pro-mode)
 ;;  :mode ("\\.pro\\'" "\\.pri\\'")
@@ -1885,4 +1889,6 @@
     (define-key modmap (kbd "C-. ns") 'eye/notes-search-keyword)
     (define-key modmap (kbd "C-. nf") 'eye/notes-search-file)
 
+    (define-key modmap (kbd "C-. ym") 'yankpad-map)
+    (define-key modmap (kbd "C-. yi") 'yankpad-insert)
     ))

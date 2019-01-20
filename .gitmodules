@@ -184,3 +184,6 @@
 [submodule "site-lisp/web-mode"]
 	path = site-lisp/web-mode
 	url = https://github.com/fxbois/web-mode.git
+[submodule "site-lisp/yankpad"]
+	path = site-lisp/yankpad
+	url = https://github.com/Kungsgeten/yankpad.git
