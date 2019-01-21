@@ -452,8 +452,8 @@
 ;; 在当前光标处弹出ivy
 ;; (setq ivy-completion-beg 0)
 ;; (setq ivy-display-function 'ivy-display-function-overlay)
-(define-key ivy-minibuffer-map (kbd "C-i") 'ivy-previous-line)
-(define-key ivy-minibuffer-map (kbd "C-k") 'ivy-next-line)
+(define-key ivy-minibuffer-map (kbd "M-i") 'ivy-previous-line)
+(define-key ivy-minibuffer-map (kbd "M-k") 'ivy-next-line)
 (define-key ivy-minibuffer-map (kbd "M-o") 'ivy-occur)
 
 
@@ -1715,7 +1715,7 @@
 
 ;;;; keys
 (require 'which-key)
-(which-key-mode)
+;; (which-key-mode)
 
 (set-cursor-color "#00A876")
 
@@ -1774,27 +1774,14 @@
 (global-set-key (kbd "<f3> k") 'delete-frame)
 
 
-(define-key emacs-lisp-mode-map (kbd "<f5>") 'eval-last-sexp)
-(define-key lisp-interaction-mode-map (kbd "<f5>") 'eval-last-sexp)
+(setq eye-leader-key ",")
 
-(define-key global-map (kbd "<f7> c") 'org-capture)
-(define-key global-map (kbd "<f7> a") 'org-agenda)
-(define-key global-map (kbd "<f7> r") 'aweshell-toggle)
-(define-key global-map (kbd "<f7> g") 'magit-status)
-(define-key global-map (kbd "<f7> ss") 'prelude-google)
-(define-key global-map (kbd "<f7> sb") 'prelude-bing)
-(define-key global-map (kbd "<f7> sd") 'prelude-duckduckgo)
-(define-key global-map (kbd "<f7> sg") 'prelude-github)
-(define-key global-map (kbd "<f7> sv") 'prelude-youtube)
-(define-key global-map (kbd "<f7> qq") 'youdao-dictionary-search-from-input)
-(define-key global-map (kbd "<f7> qw") 'youdao-dictionary-search-at-point)
-(define-key global-map (kbd "<f9> s") 'outline-show-entry)
-(define-key global-map (kbd "<f9> h") 'outline-hide-entry)
-(define-key global-map (kbd "<f9> a") 'outline-hide-body)
-
+(defun eye-define-key (modmap key func)
+  (define-key modmap (kbd (concat eye-leader-key " " key)) func))
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
 (dolist (modmap (list global-map c++-mode-map org-mode-map
-		      org-src-mode-map nxml-mode-map emacs-lisp-mode-map lisp-interaction-mode-map))
+		      org-src-mode-map nxml-mode-map emacs-lisp-mode-map lisp-interaction-mode-map
+		      counsel-describe-map))
   (progn
     (define-key modmap (kbd "M-j") 'left-char)
     (define-key modmap (kbd "M-l") 'right-char)
@@ -1815,63 +1802,97 @@
     (define-key modmap (kbd "<M-right>") 'forward-word)
     (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
     (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
-    (define-key modmap (kbd "M-,") 'backward-forward-previous-location)
-    (define-key modmap (kbd "M-.") 'backward-forward-next-location)
-    (define-key modmap (kbd "C-k") 'nil)
-    (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
-    (define-key modmap (kbd "C-k C-,") 'keyboard-escape-quit)
     (define-key modmap (kbd "C-s") 'save-buffer)
     (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer)
-    (define-key modmap (kbd "C-l") 'recenter-top-bottom)
+    (define-key modmap (kbd "C-l") 'delete-char)
+    (define-key modmap (kbd "C-j") 'backward-delete-char)    
+    (define-key modmap (kbd "M-,") 'backward-forward-previous-location)
+    (define-key modmap (kbd "M-.") 'backward-forward-next-location)
 
-    (define-key modmap (kbd "C-k a") 'counsel-M-x)
-    (define-key modmap (kbd "C-k m") 'counsel-ibuffer)
-    (define-key modmap (kbd "C-k ff") 'counsel-find-file)
-    (define-key modmap (kbd "C-k fo") 'find-file-other-window)
-    (define-key modmap (kbd "C-k fk") 'kill-this-buffer)
-    (define-key modmap (kbd "C-k fd") 'dired-jump)
-    (define-key modmap (kbd "C-k q") 'swiper)
-    (define-key modmap (kbd "C-k rq") 'query-replace)
-    (define-key modmap (kbd "C-k rr") 'replace-rectangle)
-    (define-key modmap (kbd "C-k rk") 'kill-rectangle)
-    (define-key modmap (kbd "C-k v") 'counsel-yank-pop)
-    (define-key modmap (kbd "C-k c") 'eye/eno-copy)
-
-    (define-key modmap (kbd "C-k wh") 'split-window-horizontally)
-    (define-key modmap (kbd "C-k wv") 'split-window-vertically)
-    (define-key modmap (kbd "C-k ww") 'xah-next-window-or-frame)
-    (define-key modmap (kbd "C-k wo") 'delete-other-windows)
-    (define-key modmap (kbd "C-k wk") 'delete-window)
+    (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
     
-    (define-key modmap (kbd "C-k 8") 'xah-extend-selection)
-    (define-key modmap (kbd "C-k s") 'save-buffer)
-    (define-key modmap (kbd "C-k z") 'undo)
-    (define-key modmap (kbd "C-k <tab>") 'mode-line-other-buffer)
-    (define-key modmap (kbd "C-k dd") 'delete-line-no-copy)
-    (define-key modmap (kbd "C-k dl") 'delete-char)
-    (define-key modmap (kbd "C-k du") 'delete-inner-word-no-copy)
-    (define-key modmap (kbd "C-k do") 'delete-forward-word-no-copy) 
-    (define-key modmap (kbd "C-k d;") 'delete-end-of-line-no-copy)
-    (define-key modmap (kbd "C-k dh") 'delete-beginning-of-line-no-copy)
-    (define-key modmap (kbd "C-k dj") 'delete-backward-char)
-    (define-key modmap (kbd "C-k dw") 'delete-window)
-    (define-key modmap (kbd "C-k jc") 'avy-goto-char)
-    (define-key modmap (kbd "C-k jl") 'avy-goto-line)
-    (define-key modmap (kbd "C-k jd") 'dumb-jump-go) ;; jump to define
-    (define-key modmap (kbd "C-k i") 'counsel-semantic-or-imenu)
-    (define-key modmap (kbd "C-k bl") 'bookmark-bmenu-list)
-    (define-key modmap (kbd "C-k bs") 'bookmark-set)
-    (define-key modmap (kbd "C-k bj") 'bookmark-jump)
-    (define-key modmap (kbd "C-k ei") 'eye/init-imenu)
+    (define-key modmap (kbd eye-leader-key) nil)
+    (define-key modmap (kbd ",,") '(lambda () (interactive (insert ","))))
+    (eye-define-key modmap "a" 'counsel-M-x)
 
-    (define-key modmap (kbd "C-.") nil)
-    (define-key modmap (kbd "C-. nd") 'eye/notes-dired)
-    (define-key modmap (kbd "C-. nn") 'eye/notes-new)
-    (define-key modmap (kbd "C-. na") 'eye/notes-create-attachment)
-    (define-key modmap (kbd "C-. no") 'eye/notes-open-attachment)
-    (define-key modmap (kbd "C-. ns") 'eye/notes-search-keyword)
-    (define-key modmap (kbd "C-. nf") 'eye/notes-search-file)
+    (eye-define-key modmap "bb" 'counsel-ibuffer)
+    (eye-define-key modmap "bl" 'bookmark-bmenu-list)
+    (eye-define-key modmap "bs" 'bookmark-set)
+    (eye-define-key modmap "bj" 'bookmark-jump)
+    (eye-define-key modmap "cc" 'eye/eno-copy)
 
-    (define-key modmap (kbd "C-. ym") 'yankpad-map)
-    (define-key modmap (kbd "C-. yi") 'yankpad-insert)
+    (eye-define-key modmap "dd" 'delete-line-no-copy)
+    (eye-define-key modmap "du" 'delete-inner-word-no-copy)
+    (eye-define-key modmap "do" 'delete-forward-word-no-copy) 
+    (eye-define-key modmap "d;" 'delete-end-of-line-no-copy)
+    (eye-define-key modmap "dh" 'delete-beginning-of-line-no-copy)
+    (eye-define-key modmap "di" 'youdao-dictionary-search-from-input)
+    (eye-define-key modmap "dp" 'youdao-dictionary-search-at-point)
+
+    (eye-define-key modmap "ee" 'xah-extend-selection)
+    (eye-define-key modmap "el" 'eval-last-sexp)
+    (eye-define-key modmap "ep" 'counsel-etags-find-tag-at-point)
+    (eye-define-key modmap "ef" 'counsel-etags-find-tag)
+
+    (eye-define-key modmap "fa" 'helm-mini)
+    (eye-define-key modmap "ff" 'helm-find-files)
+    (eye-define-key modmap "fo" 'ido-find-file-other-window)
+    (eye-define-key modmap "fd" 'dired-jump)
+
+    (eye-define-key modmap "gc" 'avy-goto-char)
+    (eye-define-key modmap "gl" 'avy-goto-line)
+    (eye-define-key modmap "gm" 'xah-goto-matching-bracket)
+
+    (eye-define-key modmap "im" 'counsel-semantic-or-imenu)
+    (eye-define-key modmap "jd" 'dumb-jump-go)
+
+    (eye-define-key modmap "kb" 'kill-this-buffer)
+    (eye-define-key modmap "kr" 'kill-rectangle)
+
+    (eye-define-key modmap "ll" 'recenter-top-bottom)
+    
+    (eye-define-key modmap "nd" 'eye/notes-dired)
+    (eye-define-key modmap "nn" 'eye/notes-new)
+    (eye-define-key modmap "na" 'eye/notes-create-attachment)
+    (eye-define-key modmap "no" 'eye/notes-open-attachment)
+    (eye-define-key modmap "ns" 'eye/notes-search-keyword)
+    (eye-define-key modmap "nf" 'eye/notes-search-file)
+    
+    (eye-define-key modmap "oa" 'org-agenda)
+    (eye-define-key modmap "oc" 'org-capture)
+    (eye-define-key modmap "oi" 'eye/init-imenu)
+    (eye-define-key modmap "os" 'outline-show-entry)
+    (eye-define-key modmap "oh" 'outline-hide-entry)
+    (eye-define-key modmap "ob" 'outline-hide-body)
+
+    (eye-define-key modmap "qr" 'query-replace)
+
+    (eye-define-key modmap "rr" 'replace-rectangle)
+    (eye-define-key modmap "rk" 'kill-rectangle)
+    (eye-define-key modmap "rf" 'ivy-recentf)
+
+    (eye-define-key modmap "sr" 'counsel-rg-marked)
+    (eye-define-key modmap "sb" 'save-buffer)
+    (eye-define-key modmap "ss" 'swiper)
+    (eye-define-key modmap "se" 'aweshell-toggle)
+    (eye-define-key modmap "sg" 'prelude-google)
+    (eye-define-key modmap "sn" 'prelude-bing)
+    (eye-define-key modmap "sd" 'prelude-duckduckgo)
+    (eye-define-key modmap "sh" 'prelude-github)
+    (eye-define-key modmap "sy" 'prelude-youtube)
+
+    (eye-define-key modmap "tf" 'toggle-frame-fullscreen)
+
+    (eye-define-key modmap "v" 'counsel-yank-pop)
+
+    (eye-define-key modmap "ww" 'xah-next-window-or-frame)
+    (eye-define-key modmap "wk" 'delete-window)
+    (eye-define-key modmap "wo" 'delete-other-windows)
+    (eye-define-key modmap "wv" 'split-window-vertically)
+    (eye-define-key modmap "wh" 'split-window-horizontally)
+
+    (eye-define-key modmap "z" 'undo)
+
+    (eye-define-key modmap "<tab>" 'mode-line-other-buffer)
     ))
+
