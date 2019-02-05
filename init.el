@@ -412,7 +412,7 @@
 
 ;; (setq truncate-lines t) ;; 不自动折行
 
-;;;; ivy
+;; ivy
 (require 'swiper)
 
 (defun swiper-dwim ()
