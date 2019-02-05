@@ -1811,16 +1811,22 @@
     (define-key modmap (kbd "M-.") 'backward-forward-next-location)
 
     (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
+    (define-key modmap (kbd "C-k") nil)
     
     (define-key modmap (kbd eye-leader-key) nil)
     (define-key modmap (kbd ",,") '(lambda () (interactive (insert ","))))
     (eye-define-key modmap "a" 'counsel-M-x)
+    (define-key modmap (kbd ",.") 'keyboard-escape-quit)
+
+    (define-key modmap (kbd ",=") 'eye/increase-font-size)
+    (define-key modmap (kbd ",-") 'eye/decrease-font-size)
 
     (eye-define-key modmap "bb" 'counsel-ibuffer)
     (eye-define-key modmap "bl" 'bookmark-bmenu-list)
     (eye-define-key modmap "bs" 'bookmark-set)
     (eye-define-key modmap "bj" 'bookmark-jump)
     (eye-define-key modmap "cc" 'eye/eno-copy)
+    (eye-define-key modmap "bk" 'kill-this-buffer)
 
     (eye-define-key modmap "dd" 'delete-line-no-copy)
     (eye-define-key modmap "du" 'delete-inner-word-no-copy)
@@ -1836,7 +1842,7 @@
     (eye-define-key modmap "ef" 'counsel-etags-find-tag)
 
     (eye-define-key modmap "fa" 'helm-mini)
-    (eye-define-key modmap "ff" 'helm-find-files)
+    (eye-define-key modmap "ff" 'counsel-find-file)
     (eye-define-key modmap "fo" 'ido-find-file-other-window)
     (eye-define-key modmap "fd" 'dired-jump)
 
@@ -1846,9 +1852,6 @@
 
     (eye-define-key modmap "im" 'counsel-semantic-or-imenu)
     (eye-define-key modmap "jd" 'dumb-jump-go)
-
-    (eye-define-key modmap "kb" 'kill-this-buffer)
-    (eye-define-key modmap "kr" 'kill-rectangle)
 
     (eye-define-key modmap "ll" 'recenter-top-bottom)
     
@@ -1864,7 +1867,7 @@
     (eye-define-key modmap "oi" 'eye/init-imenu)
     (eye-define-key modmap "os" 'outline-show-entry)
     (eye-define-key modmap "oh" 'outline-hide-entry)
-    (eye-define-key modmap "ob" 'outline-hide-body)
+    (eye-define-key modmap "ob" 'eye/outline-hide-body)
 
     (eye-define-key modmap "qr" 'query-replace)
 
