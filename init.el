@@ -1503,6 +1503,11 @@
 ;; password generator
 (require 'password-generator)
 
+(defun eye/open-password-file ()
+  "Open my password manager file"
+  (interactive)
+  (find-file locale-password-file))
+
 ;;;; gtd
 (require 'org-agenda)
 (require 'org-capture)
