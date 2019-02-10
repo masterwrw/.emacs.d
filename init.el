@@ -99,7 +99,7 @@
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
 
 ;; @see https://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
-(setq split-width-threshold nil) ;;不允许自动左右分屏
+;; (setq split-width-threshold nil) ;;不允许自动左右分屏
 (setq split-height-threshold nil) ;;不允许自动上下分屏
 
 ;; 全屏
