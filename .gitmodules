@@ -181,3 +181,6 @@
 [submodule "site-lisp/yankpad"]
 	path = site-lisp/yankpad
 	url = https://github.com/Kungsgeten/yankpad.git
+[submodule "site-lisp/password-generator"]
+	path = site-lisp/password-generator
+	url = https://github.com/zargener/emacs-password-genarator.git

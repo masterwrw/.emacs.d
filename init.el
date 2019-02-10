@@ -1500,6 +1500,9 @@
 (setq org-crypt-key nil)
 (setq org-crypt-tag-matcher "sec") ;; Custom tag for crypt
 
+;; password generator
+(require 'password-generator)
+
 ;;;; gtd
 (require 'org-agenda)
 (require 'org-capture)
