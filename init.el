@@ -1843,6 +1843,7 @@
 
     (eye-define-key modmap "fa" 'helm-mini)
     (eye-define-key modmap "ff" 'counsel-find-file)
+    (eye-define-key modmap "fg" 'counsel-git)
     (eye-define-key modmap "fo" 'ido-find-file-other-window)
     (eye-define-key modmap "fd" 'dired-jump)
 
