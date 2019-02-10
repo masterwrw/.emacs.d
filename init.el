@@ -1497,7 +1497,8 @@
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote("crypt")))
-(setq org-crypt-key nil);(setq org-crypt-tag-matcher "secret") ;; Custom tag for crypt
+(setq org-crypt-key nil)
+(setq org-crypt-tag-matcher "sec") ;; Custom tag for crypt
 
 ;;;; gtd
 (require 'org-agenda)
