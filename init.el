@@ -1716,7 +1716,7 @@
 
 ;;;; keys
 (require 'which-key)
-;; (which-key-mode)
+(which-key-mode)
 
 (set-cursor-color "#00A876")
 
