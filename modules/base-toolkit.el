@@ -415,4 +415,10 @@ use command: ls -lR > virtual.dired
       (replace-match ""))))
 
 
+(defun eye/outline-hide-body ()
+  "Hide outline body and move to beginning of buffer."
+  (interactive)
+  (outline-hide-body)
+  (beginning-of-buffer))
+
 (provide 'base-toolkit)
