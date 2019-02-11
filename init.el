@@ -1445,6 +1445,7 @@
                         '(("^ +\\([-*]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
 ;; Exported to HTML
 (require 'htmlize)
@@ -1517,17 +1518,17 @@
 ;; (setq org-agenda-window-setup 'only-window)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "WAITTING(w)" "SOMEDAY(s)" "|" "DONE(d@/!)" "ABORT(a@/!)")
-        (sequence "REPORT(r)" "BUG(b)" "|" "FIXED(f)")
+      '((sequence "TODO(t)" "STARTED(s)" "WAITTING(w)" "SOMEDAY(m)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
         ))
 
 (setq org-todo-keyword-faces
       (quote (("TODO" :foreground "#9ff048" :weight bold)
-              ("NEXT" :foreground "#ee5555" :weight bold)
-              ("WAITING" :foreground "#999933" :weight bold)
+              ("STARTED" :foreground "#ee5555" :weight bold)
+	      ("WAITTING" :foreground "#cccccc" :weight bold)
               ("SOMEDAY" :foreground "#6e6e6e" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
-              ("ABORT" :foreground "#000000" :weight bold))))
+              ("CANCELLED" :foreground "#000000" :weight bold)
+	      ("DEFERRED" :foreground "#999999" :weight bold))))
 
 
 (require 'org-protocol)
@@ -1538,77 +1539,83 @@
    (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
   )
 
-(setq locale-gtd-inbox (concat locale-gtd-dir "/inbox.org"))
-(setq locale-gtd-task (concat locale-gtd-dir "/task.org"))
-(setq locale-gtd-finished (concat locale-gtd-dir "/finished.org"))
-(setq locale-gtd-trash (concat locale-gtd-dir "/trash.org"))
-(setq locale-gtd-someday (concat locale-gtd-dir "/someday.org"))
+;; (setq org-agenda-block-separator nil)
+;; (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
 
-(setq org-agenda-files (list locale-gtd-task))
+;; 文件名反应用途，一级标题反应分类，todo keyword 反应状态
+(setq locale-gtd-inbox (concat locale-gtd-dir "/inbox.org"))
+(setq locale-gtd-todo (concat locale-gtd-dir "/gtd.org"))
+(setq locale-gtd-archive (concat locale-gtd-dir "/archive.org"))
+
+(setq org-agenda-files (list locale-gtd-todo locale-gtd-archive))
 (setq org-default-notes-file locale-gtd-inbox)
-(defun eye/open-inbox () (interactive) (find-file org-default-notes-file))
+(defun eye/open-inbox-file () (interactive) (find-file locale-gtd-inbox))
+
+(setq org-refile-targets
+      '(
+        (locale-gtd-todo :level . 1)
+        (locale-gtd-archive :level . 1)
+        ))
+
+(setq org-archive-location (concat locale-gtd-archive "::"))
+
+;;; custom agenda command
+;; method 1
+;; (setq eye/gtd-someday-view
+;;       `("U" "someday" todo "SOMEDAY"
+;;         ((org-agenda-files (list locale-gtd-task)))))
+;; (add-to-list 'org-agenda-custom-commands `,eye/gtd-someday-view)
+;; method 2
+(setq org-agenda-custom-commands
+      '(("w" . "View task")
+	("wa" "重要且紧急的任务" tags-todo "+PRIORITY=\"A\"")
+	("wb" "重要且不紧急的任务" tags-todo "+PRIORITY=\"B\"")
+	("wc" "不重要且不紧急的任务" tags-todo "+PRIORITY=\"C\"")
+	("d" "Day task" agenda "" ((org-agenda-span 1) ;limits display to a single day
+				   (org-agenda-sorting-strategy
+				    (quote ((agenda time-up priority-down tag-up) )))
+				   (org-deadline-warning-days 0)
+				   (org-agenda-remove-tags t) ;don't show tags
+				   ))
+	))
+	
 
 ;; capture 的目标路径不能直接使用 concat
 (setq org-capture-templates
       '(
-        ("k"
-         "收集" entry (file+headline locale-gtd-inbox "Inbox")
-         "* %?\n%i\n"
+        ("i"
+         "inbox" entry (file+headline locale-gtd-inbox "INBOX")
+         "* TODO %?\n%i\n"
          :create t)
 
-	("b" "Bookmark" entry (file+headline locale-gtd-inbox "Bookmarks")
+	("b" "link" entry (file+headline locale-gtd-inbox "LINKS")
          "* %?\n%i\n"
 	 :create 1)
         
-        ("s"
-         "重要紧急任务" entry (file+headline locale-gtd-task "Tasks")
+        ("t"
+         "todo" entry (file+headline locale-gtd-todo "TASKS")
          "* TODO [#A] %?\n%i\n"
          :create t)
 
-        ("d"
-         "重要不紧急任务" entry (file+headline locale-gtd-task "Tasks")
-         "* TODO [#B] %?\n%i\n"
-         :create t)
-
-        ("f"
-         "项目任务重要紧急" entry (file+headline locale-gtd-task "Projects")
+        ("w"
+         "project task" entry (file+headline locale-gtd-todo "PROJECTS")
          "* TODO [#A] %?\n%i\n"
-         :create t)
-
-        ("g"
-         "项目任务重要不紧急" entry (file+headline locale-gtd-task "Projects")
-         "* TODO [#B] %?\n%i\n"
          :create t)
 
         ;; org-protocol: https://github.com/sprig/org-capture-extension
 
         ("p" 
-         "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "Inbox")
+         "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "INBOX")
          "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
                 %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
          :create t)
         
         ("L" 
-         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "Bookmarks")
+         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "LINKS")
          "* [[%:link][%:description]]\n%?\n"
          :create t)
         
         ))
-
-
-(setq org-refile-targets
-      '(
-        (locale-gtd-inbox :level . 1)
-        (locale-gtd-task :level . 1)
-        (locale-gtd-finished :level . 1)
-        (locale-gtd-trash :level . 1)
-        (locale-gtd-someday :level . 1)
-        ))
-
-(setq org-archive-location (concat locale-gtd-finished "::"))
-
-
-(defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
 
 ;;;; Notebook
@@ -1791,7 +1798,8 @@
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
 (dolist (modmap (list global-map c++-mode-map org-mode-map
 		      org-src-mode-map nxml-mode-map emacs-lisp-mode-map lisp-interaction-mode-map
-		      counsel-describe-map))
+		      counsel-describe-map
+		      org-agenda-mode-map))
   (progn
     (define-key modmap (kbd "M-j") 'left-char)
     (define-key modmap (kbd "M-l") 'right-char)
@@ -1910,3 +1918,7 @@
     (eye-define-key modmap "<tab>" 'mode-line-other-buffer)
     ))
 
+
+(define-key org-mode-map (kbd ",xi") 'org-move-subtree-up)
+(define-key org-mode-map (kbd ",xk") 'org-move-subtree-down)
+(define-key org-mode-map (kbd ",xr") 'org-refile)
