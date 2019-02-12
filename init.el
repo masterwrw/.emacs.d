@@ -1660,13 +1660,13 @@
 ;;;; Notebook
 (defun eye/notes-search-keyword ()
   (interactive)
-  (let ((keyword (read-string "Search keyword: " (eye/current-word))))
+  (let ((keyword (read-string "Search note keyword: " (eye/current-word))))
     (counsel-rg keyword locale-notebook-dir)
     ))
 
 (defun eye/notes-search-file ()
   (interactive)
-  (let ((keyword (read-string "Search file: " (eye/current-word))))
+  (let ((keyword (read-string "Search note file: ")))
     (dired locale-notebook-dir)
     (swiper keyword)
     ))
