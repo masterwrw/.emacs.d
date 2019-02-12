@@ -2,3 +2,6 @@
 (setq locale-notebook-attachment-dir "D:/cloud/YandexDisk/notebook/attachment")
 (setq locale-gtd-dir "D:/cloud/YandexDisk/notebook/gtd")
 (setq locale-password-file "D:/cloud/YandexDisk/notebook/password.org")
+(setq locale-custom-projects (list (concat locale-gtd-dir "/project/ud.org")
+				   (concat locale-gtd-dir "/project/supertool.org")
+				   ))

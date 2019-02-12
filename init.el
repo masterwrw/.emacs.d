@@ -1515,23 +1515,36 @@
 (require 'find-lisp)
 
 ;; full frame show
-;; (setq org-agenda-window-setup 'only-window)
+(setq org-agenda-window-setup 'only-window)
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "STARTED(s)" "WAITTING(w)" "SOMEDAY(m)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
+      '((sequence "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
         ))
 
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "#9ff048" :weight bold)
-              ("STARTED" :foreground "#ee5555" :weight bold)
-	      ("WAITTING" :foreground "#cccccc" :weight bold)
-              ("SOMEDAY" :foreground "#6e6e6e" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("CANCELLED" :foreground "#000000" :weight bold)
-	      ("DEFERRED" :foreground "#999999" :weight bold))))
+(setf org-todo-keyword-faces
+      '(("NEXT" . (:foreground "yellow" :background "red" :bold t :weight bold))
+        ("TODO" . (:foreground "cyan" :bold t :weight bold))
+        ("STARTED" . (:foreground "springgreen" :bold t :weight bold))
+        ("CANCELLED" . (:foreground "#DC143C" :bold t :weight bold))
+        ("WAITING" . (:foreground "yellow" :bold t :weight bold))
+        ("DEFERRED" . (:foreground "deepskyblue" :bold t :weight bold))
+        ("DONE" . (:foreground "gray50" :background "gray30"))))
 
+;; tags
+;; #+TAGS: { @work(w) @life(l) @thinking(t) @study(s) }
+;; #+TAGS: { @add(a) @bug(b) @fixed(f) }
+;; (setq org-tag-alist '(("STUDIO" . ?s) ;; company studio office
+;;                       ("PROJECT" . ?p) ;; difference task at company
+;;                       ("HOME" . ?h) ;; home
+;;                       ("MAIL" . ?m) ;; mail somebody
+;;                       ("LUNCHTIME" . ?l) ;; breakfast lunchtime dinner onway etc. (rest)
+;;                       ("TOURISM" . ?t) ;; tourism or not at home/company and any where
+;;                       ("COMPUTER" . ?c)
+;;                       ;; ("FIELD" . ?f)
+;;                       ("READING" . ?r))) ;; reading
 
 (require 'org-protocol)
+(require 'base-toolkit)
 
 (defun transform-square-brackets-to-round-ones(string-to-transform)
   "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -1542,18 +1555,20 @@
 ;; (setq org-agenda-block-separator nil)
 ;; (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
 
-;; 文件名反应用途，一级标题反应分类，todo keyword 反应状态
 (setq locale-gtd-inbox (concat locale-gtd-dir "/inbox.org"))
-(setq locale-gtd-todo (concat locale-gtd-dir "/gtd.org"))
+(setq locale-gtd-todo (concat locale-gtd-dir "/tasks.org"))
+(setq locale-gtd-private (concat locale-gtd-dir "/private.org"))
 (setq locale-gtd-archive (concat locale-gtd-dir "/archive.org"))
 
-(setq org-agenda-files (list locale-gtd-todo locale-gtd-archive))
+(setq org-agenda-files (list locale-gtd-todo locale-gtd-private locale-gtd-archive))
+(append-to-list 'org-agenda-files locale-custom-projects)
 (setq org-default-notes-file locale-gtd-inbox)
 (defun eye/open-inbox-file () (interactive) (find-file locale-gtd-inbox))
 
 (setq org-refile-targets
       '(
         (locale-gtd-todo :level . 1)
+        (locale-gtd-private :level . 1)
         (locale-gtd-archive :level . 1)
         ))
 
@@ -1571,6 +1586,9 @@
 	("wa" "重要且紧急的任务" tags-todo "+PRIORITY=\"A\"")
 	("wb" "重要且不紧急的任务" tags-todo "+PRIORITY=\"B\"")
 	("wc" "不重要且不紧急的任务" tags-todo "+PRIORITY=\"C\"")
+	;; can use org-agenda T also
+	("n" "Next task" todo "NEXT")
+	("l" "Todo list" todo "TODO")
 	("d" "Day task" agenda "" ((org-agenda-span 1) ;limits display to a single day
 				   (org-agenda-sorting-strategy
 				    (quote ((agenda time-up priority-down tag-up) )))
@@ -1578,42 +1596,43 @@
 				   (org-agenda-remove-tags t) ;don't show tags
 				   ))
 	))
-	
+
+(defun eye/open-agenda-day-view ()
+  (interactive)
+  (org-agenda nil "d"))
+
+(add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
 ;; capture 的目标路径不能直接使用 concat
 (setq org-capture-templates
       '(
         ("i"
-         "inbox" entry (file+headline locale-gtd-inbox "INBOX")
-         "* TODO %?\n%i\n"
+         "inbox" entry (file+headline locale-gtd-inbox "Inbox")
+         "* NEXT %?\n%i\n"
          :create t)
-
-	("b" "link" entry (file+headline locale-gtd-inbox "LINKS")
-         "* %?\n%i\n"
-	 :create 1)
         
         ("t"
-         "todo" entry (file+headline locale-gtd-todo "TASKS")
-         "* TODO [#A] %?\n%i\n"
+         "task" entry (file+headline locale-gtd-todo "Tasks")
+         "* NEXT %?\n%i\n"
          :create t)
 
-        ("w"
-         "project task" entry (file+headline locale-gtd-todo "PROJECTS")
-         "* TODO [#A] %?\n%i\n"
+        ("p"
+         "private" entry (file+headline locale-gtd-private "Private")
+         "* NEXT %?\n%i\n"
          :create t)
 
         ;; org-protocol: https://github.com/sprig/org-capture-extension
 
-        ("p" 
-         "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "INBOX")
-         "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
-                %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
-         :create t)
+        ;; ("p" 
+        ;;  "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "INBOX")
+        ;;  "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
+        ;;         %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+        ;;  :create t)
         
-        ("L" 
-         "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "LINKS")
-         "* [[%:link][%:description]]\n%?\n"
-         :create t)
+        ;; ("L" 
+        ;;  "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "LINKS")
+        ;;  "* [[%:link][%:description]]\n%?\n"
+        ;;  :create t)
         
         ))
 
@@ -1670,8 +1689,6 @@
 
 
 ;;;; session
-(require 'base-toolkit)
-
 ;; desktop save
 (require 'desktop)
 
@@ -1711,11 +1728,11 @@
   (desktop-save-in-desktop-dir)))
 
 ;; ask user whether to restore desktop at start-up
-(add-hook 'after-init-hook
-	  '(lambda ()
-	     (if (saved-session)
-		 (if (y-or-n-p "Restore desktop? ")
-		     (session-restore)))))
+;; (add-hook 'after-init-hook
+;; 	  '(lambda ()
+;; 	     (if (saved-session)
+;; 		 (if (y-or-n-p "Restore desktop? ")
+;; 		     (session-restore)))))
 
 (add-hook 'kill-emacs-hook 'session-save)
 
