@@ -275,12 +275,32 @@
 (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
 
 
-(defun eye/open-file-manager ()
-  "Open external file manager."
-  (interactive)
+(defun eye/open-thunar ()
+  "Open thunar of current buffer directory."
   (when (and (executable-find "thunar")
              (not (null default-directory)))
     (start-process "File manager" nil "thunar" default-directory)))
+
+(defun eye/open-explorer ()
+  "Open explorer of current buffer directory."
+  (when (and (not (string-empty-p default-directory))
+	     (eq system-type 'windows-nt))
+    (let ((dir default-directory))
+      (setq dir (encode-coding-string
+		 (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))
+      (shell-command (concat "explorer " dir) nil nil)
+      (message dir))
+    ))
+
+(defun eye/open-file-manager ()
+  "Open external file manager."
+  (interactive)
+  (cond ((eq system-type 'windows-nt)
+	 (eye/open-explorer))
+	((eq system-type 'gnu/linux)
+	 (eye/open-thunar))
+	(t (message "Not support current system."))
+	))
 
 (defun eye/open-terminal ()
   (interactive)
