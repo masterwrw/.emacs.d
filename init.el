@@ -722,6 +722,8 @@
   (remove-hook 'css-mode-hook 'writeroom-mode)
   (writeroom-mode -1))
 
+(require 'watch-other-window)
+
 ;;;; Company
 (unless (equal system-type 'windows-nt)
   (require 'company)
@@ -1951,11 +1953,15 @@
     (eye-define-key modmap "v" 'counsel-yank-pop)
 
     (eye-define-key modmap "ww" 'xah-next-window-or-frame)
-    (eye-define-key modmap "wk" 'delete-window)
+    (eye-define-key modmap "wd" 'delete-window)
     (eye-define-key modmap "wo" 'delete-other-windows)
     (eye-define-key modmap "wv" 'split-window-vertically)
     (eye-define-key modmap "wh" 'split-window-horizontally)
-
+    (eye-define-key modmap "wi" 'watch-other-window-down-line)
+    (eye-define-key modmap "wk" 'watch-other-window-up-line)
+    (eye-define-key modmap "wp" 'watch-other-window-down)
+    (eye-define-key modmap "wn" 'watch-other-window-up)
+    
     (eye-define-key modmap "z" 'undo)
 
     (eye-define-key modmap "<tab>" 'mode-line-other-buffer)

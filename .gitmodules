@@ -184,3 +184,6 @@
 [submodule "site-lisp/password-generator"]
 	path = site-lisp/password-generator
 	url = https://github.com/zargener/emacs-password-genarator.git
+[submodule "site-lisp/watch-other-window"]
+	path = site-lisp/watch-other-window
+	url = https://github.com/manateelazycat/watch-other-window.git
