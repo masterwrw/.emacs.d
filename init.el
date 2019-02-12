@@ -1534,6 +1534,11 @@
 (require 'org-capture)
 (require 'find-lisp)
 
+;; System locale to use for formatting time values.
+(setq system-time-locale "C")         ; Make sure that the weekdays in the
+                                      ; time stamps of your Org mode files and
+					; in the agenda appear in English.
+
 ;; full frame show
 (setq org-agenda-window-setup 'only-window)
 
