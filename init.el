@@ -1889,6 +1889,7 @@
     (eye-define-key modmap "jd" 'dumb-jump-go)
 
     (eye-define-key modmap "ll" 'recenter-top-bottom)
+    (eye-define-key modmap "lb" 'ibuffer)
     
     (eye-define-key modmap "nd" 'eye/notes-dired)
     (eye-define-key modmap "nn" 'eye/notes-new)
