@@ -1969,6 +1969,8 @@
     ))
 
 
+(define-key org-mode-map (kbd ",xo") 'org-open-at-point)
+(define-key org-mode-map (kbd ",xl") 'org-toggle-link-display)
 (define-key org-mode-map (kbd ",xi") 'org-move-subtree-up)
 (define-key org-mode-map (kbd ",xk") 'org-move-subtree-down)
 (define-key org-mode-map (kbd ",xr") 'org-refile)
