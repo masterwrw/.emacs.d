@@ -1536,6 +1536,12 @@
 (require 'org-capture)
 (require 'find-lisp)
 
+;; for task more times repeat a week.
+;; @see https://stackoverflow.com/questions/8751287/weekly-repeating-tasks-emacs-org-mode
+(require 'org)
+(require 'org-install)
+(add-to-list 'org-modules 'org-habit)
+
 ;; System locale to use for formatting time values.
 (setq system-time-locale "C")         ; Make sure that the weekdays in the
                                       ; time stamps of your Org mode files and
