@@ -1545,16 +1545,17 @@
 (setq org-agenda-window-setup 'only-window)
 
 (setq org-todo-keywords
-      '((sequence "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
+      '((sequence "REPEAT(r)" "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
         ))
 
 (setf org-todo-keyword-faces
-      '(("NEXT" . (:foreground "yellow" :background "red" :bold t :weight bold))
+      '(("REPEAT" . (:foreground "OliveDrab" :bold t :weight bold))
+	("NEXT" . (:foreground "SlateBlue3" :bold t :weight bold))
         ("TODO" . (:foreground "cyan" :bold t :weight bold))
         ("STARTED" . (:foreground "springgreen" :bold t :weight bold))
         ("CANCELLED" . (:foreground "#DC143C" :bold t :weight bold))
         ("WAITING" . (:foreground "yellow" :bold t :weight bold))
-        ("DEFERRED" . (:foreground "deepskyblue" :bold t :weight bold))
+        ("DEFERRED" . (:foreground "OrangeRed" :bold t :weight bold))
         ("DONE" . (:foreground "gray50" :background "gray30"))))
 
 ;; tags
