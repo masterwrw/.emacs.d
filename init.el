@@ -65,6 +65,16 @@
 ;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
 (setq x-select-enable-clipboard-manager nil)
 
+;;;; System env
+(setq is-windows (or
+		  (eq system-type 'windows-nt)
+		  (eq system-type 'cygwin)))
+(setq is-linux (eq system-type 'gnu/linux))
+(setq is-mac (eq system-type 'darwin))
+
+(setq is-gui (display-graphic-p))
+(setq is-terminal (not (display-graphic-p)))
+
 ;;;; UI
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
