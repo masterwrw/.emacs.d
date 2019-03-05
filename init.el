@@ -1834,27 +1834,10 @@
 (define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
 (define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
 
-(define-key org-src-mode-map (kbd "C-s") 'org-edit-src-save)
+(define-key org-src-mode-map (kbd ",fs") 'org-edit-src-save)
 
 (define-key global-map (kbd "<C-wheel-up>") 'eye/increase-font-size)
 (define-key global-map (kbd "<C-wheel-down>") 'eye/decrease-font-size)
-
-(if (>= emacs-major-version 26)
-    (progn
-      (require 'helpful)
-      (define-key global-map (kbd "C-h v") 'helpful-variable)
-      (define-key global-map (kbd "C-h f") 'helpful-function)
-      (define-key global-map (kbd "C-h k") 'helpful-key)
-      (define-key global-map (kbd "C-h m") 'describe-mode)
-      (define-key global-map (kbd "C-h i") 'info))
-  (progn
-    (define-key global-map (kbd "C-h v") 'describe-variable)
-    (define-key global-map (kbd "C-h f") 'describe-function)
-    (define-key global-map (kbd "C-h k") 'describe-key)
-    (define-key global-map (kbd "C-h m") 'describe-mode)
-    (define-key global-map (kbd "C-h i") 'info)))
-(define-key global-map (kbd "C-h d") 'find-function)
-(define-key global-map (kbd "C-h l") 'find-library)
 
 (global-set-key (kbd "<f3> u") 'winner-undo)
 (global-set-key (kbd "<f3> i") 'winner-redo)
@@ -1867,10 +1850,22 @@
 (defun eye-define-key (modmap key func)
   (define-key modmap (kbd (concat eye-leader-key " " key)) func))
 ;; 这里的 list 不能使用 quote 或 ' 因为 define-key 的第一个参数不是一个 symbol
-(dolist (modmap (list global-map c++-mode-map org-mode-map
-		      org-src-mode-map nxml-mode-map emacs-lisp-mode-map lisp-interaction-mode-map
+(setq eye-key-mode-list (list global-map
+		      c++-mode-map
+		      org-mode-map
+		      org-src-mode-map
+		      emacs-lisp-mode-map
+		      lisp-interaction-mode-map
 		      counsel-describe-map
-		      org-agenda-mode-map))
+		      org-agenda-mode-map
+		      nxml-mode-map
+		      Man-mode-map
+			  info-mode-map
+			  eshell-mode-map))
+(when is-linux
+  (add-to-list 'eye-key-mode-list magit-mode-map))
+
+(dolist (modmap eye-key-mode-list)
   (progn
     (define-key modmap (kbd "M-j") 'left-char)
     (define-key modmap (kbd "M-l") 'right-char)
@@ -1887,53 +1882,65 @@
     (define-key modmap (kbd "M-w") 'xah-copy-line-or-region)
     (define-key modmap (kbd "M-q") 'xah-cut-line-or-region)
     (define-key modmap (kbd "M-a") 'yank)
-    (define-key modmap (kbd "<M-left>") 'backward-word)
-    (define-key modmap (kbd "<M-right>") 'forward-word)
-    (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
-    (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
-    (define-key modmap (kbd "C-s") 'save-buffer)
-    (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer)
-    (define-key modmap (kbd "C-l") 'delete-char)
-    (define-key modmap (kbd "C-j") 'backward-delete-char)    
-    (define-key modmap (kbd "M-,") 'backward-forward-previous-location)
-    (define-key modmap (kbd "M-.") 'backward-forward-next-location)
 
-    (define-key modmap (kbd "C-,") 'keyboard-escape-quit)
-    (define-key modmap (kbd "C-k") nil)
-    
+    ;; not working in mobaxterm
+    (when is-gui
+      (define-key modmap (kbd "<M-left>") 'backward-word)
+      (define-key modmap (kbd "<M-right>") 'forward-word)
+      (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
+      (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
+      (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer))
+
+
+    (define-key modmap (kbd "C-k") '(lambda ()
+									  (interactive)
+									  (keyboard-escape-quit)
+									  (minibuffer-keyboard-quit)))
+
     (define-key modmap (kbd eye-leader-key) nil)
-    (define-key modmap (kbd ",,") '(lambda () (interactive (insert ","))))
+    (define-key modmap (kbd "M-,") '(lambda () (interactive (insert ","))))
+    (define-key modmap (kbd ",,") 'backward-forward-previous-location)
+    (define-key modmap (kbd ",.") 'backward-forward-next-location)
     (eye-define-key modmap "a" 'counsel-M-x)
-    (define-key modmap (kbd ",.") 'keyboard-escape-quit)
 
     (define-key modmap (kbd ",=") 'eye/increase-font-size)
     (define-key modmap (kbd ",-") 'eye/decrease-font-size)
 
-    (eye-define-key modmap "bb" 'counsel-ibuffer)
     (eye-define-key modmap "bl" 'bookmark-bmenu-list)
     (eye-define-key modmap "bs" 'bookmark-set)
     (eye-define-key modmap "bj" 'bookmark-jump)
-    (eye-define-key modmap "cc" 'eye/eno-copy)
-    (eye-define-key modmap "bk" 'kill-this-buffer)
 
+    (eye-define-key modmap "cc" 'eye/eno-copy)
+	
+    ;; delete
+    (define-key global-map (kbd "M-8") 'backward-delete-char)
+    (define-key global-map (kbd "M-9") 'delete-char)
     (eye-define-key modmap "dd" 'delete-line-no-copy)
     (eye-define-key modmap "du" 'delete-inner-word-no-copy)
     (eye-define-key modmap "do" 'delete-forward-word-no-copy) 
     (eye-define-key modmap "d;" 'delete-end-of-line-no-copy)
     (eye-define-key modmap "dh" 'delete-beginning-of-line-no-copy)
+
     (eye-define-key modmap "di" 'youdao-dictionary-search-from-input)
     (eye-define-key modmap "dp" 'youdao-dictionary-search-at-point)
 
+    ;; edit
     (eye-define-key modmap "ee" 'xah-extend-selection)
-    (eye-define-key modmap "el" 'eval-last-sexp)
+    (eye-define-key modmap "en" 'narrow-to-region)
+    (eye-define-key modmap "ew" 'widen)
+
     (eye-define-key modmap "ep" 'counsel-etags-find-tag-at-point)
     (eye-define-key modmap "ef" 'counsel-etags-find-tag)
+
+    (eye-define-key modmap "el" 'eval-last-sexp)
 
     (eye-define-key modmap "fa" 'helm-mini)
     (eye-define-key modmap "ff" 'counsel-find-file)
     (eye-define-key modmap "fg" 'counsel-git)
     (eye-define-key modmap "fo" 'ido-find-file-other-window)
     (eye-define-key modmap "fd" 'dired-jump)
+    (eye-define-key modmap "fs" 'save-buffer)
+    (eye-define-key modmap "fr" 'ivy-recentf)
 
     (eye-define-key modmap "gc" 'avy-goto-char)
     (eye-define-key modmap "gl" 'avy-goto-line)
@@ -1958,15 +1965,13 @@
     (eye-define-key modmap "os" 'outline-show-entry)
     (eye-define-key modmap "oh" 'outline-hide-entry)
     (eye-define-key modmap "ob" 'eye/outline-hide-body)
-
+    (eye-define-key modmap "p" 'counsel-yank-pop) ;paste
     (eye-define-key modmap "qr" 'query-replace)
 
     (eye-define-key modmap "rr" 'replace-rectangle)
     (eye-define-key modmap "rk" 'kill-rectangle)
-    (eye-define-key modmap "rf" 'ivy-recentf)
 
     (eye-define-key modmap "sr" 'counsel-rg-marked)
-    (eye-define-key modmap "sb" 'save-buffer)
     (eye-define-key modmap "ss" 'swiper)
     (eye-define-key modmap "se" 'aweshell-toggle)
     (eye-define-key modmap "sg" 'prelude-google)
@@ -1977,26 +1982,62 @@
 
     (eye-define-key modmap "tf" 'toggle-frame-fullscreen)
 
-    (eye-define-key modmap "v" 'counsel-yank-pop)
-
-    (eye-define-key modmap "ww" 'xah-next-window-or-frame)
-    (eye-define-key modmap "wd" 'delete-window)
-    (eye-define-key modmap "wo" 'delete-other-windows)
-    (eye-define-key modmap "wv" 'split-window-vertically)
-    (eye-define-key modmap "wh" 'split-window-horizontally)
-    (eye-define-key modmap "wi" 'watch-other-window-down-line)
-    (eye-define-key modmap "wk" 'watch-other-window-up-line)
-    (eye-define-key modmap "wp" 'watch-other-window-down)
-    (eye-define-key modmap "wn" 'watch-other-window-up)
+    ;; buffer
+    (eye-define-key modmap "vv" 'counsel-ibuffer)
+    (eye-define-key modmap "vs" 'switch-to-buffer)
+    (eye-define-key modmap "vd" 'kill-this-buffer)
+    (eye-define-key modmap "va" 'mark-whole-buffer)
+    (eye-define-key modmap "v," 'xah-previous-user-buffer)
+    (eye-define-key modmap "v." 'xah-next-user-buffer)
+    ;; window
+    (eye-define-key modmap "vo" 'xah-next-window-or-frame)
+    (eye-define-key modmap "vi" 'watch-other-window-down-line)
+    (eye-define-key modmap "vk" 'watch-other-window-up-line)
+    (eye-define-key modmap "vp" 'watch-other-window-down)
+    (eye-define-key modmap "vn" 'watch-other-window-up)
+    (eye-define-key modmap "v0" 'delete-window)
+    (eye-define-key modmap "v1" 'delete-other-windows)
+    (eye-define-key modmap "v3" 'split-window-horizontally)
+    (eye-define-key modmap "v4" 'split-window-vertically)
     
     (eye-define-key modmap "z" 'undo)
+    (if is-terminal
+	(eye-define-key modmap "TAB" 'mode-line-other-buffer)
+      (eye-define-key modmap "<tab>" 'mode-line-other-buffer))
 
-    (eye-define-key modmap "<tab>" 'mode-line-other-buffer)
-    ))
+    ;; help
+	(eye-define-key modmap "hd" 'find-function)
+    (eye-define-key modmap "hl" 'find-library))
+    (if (>= emacs-major-version 26)
+		(progn
+		  (require 'helpful)
+		  (eye-define-key modmap "hv" 'helpful-variable)
+		  (eye-define-key modmap "hf" 'helpful-function)
+		  (eye-define-key modmap "hk" 'helpful-key)
+		  (eye-define-key modmap "hm" 'describe-mode)
+		  (eye-define-key modmap "hi" 'info))
+      (progn
+		(eye-define-key modmap "hv" 'describe-variable)
+		(eye-define-key modmap "hf" 'describe-function)
+		(eye-define-key modmap "hk" 'describe-key)
+		(eye-define-key modmap "hm" 'describe-mode)
+		(eye-define-key modmap "hi" 'info)))
+	;; other function
 
+    (eye-define-key modmap "xa" 'org-agenda)
+    (eye-define-key modmap "xc" 'org-capture)
+	(eye-define-key modmap "xg" 'magit-status)
+    )
 
-(define-key org-mode-map (kbd ",xo") 'org-open-at-point)
-(define-key org-mode-map (kbd ",xl") 'org-toggle-link-display)
-(define-key org-mode-map (kbd ",xi") 'org-move-subtree-up)
-(define-key org-mode-map (kbd ",xk") 'org-move-subtree-down)
-(define-key org-mode-map (kbd ",xr") 'org-refile)
+(define-key org-mode-map (kbd ",ma") 'org-attach)
+(define-key org-mode-map (kbd ",mo") 'org-open-at-point)
+(define-key org-mode-map (kbd ",ml") 'org-toggle-link-display)
+(define-key org-mode-map (kbd ",mi") 'org-move-subtree-up)
+(define-key org-mode-map (kbd ",mk") 'org-move-subtree-down)
+(define-key org-mode-map (kbd ",mr") 'org-refile)
+
+(define-key c++-mode-map (kbd ",ma") 'counsel-etags-find-tag-at-point)
+(define-key c++-mode-map (kbd ",ms") 'counsel-etags-find-tag)
+(define-key c++-mode-map (kbd ",md") 'dumb-jump-go)
+(define-key c++-mode-map (kbd ",mq") 'dumb-jump-back)
+(define-key c++-mode-map (kbd ",mw") 'dumb-jump-go-other-window)
