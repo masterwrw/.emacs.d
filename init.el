@@ -198,7 +198,12 @@
 ;;;; Backup
 (require 'f)
 (defvar user-cache-directory "~/tmp/emacs_cache")
-(unless (f-directory? user-cache-directory) (make-directory user-cache-directory))
+(unless (f-directory? "~/tmp")
+  (make-directory "~/tmp"))
+(unless (f-directory? user-cache-directory)
+  (make-directory user-cache-directory))
+(unless (f-directory? (concat user-cache-directory "/bak"))
+  (make-directory (concat user-cache-directory "/bak")))
 ;; 备份文件 file~，指定备份目录后，文件名为 !drive_f!dirname!dirname!filename~
 (setq backup-by-copying t)
 (setq delete-old-versions t)
