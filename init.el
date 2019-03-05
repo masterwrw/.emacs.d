@@ -88,19 +88,18 @@
 ;; Fix load slow, https://github.com/raxod502/radian/issues/180
 (when tool-bar-mode
   (tool-bar-mode -1)) ;; 禁用工具栏
-;; (when menu-bar-mode
-  ;; (menu-bar-mode -1)) ;; 禁用菜单栏
-(if (and (display-graphic-p) scroll-bar-mode)
-    (scroll-bar-mode -1) ;; 禁用滚动条 emacs26 -nw will be error
-  )
+(when (and is-terminal menu-bar-mode)
+  (menu-bar-mode -1)) ;; 禁用菜单栏
+(when (and is-gui scroll-bar-mode)
+  (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
 
 (setq frame-title-format "Editor %b -- %f") ;; 自定义标题栏
 
 ;; 去掉窗口边缘和分割窗口时分割条的边缘
 ;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
 ;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.
-(when (eq system-type 'windows-nt)
-  (set-window-fringes nil 0 0) ;; border side
+(when (and is-windows is-gui)
+  (set-window-fringes nil 5 3) ;; border side
   (fringe-mode '(0 . 0)) ;; middle of split frame
   )
 
@@ -1795,7 +1794,8 @@
 (require 'which-key)
 (which-key-mode)
 
-(set-cursor-color "#00A876")
+(when is-gui
+  (set-cursor-color "#00A876"))
 
 (global-unset-key (kbd "<f1>"))
 (global-unset-key (kbd "<f2>"))
