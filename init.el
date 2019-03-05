@@ -1691,6 +1691,10 @@
 
 
 ;;;; Notebook
+(require 'org-attach)
+(add-to-list 'org-modules 'org-attach)
+(setq org-attach-directory locale-notebook-attachment-dir)
+
 (defun eye/notes-search-keyword ()
   (interactive)
   (let ((keyword (read-string "Search note keyword: " (eye/current-word))))
@@ -1714,6 +1718,7 @@
     (find-file (concat locale-notebook-dir "/" name ".org"))
     (set-buffer-file-coding-system 'utf-8-with-signature-unix 't) ;; 设置编码
     (insert (concat "* " name)) ;; 添加一级标题
+    (org-attach-set-inherit)	; use same attach directory
     ))
 
 (defun eye/notes-create-attachment ()
