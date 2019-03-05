@@ -1338,6 +1338,11 @@
 (setq tags-revert-without-query t)
 ;; Don't warn when TAGS files are large
 (setq large-file-warning-threshold nil)
+
+(when is-linux
+  (setq counsel-etags-tags-program "xargs etags --append") ;调用命令类似 find .... -print | xargs etags --append, etags没有递归的参数
+  )
+
 ;; Setup auto update now
 (add-hook 'prog-mode-hook
           (lambda ()
