@@ -434,5 +434,11 @@ The return value is the new value of LIST-VAR."
       (set list-var elements)))
   (symbol-value list-var))
 
+(defun eye/replace-string-buffer ()
+  (interactive)
+  (save-excursion
+	(goto-char (point-min))
+	(call-interactively 'replace-string)))
+
 
 (provide 'base-toolkit)

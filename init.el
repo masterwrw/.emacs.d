@@ -446,7 +446,10 @@
 
 ;; (setq truncate-lines t) ;; 不自动折行
 
-;; ivy
+;;;; Search
+(require 'color-rg)
+
+;;;; ivy
 (require 'swiper)
 
 (defun swiper-dwim ()
@@ -1971,19 +1974,26 @@
   (eye-define-key modmap "oh" 'outline-hide-entry)
   (eye-define-key modmap "ob" 'eye/outline-hide-body)
   (eye-define-key modmap "p" 'counsel-yank-pop) ;paste
-  (eye-define-key modmap "qr" 'query-replace)
 
   (eye-define-key modmap "rr" 'replace-rectangle)
   (eye-define-key modmap "rk" 'kill-rectangle)
 
-  (eye-define-key modmap "sr" 'counsel-rg-marked)
+  ;; search
+  (eye-define-key modmap "sa" 'isearch-forward)
   (eye-define-key modmap "ss" 'swiper)
-  (eye-define-key modmap "se" 'aweshell-toggle)
-  (eye-define-key modmap "sg" 'prelude-google)
-  (eye-define-key modmap "sn" 'prelude-bing)
-  (eye-define-key modmap "sd" 'prelude-duckduckgo)
-  (eye-define-key modmap "sh" 'prelude-github)
-  (eye-define-key modmap "sy" 'prelude-youtube)
+  (eye-define-key modmap "sd" 'query-replace)
+  (eye-define-key modmap "sf" 'eye/replace-string-buffer)
+  (eye-define-key modmap "sh" 'color-rg-search-input)
+  (eye-define-key modmap "sj" 'color-rg-search-project)
+  (eye-define-key modmap "sk" 'counsel-rg-marked)
+  (eye-define-key modmap "sl" 'counsel-rg)
+  
+  ;; (eye-define-key modmap "se" 'aweshell-toggle)
+  (eye-define-key modmap "swg" 'prelude-google)
+  (eye-define-key modmap "swb" 'prelude-bing)
+  (eye-define-key modmap "swd" 'prelude-duckduckgo)
+  (eye-define-key modmap "swh" 'prelude-github)
+  (eye-define-key modmap "swy" 'prelude-youtube)
 
   (eye-define-key modmap "tf" 'toggle-frame-fullscreen)
 
