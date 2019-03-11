@@ -187,3 +187,15 @@
 [submodule "site-lisp/watch-other-window"]
 	path = site-lisp/watch-other-window
 	url = https://github.com/manateelazycat/watch-other-window.git
+[submodule "site-lisp/xah-replace-pairs"]
+	path = site-lisp/xah-replace-pairs
+	url = https://github.com/xahlee/xah-replace-pairs.git
+[submodule "site-lisp/xah-css-mode"]
+	path = site-lisp/xah-css-mode
+	url = https://github.com/xahlee/xah-css-mode.git
+[submodule "site-lisp/xah-get-thing"]
+	path = site-lisp/xah-get-thing
+	url = https://github.com/xahlee/xah-get-thing-or-selection.git
+[submodule "site-lisp/ivy-posframe"]
+	path = site-lisp/ivy-posframe
+	url = https://github.com/tumashu/ivy-posframe.git
