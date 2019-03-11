@@ -229,15 +229,10 @@
 
 ;;;; History
 (require 'saveplace)
-(add-hook 'after-init-hook 'save-place-mode)
+(save-place-mode 1)
 
 (require 'recentf)
-(add-hook 'find-file-hook
-          (lambda ()
-            (unless recentf-mode
-              (recentf-mode)
-              (recentf-track-opened-file))))
-
+(recentf-mode 1)
 (setq recentf-max-saved-items 200)
 ;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
 (add-to-list 'recentf-exclude ".cache")
