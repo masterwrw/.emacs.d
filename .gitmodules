@@ -172,9 +172,6 @@
 [submodule "site-lisp/super-save"]
 	path = site-lisp/super-save
 	url = https://github.com/bbatsov/super-save.git
-[submodule "site-lisp/xah-html-mode"]
-	path = site-lisp/xah-html-mode
-	url = https://github.com/xahlee/xah-html-mode.el.git
 [submodule "site-lisp/web-mode"]
 	path = site-lisp/web-mode
 	url = https://github.com/fxbois/web-mode.git
@@ -187,15 +184,6 @@
 [submodule "site-lisp/watch-other-window"]
 	path = site-lisp/watch-other-window
 	url = https://github.com/manateelazycat/watch-other-window.git
-[submodule "site-lisp/xah-replace-pairs"]
-	path = site-lisp/xah-replace-pairs
-	url = https://github.com/xahlee/xah-replace-pairs.git
-[submodule "site-lisp/xah-css-mode"]
-	path = site-lisp/xah-css-mode
-	url = https://github.com/xahlee/xah-css-mode.git
-[submodule "site-lisp/xah-get-thing"]
-	path = site-lisp/xah-get-thing
-	url = https://github.com/xahlee/xah-get-thing-or-selection.git
 [submodule "site-lisp/ivy-posframe"]
 	path = site-lisp/ivy-posframe
 	url = https://github.com/tumashu/ivy-posframe.git
