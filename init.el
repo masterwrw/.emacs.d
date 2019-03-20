@@ -1887,12 +1887,6 @@
 (setq helm-dash-common-docsets '("C" "C++" "Qt_5" "Emacs_Lisp"))
 
 ;;;; keys
-(require 'which-key)
-(which-key-mode)
-
-(when is-gui
-  (set-cursor-color "#00A876"))
-
 (global-unset-key (kbd "<f1>"))
 (global-unset-key (kbd "<f2>"))
 (global-unset-key (kbd "<f3>"))
@@ -1968,14 +1962,17 @@
   (define-key modmap (kbd "M-w") 'xah-copy-line-or-region)
   (define-key modmap (kbd "M-q") 'xah-cut-line-or-region)
   (define-key modmap (kbd "M-a") 'yank)
+  (define-key modmap (kbd "M-e") 'eye/eno-copy)
+  (define-key modmap (kbd "M-'") 'xah-goto-matching-bracket)
 
   ;; not working in mobaxterm
-  (when is-gui
-    (define-key modmap (kbd "<M-left>") 'backward-word)
-    (define-key modmap (kbd "<M-right>") 'forward-word)
-    (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
-    (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
-    (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer))
+  ;; (when is-gui
+  (define-key modmap (kbd "<M-left>") 'backward-word)
+  (define-key modmap (kbd "<M-right>") 'forward-word)
+  (define-key modmap (kbd "<M-up>") 'eye/scroll-up)
+  (define-key modmap (kbd "<M-down>") 'eye/scroll-down)
+  ;; (define-key modmap (kbd "<C-tab>") 'mode-line-other-buffer)
+  ;; )
 
 
   (define-key modmap (kbd "C-k") '(lambda ()
@@ -1991,12 +1988,9 @@
 
   (define-key modmap (kbd ",=") 'eye/increase-font-size)
   (define-key modmap (kbd ",-") 'eye/decrease-font-size)
-
-  (eye-define-key modmap "bl" 'bookmark-bmenu-list)
-  (eye-define-key modmap "bs" 'bookmark-set)
-  (eye-define-key modmap "bj" 'bookmark-jump)
-
-  (eye-define-key modmap "cc" 'eye/eno-copy)
+  
+  (eye-define-key modmap "c" 'avy-goto-char)
+  (eye-define-key modmap "v" 'avy-goto-line)
   
   ;; delete
   (define-key global-map (kbd "M-8") 'backward-delete-char)
@@ -2011,26 +2005,30 @@
   (eye-define-key modmap "dp" 'youdao-dictionary-search-at-point)
 
   ;; edit
+  (eye-define-key modmap "ea" 'mark-whole-buffer)
   (eye-define-key modmap "ee" 'xah-extend-selection)
+  (eye-define-key modmap "eq" 'xah-select-text-in-quote)
   (eye-define-key modmap "en" 'narrow-to-region)
   (eye-define-key modmap "ew" 'widen)
-
-  (eye-define-key modmap "ep" 'counsel-etags-find-tag-at-point)
-  (eye-define-key modmap "ef" 'counsel-etags-find-tag)
-
-  (eye-define-key modmap "el" 'eval-last-sexp)
-
-  (eye-define-key modmap "fa" 'helm-mini)
-  (eye-define-key modmap "ff" 'counsel-find-file)
-  (eye-define-key modmap "fg" 'counsel-git)
-  (eye-define-key modmap "fo" 'ido-find-file-other-window)
+  
+  ;; buffer and file
+  (eye-define-key modmap "fa" 'counsel-ibuffer)
+  (eye-define-key modmap "fb" 'bookmark-set)
   (eye-define-key modmap "fd" 'dired-jump)
   (eye-define-key modmap "fs" 'save-buffer)
-  (eye-define-key modmap "fr" 'ivy-recentf)
-
-  (eye-define-key modmap "gc" 'avy-goto-char)
-  (eye-define-key modmap "gl" 'avy-goto-line)
-  (eye-define-key modmap "gm" 'xah-goto-matching-bracket)
+  (eye-define-key modmap "ff" 'xah-open-file-fast)
+  (eye-define-key modmap "fo" 'counsel-find-file)
+  (eye-define-key modmap "fr" 'counsel-recentf)
+  (eye-define-key modmap "fk" 'xah-close-current-buffer)
+  (eye-define-key modmap "fg" 'counsel-git) ;查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
+  (eye-define-key modmap "fp" 'xah-previous-user-buffer)
+  (eye-define-key modmap "fn" 'xah-next-user-buffer)
+  (eye-define-key modmap "fl" 'bookmark-bmenu-list)
+  (eye-define-key modmap "fj" 'bookmark-jump)
+  (eye-define-key modmap "fh" 'helm-mini)
+  (eye-define-key modmap "fw" 'mark-whole-buffer)
+  (eye-define-key modmap "fx" 'recentf-open-files)
+  (eye-define-key modmap "fz" 'xah-open-last-closed)
 
   (eye-define-key modmap "im" 'counsel-semantic-or-imenu)
   (eye-define-key modmap "jd" 'dumb-jump-go)
@@ -2045,12 +2043,11 @@
   (eye-define-key modmap "ns" 'eye/notes-search-keyword)
   (eye-define-key modmap "nf" 'eye/notes-search-file)
   
-  (eye-define-key modmap "oa" 'org-agenda)
-  (eye-define-key modmap "oc" 'org-capture)
   (eye-define-key modmap "oi" 'eye/init-imenu)
   (eye-define-key modmap "os" 'outline-show-entry)
   (eye-define-key modmap "oh" 'outline-hide-entry)
   (eye-define-key modmap "ob" 'eye/outline-hide-body)
+
   (eye-define-key modmap "p" 'counsel-yank-pop) ;paste
 
   (eye-define-key modmap "rr" 'replace-rectangle)
@@ -2075,23 +2072,17 @@
 
   (eye-define-key modmap "tf" 'toggle-frame-fullscreen)
 
-  ;; buffer
-  (eye-define-key modmap "vv" 'counsel-ibuffer)
-  (eye-define-key modmap "vs" 'switch-to-buffer)
-  (eye-define-key modmap "vd" 'kill-this-buffer)
-  (eye-define-key modmap "va" 'mark-whole-buffer)
-  (eye-define-key modmap "v," 'xah-previous-user-buffer)
-  (eye-define-key modmap "v." 'xah-next-user-buffer)
   ;; window
-  (eye-define-key modmap "vo" 'xah-next-window-or-frame)
-  (eye-define-key modmap "vi" 'watch-other-window-down-line)
-  (eye-define-key modmap "vk" 'watch-other-window-up-line)
-  (eye-define-key modmap "vp" 'watch-other-window-down)
-  (eye-define-key modmap "vn" 'watch-other-window-up)
-  (eye-define-key modmap "v0" 'delete-window)
-  (eye-define-key modmap "v1" 'delete-other-windows)
-  (eye-define-key modmap "v3" 'split-window-horizontally)
-  (eye-define-key modmap "v4" 'split-window-vertically)
+  (eye-define-key modmap "wo" 'xah-next-window-or-frame)
+  (eye-define-key modmap "wk" 'watch-other-window-down-line)
+  (eye-define-key modmap "wi" 'watch-other-window-up-line)
+  (eye-define-key modmap "wp" 'watch-other-window-down)
+  (eye-define-key modmap "wn" 'watch-other-window-up)
+  (eye-define-key modmap "w0" 'delete-window)
+  (eye-define-key modmap "w1" 'delete-other-windows)
+  (eye-define-key modmap "w3" 'split-window-horizontally)
+  (eye-define-key modmap "w4" 'split-window-vertically)
+  (eye-define-key modmap "wm" 'eye/set-mini-window-height)
   
   (eye-define-key modmap "z" 'undo)
   (if is-terminal
@@ -2123,6 +2114,10 @@
   
   )
 
+
+(define-key emacs-lisp-mode-map (kbd ",mx") 'eval-last-sexp)
+(define-key lisp-interaction-mode-map (kbd ",mx") 'eval-last-sexp)
+
 (define-key org-mode-map (kbd ",ma") 'org-attach)
 (define-key org-mode-map (kbd ",mo") 'org-open-at-point)
 (define-key org-mode-map (kbd ",ml") 'org-toggle-link-display)
@@ -2135,3 +2130,21 @@
 (define-key c++-mode-map (kbd ",md") 'dumb-jump-go)
 (define-key c++-mode-map (kbd ",mq") 'dumb-jump-back)
 (define-key c++-mode-map (kbd ",mw") 'dumb-jump-go-other-window)
+
+;;;; which key 
+(require 'which-key)
+(which-key-mode)
+(which-key-add-key-based-replacements ",f" " 文件(f)")
+(which-key-add-key-based-replacements ",fz" "打开最后关闭的文件")
+
+(which-key-add-key-based-replacements ",w" " 窗口(w)")
+(which-key-add-key-based-replacements ",h" " 帮助(h)")
+(which-key-add-key-based-replacements ",d" " 删除(d)")
+(which-key-add-key-based-replacements ",e" " 选择(e)")
+(which-key-add-key-based-replacements ",s" " 搜索和替换(s)")
+(which-key-add-key-based-replacements ",o" " 大纲(o)")
+(which-key-add-key-based-replacements ",j" " 定义(j)")
+(which-key-add-key-based-replacements ",r" " 矩形(r)")
+(which-key-add-key-based-replacements ",n" " 笔记(n)")
+(which-key-add-key-based-replacements ",m" " 模式(m)")
+(which-key-add-key-based-replacements ",x" " 功能x")
