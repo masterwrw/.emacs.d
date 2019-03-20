@@ -380,6 +380,47 @@
                ))
 
 
+
+;; Show modeline information on top header
+(setq-default header-line-format mode-line-format) ; Copy mode-line
+;; (setq-default mode-line-format nil) ; Remove mode-line
+(set-face-attribute 'header-line nil :background "white" :foreground "black")
+
+
+;; set modeline face
+(setq awesome-tray-mode-line-active-color "color-24")
+(setq awesome-tray-mode-line-inactive-color "color-238")
+(defvar awesome-tray-mode-line-colors nil)
+(defun awesome-tray-enable ()
+  ;; Save mode-line colors when first time.
+  ;; Don't change `awesome-tray-mode-line-colors' anymore.
+  (interactive)
+  (unless awesome-tray-mode-line-colors
+    (setq awesome-tray-mode-line-colors
+          (list (face-attribute 'mode-line :foreground)
+                (face-attribute 'mode-line :background)
+                (face-attribute 'mode-line :family)
+                (face-attribute 'mode-line :box)
+                (face-attribute 'mode-line-inactive :foreground)
+                (face-attribute 'mode-line-inactive :background)
+                (face-attribute 'mode-line-inactive :family)
+                (face-attribute 'mode-line-inactive :box)
+                )))
+  ;; Disable mode line.
+  (set-face-attribute 'mode-line nil
+                      :foreground awesome-tray-mode-line-active-color
+                      :background awesome-tray-mode-line-active-color
+                      :height 0.1
+                      :box nil)
+  (set-face-attribute 'mode-line-inactive nil
+                      :foreground awesome-tray-mode-line-inactive-color
+                      :background awesome-tray-mode-line-inactive-color
+                      :height 0.1
+                      :box nil
+                      :inherit 'unspecified))
+(add-hook 'after-init-hook 'awesome-tray-enable)
+
+
 ;;;; Font
 (defvar en-font-name "Liberation Mono")
 (defvar cn-font-name "Microsoft YaHei")
@@ -514,6 +555,45 @@
    cands "\n"))
 
 (setq ivy-format-function 'maple/ivy-format-function)
+
+
+;; fixed minibuffe
+(setq resize-mini-windows nil)
+(setq ivy-height 6)
+
+(defun eye/set-mini-window-height (&optional frame)
+  (interactive)
+  (let ((mini-win (minibuffer-window frame)))
+	(when (and mini-win (< (window-size mini-win) ivy-height))
+	  (window-resize mini-win ivy-height))))
+
+;; (add-hook 'window-setup-hook 'eye/set-mini-window-height)
+;; (add-hook 'after-make-frame-functions 'eye/set-mini-window-height)
+;; (add-hook 'move-frame-functions 'eye/set-mini-window-height)
+;; no need above hook if use code below 
+(add-hook 'window-size-change-functions 'eye/set-mini-window-height)
+(add-hook 'after-init-hook 'eye/set-mini-window-height)
+
+;; ivy-posframe
+(when (and is-gui (> emacs-major-version 26))
+  (require 'ivy-posframe)
+  ;; (setq ivy-display-function #'ivy-posframe-display)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-window-center)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-bottom-left)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-window-bottom-left)
+  (setq ivy-display-function #'ivy-posframe-display-at-point)
+
+  (push '(counsel-M-x . ivy-posframe-display-at-window-bottom-left) ivy-display-functions-alist)
+  (push '(complete-symbol . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(swiper . ivy-posframe-display-at-point) ivy-display-functions-alist)
+
+  ;; show border
+  (set-face-attribute 'internal-border nil :background "gray50")
+  (setq ivy-posframe-border-width 1)
+  (ivy-posframe-enable)
+  )
+
 
 ;;;; Project
 (unless (equal system-type 'windows-nt)
