@@ -106,7 +106,9 @@
 
 (blink-cursor-mode -1) ;; 取消光标闪烁
 (when is-gui
-  (set-cursor-color "#00A876"))
+  (add-hook 'after-init-hook
+	    (lambda ()
+	      (set-cursor-color "#00A876"))))
 
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
 
