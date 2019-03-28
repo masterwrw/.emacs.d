@@ -441,4 +441,9 @@ The return value is the new value of LIST-VAR."
 	(call-interactively 'replace-string)))
 
 
+(defun eye/new-frame ()
+  (interactive)
+  (new-frame '((height . 50) (width . 100))))
+
+
 (provide 'base-toolkit)

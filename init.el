@@ -820,7 +820,8 @@
   (remove-hook 'css-mode-hook 'writeroom-mode)
   (writeroom-mode -1))
 
-(require 'watch-other-window)
+;; (require 'watch-other-window)
+(require 'watch-other-frame)
 
 ;;;; Company
 ;; (require 'init-company)
@@ -933,6 +934,9 @@
 (backward-forward-mode t)
 
 ;; (require 'init-tags)
+
+(require 'ace-jump-mode)
+
 
 ;; ibuffer
 (setq ibuffer-saved-filter-groups
@@ -1084,11 +1088,12 @@
 (define-key global-map (kbd "<C-wheel-up>") 'eye/increase-font-size)
 (define-key global-map (kbd "<C-wheel-down>") 'eye/decrease-font-size)
 
-(global-set-key (kbd "<f3> u") 'winner-undo)
-(global-set-key (kbd "<f3> i") 'winner-redo)
-(global-set-key (kbd "<f3> n") 'new-frame)
-(global-set-key (kbd "<f3> k") 'delete-frame)
+(if (>= emacs-major-version 26)
+    (global-set-key (kbd "<f1>") 'global-display-line-numbers-mode))
 
+
+(global-set-key (kbd "<f3> u") 'winner-undo)
+(global-set-key (kbd "<f3> i") 'winner-redo
 
 (setq eye-leader-key ",")
 
@@ -1111,17 +1116,19 @@
 (when is-linux
   (add-to-list 'eye-key-mode-list magit-mode-map))
 
-(dolist (modmap eye-key-mode-list)
+;;(global-unset-key (kbd "SPC"))
+(dolist (modmap eye-key-mode-list)  
   (define-key modmap (kbd "M-j") 'left-char)
   (define-key modmap (kbd "M-l") 'right-char)
   (define-key modmap (kbd "M-u") 'left-word)
   (define-key modmap (kbd "M-o") 'right-word)
   (define-key modmap (kbd "M-i") 'previous-line)
   (define-key modmap (kbd "M-k") 'next-line)
+    
   (define-key modmap (kbd "M-h") 'eye/beginning-of-line-or-block)
   (define-key modmap (kbd "M-;") 'xah-end-of-line-or-block)
-  (define-key modmap (kbd "M-n") 'eye/scroll-down)
-  (define-key modmap (kbd "M-p") 'eye/scroll-up)
+  (define-key modmap (kbd "M-n") 'scroll-up-command)
+  (define-key modmap (kbd "M-p") 'scroll-down-command)
   (define-key modmap (kbd "M-/") 'xah-comment-dwim)
   (define-key modmap (kbd "M-m") 'set-mark-command)
   (define-key modmap (kbd "M-w") 'xah-copy-line-or-region)
@@ -1154,8 +1161,6 @@
   (define-key modmap (kbd ",=") 'eye/increase-font-size)
   (define-key modmap (kbd ",-") 'eye/decrease-font-size)
   
-  (eye-define-key modmap "c" 'avy-goto-char)
-  (eye-define-key modmap "v" 'avy-goto-line)
   
   ;; delete
   (define-key global-map (kbd "M-8") 'backward-delete-char)
@@ -1191,15 +1196,18 @@
   (eye-define-key modmap "fl" 'bookmark-bmenu-list)
   (eye-define-key modmap "fj" 'bookmark-jump)
   (eye-define-key modmap "fh" 'helm-mini)
-  (eye-define-key modmap "fw" 'mark-whole-buffer)
+  (eye-define-key modmap "fw" 'write-file)
   (eye-define-key modmap "fx" 'recentf-open-files)
   (eye-define-key modmap "fz" 'xah-open-last-closed)
 
   (eye-define-key modmap "im" 'counsel-semantic-or-imenu)
-  (eye-define-key modmap "jd" 'dumb-jump-go)
+  ;; (eye-define-key modmap "jd" 'dumb-jump-go)
 
-  (eye-define-key modmap "ll" 'recenter-top-bottom)
-  (eye-define-key modmap "lb" 'ibuffer)
+  (eye-define-key modmap "c" 'ace-jump-char-mode)
+  (eye-define-key modmap "v" 'ace-jump-line-mode)
+  (eye-define-key modmap "j" 'ace-jump-word-mode)
+  (eye-define-key modmap "l" 'avy-goto-char-in-line)
+  ;; (eye-define-key modmap "lb" 'ibuffer)
   
   (eye-define-key modmap "nd" 'eye/notes-dired)
   (eye-define-key modmap "nn" 'eye/notes-new)
@@ -1238,15 +1246,15 @@
   (eye-define-key modmap "tf" 'toggle-frame-fullscreen)
 
   ;; window
-  (eye-define-key modmap "wo" 'xah-next-window-or-frame)
-  (eye-define-key modmap "wk" 'watch-other-window-down-line)
-  (eye-define-key modmap "wi" 'watch-other-window-up-line)
-  (eye-define-key modmap "wp" 'watch-other-window-down)
-  (eye-define-key modmap "wn" 'watch-other-window-up)
+  (eye-define-key modmap "wo" 'xah-next-window-or-frame);xah-unsplit-window-or-next-frame
   (eye-define-key modmap "w0" 'delete-window)
+  ;;(eye-define-key modmap "ws" 'hydra-watch-other-window-or-frame/body)
   (eye-define-key modmap "w1" 'delete-other-windows)
   (eye-define-key modmap "w3" 'split-window-horizontally)
   (eye-define-key modmap "w4" 'split-window-vertically)
+  (eye-define-key modmap "w7" 'eye/new-frame)
+  (eye-define-key modmap "w8" 'delete-other-frames)
+  (eye-define-key modmap "w9" 'delete-frame)
   (eye-define-key modmap "wm" 'eye/set-mini-window-height)
   
   (eye-define-key modmap "z" 'undo)
@@ -1276,7 +1284,7 @@
   (eye-define-key modmap "xa" 'org-agenda)
   (eye-define-key modmap "xc" 'org-capture)
   (eye-define-key modmap "xg" 'magit-status)
-  
+  (eye-define-key modmap "xr" 'read-only-mode)  
   )
 
 
@@ -1308,7 +1316,6 @@
 (which-key-add-key-based-replacements ",e" " 选择(e)")
 (which-key-add-key-based-replacements ",s" " 搜索和替换(s)")
 (which-key-add-key-based-replacements ",o" " 大纲(o)")
-(which-key-add-key-based-replacements ",j" " 定义(j)")
 (which-key-add-key-based-replacements ",r" " 矩形(r)")
 (which-key-add-key-based-replacements ",n" " 笔记(n)")
 (which-key-add-key-based-replacements ",m" " 模式(m)")
