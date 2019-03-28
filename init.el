@@ -384,7 +384,7 @@
 
 
 ;; Show modeline information on top header
-(setq-default header-line-format mode-line-format) ; Copy mode-line
+;; (setq-default header-line-format mode-line-format) ; Copy mode-line
 ;; (setq-default mode-line-format nil) ; Remove mode-line
 (set-face-attribute 'header-line nil :background "white" :foreground "black")
 
