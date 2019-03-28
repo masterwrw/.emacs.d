@@ -42,7 +42,7 @@
   (let ((default-directory (file-name-as-directory dir)))
     (add-to-list 'load-path dir)
     (normal-top-level-add-subdirs-to-load-path)))
-(add-subdirs-to-load-path (concat user-emacs-directory "site-lisp/"))
+(add-subdirs-to-load-path (concat user-emacs-directory "packages/"))
 (add-subdirs-to-load-path (concat user-emacs-directory "modules/"))
 
 (setq custom-file (concat user-emacs-directory "custom.el"))
@@ -646,7 +646,8 @@
 
   (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
   ;; 添加 magit-submodule-remove
-  (require 'magit-extension))
+  ;;(require 'magit-extension)
+  )
 
 ;;;; Shell
 (require 'aweshell)
@@ -1018,7 +1019,7 @@
       (desktop-read user-cache-directory)
     (message "No desktop found.")))
 
-(require 'auto-save)
+;;(require 'auto-save)
 ;; use session-save to save the desktop manually
 (defun session-save ()
   "Save an emacs session."
@@ -1037,7 +1038,7 @@
 ;; 		 (if (y-or-n-p "Restore desktop? ")
 ;; 		     (session-restore)))))
 
-(add-hook 'kill-emacs-hook 'session-save)
+;;(add-hook 'kill-emacs-hook 'session-save)
 
 ;;;; remote
 (if (eq system-type 'windows-nt)
