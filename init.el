@@ -535,19 +535,25 @@
 ;; (add-hook 'window-setup-hook 'eye/set-mini-window-height)
 ;; (add-hook 'after-make-frame-functions 'eye/set-mini-window-height)
 ;; (add-hook 'move-frame-functions 'eye/set-mini-window-height)
-;; no need above hook if use code below 
-(add-hook 'window-size-change-functions 'eye/set-mini-window-height)
-(add-hook 'after-init-hook 'eye/set-mini-window-height)
-
+;; no need above hook if use code below
+(defun eye/mini-ivy-on ()
+  (interactive)
+  (add-hook 'window-size-change-functions 'eye/set-mini-window-height)
+  (add-hook 'after-init-hook 'eye/set-mini-window-height))
+(defun eye/mini-ivy-off ()
+  (interactive)
+  (remove-hook 'window-size-change-functions 'eye/set-mini-window-height)
+  (remove-hook 'after-init-hook 'eye/set-mini-window-height))
+			
 ;; ivy-posframe
-(when (and is-gui (> emacs-major-version 26))
+(when (and is-gui (>= emacs-major-version 26))
   (require 'ivy-posframe)
   ;; (setq ivy-display-function #'ivy-posframe-display)
   ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
   ;; (setq ivy-display-function #'ivy-posframe-display-at-window-center)
-  ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-bottom-left)
+  (setq ivy-display-function #'ivy-posframe-display-at-frame-bottom-left)
   ;; (setq ivy-display-function #'ivy-posframe-display-at-window-bottom-left)
-  (setq ivy-display-function #'ivy-posframe-display-at-point)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-point)
 
   (push '(counsel-M-x . ivy-posframe-display-at-window-bottom-left) ivy-display-functions-alist)
   (push '(complete-symbol . ivy-posframe-display-at-point) ivy-display-functions-alist)
