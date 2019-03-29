@@ -345,5 +345,18 @@
 
 
 
+(defhydra hydra-note (:exit t)
+  ("d" eye/notes-dired "Notes dir")
+  ("n" eye/notes-new "New note")
+  ("a" eye/notes-create-attachment "Create attach dir")
+  ("o" eye/notes-open-attachment "Open attach")
+  ("s" eye/notes-search-keyword "Search word")
+  ("f" eye/notes-search-file "Search file"))
+
+
+(eye-set-leader-mode-key global-map "n" 'hydra-note/body)
+
+
+
 
 (provide 'init-orgmode)
