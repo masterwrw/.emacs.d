@@ -904,8 +904,45 @@
 
 ;; (require 'init-tags)
 
-(require 'ace-jump-mode)
+;;;; orgmode
+(eye--reset-time)
+(require 'init-orgmode)
+(eye-set-basic-keys org-mode-map)
+(eye--print-time "init-orgmode")
 
+(defhydra hydra-global-func (:exit t)
+  ("a" org-agenda "Agenda")
+  ("c" org-capture "Capture"))
+(eye-set-leader-mode-key global-map "x" 'hydra-global-func/body)
+
+;;;; elisp
+(eye--reset-time)
+(require 'init-elisp)
+(eye--print-time "init-elisp")
+
+
+;;;; packages
+(setq is-load-packages t)
+(when is-load-packages
+  ;; theme
+  (eye--reset-time)
+  (require 'moe-theme)
+  (load-theme 'moe-dark t)
+  (eye--print-time "load theme")
+
+  (eye--reset-time)
+  (require 'init-ivy)
+  (eye--print-time "init-ivy")
+
+  (eye--reset-time)
+  (require 'which-key)
+  (which-key-mode)
+  (eye--print-time "require whichkey")
+
+  (when is-linux
+    (eye--reset-time)
+    (require 'init-magit)
+    (eye--print-time "init-magit"))
 
 ;; ibuffer
 (setq ibuffer-saved-filter-groups

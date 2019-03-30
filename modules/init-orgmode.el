@@ -137,7 +137,8 @@
 (setq org-agenda-window-setup 'only-window)
 
 (setq org-todo-keywords
-      '((sequence "REPEAT(r)" "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w)" "|" "DONE(d!)" "CANCELLED(c)" "DEFERRED(f)")
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+	(sequence "WAITING(w)" "|" "CANCELLED(c)" "DEFERRED(f)")
         ))
 
 (setf org-todo-keyword-faces
@@ -185,7 +186,7 @@
 (setq locale-gtd-goal-tpl (concat locale-gtd-dir "/tpl-goals.txt"))
 
 (setq org-agenda-files (list locale-gtd-todo locale-gtd-private locale-gtd-archive locale-gtd-goal))
-(append-to-list 'org-agenda-files locale-custom-projects)
+;; (append-to-list 'org-agenda-files locale-custom-projects)
 (setq org-default-notes-file locale-gtd-inbox)
 (defun eye/open-inbox-file () (interactive) (find-file locale-gtd-inbox))
 
@@ -206,19 +207,34 @@
 ;; (add-to-list 'org-agenda-custom-commands `,eye/gtd-someday-view)
 ;; method 2
 (setq org-agenda-custom-commands
-      '(("w" . "View task")
-	("wa" "重要且紧急的任务" tags-todo "+PRIORITY=\"A\"")
-	("wb" "重要且不紧急的任务" tags-todo "+PRIORITY=\"B\"")
-	("wc" "不重要且不紧急的任务" tags-todo "+PRIORITY=\"C\"")
+      '(("w" . "Work")
+	("wn" "Next" tags-todo "+CATEGORY=\"work\"")
+	("ww" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"work\"")
+
+	("p" . "Private")
+	("pn" "Next" tags-todo "+CATEGORY=\"private\"")
+	("pw" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"private\"")
+
 	;; can use org-agenda T also
-	("n" "Next task" todo "NEXT")
-	("l" "Todo list" todo "TODO")
-	("d" "Day task" agenda "" ((org-agenda-span 1) ;limits display to a single day
-				   (org-agenda-sorting-strategy
-				    (quote ((agenda time-up priority-down tag-up) )))
-				   (org-deadline-warning-days 0)
-				   (org-agenda-remove-tags t) ;don't show tags
-				   ))
+	("n" "All Next" todo "NEXT")
+	("v" "All Waiting" todo "WAITING")
+	("D" "Agenda(week) + Next" ((agenda) (todo "NEXT")))
+	
+	;; ("z" "Waiting" todo "WAITING")
+	("d" "Day" agenda "" ((org-agenda-span 1) ;limits display to a single day
+			      (org-agenda-sorting-strategy
+			       (quote ((agenda time-up priority-down tag-up) )))
+			      (org-deadline-warning-days 0)
+			      (org-agenda-remove-tags t) ;don't show tags
+			      ))
+	("f" "Test" ((tags "Goal=\"Long\""
+			   ((org-agenda-overriding-header "Long term goals")))
+		     (tags "Goal=\"Medium\""
+			   ((org-agenda-overriding-header "Medium term goals")))
+		     (tags "Goal=\"Short\""
+			   ((org-agenda-overriding-header "Short term goals")))
+		     ))
+	
 	("g" "Weekly Goals Review"
 	 ((tags "Goal=\"Long\""
 		((org-agenda-overriding-header "Long term goals")))
@@ -237,46 +253,48 @@
 
 ;(add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
+;; 模板中的file路径不是绝对路径时，将会使用org-directory进行查找
+(setq org-directory locale-gtd-dir)
+
 ;; capture 的目标路径不能直接使用 concat
 (setq org-capture-templates
       '(
         ("i"
-         "inbox" entry (file+headline locale-gtd-inbox "Inbox")
-         "* NEXT %?\n%i\n"
-         :create t)
-        
-        ("t"
-         "task" entry (file+headline locale-gtd-todo "Tasks")
-         "* NEXT %?\n%i\n"
+         "inbox" entry (file+headline "inbox.org" "Inbox")
+         "* %?\n%i\n"
          :create t)
 
-        ("p"
-         "private" entry (file+headline locale-gtd-private "Private")
-         "* NEXT %?\n%i\n"
-         :create t)
+	;; Create Todo under GTD.org -> Work -> Tasks
+       ;; file+olp specifies to full path to fill the Template
+	("w" "Work TODO" entry (file+olp "tasks.org" "Work" "Tasks")
+	 "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
+	;; Create Todo under GTD.org -> Private -> Tasks
+	;; file+olp specifies to full path to fill the Template
+	("m" "Private TODO" entry (file+olp "private.org" "Private" "Tasks")
+         "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
 
 	("g" "Goals") 
-	("ge" "Epic goals" entry (file+headline locale-gtd-goal 
-						"Epic goals") (file locale-gtd-goal-tpl) :empty-lines-after 1) 
-	("gl" "Long term goal (2-5 years from now)" entry (file+headline locale-gtd-goal 
-									 "Long term goals") (file locale-gtd-goal-tpl) :empty-lines-after 1) 
-	("gm" "Medium term goal (6 months up to 2 years)" entry (file+headline locale-gtd-goal 
-									       "Medium term goals") (file locale-gtd-goal-tpl) :empty-lines-after 1) 
-	("gs" "Short term goals (next 6 months)" entry (file+headline locale-gtd-goal 
-								      "Short term goals") (file "d:/cloud/YandexDisk/notebook/gtd/tpl-goals.txt") :empty-lines-after 1)
+	("ge" "Epic goals" entry (file+headline "goals.org" 
+						"Epic goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+	("gl" "Long term goal (2-5 years from now)" entry (file+headline "goals.org"
+									 "Long term goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+	("gm" "Medium term goal (6 months up to 2 years)" entry (file+headline "goals.org"
+									       "Medium term goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+	("gs" "Short term goals (next 6 months)" entry (file+headline "goals.org" 
+								      "Short term goals") (file "tpl-goals.txt") :empty-lines-after 1)
 
         ;; org-protocol: https://github.com/sprig/org-capture-extension
 
-        ;; ("p" 
-        ;;  "收集网页内容（自动调用）" entry (file+headline locale-gtd-inbox "INBOX")
-        ;;  "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
-        ;;         %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
-        ;;  :create t)
+        ("p" 
+         "收集网页内容（自动调用）" entry (file+headline "inbox.org" "INBOX")
+         "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
+                %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+         :create t)
         
-        ;; ("L" 
-        ;;  "收集网页链接（自动调用）" entry (file+headline locale-gtd-inbox "LINKS")
-        ;;  "* [[%:link][%:description]]\n%?\n"
-        ;;  :create t)
+        ("L" 
+         "收集网页链接（自动调用）" entry (file+headline "inbox.org" "LINKS")
+         "* [[%:link][%:description]]\n%?\n"
+         :create t)
         
         ))
 
@@ -315,6 +333,7 @@
 (defun eye/notes-create-attachment ()
   "创建文件对应的附件文件夹"
   (interactive)
+  (require 'f)
   (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
 	 (dir (concat locale-notebook-attachment-dir "/" name)))
     (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
