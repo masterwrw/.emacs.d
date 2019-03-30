@@ -888,8 +888,75 @@
 ;;;; sql
 (add-hook 'sql-mode-hook 'yas-minor-mode)
 
-;;;; xml
-(require 'nxml-mode)
+;;;; files
+(require 'recentf)
+(require 'dired)
+(defhydra hydra-file (:exit t)
+  ("a" switch-to-buffer "Switch buffer")
+  ("s" save-buffer "Save buffer")
+  ("o" ido-find-file "Find file")
+  ("h" recentf-open-files)
+  ("k" kill-this-buffer "Kill buffer")
+  ("d" dired-jump "Dired")
+  ("z" xah-open-last-closed "Open last closed")
+  ("b" bookmark-set "Set bookmark")
+  ("f" xah-open-file-fast "Jump bookmark")
+  ("l" bookmark-bmenu-list "List bookmark")
+  ("p" xah-previous-user-buffer "Previous buffer")
+  ("n" xah-next-user-buffer "Next buffer")
+  )
+(eye-set-leader-mode-key global-map "f" 'hydra-file/body)
+
+(if is-terminal
+    (eye-set-leader-mode-key global-map " TAB" 'mode-line-other-buffer)
+  (eye-set-leader-mode-key global-map " <tab>" 'mode-line-other-buffer))
+
+;;;; select
+(defhydra hydra-select ()
+  ("SPC" keyboard-quit "quit" :exit t)
+  ("a" mark-whole-buffer "Select all" :exit t)
+  ("e" xah-extend-selection "Extend")
+  ("q" xah-select-text-in-quote "Select quote" :exit t)
+  ("l" xah-select-line "Select line" :exit t)
+  ("n" narrow-to-region "Narrorw" :exit t)
+  ("w" widen "widen" :exit t)
+  )
+(eye-set-leader-mode-key global-map "e" 'hydra-select/body)
+
+
+;;;; delete
+(define-key global-map (kbd "M-8") 'backward-delete-char)
+(define-key global-map (kbd "M-9") 'delete-char)
+(defhydra hydra-delete (:exit t)
+  ("d" delete-line-no-copy)
+  ("u" delete-inner-word-no-copy)
+  ("o" delete-forward-word-no-copy)
+  (";" delete-end-of-line-no-copy)
+  ("h" delete-beginning-of-line-no-copy))
+(eye-set-leader-mode-key global-map "d" 'hydra-delete/body)
+
+;;;; window
+(defhydra hydra-window ()
+  ("SPC" nil "quit")
+  ("f" eye/new-frame)
+  ("o" xah-next-window-or-frame "Next window/frame")
+  ("0" delete-window-or-frame "Delete window/frame" :exit t)
+  ("1" delete-other-windows "Delete other window" :exit t)
+  ("3" split-window-horizontally "Split hor" :exit t)
+  ("4" split-window-vertically "Split ver" :exit t))
+(eye-set-leader-mode-key global-map "w" 'hydra-window/body)
+
+;;;; search
+(defhydra hydra-search ()
+  ("SPC" nil "quit" :exit t)
+  ("f" isearch-forward "isearch-forward" :exit t)
+  ("b" isearch-backward "isearch-backward" :exit t)
+  ("q" query-replace "query-replace" :exit t)
+  ("r" eye/replace-string-buffer "Replace all" :exit t)
+  )
+(define-key isearch-mode-map (kbd "M-k") 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd "M-i") 'isearch-repeat-backward)
+(eye-set-leader-mode-key global-map "s" 'hydra-search/body)
 
 ;;;; Navigation
 (require 'backward-forward)
