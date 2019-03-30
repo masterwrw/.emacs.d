@@ -36,3 +36,4 @@ abbrev_defs
 eaf/
 srecode-map.el
 /packages
+/transient
