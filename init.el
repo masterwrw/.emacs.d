@@ -375,10 +375,6 @@
   (eye-update-font-size)
   )
 
-(when is-gui
-  (define-key global-map (kbd ",=") 'eye/increase-font-size)
-  (define-key global-map (kbd ",-") 'eye/decrease-font-size))
-
 (eye--print-time "init font")
 
 ;;;; locale
@@ -580,9 +576,15 @@
 (eye-set-basic-keys org-mode-map)
 (eye--print-time "init-orgmode")
 
-(defhydra hydra-global-func (:exit t :idle 1.0)
-  ("a" org-agenda "Agenda")
-  ("c" org-capture "Capture"))
+(defhydra hydra-global-func (:idle 1.0)
+  ("a" org-agenda "Agenda" :exit t)
+  ("c" org-capture "Capture" :exit t))
+
+(when is-gui
+  (defhydra+ hydra-global-func (:idle 1.0)
+    ("=" eye/increase-font-size "Font++")
+    ("-" eye/decrease-font-size "Font--")))
+
 (eye-set-leader-mode-key global-map "x" 'hydra-global-func/body)
 
 ;;;; elisp
