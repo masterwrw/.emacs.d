@@ -325,26 +325,6 @@ Version 2018-06-04"
 					  (set-window-configuration wnd))))
 	  (error "no more than 2 files should be marked"))))
 
-(defun xah-comment-dwim ()
-  "Like `comment-dwim', but toggle comment if cursor is not at end of line.
-
-  URL `http://ergoemacs.org/emacs/emacs_toggle_comment_by_line.html'
-  Version 2016-10-25"
-  (interactive)
-  (if (region-active-p)
-	  (comment-dwim nil)
-	(let (($lbp (line-beginning-position))
-		  ($lep (line-end-position)))
-	  (if (eq $lbp $lep)
-		  (progn
-			(comment-dwim nil))
-		(if (eq (point) $lep)
-			(progn
-			  (comment-dwim nil))
-		  (progn
-			(comment-or-uncomment-region $lbp $lep)
-			(forward-line )))))))
-
 
 ;; quick generate virtual.dired file and open it
 (defun eye/virtual-dir ()
@@ -444,6 +424,13 @@ The return value is the new value of LIST-VAR."
 (defun eye/new-frame ()
   (interactive)
   (new-frame '((height . 50) (width . 100))))
+
+
+(defun delete-window-or-frame (&optional window frame force)
+  (interactive)
+  (if (= 1 (length (window-list frame)))
+      (delete-frame frame force)
+    (delete-window window)))
 
 
 (provide 'base-toolkit)

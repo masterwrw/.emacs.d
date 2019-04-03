@@ -12,4 +12,4 @@
   (interactive)
   (find-file-existing (concat locale-gtd-dir "/goals.org")))
 
-(add-hook 'after-init-hook 'eye/open-goals-file)
+;;(add-hook 'after-init-hook 'eye/open-goals-file)

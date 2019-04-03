@@ -139,6 +139,7 @@
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
 	(sequence "WAITING(w)" "|" "CANCELLED(c)" "DEFERRED(f)")
+	(sequence "GOAL(g)")
         ))
 
 (setf org-todo-keyword-faces
@@ -149,7 +150,9 @@
         ("CANCELLED" . (:foreground "#DC143C" :bold t :weight bold))
         ("WAITING" . (:foreground "yellow" :bold t :weight bold))
         ("DEFERRED" . (:foreground "OrangeRed" :bold t :weight bold))
-        ("DONE" . (:foreground "gray50" :background "gray30"))))
+        ("DONE" . (:foreground "gray50" :background "gray30"))
+	("GOAL" . (:foreground "springgreen" :bold t :weight bold))
+	))
 
 ;; tags
 ;; #+TAGS: { @work(w) @life(l) @thinking(t) @study(s) }
@@ -245,13 +248,16 @@
 	  (tags-todo "Goal=\"\""
 		     ((org-agenda-overriding-header "Actions that don't contribute to a goal yet"))))
 	 )
+
+	("G" "Goals" tags "GOAL-TODO=\"GOAL\"" nil)
+	
 	))
 
 (defun eye/open-agenda-day-view ()
   (interactive)
   (org-agenda nil "d"))
 
-;(add-hook 'after-init-hook #'eye/open-agenda-day-view)
+;; (add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
 ;; 模板中的file路径不是绝对路径时，将会使用org-directory进行查找
 (setq org-directory locale-gtd-dir)
@@ -277,11 +283,11 @@
 	("ge" "Epic goals" entry (file+headline "goals.org" 
 						"Epic goals") (file "tpl-goals.txt") :empty-lines-after 1) 
 	("gl" "Long term goal (2-5 years from now)" entry (file+headline "goals.org"
-									 "Long term goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+									 "Long term goals (2-5 years from now)") (file "tpl-goals.txt") :empty-lines-after 1) 
 	("gm" "Medium term goal (6 months up to 2 years)" entry (file+headline "goals.org"
-									       "Medium term goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+									       "Medium term goalsl (6 months up to 2 years)") (file "tpl-goals.txt") :empty-lines-after 1) 
 	("gs" "Short term goals (next 6 months)" entry (file+headline "goals.org" 
-								      "Short term goals") (file "tpl-goals.txt") :empty-lines-after 1)
+								      "Short term goals (next 6 months)") (file "tpl-goals.txt") :empty-lines-after 1)
 
         ;; org-protocol: https://github.com/sprig/org-capture-extension
 
@@ -314,7 +320,9 @@
   (interactive)
   (let ((keyword (read-string "Search note file: ")))
     (dired locale-notebook-dir)
-    (swiper keyword)
+    (if (fboundp 'swiper)
+	(swiper keyword)
+      (isearch-forward keyword))
     ))
 
 (defun eye/notes-dired ()
@@ -361,6 +369,19 @@
     (org-end-of-line)
     (org-meta-return))
 (define-key org-mode-map (kbd "M-RET") 'eye/org-meta-return)
+
+
+
+(defhydra hydra-note (:exit t :idle 1.0)
+  ("d" eye/notes-dired "Notes dir")
+  ("n" eye/notes-new "New note")
+  ("a" eye/notes-create-attachment "Create attach dir")
+  ("o" eye/notes-open-attachment "Open attach")
+  ("s" eye/notes-search-keyword "Search word")
+  ("f" eye/notes-search-file "Search file"))
+
+
+(eye-set-leader-mode-key global-map "n" 'hydra-note/body)
 
 
 
