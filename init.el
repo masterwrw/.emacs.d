@@ -614,6 +614,21 @@
     (require 'init-magit)
     (eye--print-time "init-magit"))
 
+  (eye--reset-time)
+  (require 'init-cpp)
+  (unset-leader-key c++-mode-map)
+  (eye-set-basic-keys c++-mode-map)
+  (define-key c++-mode-map (kbd ",f") 'hydra-file/body)
+  (define-key c++-mode-map (kbd ",r") 'hydra-rect/body)
+  (define-key c++-mode-map (kbd ",c") 'hydra-jump/body)
+  (define-key c++-mode-map (kbd ",e") 'hydra-select/body)
+  (define-key c++-mode-map (kbd ",d") 'hydra-delete/body)
+  (define-key c++-mode-map (kbd ",w") 'hydra-window/body)
+  (define-key c++-mode-map (kbd ",s") 'hydra-search/body)
+  (define-key c++-mode-map (kbd ",i") 'hydra-imenu/body)
+  (define-key c++-mode-map (kbd ",o") 'hydra-outline/body)
+  (define-key c++-mode-map (kbd ",x") 'hydra-global-func/body)
+  (eye--print-time "init-cpp")
   
   )
 
