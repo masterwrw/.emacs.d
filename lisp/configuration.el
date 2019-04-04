@@ -40,6 +40,8 @@
 (add-hook 'minibuffer-setup-hook #'eye-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'eye-minibuffer-exit-hook)
 
+(setq inhibit-compacting-font-caches t)
+
 ;;
 ;; 启动时间统计
 ;;
