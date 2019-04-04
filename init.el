@@ -209,6 +209,61 @@
 (setq auto-save-default t) ;; 开启自动备份临时文件，auto-save.el 中会修改这个变量
 (setq auto-save-file-name-transforms '((".*" "~/tmp/emacs_cache/bak" t))) ;; 设置备份文件目录
 
+;;;; Encoding
+(setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
+(set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
+(set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
+;; 解决粘贴中文出现乱码的问题
+(if (eq system-type 'windows-nt)
+    (progn
+      ;; (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
+      ;; (set-default selection-coding-system 'utf-16le-dos)
+      (set-selection-coding-system 'utf-16le-dos) ;; 别名set-clipboard-coding-system
+      )
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
+;; 文件默认保存为 utf-8
+(set-buffer-file-coding-system 'utf-8)
+(set-default buffer-file-coding-system 'utf8)
+(set-default-coding-systems 'utf-8)
+;; 防止终端中文乱码
+(set-terminal-coding-system 'utf-8)
+(modify-coding-system-alist 'process "*" 'utf-8)
+(setq default-process-coding-system '(utf-8 . utf-8))
+;; 解决文件目录的中文名乱码
+(setq-default pathname-coding-system 'utf-8)
+(set-file-name-coding-system 'utf-8)
+
+;; windows shell
+(when (and is-windows is-terminal)
+  (defun eye/change-shell-mode-coding ()
+    (progn
+      (set-terminal-coding-system 'gbk)
+      (set-keyboard-coding-system 'gbk)
+      ;; (set-selection-coding-system 'gbk)
+      (set-buffer-file-coding-system 'gbk)
+      (set-file-name-coding-system 'gbk)
+      (modify-coding-system-alist 'process "*" 'gbk)
+      (set-buffer-process-coding-system 'gbk 'gbk)
+      (set-file-name-coding-system 'gbk)))
+  (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
+  (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
+
+(defun eye/convert-to-utf8-unix ()
+  (interactive)
+  (set-buffer-file-coding-system 'unix 't))
+
+;; vs文件编码
+(defun eye/convert-to-gbk-dos ()
+  (interactive)
+  (set-buffer-file-coding-system 'chinese-gbk-dos 't))
+
+;; org笔记编码
+(defun eye/convert-to-utf-8-withsignature-unix ()
+  (interactive)
+  (set-buffer-file-coding-system 'utf-8-with-signature-unix 't))
+
 
 ;;;; modeline
 ;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
@@ -413,6 +468,14 @@
 
 ;;;; basic keys
 (require 'hydra)
+(defhydra hydra-help (:exit t :idle 1.0)
+  ("v" describe-variable "Desc var")
+  ("f" describe-function "Desc fun")
+  ("k" describe-key "Desc key")
+  ("a" describe-face "Desc face")
+  ("i" info "Info"))
+(eye-set-leader-mode-key global-map "h" 'hydra-help/body)
+
 
 ;;;; move cursor
 (defhydra hydra-move (:column 4 :idle 1.0)
@@ -441,7 +504,6 @@
   ("/" xah-comment-dwim)
   ("SPC" keyboard-quit "quit" :exit t) 		;keyboard-quit to quit mark state
   )
-(eye-set-leader-mode-key global-map "c" 'hydra-jump/body)
 
 (defun eye-set-basic-keys (modmap)
   (interactive)
@@ -473,12 +535,14 @@
 ;;;; jump
 (require 'avy)
 (require 'ace-jump-mode)
-(defhydra hydra-jump (:idle 1.0)
-  ("c" ace-jump-char-mode "Goto char" :exit t)
-  ("l" ace-jump-line-mode "Goto line" :exit t)
-  ("v" avy-goto-char-in-line "Goto inline" :exit t)
-  ("SPC" keyboard-quit "quit" :exit t)
+(defhydra hydra-jump (:exit t :idle 1.0)
+  ("c" ace-jump-char-mode "Jump char")
+  ("l" ace-jump-line-mode "Jump line")
+  ("v" avy-goto-char-in-line "Jump inline")
+  ("g" goto-line "Goto line")
+  ("SPC" keyboard-quit "quit")
   )
+(eye-set-leader-mode-key global-map "c" 'hydra-jump/body)
 
 
 ;;;; smex
@@ -535,7 +599,7 @@
 ;;;; window
 (defhydra hydra-window (:idle 1.0)
   ("SPC" nil "quit")
-  ("f" eye/new-frame)
+  ("n" eye/new-frame)
   ("o" xah-next-window-or-frame "Next window/frame")
   ("0" delete-window-or-frame "Delete window/frame" :exit t)
   ("1" delete-other-windows "Delete other window" :exit t)
@@ -598,8 +662,10 @@
 (when is-load-packages
   ;; theme
   (eye--reset-time)
-  (require 'moe-theme)
-  (load-theme 'moe-dark t)
+  ;; (require 'moe-theme)
+  ;; (load-theme 'moe-dark t)
+  (require 'spolsky-theme)
+  (load-theme 'spolsky t)
   (eye--print-time "load theme")
 
   (eye--reset-time)
@@ -631,6 +697,9 @@
   (define-key c++-mode-map (kbd ",o") 'hydra-outline/body)
   (define-key c++-mode-map (kbd ",x") 'hydra-global-func/body)
   (eye--print-time "init-cpp")
+
+
+  (require 'init-external)
   
   )
 
