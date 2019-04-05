@@ -10,7 +10,7 @@
   (setq en-font-name "Verily Serif Mono")
   (setq cn-font-name "Microsoft YaHei")
   (setq en-font-size 16)
-  (setq cn-font-size 14)
+  (setq cn-font-size 16)
   )
 
 ;; 获取屏幕分辨率
