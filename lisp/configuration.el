@@ -113,11 +113,7 @@
 
 
 
-(when is-gui
-  (add-to-list 'load-path "~/packages/spolsky-theme")
-  (require 'spolsky-theme)
-  (load-theme 'spolsky t))
-
+(when is-gui (require 'init-theme))
 
 ;;;; idle require other packages
 (setq is-load-packages t)
