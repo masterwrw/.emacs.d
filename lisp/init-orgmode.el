@@ -373,6 +373,10 @@
 (define-key org-mode-map (kbd "M-RET") 'eye/org-meta-return)
 
 
+(defhydra+ hydra-funcs (:idle 1.0)
+  ("c" org-capture "Capture" :exit t)
+  ("a" org-agenda "Agenda" :exit t))
+
 
 (defhydra hydra-note (:exit t :idle 1.0)
   ("d" eye/notes-dired "Notes dir")
@@ -381,11 +385,26 @@
   ("o" eye/notes-open-attachment "Open attach")
   ("s" eye/notes-search-keyword "Search word")
   ("f" eye/notes-search-file "Search file"))
-
-
 (eye-define-leader-key global-map "n" 'hydra-note/body)
 
+
+(eye-reset-mode-leader-key org-mode-map)
 (eye-define-mode-basic-keys org-mode-map)
+(eye-define-leader-key org-mode-map "h" 'hydra-help/body)
+(eye-define-leader-key org-mode-map "r" 'hydra-rect/body)
+(eye-define-leader-key org-mode-map "f" 'hydra-file/body)
+(eye-define-leader-key org-mode-map "e" 'hydra-select/body)
+(eye-define-leader-key org-mode-map "c" 'hydra-jump/body)
+(eye-define-leader-key org-mode-map "d" 'hydra-delete/body)
+(eye-define-leader-key org-mode-map "w" 'hydra-window/body)
+(eye-define-leader-key org-mode-map "s" 'hydra-search/body)
+(eye-define-leader-key org-mode-map "i" 'hydra-imenu/body)
+(eye-define-leader-key org-mode-map "o" 'hydra-outline/body)
+(eye-define-leader-key org-mode-map "x" 'hydra-funcs/body)
+
+
+
+
 (eye--print-time "init-orgmode")
 
 
