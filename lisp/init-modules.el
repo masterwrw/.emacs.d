@@ -370,7 +370,6 @@
   (remove-hook 'css-mode-hook 'writeroom-mode)
   (writeroom-mode -1))
 
-;; (require 'watch-other-window)
 (require 'watch-other-frame)
 
 ;;;; Company

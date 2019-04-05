@@ -138,6 +138,7 @@
   (idle-require 'init-idomenu)
   (idle-require 'init-ivy)
   (idle-require 'init-web-search)
+  (idle-require 'init-watch-other-window)
   (idle-require 'init-elisp)
   (idle-require 'init-orgmode)
   (idle-require 'init-cpp)
