@@ -1,3 +1,4 @@
+(eye--reset-time)
 
 (require 'ivy)
 (require 'counsel)
@@ -19,6 +20,7 @@
 (defhydra+ hydra-imenu (:exit t :idle 1.0)
   ("c" counsel-semantic-or-imenu "counsel imenu"))
 
+(eye--print-time "init-ivy")
 
 
 

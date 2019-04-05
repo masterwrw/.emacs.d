@@ -1,3 +1,5 @@
+(eye--reset-time)
+
 (setq locale-notebook-dir "~/notebook/org/note")
 (setq locale-notebook-attachment-dir "~/notebook/attach")
 (setq locale-gtd-dir "~/notebook/org/gtd")
@@ -12,4 +14,14 @@
   (interactive)
   (find-file-existing (concat locale-gtd-dir "/goals.org")))
 
-;;(add-hook 'after-init-hook 'eye/open-goals-file)
+
+(defun eye/open-locale-file ()
+  (interactive)
+  (find-file locale-config-file))
+
+(eye--print-time "load locale")
+
+
+
+
+(provide 'init-locale)

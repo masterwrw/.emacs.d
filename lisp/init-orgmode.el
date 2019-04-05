@@ -1,4 +1,6 @@
 ;;;; orgmode
+(eye--reset-time)
+
 ;; Disable buildin org, https://emacs-china.org/t/topic/3931/3
 (defun eh-hack-load-path ()
   ;; Delete buildin org's PATH
@@ -381,8 +383,10 @@
   ("f" eye/notes-search-file "Search file"))
 
 
-(eye-set-leader-mode-key global-map "n" 'hydra-note/body)
+(eye-define-leader-key global-map "n" 'hydra-note/body)
 
+(eye-define-mode-basic-keys org-mode-map)
+(eye--print-time "init-orgmode")
 
 
 
