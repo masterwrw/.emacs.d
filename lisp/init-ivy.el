@@ -7,7 +7,6 @@
 (defhydra+ hydra-help (:exit t :idle 1.0)
   ("v" counsel-describe-variable "Desc var")
   ("f" counsel-describe-function "Desc fun")
-  ("k" counsel-describe-key "Desc key")
   ("a" counsel-describe-face "Desc face")
   ("b" counsel-descbinds "Desc bind"))
 
