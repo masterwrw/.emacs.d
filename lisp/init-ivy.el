@@ -20,7 +20,7 @@
 
 (defhydra+ hydra-search (:idle 1.0)
   ("s" swiper "swiper" :exit t)
-  ("l" counsel-rg "rg" :exit t)
+  ("l" counsel-rg "counsel-rg" :exit t)
   ("k" counsel-rg-marked "rg marked" :exit t))
 
 
