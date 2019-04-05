@@ -4,6 +4,14 @@
 (require 'counsel)
 (require 'swiper)
 
+(defhydra+ hydra-help (:exit t :idle 1.0)
+  ("v" counsel-describe-variable "Desc var")
+  ("f" counsel-describe-function "Desc fun")
+  ("k" counsel-describe-key "Desc key")
+  ("a" counsel-describe-face "Desc face")
+  ("b" counsel-descbinds "Desc bind"))
+
+
 (defhydra+ hydra-file (:exit t :idle 1.0)
   ("a" counsel-ibuffer)
   ("g" counsel-git "git find");查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
