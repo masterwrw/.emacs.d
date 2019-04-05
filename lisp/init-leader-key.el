@@ -23,6 +23,10 @@
 
 ;;;; move cursor
 (defhydra hydra-move (:column 4 :idle 1.0)
+  "
+_a_:Begin defun    _w_:Begin buffer   _r_:Forward para    _b_:Brackets match
+_s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
+"
   ("j" left-char)
   ("M-j" left-char)
   ("l" right-char)
@@ -44,8 +48,14 @@
   ("p" scroll-down-command)
   ("M-p" scroll-down-command)
   ("m" set-mark-command)
-  ("b" xah-goto-matching-bracket "goto match bracket")
-  ("/" xah-comment-dwim)
+  ("b" xah-goto-matching-bracket nil)
+  ("/" xah-comment-dwim nil)
+  ("a" beginning-of-defun nil)
+  ("s" end-of-defun nil)
+  ("w" beginning-of-buffer nil)
+  ("e" end-of-buffer nil)
+  ("r" forward-paragraph nil)
+  ("t" backward-paragraph nil)
   ("SPC" keyboard-quit "quit" :exit t) 		;keyboard-quit to quit mark state
   )
 
@@ -169,20 +179,26 @@
 ;;;; funcs
 (defhydra hydra-funcs (:idle 1.0)
   ("SPC" nil "quit" :exit t)
-  ("r" read-only-mode :exit t))
+  ("r" read-only-mode "Read only" :exit t))
 
 
-(eye-define-leader-key global-map "h" 'hydra-help/body)
-(eye-define-leader-key global-map "r" 'hydra-rect/body)
-(eye-define-leader-key global-map "f" 'hydra-file/body)
-(eye-define-leader-key global-map "e" 'hydra-select/body)
-(eye-define-leader-key global-map "c" 'hydra-jump/body)
-(eye-define-leader-key global-map "d" 'hydra-delete/body)
-(eye-define-leader-key global-map "w" 'hydra-window/body)
-(eye-define-leader-key global-map "s" 'hydra-search/body)
-(eye-define-leader-key global-map "i" 'hydra-imenu/body)
-(eye-define-leader-key global-map "o" 'hydra-outline/body)
-(eye-define-leader-key global-map "x" 'hydra-funcs/body)
+(defun eye-set-leader-key (modmap)
+  (interactive)
+  (eye-reset-mode-leader-key modmap)
+  (eye-define-mode-basic-keys modmap)
+  (eye-define-leader-key modmap "h" 'hydra-help/body)
+  (eye-define-leader-key modmap "r" 'hydra-rect/body)
+  (eye-define-leader-key modmap "f" 'hydra-file/body)
+  (eye-define-leader-key modmap "e" 'hydra-select/body)
+  (eye-define-leader-key modmap "c" 'hydra-jump/body)
+  (eye-define-leader-key modmap "d" 'hydra-delete/body)
+  (eye-define-leader-key modmap "w" 'hydra-window/body)
+  (eye-define-leader-key modmap "s" 'hydra-search/body)
+  (eye-define-leader-key modmap "i" 'hydra-imenu/body)
+  (eye-define-leader-key modmap "o" 'hydra-outline/body)
+  (eye-define-leader-key modmap "x" 'hydra-funcs/body))
+
+(eye-set-leader-key global-map)
 
 
 

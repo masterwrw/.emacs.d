@@ -319,21 +319,10 @@
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
 
-  
-(eye-reset-mode-leader-key c++-mode-map)
-(eye-define-mode-basic-keys c++-mode-map)
 
-(eye-define-leader-key global-map "h" 'hydra-help/body)
-(eye-define-leader-key global-map "r" 'hydra-rect/body)
-(eye-define-leader-key global-map "f" 'hydra-file/body)
-(eye-define-leader-key global-map "e" 'hydra-select/body)
-(eye-define-leader-key global-map "c" 'hydra-jump/body)
-(eye-define-leader-key global-map "d" 'hydra-delete/body)
-(eye-define-leader-key global-map "w" 'hydra-window/body)
-(eye-define-leader-key global-map "s" 'hydra-search/body)
-(eye-define-leader-key global-map "i" 'hydra-imenu/body)
-(eye-define-leader-key global-map "o" 'hydra-outline/body)
-(eye-define-leader-key global-map "x" 'hydra-funcs/body)
+
+(eye-set-leader-key c++-mode-map)
+
 
 
 (eye--print-time "init-cpp")

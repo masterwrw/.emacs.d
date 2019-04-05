@@ -388,21 +388,8 @@
 (eye-define-leader-key global-map "n" 'hydra-note/body)
 
 
-(eye-reset-mode-leader-key org-mode-map)
-(eye-define-mode-basic-keys org-mode-map)
-(eye-define-leader-key org-mode-map "h" 'hydra-help/body)
-(eye-define-leader-key org-mode-map "r" 'hydra-rect/body)
-(eye-define-leader-key org-mode-map "f" 'hydra-file/body)
-(eye-define-leader-key org-mode-map "e" 'hydra-select/body)
-(eye-define-leader-key org-mode-map "c" 'hydra-jump/body)
-(eye-define-leader-key org-mode-map "d" 'hydra-delete/body)
-(eye-define-leader-key org-mode-map "w" 'hydra-window/body)
-(eye-define-leader-key org-mode-map "s" 'hydra-search/body)
-(eye-define-leader-key org-mode-map "i" 'hydra-imenu/body)
-(eye-define-leader-key org-mode-map "o" 'hydra-outline/body)
-(eye-define-leader-key org-mode-map "x" 'hydra-funcs/body)
-
-
+(eye-set-leader-key org-mode-map)
+(eye-set-leader-key org-agenda-mode-map)
 
 
 (eye--print-time "init-orgmode")
