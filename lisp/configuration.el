@@ -136,6 +136,7 @@
   (idle-require 'init-avy)
   (idle-require 'init-ace-jump)
   (idle-require 'init-ivy)
+  (idle-require 'init-web-search)
   (idle-require 'init-elisp)
   (idle-require 'init-orgmode)
   (idle-require 'init-cpp)
