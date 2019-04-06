@@ -130,6 +130,7 @@
   (idle-require 'which-key)
   (with-eval-after-load 'which-key (which-key-mode))
   (idle-require 'init-avy)
+  (idle-require 'init-avy-zap)
   (idle-require 'init-ace-jump)
   (idle-require 'init-idomenu)
   (idle-require 'init-ivy)
