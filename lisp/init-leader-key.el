@@ -175,6 +175,7 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
 ;;;; funcs
 (defhydra hydra-funcs (:idle 1.0)
   ("SPC" nil "quit" :exit t)
+  ("p" pop-global-mark "Pop mark" :exit t)
   ("r" read-only-mode "Read only" :exit t))
 
 
