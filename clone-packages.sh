@@ -65,6 +65,7 @@ git clone https://github.com/Kungsgeten/yankpad.git
 git clone https://github.com/zargener/emacs-password-genarator.git
 git clone https://github.com/manateelazycat/watch-other-window.git
 git clone https://github.com/tumashu/ivy-posframe.git
-git clone https://github.com/dajva/rg.el.git rg rg
+git clone https://github.com/dajva/rg.el.git rg
 git clone https://github.com/bbatsov/solarized-emacs.git
 git clone https://github.com/jordonbiondo/ample-theme.git
+git clone https://github.com/skeeto/elfeed.git
