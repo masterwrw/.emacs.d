@@ -4,7 +4,12 @@
 
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
-(setq inhibit-compacting-font-caches t)
+(setq inhibit-compacting-font-caches t) ;; Don’t compact font caches during GC.
+(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-screen t)
+(setq use-file-dialog nil)
+(setq use-dialog-box nil)
+
 (put 'suspend-frame 'disabled t) ;; 禁止 Ctrl+z 时挂起 emacs
 
 ;; 用 y/n 代替 yes/no 的回答
@@ -78,8 +83,12 @@
 
 (setq ibuffer-expert t) ;;don't ask when delete
 
+;; Don't open a file in a new frame
+(when (boundp 'ns-pop-up-frames)
+  (setq ns-pop-up-frames nil))
 
-
+(setq track-eol t)                      ; Keep cursor at end of lines. Require line-move-visual is nil.
+(setq line-move-visual nil)
 
 ;; 全屏
 (defun fullscreen ()
