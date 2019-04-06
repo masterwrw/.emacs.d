@@ -109,5 +109,8 @@
 (maximize-frame)
 
 
+(defhydra+ hydra-funcs (:idle 1.0)
+  ("f" fullscreen-toggle "Fullscreen toggle" :exit t))
+
 
 (provide 'init-misc)
