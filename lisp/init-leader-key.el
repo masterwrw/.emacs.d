@@ -86,7 +86,9 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("f" describe-function "Desc fun")
   ("k" describe-key "Desc key")
   ("a" describe-face "Desc face")
-  ("i" info "Info"))
+  ("i" info "Info")
+  ("c" list-colors-display "List colors")
+  ("s" list-faces-display "List faces"))
 
 ;;;; rectangle
 (defhydra hydra-rect (:idle 1.0)
