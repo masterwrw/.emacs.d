@@ -9,7 +9,8 @@
 
 
 (defhydra+ hydra-window (:idle 1.0)
-  ("w" hydra-watch-other/body "Watch other"))
+  ;; Don't show the new hydra view if no exit
+  ("w" hydra-watch-other/body "Watch other" :exit t))
 
 
 
