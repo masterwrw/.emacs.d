@@ -113,10 +113,6 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("p" xah-previous-user-buffer "Previous buffer")
   ("n" xah-next-user-buffer "Next buffer")
   )
-(if is-terminal
-    (eye-define-leader-key global-map " TAB" 'mode-line-other-buffer)
-  (eye-define-leader-key global-map " <tab>" 'mode-line-other-buffer))
-
 
 ;;;; select
 (defhydra hydra-select (:idle 1.0)
@@ -199,6 +195,10 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   (eye-define-leader-key modmap "x" 'hydra-funcs/body))
 
 (eye-set-leader-key global-map)
+
+(if is-terminal
+    (eye-define-leader-key global-map " TAB" 'mode-line-other-buffer)
+  (eye-define-leader-key global-map " <tab>" 'mode-line-other-buffer))
 
 
 
