@@ -1,3 +1,37 @@
+(eye--reset-time)
+
+(defun eye/create-ctags-file ()
+  "Create ctags file"
+  (interactive)
+  ;; ctags必须加-e选项，否则counsel-xxx-find-tag-xx无法识别其中的tagname
+  (let ((tags-dir (ido-read-directory-name "TAGS DIR:"))
+	(command "find %s \( -iwholename \"*.h\" -or -iwholename \"*.cpp\" \) -print | ctags -e -f %sTAGS -V -R -L -"))
+    (setq command (format command tags-dir tags-dir))
+    (message command)
+    (async-shell-command command)
+    ))
+
+(defun eye/update-ctags-this-file ()
+  "Update current file tags"
+  (interactive)
+  (let ((tags-path (locate-dominating-file default-directory "TAGS"))
+	(command)
+	(proc))
+    (when tags-path
+      (setq tags-path (expand-file-name "TAGS" tags-path))
+      (setq command (format "ctags -e -a -f %s %s" tags-path (buffer-name))) ;; -a means append
+      (message (concat "command:" command))
+      (async-shell-command command)
+      (delete-other-windows))))
+
+
+;; Setup auto update now
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook 'eye/update-ctags-this-file)))
+
+
+;;;; counsel-etags
 (require 'counsel-etags)
 ;; Don't ask before rereading the TAGS files if they have changed
 (setq tags-revert-without-query t)
@@ -8,11 +42,9 @@
   (setq counsel-etags-tags-program "xargs etags --append") ;调用命令类似 find .... -print | xargs etags --append, etags没有递归的参数
   )
 
-;; Setup auto update now
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (add-hook 'after-save-hook
-                      'counsel-etags-virtual-update-tags 'append 'local)))
+;; 是否开启输出命令
+(setq counsel-etags-debug nil)
+
 
 (with-eval-after-load 'counsel-etags
   ;; counsel-etags-ignore-directories does NOT support wildcast
@@ -53,15 +85,10 @@
   (add-to-list 'counsel-etags-ignore-filenames "*.exp")
   )
 
-(defun eye/create-ctags-file ()
-  "Create ctags file"
-  (interactive)
-  (let ((command (read-string "command: " "ctags -V -R")))
-    (async-shell-command command)
-    ))
-
-;; You can change callback counsel-etags-update-tags-backend to update tags file using your own solution,
-;;(setq counsel-etags-update-tags-backend (lambda () (shell-command "find . -type f -iname \"*.[ch]\" | etags -")))
 
 
-(provide 'init-tags)
+(eye--print-time "init-counsel-etags)
+
+
+
+(provide 'init-counsel-etags)

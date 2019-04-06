@@ -320,9 +320,23 @@
 
 
 
-
 (eye-set-leader-key c++-mode-map)
 
+(require 'init-counsel-etags)
+(defhydra hydra-ctags (:exit t)
+  "
+_f_:Find tag at point   _t_:Find other tag   _r_:Open recent tag
+_a_:List all tag        _c_:Create tags
+"
+  ("SPC" nil)
+  ("f" counsel-etags-find-tag-at-point nil)
+  ("t" counsel-etags-find-tag nil)
+  ("r" counsel-etags-recent-tag nil)
+  ("a" counsel-etags-list-tag nil)
+  ("c" eye/create-ctags-file nil))
+
+
+(eye-define-leader-key c++-mode-map "m" 'hydra-ctags/body)
 
 
 (eye--print-time "init-cpp")
