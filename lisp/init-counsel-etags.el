@@ -87,7 +87,7 @@
 
 
 
-(eye--print-time "init-counsel-etags)
+(eye--print-time "init-counsel-etags")
 
 
 
