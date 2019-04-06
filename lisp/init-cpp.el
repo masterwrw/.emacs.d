@@ -3,8 +3,8 @@
 (require 'cc-mode)
 
 ;; show current function name
-(if (fboundp 'set-header-line)
-    (add-hook 'c++-mode-hook 'set-header-line))
+;; (if (fboundp 'set-header-line)
+    ;; (add-hook 'c++-mode-hook 'set-header-line))
 
 ;; (add-hook 'c++-mode-hook 'yas-minor-mode)
 ;; (add-hook 'c-mode-hook 'yas-minor-mode)

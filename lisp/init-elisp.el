@@ -45,10 +45,6 @@
   ("SPC" keyboard-quit "quit" :exit t))
 
 
-;; show current function name
-(if (fboundp 'set-header-line)
-    (add-hook 'emacs-lisp-mode-hook 'set-header-line))
-
 
 (eye-set-leader-key emacs-lisp-mode-map)
 (eye-set-leader-key lisp-interaction-mode-map)
