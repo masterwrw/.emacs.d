@@ -69,3 +69,12 @@ git clone https://github.com/dajva/rg.el.git rg
 git clone https://github.com/bbatsov/solarized-emacs.git
 git clone https://github.com/jordonbiondo/ample-theme.git
 git clone https://github.com/skeeto/elfeed.git
+git clone https://gitlab.com/bennya/shrink-path.el.git shrink-path
+git clone https://github.com/thierryvolpiatto/eldoc-eval.git
+git clone https://github.com/skeeto/emacs-memoize.git
+git clone https://github.com/domtronn/all-the-icons.el.git all-the-icons
+git clone https://github.com/seagle0128/doom-modeline.git
+git clone https://github.com/hlissner/emacs-hide-mode-line.git
+git clone https://github.com/hlissner/emacs-doom-themes.git
+git clone https://github.com/hlissner/emacs-solaire-mode.git
+git clone https://github.com/cute-jumper/avy-zap.git

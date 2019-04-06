@@ -113,7 +113,7 @@
 
 
 
-(when is-gui (require 'init-theme))
+;;(when is-gui (require 'init-theme))
 
 ;;;; idle require other packages
 (setq is-load-packages t)
@@ -126,6 +126,7 @@
   (require 'idle-require)
   (setq idle-require-idle-delay 1.0)
 
+  (when is-gui (idle-require 'init-doom))
   (idle-require 'init-font)
   (idle-require 'which-key)
   (with-eval-after-load 'which-key (which-key-mode))
@@ -143,8 +144,7 @@
   (idle-require 'init-counsel-etags)
   (idle-require 'init-company)
   (idle-require 'init-external)
-
-  (when is-linux (idle-require 'init-magit))  
+  (when is-linux (idle-require 'init-magit))
 
   (idle-require-mode 1) ;; starts loading
   )

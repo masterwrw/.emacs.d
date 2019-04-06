@@ -90,6 +90,11 @@
 (setq track-eol t)                      ; Keep cursor at end of lines. Require line-move-visual is nil.
 (setq line-move-visual nil)
 
+
+;; display the real names on mode-line when visiting a symbolink
+(setq find-file-visit-truename t)
+
+
 ;; 全屏
 (defun fullscreen ()
   "Fullscreen."
