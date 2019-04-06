@@ -59,7 +59,12 @@
 ;; Show modeline information on top header
 ;; (setq-default header-line-format mode-line-format) ; Copy mode-line
 ;; (setq-default mode-line-format nil) ; Remove mode-line
-(set-face-attribute 'header-line nil :background "white" :foreground "black")
+;;(set-face-attribute 'header-line nil :background "white" :foreground "black")
+
+(which-function-mode)
+(defun set-header-line ()
+  (setq header-line-format
+        '((which-function-mode ("" which-func-format " ")))))
 
 
 
