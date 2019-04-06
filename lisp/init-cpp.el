@@ -319,24 +319,36 @@
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
 
-
 (eye-set-leader-key c++-mode-map)
 
-(require 'init-counsel-etags)
-(defhydra hydra-ctags (:exit t)
-  "
+;;;; ctags for cpp
+(with-eval-after-load 'init-counsel-etags
+  (defhydra hydra-ctags (:exit t)
+    "
 _f_:Find tag at point   _t_:Find other tag   _r_:Open recent tag
 _a_:List all tag        _c_:Create tags
 "
-  ("SPC" nil)
-  ("f" counsel-etags-find-tag-at-point nil)
-  ("t" counsel-etags-find-tag nil)
-  ("r" counsel-etags-recent-tag nil)
-  ("a" counsel-etags-list-tag nil)
-  ("c" eye/create-ctags-file nil))
+    ("SPC" nil)
+    ("f" counsel-etags-find-tag-at-point nil)
+    ("t" counsel-etags-find-tag nil)
+    ("r" counsel-etags-recent-tag nil)
+    ("a" counsel-etags-list-tag nil)
+    ("c" eye/create-ctags-file nil))
+
+  (eye-define-leader-key c++-mode-map "m" 'hydra-ctags/body)
+  )
 
 
-(eye-define-leader-key c++-mode-map "m" 'hydra-ctags/body)
+;;;; company for cpp
+(with-eval-after-load 'init-company
+  (require 'company-c-headers)
+  (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
+  (when is-windows
+    (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
+					  "C:/Program Files (x86)/Microsoft SDKs/Windows\v7.1A/Include")))
+  )
+
+
 
 
 (eye--print-time "init-cpp")

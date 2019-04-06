@@ -139,6 +139,8 @@
   (idle-require 'init-elisp)
   (idle-require 'init-orgmode)
   (idle-require 'init-cpp)
+  (idle-require 'init-counsel-etags)
+  (idle-require 'init-company)
   (idle-require 'init-external)
 
   (when is-linux (idle-require 'init-magit))  
