@@ -1,19 +1,41 @@
 ;;;; History
 (eye--reset-time)
-(require 'saveplace)
-(save-place-mode 1)
-(eye--print-time "require saveplace")
 
-(eye--reset-time)
+(require 'saveplace)
+
+
 (require 'recentf)
-(recentf-mode 1)
 (setq recentf-max-saved-items 200)
 ;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
 (add-to-list 'recentf-exclude ".cache")
 (add-to-list 'recentf-exclude ".cask")
 (add-to-list 'recentf-exclude "bookmarks")
 (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
-(eye--print-time "require recentf")
+
+
+;; save minibuffer history
+(require 'savehist)
+(setq enable-recursive-minibuffers t ; Allow commands in minibuffers
+      history-length 100
+      savehist-additional-variables '(mark-ring
+                                      global-mark-ring
+                                      search-ring
+                                      regexp-search-ring
+                                      extended-command-history)
+      savehist-autosave-interval nil ;;不开启自动保存，否则会不断的分配内存
+      )
+
+
+;; for quick startup
+(add-hook 'after-init-hook
+	  (lambda ()
+	    (save-place-mode 1)
+	    (recentf-mode 1)
+	    (savehist-mode 1)))
+
+
+
+(eye--print-time "init-history")
 
 
 (provide 'init-history)

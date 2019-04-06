@@ -10,20 +10,6 @@
 (setq super-save-remote-files nil)
 
 
-;; save minibuffer history
-(require 'savehist)
-(add-hook 'after-init-hook 'savehist-mode)
-(setq enable-recursive-minibuffers t ; Allow commands in minibuffers
-      history-length 100
-      savehist-additional-variables '(mark-ring
-                                      global-mark-ring
-                                      search-ring
-                                      regexp-search-ring
-                                      extended-command-history)
-      savehist-autosave-interval nil ;;不开启自动保存，否则会不断的分配内存
-      )
-
-
 (require 'youdao-dictionary)
 
 (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
