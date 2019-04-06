@@ -94,7 +94,6 @@
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
-(fullscreen)
 
 ;; 最大化
 (defun maximize-frame ()
@@ -104,6 +103,10 @@
   ;; `SC_MAXIMIZE' parameter.
   (when is-windows
     (w32-send-sys-command 61488)))
+
+
+
+(maximize-frame)
 
 
 
