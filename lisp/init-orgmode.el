@@ -53,6 +53,11 @@
                         '(("^ +\\([-*]\\) "
                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+;; Speed keys, @see https://orgmode.org/manual/Speed-keys.html
+;; quick navigation when cursor is on a headline (before any of the stars)
+;; ?:for help, n/p/f/b...
+(setq org-use-speed-commands t)
+
 (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
 ;; Exported to HTML
