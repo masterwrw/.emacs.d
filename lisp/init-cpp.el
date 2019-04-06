@@ -2,6 +2,12 @@
 
 (require 'cc-mode)
 
+;; outline fold
+(add-hook 'c++-mode-hook
+	  (lambda ()
+	    (outline-minor-mode 1)
+	    (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")))
+
 ;; show current function name
 ;; (if (fboundp 'set-header-line)
     ;; (add-hook 'c++-mode-hook 'set-header-line))

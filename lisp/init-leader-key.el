@@ -163,11 +163,19 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
 
 
 ;;;; outline
-(defhydra hydra-outline (:exit t :idle 1.0)
-  ("s" outline-show-entry)
-  ("h" outline-hide-entry)
-  ("b" outline-hide-body)
-  ("a" outline-show-all))
+(defhydra hydra-outline ()
+  "
+    _s_: outline show entry    _a_: outline show all    _n_: outline next heading      _t_: toggle children
+    _h_: outline hide entry    _b_: outline hide body   _p_: outline previous heading
+"
+  ("SPC" nil "quit")
+  ("s" outline-show-entry nil)
+  ("h" outline-hide-entry nil)
+  ("a" outline-show-all nil)
+  ("b" outline-hide-body nil)
+  ("n" outline-next-heading nil)
+  ("p" outline-previous-heading nil)
+  ("t" outline-toggle-children nil))
 
 ;;;; imenu
 (defhydra hydra-imenu (:exit t :idle 1.0)
