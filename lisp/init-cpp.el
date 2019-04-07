@@ -1,6 +1,6 @@
 (eye--reset-time)
 
-(require 'cc-mode)
+;;(require 'cc-mode)
 
 ;; outline fold
 (add-hook 'c++-mode-hook
@@ -15,19 +15,6 @@
 ;; (add-hook 'c++-mode-hook 'yas-minor-mode)
 ;; (add-hook 'c-mode-hook 'yas-minor-mode)
 
-(define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
-(define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
-
-
-(defun set-tab-width-hook ()
-  (setq indent-tabs-mode nil)
-  (setq default-tab-width 4)
-  (setq tab-width 4)
-  (setq c-basic-offset 4) ;; tab 缩进量
-  (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
-  (setq tab-stop-list ()))
-(add-hook 'c-mode-hook 'set-tab-width-hook)
-(add-hook 'c++-mode-hook 'set-tab-width-hook)
 
 (defun eye/find-corresponding-file ()
   "Find the file that corresponds to this one."
@@ -115,14 +102,16 @@
     (f-write script 'gbk file)
     ))
 
-(require 'compile)
-(setq compilation-directory-locked nil)
+(with-eval-after-load 'compile
+  ;;(require 'compile)
+  (setq compilation-directory-locked nil)
 
-;; Compilation
-(setq compilation-context-lines 0)
-(setq compilation-error-regexp-alist
-      (cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
-            compilation-error-regexp-alist))
+  ;; Compilation
+  (setq compilation-context-lines 0)
+  (setq compilation-error-regexp-alist
+	(cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
+              compilation-error-regexp-alist))
+  )
 
 (defun find-project-directory-recursive (x)
   "Recursively search for a makefile."
@@ -212,10 +201,10 @@
   (switch-to-buffer-other-window "*compilation*")
   (other-window 1))
 
-(define-key c++-mode-map (kbd "<f5>") 'make-without-asking)
 
-(require 'smart-compile)
-(setq smart-compile-option-string "-w -s -j4")
+;;(require 'smart-compile)
+(with-eval-after-load 'smart-compile
+  (setq smart-compile-option-string "-w -s -j4"))
 
 (defun eye/cpp-help ()
   "Find cpp reference document."
@@ -230,25 +219,6 @@
   (eye/shell-cmd "shell-cmake" (concat "C:\\green-soft\\git\\bin;"
                                        "C:\\green-soft\\cmake-3.11.0-rc4-win64-x64\\bin;"
                                        )))
-
-
-;;;; auto insert
-(require 'autoinsert)
-(define-auto-insert '(c++-mode . "C++ skeleton")
-  '(
-    (upcase (concat "_"
-                    (replace-regexp-in-string
-                     "[^A-Za-z0-9]" "_"
-                     (file-name-nondirectory buffer-file-name))))
-    "/*******************************************************************************" \n
-    "Copyright: WRW.Tec" \n
-    "Author: WRW" \n
-    "Description: " \n
-    "*******************************************************************************/" \n
-    "#ifndef " str \n "#define " str "\n\n\n"
-    "#endif"
-    ))
-
 
 
 (defun eye/create-class ()
@@ -328,30 +298,50 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
+(defun eye-setup-c++ ()
+  ;;(require 'autoinsert)
+  (define-auto-insert '(c++-mode . "C++ skeleton")
+    '(
+      (upcase (concat "_"
+                      (replace-regexp-in-string
+                       "[^A-Za-z0-9]" "_"
+                       (file-name-nondirectory buffer-file-name))))
+      "/*******************************************************************************" \n
+      "Copyright: WRW.Tec" \n
+      "Author: WRW" \n
+      "Description: " \n
+      "*******************************************************************************/" \n
+      "#ifndef " str \n "#define " str "\n\n\n"
+      "#endif"
+      ))
 
-(eye-set-leader-key c++-mode-map)
+  (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
+  (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
+  (define-key c++-mode-map (kbd "<f5>") 'make-without-asking)
 
-;;;; ctags for cpp
-(with-eval-after-load 'init-counsel-etags
-  (defhydra hydra-ctags (:exit t)
-    "
-_f_:Find tag at point   _t_:Find other tag   _r_:Open recent tag
-_a_:List all tag        _c_:Create tags
-"
-    ("SPC" nil)
-    ("f" counsel-etags-find-tag-at-point nil)
-    ("t" counsel-etags-find-tag nil)
-    ("r" counsel-etags-recent-tag nil)
-    ("a" counsel-etags-list-tag nil)
-    ("c" eye/create-ctags-file nil))
+  (defun set-tab-width-hook ()
+    (setq indent-tabs-mode nil)
+    (setq default-tab-width 4)
+    (setq tab-width 4)
+    (setq c-basic-offset 4) ;; tab 缩进量
+    (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
+    (setq tab-stop-list ()))
+  (add-hook 'c-mode-hook 'set-tab-width-hook)
+  (add-hook 'c++-mode-hook 'set-tab-width-hook)
 
+  )
+
+
+(with-eval-after-load 'cc-mode ;can't use c++-mode
+  (eye-setup-c++)
+  (eye-set-leader-key c++-mode-map)
   (eye-define-leader-key c++-mode-map "m" 'hydra-ctags/body)
   )
 
 
 ;;;; company for cpp
-(with-eval-after-load 'init-company
-  (require 'company-c-headers)
+(with-eval-after-load 'company-c-headers
+  ;;(require 'company-c-headers)
   (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
   (when is-windows
     (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"

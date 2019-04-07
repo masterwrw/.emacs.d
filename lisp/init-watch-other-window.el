@@ -1,4 +1,9 @@
-(require 'watch-other-window)
+;;(require 'watch-other-window)
+
+(autoload 'watch-other-window-up "watch-other-window" "" t)
+(autoload 'watch-other-window-down "watch-other-window" "" t)
+(autoload 'watch-other-window-up-line "watch-other-window" "" t)
+(autoload 'watch-other-window-down-line "watch-other-window" "" t)
 
 (defhydra hydra-watch-other ()
   ("SPC" nil "quit")

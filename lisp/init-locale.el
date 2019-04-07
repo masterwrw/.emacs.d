@@ -35,6 +35,7 @@
   (setq locale-system-tags-paths nil))
 
 
+(defvar locale-cpp-project-tags nil)
 
 (defun eye/open-goals-file ()
   (interactive)

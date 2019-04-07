@@ -1,6 +1,6 @@
 (eye--reset-time)
 
-(require 'rg)
+;;(require 'rg)
 
 
 (defhydra+ hydra-search (:idle 1.0)

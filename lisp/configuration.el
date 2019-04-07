@@ -108,30 +108,29 @@
 ;;;; idle require other packages
 (setq is-load-packages t)
 (when is-load-packages
-  (require 'idle-require)
-  (setq idle-require-idle-delay 1.0)
-
-  (when is-gui (idle-require 'init-doom))
-  (idle-require 'init-font)
-  (idle-require 'which-key)
+  ;; (require 'idle-require)
+  ;; (setq idle-require-idle-delay 1.0)
+  
+  (when is-gui (require 'init-doom))
+  (require 'init-font)
+  (require 'which-key)
   (with-eval-after-load 'which-key (which-key-mode))
-  (idle-require 'init-avy)
-  (idle-require 'init-avy-zap)
-  (idle-require 'init-ace-jump)
-  (idle-require 'init-idomenu)
-  (idle-require 'init-ivy)
-  (idle-require 'init-web-search)
-  (idle-require 'init-watch-other-window)
-  (idle-require 'init-rg)
-  (idle-require 'init-elisp)
-  (idle-require 'init-orgmode)
-  (idle-require 'init-cpp)
-  (idle-require 'init-counsel-etags)
-  (idle-require 'init-company)
-  (idle-require 'init-external)
-  (when is-linux (idle-require 'init-magit))
-
-  (idle-require-mode 1) ;; starts loading
+  (require 'init-avy)
+  (require 'init-avy-zap)
+  (require 'init-ace-jump)
+  (require 'init-idomenu)
+  (require 'init-ivy)
+  (require 'init-web-search)
+  (require 'init-watch-other-window)
+  (require 'init-rg)
+  (require 'init-elisp)
+  (require 'init-orgmode)
+  (require 'init-cpp)
+  (require 'init-counsel-etags)
+  (require 'init-company)
+  (require 'init-external)
+  (when is-linux (require 'init-magit))
+  ;; (idle-require-mode 1) ;; starts loading
   )
 
 

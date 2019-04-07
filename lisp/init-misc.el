@@ -119,12 +119,11 @@
     (w32-send-sys-command 61488)))
 
 
-
-(maximize-frame)
-
-
 (defhydra+ hydra-funcs (:idle 1.0)
   ("f" fullscreen-toggle "Fullscreen toggle" :exit t))
+
+
+(add-hook 'after-init-hook 'maximize-frame)
 
 
 (provide 'init-misc)

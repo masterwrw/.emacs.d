@@ -1,8 +1,8 @@
 (eye--reset-time)
 
-(require 'ivy)
-(require 'counsel)
-(require 'swiper)
+;; (require 'ivy)
+;; (require 'counsel)
+;; (require 'swiper)
 
 (defhydra+ hydra-help (:exit t :idle 1.0)
   ("v" counsel-describe-variable "Desc var")
@@ -25,7 +25,7 @@
 
 
 (defhydra+ hydra-imenu (:exit t :idle 1.0)
-  ("c" counsel-semantic-or-imenu "counsel imenu"))
+  ("c" counsel-imenu "counsel imenu")) ;counsel-semantic-or-imenu is not autoload function, use counsel-imenu
 
 
 (eye-define-key global-map "M-y" 'counsel-yank-pop)

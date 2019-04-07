@@ -40,20 +40,21 @@
 
 
 ;;;; auto insert
-(require 'autoinsert)
-(define-auto-insert '(emacs-lisp-mode . "Elisp skeleton")
-  '(
-    (read-string "Describe:")
-    ";;; " (file-name-nondirectory buffer-file-name) " --- " str " -*- lexical-binding: t -*-" \n
-    ";;"\n
-    \n
-    \n
-    \n
-    \n
-    \n
-    \n
-    ";;; " (file-name-nondirectory buffer-file-name) " ends here"
-    ))
+(with-eval-after-load 'emacs-lisp-mode
+  (define-auto-insert '(emacs-lisp-mode . "Elisp skeleton")
+    '(
+      (read-string "Describe:")
+      ";;; " (file-name-nondirectory buffer-file-name) " --- " str " -*- lexical-binding: t -*-" \n
+      ";;"\n
+      \n
+      \n
+      \n
+      \n
+      \n
+      \n
+      ";;; " (file-name-nondirectory buffer-file-name) " ends here"
+      ))
+  )
 
 
 
