@@ -63,16 +63,6 @@
 	      (float-time begin-time))
 	   msg)))
 
-(defun add-subdirs-to-load-path (dir)
-  "Recursive add directories to `load-path'."
-  (let ((default-directory (file-name-as-directory dir)))
-    (add-to-list 'load-path dir)
-    (normal-top-level-add-subdirs-to-load-path)))
-
-;; (add-subdirs-to-load-path "~/packages/") ;; all site packages don't put to .emacs.d
-;; (add-subdirs-to-load-path (concat user-emacs-directory "lisp/"))
-(add-to-list 'load-path (concat user-emacs-directory "lisp"))
-
 
 (setq custom-file (concat user-emacs-directory "custom.el"))
 ;;(load custom-file)
@@ -89,8 +79,8 @@
 (setq is-gui (display-graphic-p))
 (setq is-terminal (not (display-graphic-p)))
 
-
 ;;;; basic configuration
+(require 'init-packages)
 (require 'init-leader-key)
 (require 'init-misc)
 (require 'init-history)
@@ -118,11 +108,6 @@
 ;;;; idle require other packages
 (setq is-load-packages t)
 (when is-load-packages
-  (eye--reset-time)
-  (add-subdirs-to-load-path "~/packages/") ;; all site packages don't put to .emacs.d
-  (add-subdirs-to-load-path (concat user-emacs-directory "lisp/"))
-  (eye--print-time "add packages path")
-
   (require 'idle-require)
   (setq idle-require-idle-delay 1.0)
 
