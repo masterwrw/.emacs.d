@@ -39,6 +39,24 @@
 	    ))
 
 
+;;;; auto insert
+(require 'autoinsert)
+(define-auto-insert '(emacs-lisp-mode . "Elisp skeleton")
+  '(
+    (read-string "Describe:")
+    ";;; " (file-name-nondirectory buffer-file-name) " --- " str " -*- lexical-binding: t -*-" \n
+    ";;"\n
+    \n
+    \n
+    \n
+    \n
+    \n
+    \n
+    ";;; " (file-name-nondirectory buffer-file-name) " ends here"
+    ))
+
+
+
 (defhydra hydra-elisp ()
   ("x" eval-last-sexp "Eval last" :exit t)
   ("i" imenu "imenu" :exit t)
