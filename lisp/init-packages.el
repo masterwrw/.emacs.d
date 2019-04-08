@@ -65,6 +65,16 @@ git-bash进入包目录后执行
 ;;3.generate autoload file
 ;;(update-directory-autoloads "~/packages/youdao-dictionary")
 ;;(update-directory-autoloads "~/packages/writeroom-mode")
+(defun eye/package-update-autoload ()
+  (interactive)
+  (let ((name (read-string "package name:"))
+	path)
+    (when name
+      (setq path (concat eye-packages-dir "/" name))
+      (if (f-dir-p path)
+	  (message "Update autoloads: %s" name)
+	  (update-directory-autoloads path)))))
+
 ;; traverse dir @see http://ergoemacs.org/emacs/elisp_traverse_dir.html
 (defun eye/package-update-autoload-all ()
   (interactive)
