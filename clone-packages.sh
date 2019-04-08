@@ -78,3 +78,4 @@ git clone https://github.com/hlissner/emacs-hide-mode-line.git
 git clone https://github.com/hlissner/emacs-doom-themes.git
 git clone https://github.com/hlissner/emacs-solaire-mode.git
 git clone https://github.com/cute-jumper/avy-zap.git
+wget -O~/packages/find-file-in-tags/find-file-in-tags.el http://www.emacswiki.org/emacs/download/find-file-in-tags.el
