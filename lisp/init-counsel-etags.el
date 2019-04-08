@@ -1,7 +1,6 @@
+(require-maybe 'counsel-etags)
 
 (with-eval-after-load 'counsel-etags
-;;;; counsel-etags
-  ;;(require 'counsel-etags)
   ;; Don't ask before rereading the TAGS files if they have changed
   (setq tags-revert-without-query t)
   ;; Don't warn when TAGS files are large

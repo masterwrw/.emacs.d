@@ -4,6 +4,7 @@
 (defvar eye-packages-dir (expand-file-name "packages" "~")
   "All packages main directory.")
 
+
 (add-to-list 'load-path (expand-file-name "dash" eye-packages-dir))
 (add-to-list 'load-path (expand-file-name "s" eye-packages-dir))
 (add-to-list 'load-path (expand-file-name "f" eye-packages-dir))
@@ -125,6 +126,9 @@ git-bash进入包目录后执行
 ;; autoload file
 (setq generated-autoload-file (expand-file-name "autoload.pkg.el" eye-packages-dir))
 
+(defvar autoload-file-exist (file-exists-p generated-autoload-file))
+(defun require-maybe (feature)
+  (unless autoload-file-exist (require feature)))
 
 ;;; require autoload.pkg file
 ;; 1.由于一些包中有eval-when-compile代码，生成的autoload文件中有require其它包，必须先添加到load-path
@@ -139,7 +143,7 @@ git-bash进入包目录后执行
 ;; (eye--reset-time)
 (setq test-time (current-time))
 
-(when (file-exists-p generated-autoload-file)
+(when autoload-file-exist
   (require 'autoload.pkg generated-autoload-file))
 
 (message

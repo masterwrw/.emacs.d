@@ -1,4 +1,4 @@
-(require 'imenu)
+(require-maybe 'imenu)
 
 (defhydra hydra-imenu (:exit t :idle 1.0)
   ("i" imenu))

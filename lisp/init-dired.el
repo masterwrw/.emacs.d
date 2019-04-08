@@ -1,4 +1,4 @@
-(require 'dired)
+(require-maybe 'dired)
 
 (defhydra+ hydra-file (:exit t :idle 1.0)
   ("d" dired-jump "Dired"))

@@ -1,6 +1,6 @@
-;; (require 'ivy)
-;; (require 'counsel)
-;; (require 'swiper)
+(require-maybe 'ivy)
+(require-maybe 'counsel)
+(require-maybe 'swiper)
 
 (defhydra+ hydra-help (:exit t :idle 1.0)
   ("v" counsel-describe-variable "Desc var")

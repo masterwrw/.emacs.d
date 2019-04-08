@@ -1,6 +1,6 @@
 (add-to-list 'load-path "~/packages/dash")
 (add-to-list 'load-path "~/packages/solarized-emacs")
-(require 'solarized)
+(require-maybe 'solarized)
 ;; make the modeline high contrast
 (setq solarized-high-contrast-mode-line t)
 ;; Use less bolding

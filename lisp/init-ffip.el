@@ -24,10 +24,7 @@
 
 ;;; Code:
 
-
-
-(provide 'init-ffip)
-;;; init-ffip.el ends here
+(require-maybe 'find-file-in-project)
 
 ;; Windows平台必须设置，否则执行ffip会直占用CPU。
 (when is-windows (setq ffip-find-executable "find"))

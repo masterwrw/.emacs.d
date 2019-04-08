@@ -20,11 +20,11 @@
 ;; (eh-hack-load-path)
 ;; (add-to-list 'load-path (expand-file-name "modules/org-9.2.2/lisp" user-emacs-directory))
 
-;;(require 'org)
+(require-maybe 'org)
+(require-maybe 'helm-org)
 
 ;;;; org
 (defun eye-setup-orgmode ()
-  ;;(require 'helm-org)
   (setq org-ellipsis " ")
   (setq org-src-fontify-natively nil) ;; 代码块内语法高亮
   (setq org-src-tab-acts-natively t)
@@ -55,7 +55,7 @@
   (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
   ;; Exported to HTML
-  ;;(require 'htmlize)
+  (require-maybe 'htmlize)
 
 
   ;; Line wrapping
@@ -103,7 +103,7 @@
 
   ;; Advise set auto-save-default to nil
   (with-eval-after-load 'org-crypt
-    ;;(require 'org-crypt)
+    (require-maybe 'org-crypt)
     (org-crypt-use-before-save-magic)
     (setq org-tags-exclude-from-inheritance (quote("crypt")))
     (setq org-crypt-key nil)
@@ -111,7 +111,7 @@
     )
 
   ;; password generator
-  ;;(require 'password-generator)
+  (require-maybe 'password-generator)
 
   (defun eye/open-password-file ()
     "Open my password manager file"
@@ -119,14 +119,13 @@
     (find-file locale-password-file))
 
 ;;;; gtd
-  ;;(require 'org-agenda)
-  ;;(require 'org-capture)
-  ;;(require 'find-lisp)
+  (require-maybe 'org-agenda)
+  (require-maybe 'org-capture)
+  (require-maybe 'find-lisp)
 
   ;; for task more times repeat a week.
   ;; @see https://stackoverflow.com/questions/8751287/weekly-repeating-tasks-emacs-org-mode
-  ;;(require 'org)
-  ;;(require 'org-install)
+  (require-maybe 'org-install)
   (add-to-list 'org-modules 'org-habit)
 
   ;; System locale to use for formatting time values.
@@ -170,8 +169,7 @@
   ;;                       ;; ("FIELD" . ?f)
   ;;                       ("READING" . ?r))) ;; reading
 
-  ;;(require 'org-protocol)
-  ;;(require 'base-toolkit)
+  (require-maybe 'org-protocol)
 
   (defun transform-square-brackets-to-round-ones(string-to-transform)
     "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -309,7 +307,7 @@
 
 
 ;;;; Notebook
-  ;;(require 'org-attach)
+  (require-maybe 'org-attach)
   (add-to-list 'org-modules 'org-attach)
   (setq org-attach-directory locale-notebook-attachment-dir)
 
@@ -344,7 +342,6 @@
   (defun eye/notes-create-attachment ()
     "创建文件对应的附件文件夹"
     (interactive)
-    (require 'f)
     (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
 	   (dir (concat locale-notebook-attachment-dir "/" name)))
       (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录

@@ -1,4 +1,5 @@
-;;(require 'magit)
+(require-maybe 'magit)
+
 (with-eval-after-load 'magit  
   (setq magit-push-always-verify nil)
   (setq git-commit-summary-max-length 80)

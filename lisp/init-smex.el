@@ -1,5 +1,5 @@
 (add-to-list 'load-path "~/packages/smex")
-(require 'smex)
+(require-maybe 'smex)
 
 ;; modify smex so that typing a space will insert a hyphen ‘-’ like in normal M-x
 ;; @see https://www.emacswiki.org/emacs/Smex

@@ -1,5 +1,4 @@
 ;;;; Backup
-;;(require 'f)
 (defvar user-cache-directory "~/tmp/emacs_cache")
 (file-exists-p user-cache-directory)
 (unless (file-exists-p "~/tmp")

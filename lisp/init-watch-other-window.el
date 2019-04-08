@@ -1,4 +1,4 @@
-;;(require 'watch-other-window)
+(require-maybe 'watch-other-window)
 
 (autoload 'watch-other-window-up "watch-other-window" "" t)
 (autoload 'watch-other-window-down "watch-other-window" "" t)

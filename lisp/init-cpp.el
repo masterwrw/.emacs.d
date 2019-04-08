@@ -1,4 +1,4 @@
-;;(require 'cc-mode)
+(require-maybe 'cc-mode)
 
 ;; outline fold
 (add-hook 'c++-mode-hook
@@ -100,8 +100,8 @@
     (f-write script 'gbk file)
     ))
 
+(require-maybe 'compile)
 (with-eval-after-load 'compile
-  ;;(require 'compile)
   (setq compilation-directory-locked nil)
 
   ;; Compilation
@@ -200,7 +200,7 @@
   (other-window 1))
 
 
-;;(require 'smart-compile)
+(require-maybe 'smart-compile)
 (with-eval-after-load 'smart-compile
   (setq smart-compile-option-string "-w -s -j4"))
 
@@ -277,8 +277,8 @@
 ;; Move cursor on variable name, call srefactor-refactor-at-point
 ;;
 
-;; (require 'srefactor)
-;; (require 'srefactor-lisp)
+;; (require-maybe 'srefactor)
+;; (require-maybe 'srefactor-lisp)
 ;; (setq srefactor-ui-menu-show-help nil)
 
 ;; (setq semantic-idle-scheduler-idle-time 3)
@@ -296,8 +296,8 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
+(require-maybe 'autoinsert)
 (defun eye-setup-c++ ()
-  ;;(require 'autoinsert)
   (define-auto-insert '(c++-mode . "C++ skeleton")
     '(
       (upcase (concat "_"
@@ -338,8 +338,8 @@
 
 
 ;;;; company for cpp
+(require-maybe 'company-c-headers)
 (with-eval-after-load 'company-c-headers
-  ;;(require 'company-c-headers)
   (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
   (when is-windows
     (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"

@@ -1,5 +1,4 @@
 ;;;; imenu
-;;(require 'idomenu)
 (autoload 'idomenu "idomenu" "" t)
 
 (defhydra+ hydra-imenu (:exit t :idle 1.0)
