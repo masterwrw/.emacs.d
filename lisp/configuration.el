@@ -63,12 +63,6 @@
 	      (float-time begin-time))
 	   msg)))
 
-
-(setq custom-file (concat user-emacs-directory "custom.el"))
-;;(load custom-file)
-
-;;(setq default-directory user-emacs-directory)
-
 ;;;; system env
 (setq is-windows (or
 		  (eq system-type 'windows-nt)
@@ -79,10 +73,18 @@
 (setq is-gui (display-graphic-p))
 (setq is-terminal (not (display-graphic-p)))
 
+;; 使用 emacsclient 需要先启动服务
+(add-hook 'after-init-hook
+          (lambda ()
+            (require 'server)
+            (unless (server-running-p)
+	      (server-start))))
+
 ;;;; basic configuration
 (require 'init-packages)
 (require 'init-leader-key)
 (require 'init-misc)
+(require 'init-font)
 (require 'init-history)
 (require 'init-backup)
 (require 'init-encoding)
@@ -93,50 +95,32 @@
 (require 'init-imenu)
 (require 'init-dired)
 (require 'init-locale)
+;;;; site packages
+(require 'which-key)
+(with-eval-after-load 'which-key (which-key-mode))
+(when is-gui (require 'init-theme))
+(when is-gui (require 'init-doom))
+(require 'init-avy)
+(require 'init-avy-zap)
+(require 'init-ace-jump)
+(require 'init-idomenu)
+(require 'init-ivy)
+(require 'init-web-search)
+(require 'init-watch-other-window)
+(require 'init-rg)
+(require 'init-elisp)
+(require 'init-orgmode)
+(require 'init-cpp)
+(require 'init-counsel-etags)
+(require 'init-company)
+(require 'init-external)
+(when is-linux (require 'init-magit))
 
-;; 使用 emacsclient 需要先启动服务
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-	      (server-start))))
-
-
-
-;;(when is-gui (require 'init-theme))
-
-;;;; idle require other packages
-(setq is-load-packages t)
-(when is-load-packages
-  ;; (require 'idle-require)
-  ;; (setq idle-require-idle-delay 1.0)
-  
-  (when is-gui (require 'init-doom))
-  (require 'init-font)
-  (require 'which-key)
-  (with-eval-after-load 'which-key (which-key-mode))
-  (require 'init-avy)
-  (require 'init-avy-zap)
-  (require 'init-ace-jump)
-  (require 'init-idomenu)
-  (require 'init-ivy)
-  (require 'init-web-search)
-  (require 'init-watch-other-window)
-  (require 'init-rg)
-  (require 'init-elisp)
-  (require 'init-orgmode)
-  (require 'init-cpp)
-  (require 'init-counsel-etags)
-  (require 'init-company)
-  (require 'init-external)
-  (when is-linux (require 'init-magit))
-  ;; (idle-require-mode 1) ;; starts loading
-  )
-
-
-
-
-
+;;;; load custom-file
+(setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
+(unless (file-exists-p custom-file)
+  (f-touch custom-file))
+(load custom-file t t)
 
 
 
