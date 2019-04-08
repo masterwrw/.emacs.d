@@ -43,7 +43,10 @@
   (add-to-list 'company-backends 'company-files)
   ;;(add-to-list 'company-backends 'company-css)
 
-  (with-eval-after-load 'counsel-etags (add-to-list 'company-backends 'company-etags))
+  (with-eval-after-load 'cc-mode
+    (add-to-list 'company-backends 'company-etags))
+  (with-eval-after-load 'counsel-etags
+    (add-to-list 'company-backends 'company-etags))
 
   )
 
