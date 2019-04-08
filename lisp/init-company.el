@@ -48,8 +48,8 @@
   (with-eval-after-load 'counsel-etags
     (add-to-list 'company-backends 'company-etags))
 
-  ;; (with-eval-after-load 'emacs-lisp-mode
-  ;;   (add-to-list 'company-backends 'company-emacs-lisp))
+  (with-eval-after-load 'emacs-lisp-mode
+    (add-to-list 'company-backends 'company-elisp))
   )
 
 ;; Support yas in commpany
