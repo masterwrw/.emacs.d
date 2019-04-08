@@ -116,6 +116,7 @@
 (eye-require 'init-elisp "elisp")
 (eye-require 'init-orgmode "orgmode")
 (eye-require 'init-cpp "cpp")
+(eye-require 'init-ctags "ctags")
 (eye-require 'init-counsel-etags "counsel-etags")
 (eye-require 'init-company "company")
 (eye-require 'init-ffit "ffit")

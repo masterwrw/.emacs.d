@@ -33,8 +33,6 @@
   (setq locale-system-tags-paths nil))
 
 
-(defvar locale-cpp-project-tags nil)
-
 (defun eye/open-goals-file ()
   (interactive)
   (find-file-existing (concat locale-gtd-dir "/goals.org")))

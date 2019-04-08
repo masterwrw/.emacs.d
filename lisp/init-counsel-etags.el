@@ -1,43 +1,4 @@
 
-(defun eye/create-ctags-file ()
-  "Create ctags file"
-  (interactive)
-  ;; ctags必须加-e选项，否则counsel-xxx-find-tag-xx无法识别其中的tagname
-  (let ((tags-dir (ido-read-directory-name "TAGS DIR:"))
-	(command "find %s \( -iwholename \"*.h\" -or -iwholename \"*.cpp\" \) -print | ctags -e -f %sTAGS -V -R -L -"))
-    (setq command (format command tags-dir tags-dir))
-    (message command)
-    (async-shell-command command)
-    ))
-
-(defun eye/update-ctags-this-file ()
-  "Update current file tags"
-  (interactive)
-  (let ((tags-path (locate-dominating-file default-directory "TAGS"))
-	(command)
-	(proc))
-    (when tags-path
-      (setq tags-path (expand-file-name "TAGS" tags-path))
-      (setq command (format "ctags -e -a -f %s %s" tags-path (buffer-name))) ;; -a means append
-      (message (concat "command:" command))
-      (async-shell-command command)
-      (delete-other-windows))))
-
-(defun eye-setup-company-etags ()
-  (with-eval-after-load 'company-etags
-    ;; company-etags要么使用当前项目的TAGS，要么使用tags-table-list定义的TAGS文件，所以干脆直接配置tags-table-list
-    (append-to-list 'tags-table-list locale-system-tags-paths)
-
-    (defun eye/load-cpp-project-tags ()
-      "需要先启用counsel-etags后才能使用"
-      (interactive)
-      (append-to-list 'tags-table-list locale-cpp-project-tags))
-    
-    (defhydra+ hydra-ctags (:exit t)
-      ("l" eye/load-cpp-project-tags "load project tags"))
-    
-    ))
-
 (with-eval-after-load 'counsel-etags
 ;;;; counsel-etags
   ;;(require 'counsel-etags)
@@ -53,8 +14,7 @@
   ;; 是否开启输出命令
   (setq counsel-etags-debug nil)
 
-  ;;(append-to-list 'counsel-etags-extra-tags-files locale-system-tags-paths)
-  (eye-setup-company-etags)
+  ;;(append-to-list 'counsel-etags-extra-tags-files locale-system-tags-paths) ;;使counsel-etags能显示系统函数（但无法跳转进入）
   
   ;; Setup auto update now
   (add-hook 'c++-mode-hook
@@ -100,17 +60,17 @@
   )
 
 
-(defhydra hydra-ctags (:exit t)
+(defhydra+ hydra-ctags (:exit t)
   "
-    _f_:Find tag at point   _t_:Find other tag   _r_:Open recent tag
-    _a_:List all tag        _c_:Create tags
+_f_:Find tag at point   _t_:Find other tag   _r_:Open recent tag
+_a_:List all tag        _c_:Create tags
 "
-  ("SPC" nil)
-  ("f" counsel-etags-find-tag-at-point nil)
-  ("t" counsel-etags-find-tag nil)
-  ("r" counsel-etags-recent-tag nil)
-  ("a" counsel-etags-list-tag nil)
-  ("c" eye/create-ctags-file nil))
+  ("SPC" nil "quit")
+  ("f" counsel-etags-find-tag-at-point)
+  ("t" counsel-etags-find-tag)
+  ("r" counsel-etags-recent-tag)
+  ("a" counsel-etags-list-tag)
+  ("c" eye/create-ctags-file))
 
 
 
