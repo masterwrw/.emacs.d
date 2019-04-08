@@ -1,3 +1,6 @@
+(setq user-full-name "owensys")
+(setq user-mail-address "owensys at hotmail dot com")
+
 (setq locale-notebook-dir "~/notebook/org/note")
 (setq locale-notebook-attachment-dir "~/notebook/attach")
 (setq locale-gtd-dir "~/notebook/org/gtd")

@@ -120,6 +120,7 @@
 (eye-require 'init-counsel-etags "counsel-etags")
 (eye-require 'init-company "company")
 (eye-require 'init-ffit "ffit")
+(eye-require 'init-ffit "ffip")
 (eye-require 'init-external "external")
 (when is-linux (eye-require 'init-magit "magit"))
 
