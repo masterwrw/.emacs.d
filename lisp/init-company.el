@@ -8,22 +8,23 @@
   (setq company-show-numbers t)
   (setq company-echo-delay 0)
   (setq company-require-match nil)
-
-  (setq company-dabbrev-code-everywhere t) ;;Non-nil to offer completions in comments and strings.
-  (setq company-dabbrev-minimum-length 3) ;;The minimum length for the completion candidate to be included.
-  (setq company-dabbrev-other-buffers t) ;;If t, 'company-dabbrev' search buffers with the same major mode
-  (setq company-dabbrev-downcase nil)
   ;; make previous/next selection in the popup cycles
   (setq company-selection-wrap-around t)
-
-  (setq company-dabbrev-char-regexp "[\\.0-9a-z-_'/]") ;adjust regexp make `company-dabbrev' search words like `dabbrev-expand'
-  (setq company-dabbrev-code-other-buffers 't) ;If t, search buffers with the same major mode.
-
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
   ;; bigger popup window
   (setq company-tooltip-limit 20)
   ;;(set-face-attribute 'company-tooltip nil :foreground "magenta")
+  
+  (setq company-dabbrev-code-everywhere t) ;;Non-nil to offer completions in comments and strings.
+  (setq company-dabbrev-minimum-length 3) ;;The minimum length for the completion candidate to be included.
+  (setq company-dabbrev-other-buffers t) ;;If t, 'company-dabbrev' search buffers with the same major mode
+  (setq company-dabbrev-downcase nil) ;;是否把候选项前面的字母转为小写
+  (setq company-dabbrev-ignore-case t) ;;使选择后，前面输入的字母也转为正确的大小写
+  (setq company-dabbrev-char-regexp "[\\.0-9a-z-_'/]") ;adjust regexp make `company-dabbrev' search words like `dabbrev-expand'
+
+  (setq company-dabbrev-code-ignore-case t)
+  (setq company-dabbrev-code-other-buffers 't) ;If t, search buffers with the same major mode.
 
   ;; set default backends
   ;; company-dabbrev is for current buffer string auto complete
