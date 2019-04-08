@@ -69,9 +69,9 @@
       (add-to-list 'tags-table-files root-tags-file) ;; for find-file-in-tags
       )))
 
-(eval-after-load 'cc-mode
-  (defhydra hydra-ctags (:exit t)
-  ("l" eye/load-project-root-tags "load root tags")))
+;; (eval-after-load 'cc-mode
+;;   (defhydra hydra-ctags (:exit t)
+;;   ("l" eye/load-project-root-tags "load root tags")))
 
 
 
