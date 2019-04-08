@@ -1,5 +1,4 @@
 ;;;; font
-(eye--reset-time)
 (when is-linux
   (setq en-font-name "DejaVu Sans Mono")
   (setq cn-font-name "YaHei Consolas Hybrid")
@@ -65,7 +64,6 @@
     ("-" eye/decrease-font-size "Font--")))
 
 
-(eye--print-time "init font")
 
 
 (provide 'init-font)

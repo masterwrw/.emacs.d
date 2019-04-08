@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 (setq locale-notebook-dir "~/notebook/org/note")
 (setq locale-notebook-attachment-dir "~/notebook/attach")
 (setq locale-gtd-dir "~/notebook/org/gtd")
@@ -58,8 +56,6 @@
 
 
 
-
-(eye--print-time "load locale")
 
 
 

@@ -1,5 +1,4 @@
 ;;;; orgmode
-(eye--reset-time)
 
 ;; Disable buildin org, https://emacs-china.org/t/topic/3931/3
 (defun eh-hack-load-path ()
@@ -400,8 +399,6 @@
     (eye-set-leader-key org-agenda-mode-map))
   )
 
-
-(eye--print-time "init-orgmode")
 
 
 

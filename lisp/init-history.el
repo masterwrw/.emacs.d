@@ -1,6 +1,4 @@
 ;;;; History
-(eye--reset-time)
-
 (require 'saveplace)
 
 
@@ -34,8 +32,6 @@
 	    (savehist-mode 1)))
 
 
-
-(eye--print-time "init-history")
 
 
 (provide 'init-history)

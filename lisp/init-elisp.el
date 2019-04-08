@@ -1,5 +1,4 @@
 ;;;; Elisp
-(eye--reset-time)
 (defun imenu-elisp-sections ()
   (setq imenu-prev-index-position-function nil)
   (add-to-list 'imenu-generic-expression '("sections" "^;;;; \\(.+\\)$" 1) t))
@@ -71,7 +70,6 @@
 (eye-define-leader-key lisp-interaction-mode-map "m" 'hydra-elisp/body)
 
 
-(eye--print-time "init-elisp")
 
 
 

@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 ;;(require 'magit)
 (with-eval-after-load 'magit  
   (setq magit-push-always-verify nil)
@@ -23,6 +21,7 @@
 (defhydra+ hydra-global-func (:exit t)
   ("g" magit-status))
 
-(eye--print-time "init-magit")
+
+
 
 (provide 'init-magit)

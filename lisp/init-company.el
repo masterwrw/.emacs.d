@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 ;; (require 'company)
 ;; (require 'company-dabbrev)
 ;; (require 'company-files)
@@ -93,8 +91,6 @@
 (defhydra+ hydra-funcs (:idle 1.0)
   ("g" global-company-mode "Company" :exit t))
 
-
-(eye--print-time "init-company")
 
 
 (provide 'init-company)

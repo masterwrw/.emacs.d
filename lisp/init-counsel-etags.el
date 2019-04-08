@@ -1,4 +1,3 @@
-(eye--reset-time)
 
 (defun eye/create-ctags-file ()
   "Create ctags file"
@@ -115,7 +114,6 @@
 
 
 
-(eye--print-time "init-counsel-etags")
 
 
 

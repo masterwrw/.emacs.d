@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 ;;(require 'cc-mode)
 
 ;; outline fold
@@ -350,8 +348,6 @@
 
 
 
-
-(eye--print-time "init-cpp")
 
 
 (provide 'init-cpp)

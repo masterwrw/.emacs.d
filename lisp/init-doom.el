@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 ;;;; all-the-icons
 (require 'all-the-icons)
 (unless (or is-windows (member "all-the-icons" (font-family-list)))
@@ -78,8 +76,6 @@
 (display-time-mode)
 
 
-
-(eye--print-time "init-doom")
 
 
 (provide 'init-doom)

@@ -127,8 +127,16 @@ git-bash进入包目录后执行
 ;; (eye--print-time "add packages path")
 
 ;; (eye--reset-time)
+(setq test-time (current-time))
+
 (when (file-exists-p generated-autoload-file)
   (require 'autoload.pkg generated-autoload-file))
+
+(message
+ (format "-----------------------------------%.6f sec: require autoload.pkg"
+	 (- (float-time (current-time))
+	    (float-time test-time))))
+
 ;; (eye--print-time "require autoload.pkg")
 
 

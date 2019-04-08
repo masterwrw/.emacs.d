@@ -1,5 +1,3 @@
-(eye--reset-time)
-
 ;; (require 'ivy)
 ;; (require 'counsel)
 ;; (require 'swiper)
@@ -31,7 +29,6 @@
 (eye-define-key global-map "M-y" 'counsel-yank-pop)
 
 
-(eye--print-time "init-ivy")
 
 
 
