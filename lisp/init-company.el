@@ -1,32 +1,23 @@
 ;; (require 'company)
-;; (require 'company-dabbrev)
-;; (require 'company-files)
-;; (require 'company-etags)
-;;(require 'company-yasnippet)
-;;(require 'company-css)
+
+(add-hook 'after-init-hook 'global-company-mode)
 
 (with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-i") 'company-select-previous)
-  (define-key company-active-map (kbd "M-k") 'company-select-next)
-  (define-key company-active-map (kbd "<tab>") 'company-select-next)
-
-  ;;(global-company-mode)
-
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 3)
   (setq company-show-numbers t)
   (setq company-echo-delay 0)
   (setq company-require-match nil)
 
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-minimum-length 3)
-  (setq company-dabbrev-other-buffers 'all)
+  (setq company-dabbrev-code-everywhere t) ;;Non-nil to offer completions in comments and strings.
+  (setq company-dabbrev-minimum-length 3) ;;The minimum length for the completion candidate to be included.
+  (setq company-dabbrev-other-buffers t) ;;If t, 'company-dabbrev' search buffers with the same major mode
   (setq company-dabbrev-downcase nil)
   ;; make previous/next selection in the popup cycles
   (setq company-selection-wrap-around t)
 
   (setq company-dabbrev-char-regexp "[\\.0-9a-z-_'/]") ;adjust regexp make `company-dabbrev' search words like `dabbrev-expand'
-  (setq company-dabbrev-code-other-buffers 'all) ;search completion from all buffers, not just same mode buffers.
+  (setq company-dabbrev-code-other-buffers 't) ;If t, search buffers with the same major mode.
 
   ;; aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
@@ -34,22 +25,42 @@
   (setq company-tooltip-limit 20)
   ;;(set-face-attribute 'company-tooltip nil :foreground "magenta")
 
-  ;; backends
-  (setq company-backends nil)
+  ;; set default backends
+  ;; company-dabbrev is for current buffer string auto complete
+  (setq company-backends '(company-dabbrev company-dabbrev-code company-files))
 
-  ;; company-dabbrev config, it is for current buffer string auto complete
-  (add-to-list 'company-backends 'company-dabbrev)
-  (add-to-list 'company-backends 'company-dabbrev-code)
-  (add-to-list 'company-backends 'company-files)
-  ;;(add-to-list 'company-backends 'company-css)
+  (defun eye-make-local-company-backends (backends modmap)
+    "设置company-backends并设置相应major mode map下的按键，由于define-key第一个参数不能是symbol，需要在hook函数中使用"
+    (setq company-backends backends)
+    (when (keymapp modmap)
+      (define-key modmap (kbd "<backtab>") 'company-manual-begin)
+      (define-key modmap (kbd "<S-tab>") 'company-manual-begin)))
+  
+  (defun eye-setup-company-backends ()
+    "Setup company-backends for major-mode"
+    (cond ((eq major-mode 'css-mode) (eye-make-local-company-backends '(company-css company-dabbrev company-dabbrev-code company-keywords)
+								      css-mode-map))
+	  ((eq major-mode 'c-mode) (eye-make-local-company-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+								    c-mode-map))
+	  ((eq major-mode 'c++-mode) (eye-make-local-company-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+								      c++-mode-map))
+	  ((eq major-mode 'emacs-lisp-mode) (eye-make-local-company-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+									     emacs-lisp-mode-map))
+	  ((eq major-mode 'lisp-interaction-mode) (eye-make-local-company-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+										   lisp-interaction-mode-map))
+	  ((equal major-mode 'nxml-mode) (eye-make-local-company-backends '(company-nxml company-dabbrev company-dabbrev-code)
+									  nxml-mode-map))
+	  (t (eye-make-local-company-backends '(company-dabbrev company-dabbrev-code company-files)
+					      global-map))
+	  ))
 
-  (with-eval-after-load 'cc-mode
-    (add-to-list 'company-backends 'company-etags))
-  (with-eval-after-load 'counsel-etags
-    (add-to-list 'company-backends 'company-etags))
+  (dolist (hook '(c-mode-hook c++-mode-hook emacs-lisp-mode-hook lisp-interaction-mode-hook css-mode-hook nxml-mode-hook))
+    (add-hook hook 'eye-setup-company-backends))
 
-  (with-eval-after-load 'emacs-lisp-mode
-    (add-to-list 'company-backends 'company-elisp))
+  (define-key company-active-map (kbd "M-i") 'company-select-previous)
+  (define-key company-active-map (kbd "M-k") 'company-select-next)
+  (define-key company-active-map (kbd "<tab>") 'company-select-next)
+  (define-key company-active-map (kbd "TAB") 'company-select-next)
   )
 
 ;; Support yas in commpany
