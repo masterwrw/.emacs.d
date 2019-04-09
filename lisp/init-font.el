@@ -55,6 +55,8 @@
   (setq en-font-size (- en-font-size 2))
   (setq cn-font-size (- cn-font-size 1))
   (eye-update-font-size)
+  (if (equal (frame-parameter nil 'fullscreen) 'maximize)
+      (maximize-frame))
   )
 
 

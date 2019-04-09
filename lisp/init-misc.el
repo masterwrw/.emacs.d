@@ -99,13 +99,11 @@
 (defun maximize-frame ()
   "Maximizes the active frame in Windows"
   (interactive)
+  (set-frame-parameter nil 'fullscreen 'maximize)
   ;; Send a `WM_SYSCOMMAND' message to the active frame with the
   ;; `SC_MAXIMIZE' parameter.
   (if is-windows
-      (progn
-	(set-frame-parameter nil 'fullscreen nil) ;quit fullscreen
-	(w32-send-sys-command 61488))
-    (set-frame-parameter nil 'fullscreen 'maximize)))
+      (w32-send-sys-command 61488)))
 
 (defun fullscreen-toggle ()
   "Toggle fullscreen/maximize status."
