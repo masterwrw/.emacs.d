@@ -108,7 +108,7 @@
 (defun fullscreen-toggle ()
   "Toggle fullscreen/maximize status."
   (interactive)
-  (if (frame-parameter nil 'fullscreen)
+  (if (equal 'fullboth (frame-parameter nil 'fullscreen))
       (maximize-frame)
     (set-frame-parameter nil 'fullscreen 'fullboth)))
 
