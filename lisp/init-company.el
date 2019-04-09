@@ -62,6 +62,7 @@
   (define-key company-active-map (kbd "M-k") 'company-select-next)
   (define-key company-active-map (kbd "<tab>") 'company-select-next)
   (define-key company-active-map (kbd "TAB") 'company-select-next)
+  (define-key company-active-map (kbd "<S-tab>") 'company-select-previous)
   )
 
 ;; Support yas in commpany
