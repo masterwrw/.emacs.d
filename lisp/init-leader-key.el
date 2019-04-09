@@ -73,6 +73,7 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   (eye-define-key modmap "M-p" '(lambda () (interactive) (scroll-down-command) (hydra-move/body)))
   (eye-define-key modmap "M-m" 'set-mark-command)
   (eye-define-key modmap "M-w" 'xah-copy-line-or-region)
+  (eye-define-key modmap "M-e" 'xah-copy-line-or-region) ;sometimes M-w not working, then use M-e
   (eye-define-key modmap "M-q" 'xah-cut-line-or-region)
   (eye-define-key modmap "M-a" 'yank)
   (eye-define-key modmap "M-z" 'undo))
@@ -212,6 +213,19 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
     (eye-define-leader-key global-map " TAB" 'mode-line-other-buffer)
   (eye-define-leader-key global-map " <tab>" 'mode-line-other-buffer))
 
+
+;;;; Fn keys
+(define-key global-map (kbd "<f1>") (lambda ()
+				      (interactive)
+				      (if (fboundp 'counsel-ibuffer)
+					  (counsel-ibuffer)
+					(switch-to-buffer))))
+(define-key global-map (kbd "<f2>") 'toggle-input-method)
+(define-key global-map (kbd "<f3>") 'xah-next-window-or-frame)
+(define-key global-map (kbd "<f4>") 'delete-other-windows)
+(define-key global-map (kbd "<f8>") 'org-capture)
+(define-key global-map (kbd "<f9>") 'org-agenda)
+(define-key global-map (kbd "<f11>") 'fullscreen-toggle)
 
 
 (provide 'init-leader-key)
