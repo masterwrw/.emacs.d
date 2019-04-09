@@ -63,6 +63,14 @@ git-bash进入包目录后执行
   (interactive)
   (byte-recompile-directory eye-packages-dir 0)) ;must use 0 to compile
 
+(defun eye/package-compile-dir ()
+  "Compile a directory"
+  (interactive)
+  (let ((path (ido-read-directory-name "Select dir:")))
+    (when (and path (f-dir-p path))
+      (message "Compile %s" path)
+      (byte-recompile-directory path 0))))
+
 ;;3.generate autoload file
 ;;(update-directory-autoloads "~/packages/youdao-dictionary")
 ;;(update-directory-autoloads "~/packages/writeroom-mode")
