@@ -119,6 +119,7 @@
 (eye-require 'init-ctags "ctags")
 (eye-require 'init-counsel-etags "counsel-etags")
 (eye-require 'init-company "company")
+(eye-require 'init-company-quickhelp "company-quickhelp")
 (eye-require 'init-ffit "ffit")
 (eye-require 'init-ffip "ffip")
 (eye-require 'init-external "external")
