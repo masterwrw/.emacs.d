@@ -95,28 +95,24 @@
 (setq find-file-visit-truename t)
 
 
-;; 全屏
-(defun fullscreen ()
-  "Fullscreen."
-  (interactive)
-  (set-frame-parameter nil 'fullscreen 'fullboth))
-
-(defun fullscreen-toggle ()
-  "Toggle fullscreen status."
-  (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-
-
 ;; 最大化
 (defun maximize-frame ()
   "Maximizes the active frame in Windows"
   (interactive)
   ;; Send a `WM_SYSCOMMAND' message to the active frame with the
   ;; `SC_MAXIMIZE' parameter.
-  (when is-windows
-    (w32-send-sys-command 61488)))
+  (if is-windows
+      (progn
+	(set-frame-parameter nil 'fullscreen nil) ;quit fullscreen
+	(w32-send-sys-command 61488))
+    (set-frame-parameter nil 'fullscreen 'maximize)))
+
+(defun fullscreen-toggle ()
+  "Toggle fullscreen/maximize status."
+  (interactive)
+  (if (frame-parameter nil 'fullscreen)
+      (maximize-frame)
+    (set-frame-parameter nil 'fullscreen 'fullboth)))
 
 
 (defhydra+ hydra-funcs (:idle 1.0)
