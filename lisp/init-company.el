@@ -1,6 +1,6 @@
 (require-maybe 'company)
 
-(add-hook 'after-init-hook 'global-company-mode)
+;;(add-hook 'after-init-hook 'global-company-mode)
 
 (with-eval-after-load 'company
   (setq company-idle-delay 0.2)
@@ -32,33 +32,48 @@
   ;; company-dabbrev is for current buffer string auto complete
   (setq company-backends '(company-dabbrev company-dabbrev-code company-files))
 
-  (defun eye-make-local-company-backends (backends modmap)
+  ;;; 对不同的major-mode设置不同的company-backends
+  ;; 1.设置(set 'company-backend xxx)切换buffer后又会变为空，即使设置了也不能自动弹出TAGS选项，所以改为使用
+  ;; 2.设置after-change-major-mode-hook后，切换buffer时会得到major-mode为minibuffer-inactive-mode，不能得到切换后buffer的major-mode
+  ;; 3.add-hook majoe-mode hook也不能检测到切换buffer后的major-mode，要重新打开buffer才能调用到hook
+  ;; 4.add company-mode-hook 修改company-backends, add major-mode hook开启company-mode（非global），问题：也不能检测到切换buffer后的major-mode
+  ;; 5.add global-company-mode-hook根据major-mode修改company-backends，切换buffer后，重新开启global-company-mode
+  ;; 6.最终选择：手动开启global-company-mode，根据major-mode修改company-backends，当切换buffer后，重新开启global-company-mode，效果同第5条
+  (defun buffer-mode (&optional buffer-or-name)
+    "Returns the major mode associated with a buffer.
+If buffer-or-name is nil return current buffer's mode."
+    (buffer-local-value 'major-mode
+			(if buffer-or-name (get-buffer buffer-or-name) (current-buffer))))
+  
+  (defun eye-set-major-mode-backends (backends modmap)
     "设置company-backends并设置相应major mode map下的按键，由于define-key第一个参数不能是symbol，需要在hook函数中使用"
+    (message "Change company-backends to: %s" backends)
     (setq company-backends backends)
+    ;;(set (make-local-variable 'company-backends) backends) ;;不能使用setq设置local variable 'company-backend
     (when (keymapp modmap)
       (define-key modmap (kbd "<backtab>") 'company-manual-begin)
       (define-key modmap (kbd "<S-tab>") 'company-manual-begin)))
   
   (defun eye-setup-company-backends ()
     "Setup company-backends for major-mode"
-    (cond ((eq major-mode 'css-mode) (eye-make-local-company-backends '(company-css company-dabbrev company-dabbrev-code company-keywords)
-								      css-mode-map))
-	  ((eq major-mode 'c-mode) (eye-make-local-company-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
-								    c-mode-map))
-	  ((eq major-mode 'c++-mode) (eye-make-local-company-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
-								      c++-mode-map))
-	  ((eq major-mode 'emacs-lisp-mode) (eye-make-local-company-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
-									     emacs-lisp-mode-map))
-	  ((eq major-mode 'lisp-interaction-mode) (eye-make-local-company-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
-										   lisp-interaction-mode-map))
-	  ((equal major-mode 'nxml-mode) (eye-make-local-company-backends '(company-nxml company-dabbrev company-dabbrev-code)
-									  nxml-mode-map))
-	  (t (eye-make-local-company-backends '(company-dabbrev company-dabbrev-code company-files)
-					      global-map))
-	  ))
+    (when (or (bound-and-true-p global-company-mode) (bound-and-true-p company-mode))
+      (cond ((eq major-mode 'css-mode) (eye-set-major-mode-backends '(company-css company-dabbrev company-dabbrev-code company-keywords)
+								    css-mode-map))
+	    ((eq major-mode 'c-mode) (eye-set-major-mode-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+								  c-mode-map))
+	    ((eq major-mode 'c++-mode) (eye-set-major-mode-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+								    c++-mode-map))
+	    ((eq major-mode 'emacs-lisp-mode) (eye-set-major-mode-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+									   emacs-lisp-mode-map))
+	    ((eq major-mode 'lisp-interaction-mode) (eye-set-major-mode-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+										 lisp-interaction-mode-map))
+	    ((equal major-mode 'nxml-mode) (eye-set-major-mode-backends '(company-nxml company-dabbrev company-dabbrev-code)
+									nxml-mode-map))
+	    (t (eye-set-major-mode-backends '(company-dabbrev company-dabbrev-code company-files)
+					    global-map))
+	    )))
 
-  (dolist (hook '(c-mode-hook c++-mode-hook emacs-lisp-mode-hook lisp-interaction-mode-hook css-mode-hook nxml-mode-hook))
-    (add-hook hook 'eye-setup-company-backends))
+  (add-hook 'global-company-mode-hook 'eye-setup-company-backends)
 
   (define-key company-active-map (kbd "M-i") 'company-select-previous)
   (define-key company-active-map (kbd "M-k") 'company-select-next)
@@ -111,6 +126,7 @@
 (defhydra+ hydra-funcs (:idle 1.0)
   ("g" global-company-mode "Company" :exit t))
 
+(define-key global-map (kbd "<f7>") 'global-company-mode)
 
 
 (provide 'init-company)
