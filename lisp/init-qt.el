@@ -1,13 +1,13 @@
-(require 'qt-pro-mode)
-;;  :mode ("\\.pro\\'" "\\.pri\\'")
-(add-hook 'qt-pro-mode 'yas-minor-mode)
+(require-maybe 'qt-pro-mode)
+(add-to-list 'auto-mode-alist '("\\.pro$" . qt-pro-mode))
+(add-to-list 'auto-mode-alist '("\\.pri$" . qt-pro-mode))
 
-(require 'css-mode)
+(require-maybe 'css-mode)
 (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode))
 
-(require 'qml-mode)
-;;  (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
-;;(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
+(require-maybe 'qml-mode)
+(autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
+(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))
 
 (defun eye/qt5-help ()
   "Find Qt5 document."
@@ -43,17 +43,9 @@
                             '(("\\<Q[A-Z][A-Za-z]\\>" . 'qt-keywords-face)))
     ))
 
-(dolist (hook (list
-               'c-mode-hook
-               'c++-mode-hook
-               'c-mode-common-hook
-               ))
-  (add-hook hook
-	    '(lambda ()
-	       (qt-mode-style-setup)
-	       (outline-minor-mode 1)
-	       (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
-	       )))
+
+(add-hook 'c++-mode-hook 'qt-mode-style-setup)
+
 
 
 (provide 'init-qt)
