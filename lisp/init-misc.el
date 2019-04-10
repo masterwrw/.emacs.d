@@ -117,7 +117,8 @@
   ("f" fullscreen-toggle "Fullscreen toggle" :exit t))
 
 
-(add-hook 'after-init-hook 'maximize-frame)
+(when is-gui
+    (add-hook 'after-init-hook 'maximize-frame))
 
 
 (provide 'init-misc)
