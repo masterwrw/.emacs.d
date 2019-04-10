@@ -30,8 +30,8 @@
   
   ;; set default backends
   ;; company-dabbrev is for current buffer string auto complete
-  (setq company-backends '(company-dabbrev company-dabbrev-code company-files))
-
+  (setq company-backends '(company-abbrev company-dabbrev company-dabbrev-code company-files))
+ 
   ;;; 对不同的major-mode设置不同的company-backends
   ;; 1.设置(set 'company-backend xxx)切换buffer后又会变为空，即使设置了也不能自动弹出TAGS选项，所以改为使用
   ;; 2.设置after-change-major-mode-hook后，切换buffer时会得到major-mode为minibuffer-inactive-mode，不能得到切换后buffer的major-mode
@@ -57,19 +57,19 @@ If buffer-or-name is nil return current buffer's mode."
   (defun eye-setup-company-backends ()
     "Setup company-backends for major-mode"
     (when (or (bound-and-true-p global-company-mode) (bound-and-true-p company-mode))
-      (cond ((eq major-mode 'css-mode) (eye-set-major-mode-backends '(company-css company-dabbrev company-dabbrev-code company-keywords)
+      (cond ((eq major-mode 'css-mode) (eye-set-major-mode-backends '((company-css company-abbrev company-dabbrev company-dabbrev-code company-keywords))
 								    css-mode-map))
-	    ((eq major-mode 'c-mode) (eye-set-major-mode-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+	    ((eq major-mode 'c-mode) (eye-set-major-mode-backends '((company-etags company-abbrev company-dabbrev company-dabbrev-code company-keywords))
 								  c-mode-map))
-	    ((eq major-mode 'c++-mode) (eye-set-major-mode-backends '(company-etags company-dabbrev company-dabbrev-code company-keywords)
+	    ((eq major-mode 'c++-mode) (eye-set-major-mode-backends '((company-etags company-abbrev company-dabbrev company-dabbrev-code company-keywords))
 								    c++-mode-map))
-	    ((eq major-mode 'emacs-lisp-mode) (eye-set-major-mode-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+	    ((eq major-mode 'emacs-lisp-mode) (eye-set-major-mode-backends '((company-elisp company-abbrev company-files company-dabbrev company-dabbrev-code company-keywords))
 									   emacs-lisp-mode-map))
-	    ((eq major-mode 'lisp-interaction-mode) (eye-set-major-mode-backends '(company-elisp company-files company-dabbrev company-dabbrev-code company-keywords)
+	    ((eq major-mode 'lisp-interaction-mode) (eye-set-major-mode-backends '((company-elisp company-abbrev company-files company-dabbrev company-dabbrev-code company-keywords))
 										 lisp-interaction-mode-map))
-	    ((equal major-mode 'nxml-mode) (eye-set-major-mode-backends '(company-nxml company-dabbrev company-dabbrev-code)
+	    ((equal major-mode 'nxml-mode) (eye-set-major-mode-backends '((company-nxml company-abbrev company-dabbrev company-dabbrev-code))
 									nxml-mode-map))
-	    (t (eye-set-major-mode-backends '(company-dabbrev company-dabbrev-code company-files)
+	    (t (eye-set-major-mode-backends '((company-abbrev company-dabbrev company-dabbrev-code company-files))
 					    global-map))
 	    )))
 
