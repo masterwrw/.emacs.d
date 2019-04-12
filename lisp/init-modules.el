@@ -1,14 +1,7 @@
-
-
 ;;(require 'auto-save)
 ;;(auto-save-enable)
 ;;(setq auto-save-silent t)
 ;; (setq auto-save-delete-trailing-whitespace t)
-
-(require 'super-save)
-(super-save-mode +1)
-(setq super-save-remote-files nil)
-
 
 (require 'youdao-dictionary)
 
