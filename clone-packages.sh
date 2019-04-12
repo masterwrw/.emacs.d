@@ -80,3 +80,4 @@ git clone https://github.com/hlissner/emacs-solaire-mode.git
 git clone https://github.com/cute-jumper/avy-zap.git
 wget -O~/packages/find-file-in-tags/find-file-in-tags.el http://www.emacswiki.org/emacs/download/find-file-in-tags.el
 git clone https://github.com/expez/company-quickhelp.git
+git clone https://github.com/joodland/bm.git

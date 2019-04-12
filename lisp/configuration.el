@@ -110,6 +110,7 @@
 (eye-require 'init-ace-jump "ace-jump")
 (eye-require 'init-idomenu "idomenu")
 (eye-require 'init-ivy "ivy")
+(eye-require 'init-bm "bm")
 (eye-require 'init-web-search "web-search")
 (eye-require 'init-watch-other-window "watch-other-window")
 (eye-require 'init-rg "rg")
