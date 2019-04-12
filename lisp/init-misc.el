@@ -36,8 +36,8 @@
   )
 
 
-(blink-cursor-mode -1) ;; 取消光标闪烁
 (when is-gui
+  (blink-cursor-mode -1) ;; 取消光标闪烁
   (add-hook 'after-init-hook
 	    (lambda ()
 	      (set-cursor-color "#00A876"))))
