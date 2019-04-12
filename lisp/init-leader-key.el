@@ -22,34 +22,35 @@
 (require 'xah-functions)
 
 ;;;; move cursor
-(defhydra hydra-move (:column 4 :idle 1.0)
+(defhydra hydra-move (:idle 1.0)
   "
 _a_:Begin defun    _w_:Begin buffer   _r_:Forward para    _b_:Brackets match
 _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
 "
   ("j" left-char)
-  ("M-j" left-char)
+  ("M-j" left-char nil)
   ("l" right-char)
-  ("M-l" right-char)
+  ("M-l" right-char nil)
   ("u" left-word)
-  ("M-u" left-word)
+  ("M-u" left-word nil)
   ("o" right-word)
-  ("M-o" right-word)
+  ("M-o" right-word nil)
   ("i" previous-line)
-  ("M-i" previous-line)
+  ("M-i" previous-line nil)
   ("k" next-line)
-  ("M-k" next-line)
+  ("M-k" next-line nil)
   ("h" eye/beginning-of-line-or-block)
-  ("M-h" eye/beginning-of-line-or-block)
+  ("M-h" eye/beginning-of-line-or-block nil)
   (";" xah-end-of-line-or-block)
-  ("M-;" xah-end-of-line-or-block)
+  ("M-;" xah-end-of-line-or-block nil)
   ("n" scroll-up-command)
-  ("M-n" scroll-up-command)
+  ("M-n" scroll-up-command nil)
   ("p" scroll-down-command)
-  ("M-p" scroll-down-command)
+  ("M-p" scroll-down-command nil)
   ("m" set-mark-command)
   ("b" xah-goto-matching-bracket nil)
-  ("/" xah-comment-dwim nil)
+  ("/" xah-comment-dwim)
+  ("M-/" xah-comment-dwim nil)
   ("a" beginning-of-defun nil)
   ("s" end-of-defun nil)
   ("w" beginning-of-buffer nil)
@@ -71,6 +72,7 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   (eye-define-key modmap "M-;" '(lambda () (interactive) (xah-end-of-line-or-block) (hydra-move/body)))
   (eye-define-key modmap "M-n" '(lambda () (interactive) (scroll-up-command) (hydra-move/body)))
   (eye-define-key modmap "M-p" '(lambda () (interactive) (scroll-down-command) (hydra-move/body)))
+  (eye-define-key modmap "M-/" '(lambda () (interactive) (xah-comment-dwim) (hydra-move/body)))
   (eye-define-key modmap "M-m" 'set-mark-command)
   (eye-define-key modmap "M-w" 'xah-copy-line-or-region)
   (eye-define-key modmap "M-e" 'xah-copy-line-or-region) ;sometimes M-w not working, then use M-e
@@ -124,19 +126,24 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("e" xah-extend-selection "Extend")
   ("q" xah-select-text-in-quote "Select quote" :exit t)
   ("l" xah-select-line "Select line" :exit t)
+  ("b" xah-select-block "select block")
   ("n" narrow-to-region "Narrorw" :exit t)
   ("w" widen "widen" :exit t)
   )
 
 ;;;; delete
-(defhydra hydra-delete (:exit t :idle 1.0)
-  ("d" delete-line-no-copy)
-  ("u" delete-inner-word-no-copy)
-  ("o" delete-forward-word-no-copy)
-  (";" delete-end-of-line-no-copy)
-  ("h" delete-beginning-of-line-no-copy))
-(define-key global-map (kbd "M-8") 'backward-delete-char)
-(define-key global-map (kbd "M-9") 'delete-char)
+(defhydra hydra-delete (:idle 1.0)
+  "delete:"
+  ("SPC" nil "quit")
+  ("d" delete-line-no-copy :exit t)
+  ("l" delete-char)
+  ("j" backward-delete-char)
+  ("u" delete-inner-word-no-copy "backward word")
+  ("o" delete-forward-word-no-copy "forward word")
+  ("h" delete-beginning-of-line-no-copy "begin line" :exit t)
+  (";" delete-end-of-line-no-copy "end line" :exit t)
+  ("b" xah-delete-current-text-block "block" :exit t)
+  )
 
 
 ;;;; window
@@ -191,6 +198,19 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("l" global-display-line-numbers-mode "Line number"))
 
 
+(defvar hydra-major-mode-alist
+  '((emacs-lisp-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
+    (lisp-interaction-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
+    (c++-mode . (lambda () (if (fboundp 'hydra-c++/body) (hydra-c++/body))))
+    (python-mode . (lambda () (if (fboundp 'hydra-python/body) (hydra-python/body))))
+    ))
+
+(defun eye/major-mode-key ()
+  (interactive)
+  (let ((v (assoc major-mode hydra-major-mode-alist)))
+    (when v
+      (funcall (cdr v)))))
+
 (defun eye-set-leader-key (modmap)
   (interactive)
   (eye-reset-mode-leader-key modmap)
@@ -205,14 +225,14 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   (eye-define-leader-key modmap "s" 'hydra-search/body)
   (eye-define-leader-key modmap "i" 'hydra-imenu/body)
   (eye-define-leader-key modmap "o" 'hydra-outline/body)
-  (eye-define-leader-key modmap "x" 'hydra-funcs/body))
+  (eye-define-leader-key modmap "x" 'hydra-funcs/body)
+  (eye-define-leader-key modmap "m" 'eye/major-mode-key))
 
 (eye-set-leader-key global-map)
 
 (if is-terminal
     (eye-define-leader-key global-map " TAB" 'mode-line-other-buffer)
   (eye-define-leader-key global-map " <tab>" 'mode-line-other-buffer))
-
 
 ;;;; Fn keys
 (define-key global-map (kbd "<f1>") (lambda ()
@@ -226,6 +246,12 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
 (define-key global-map (kbd "<f8>") 'org-capture)
 (define-key global-map (kbd "<f9>") 'org-agenda)
 (define-key global-map (kbd "<f11>") 'fullscreen-toggle)
+(define-key global-map (kbd "<f12>") 'counsel-etags-find-tag-at-point)
+(define-key global-map (kbd "<C-f12>") 'pop-tag-mark)
+
+;; running on msys2, can't use C-c, it is <pause>
+(when is-terminal
+  (eye-define-key global-map "C-x <pause>" 'kill-emacs))
 
 
 (provide 'init-leader-key)

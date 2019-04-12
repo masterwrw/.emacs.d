@@ -66,8 +66,6 @@
 
 (eye-set-leader-key emacs-lisp-mode-map)
 (eye-set-leader-key lisp-interaction-mode-map)
-(eye-define-leader-key emacs-lisp-mode-map "m" 'hydra-elisp/body)
-(eye-define-leader-key lisp-interaction-mode-map "m" 'hydra-elisp/body)
 
 
 

@@ -332,12 +332,7 @@
 
 (with-eval-after-load 'cc-mode ;can't use c++-mode
   (eye-setup-c++)
-  (eye-set-leader-key c++-mode-map)
-  (eye-define-leader-key c++-mode-map "m" 'hydra-ctags/body)
-
-  (define-key c++-mode-map (kbd "<mouse-1>") 'counsel-etags-find-tag-at-point)
-  (define-key c++-mode-map (kbd "<mouse-3>") 'pop-tag-mark)
-  )
+  (eye-set-leader-key c++-mode-map))
 
 
 ;;;; company for cpp
