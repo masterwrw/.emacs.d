@@ -436,20 +436,21 @@ The return value is the new value of LIST-VAR."
 
 (defun eye/open-thunar ()
   "Open thunar of current buffer directory."
-  (when (and (executable-find "thunar")
-             (not (null default-directory)))
+  (when (and default-directory (executable-find "thunar"))
     (start-process "File manager" nil "thunar" default-directory)))
 
 (defun eye/open-explorer ()
   "Open explorer of current buffer directory."
-  (when (and (not (string-empty-p default-directory))
+  (when (and default-directory (file-directory-p default-directory)
 	     (eq system-type 'windows-nt))
     (let ((dir default-directory)
-	  (explorer (replace-regexp-in-string "/" "\\\\" (executable-find "C:/Windows/SysWOW64/explorer"))))
+	  (explorer (replace-regexp-in-string "/" "\\\\\\\\" (executable-find "C:/Windows/SysWOW64/explorer")))
+	  (command))
       (setq dir (encode-coding-string
-		 (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))
-      (shell-command (concat explorer " " dir) nil nil)
-      (message dir))
+		 (replace-regexp-in-string "/" "\\\\\\\\" dir) 'gbk-dos))
+      (setq command (concat explorer " " dir))
+      (shell-command command nil nil)
+      (message command))
     ))
 
 (defun eye/open-file-manager ()
