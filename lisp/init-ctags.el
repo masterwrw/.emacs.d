@@ -29,11 +29,19 @@
   (interactive)
   ;; ctags必须加-e选项，否则counsel-xxx-find-tag-xx无法识别其中的tagname
   (let ((tags-dir (ido-read-directory-name "TAGS DIR:"))
-	(command "find %s \( -iwholename \"*.h\" -or -iwholename \"*.cpp\" \) -print | ctags -e -f %sTAGS -V -R -L -"))
+	;; 需要传"\\("，否则出现错误：bash: -c:行0: 未预期的符号 `(' 附近有语法错误
+	(command "find %s \\( -iwholename \"*.h\" -or -iwholename \"*.cpp\" \\) -print | ctags -e -f %sTAGS -V -R -L -"))
     (setq command (format command tags-dir tags-dir))
     (message command)
-    (async-shell-command command)
+    (let ((proc (start-process "ctags" nil shell-file-name shell-command-switch command)))  ;; shell-command-switch值为-c，表示后面的是命令行参数
+      (set-process-sentinel proc `(lambda (proc msg)
+				    (let ((status (process-status proc)))
+				      (when (memq status '(exit signal))
+					(message "ctags:%s" msg)
+					)))))
+      ;;    (async-shell-command command)
     ))
+
 
 (defun eye/update-ctags-this-file ()
   "Update current file tags"
@@ -44,7 +52,7 @@
     (when tags-path
       (setq tags-path (expand-file-name "TAGS" tags-path))
       (setq command (format "ctags -e -a -f %s %s" tags-path (buffer-name))) ;; -a means append
-      (message (concat "command:" command))
+      (message (concat "custom command:" command))
       (async-shell-command command)
       (delete-other-windows))))
 

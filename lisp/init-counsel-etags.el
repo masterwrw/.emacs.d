@@ -9,6 +9,7 @@
   (when is-linux
     (setq counsel-etags-tags-program "xargs etags --append") ;调用命令类似 find .... -print | xargs etags --append, etags没有递归的参数
     )
+  (when is-windows (setq counsel-etags-tags-program (executable-find "ctags"))) ;; if not set, (counsel-etags-guess-program "ctags") find failed
 
   ;; 是否开启输出命令
   (setq counsel-etags-debug nil)
@@ -16,10 +17,13 @@
   ;;(append-to-list 'counsel-etags-extra-tags-files locale-system-tags-paths) ;;使counsel-etags能显示系统函数（但无法跳转进入）
   
   ;; Setup auto update now
+  (setq counsel-etags-update-tags-backend 'eye/update-ctags-this-file)  
   (add-hook 'c++-mode-hook
             (lambda ()
-              (add-hook 'after-save-hook 'eye/update-ctags-this-file)))
-
+	      (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)
+              ;;(add-hook 'after-save-hook 'eye/update-ctags-this-file))
+	      ))
+  
   ;; counsel-etags-ignore-directories does NOT support wildcast
   (add-to-list 'counsel-etags-ignore-directories ".git")
   (add-to-list 'counsel-etags-ignore-directories ".svn")
@@ -71,7 +75,6 @@ _a_:List all tag        _c_:Create tags      _l_:Load root tags
   ("a" counsel-etags-list-tag)
   ("c" eye/create-ctags-file)
   ("l" eye/load-project-root-tags))
-
 
 
 

@@ -18,8 +18,9 @@
 	 '(
 	   "C:/software/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
 	   "C:/software/Emacs26.1/Searcher"
-	   "C:/Users/soeye/.babun/cygwin/bin"
 	   "C:/software/Emacs26.1/global663wb/bin"
+	   ;;msys2
+	   "C:/msys32/usr/bin"
 	   )))
     (setenv "PATH" (mapconcat 'identity path-list ";"))
     (setq exec-path (append path-list (list "." exec-directory)))
@@ -54,9 +55,6 @@
     (add-to-list 'company-c-headers-path-user "../LibHttp")
     )
   )
-
-
-
 
 
 
