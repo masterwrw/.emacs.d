@@ -28,7 +28,5 @@
 	  (funcall value))))
     (delete-other-windows)))
 
-(funcall (function 'eye/open-file-manager))
-
 
 (provide 'init-external)
