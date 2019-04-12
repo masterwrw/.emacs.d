@@ -8,41 +8,6 @@
 (autoload 'mpg123 "mpg123" "A Front-end to mpg123/ogg123" t)
 
 
-(defun eye/open-terminal ()
-  (interactive)
-  (when (executable-find "xfce4-terminal")
-    (start-process "Terminal" nil "xfce4-terminal")))
-
-;;;; theme
-(require 'moe-theme)
-(load-theme 'moe-dark t)
-
-
-;;;; Font
-(when is-gui
-  (require 'init-font))
-
-
-;; Custom keyword hightlight
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
-(make-face 'font-lock-fixme-face)
-(make-face 'font-lock-study-face)
-(make-face 'font-lock-important-face)
-(make-face 'font-lock-improve-face)
-(make-face 'font-lock-note-face)
-(mapc (lambda (mode)
-        (font-lock-add-keywords
-         mode
-         '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
-           ("\\<\\(IMPROVE\\)" 1 'font-lock-improve-face t)
-           ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
-           ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
-      fixme-modes)
-(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "#33aa00" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "#33aa00" nil nil t nil t nil nil)
-
 ;; (setq truncate-lines t) ;; 不自动折行
 
 ;;;; Search
