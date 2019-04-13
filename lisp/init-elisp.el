@@ -33,6 +33,7 @@
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda ()
+	    (eldoc-mode 1)
 	    (outline-minor-mode 1)
 	    (setq outline-regexp ";;;;+")
 	    ))

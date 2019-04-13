@@ -254,4 +254,11 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   (eye-define-key global-map "C-x <pause>" 'kill-emacs))
 
 
+(defalias 'backward-kill-word 'eye/kill-inner-word)
+(define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
+(define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
+(define-key global-map (kbd "<C-wheel-up>") 'eye/increase-font-size)
+(define-key global-map (kbd "<C-wheel-down>") 'eye/decrease-font-size)
+
+
 (provide 'init-leader-key)

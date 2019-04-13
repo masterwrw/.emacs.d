@@ -69,6 +69,8 @@ If buffer-or-name is nil return current buffer's mode."
 										 lisp-interaction-mode-map))
 	    ((equal major-mode 'nxml-mode) (eye-set-major-mode-backends '((company-nxml company-abbrev company-dabbrev company-dabbrev-code))
 									nxml-mode-map))
+	    ((equal major-mode 'php-mode) (eye-set-major-mode-backends '((company-php company-abbrev company-dabbrev company-dabbrev-code))
+									php-mode-map))
 	    (t (eye-set-major-mode-backends '((company-abbrev company-dabbrev company-dabbrev-code company-files))
 					    global-map))
 	    )))
