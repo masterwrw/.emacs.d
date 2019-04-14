@@ -17,6 +17,8 @@
 
 (setq ring-bell-function 'ignore) ;; 禁止出现烦人的响铃
 
+;; (setq truncate-lines t) ;; 不自动折行
+
 ;; Fix load slow, https://github.com/raxod502/radian/issues/180
 (when tool-bar-mode
   (tool-bar-mode -1)) ;; 禁用工具栏
