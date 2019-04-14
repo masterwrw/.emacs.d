@@ -1,7 +1,7 @@
 ;;; init-packages.el --- Custom package manager -*- lexical-binding: t -*-
 ;;
 
-(defvar eye-packages-dir (expand-file-name "packages" "~")
+(defvar eye-packages-dir (expand-file-name "emacs-packages" "~/src")
   "All packages main directory.")
 
 
@@ -144,7 +144,7 @@ git-bash进入包目录后执行
 ;; 可能是由于autoload信息文件中出现了register-definition-prefixed导致，比如：
 ;; (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "with-editor/with-editor" '("with-editor" "start-file-process--with-editor-process-filter" "server-" "shell-command--shell-command-with-editor-mode")))
 ;; (eye--reset-time) ;;使用命令行编译时无法找到此函数定义，先注释
-(add-subdirs-to-load-path "~/packages/") ;; all site packages don't put to .emacs.d
+(add-subdirs-to-load-path eye-packages-dir) ;; all site packages don't put to .emacs.d
 (add-subdirs-to-load-path (concat user-emacs-directory "lisp/"))
 ;; (eye--print-time "add packages path")
 
