@@ -89,6 +89,8 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("f" describe-function "Desc fun")
   ("k" describe-key "Desc key")
   ("a" describe-face "Desc face")
+  ("b" describe-bindings "desc bindgings")
+  ("m" describe-mode "desc mode")
   ("i" info "Info")
   ("c" list-colors-display "List colors")
   ("s" list-faces-display "List faces"))
