@@ -190,23 +190,23 @@
   (setq org-columns-default-format "%7Goal(Goal) %12DEADLINE(Deadline) %30SCHEDULED(Scheduled) %8TODO(To Do) %1PRIORITY(P) %150ITEM(Detailes)")
 
   (setq org-agenda-files (list
-			  (expand-file-name "gtd/tasks.org" locale-notebook-dir)
-			  (expand-file-name "gtd/private.org" locale-notebook-dir)
-			  (expand-file-name "gtd/archive.org" locale-notebook-dir)
-			  (expand-file-name "gtd/goals.org" locale-notebook-dir)
+			  (expand-file-name "work/todo.org" locale-notebook-dir)
+			  (expand-file-name "private/todo.org" locale-notebook-dir)
+			  (expand-file-name "private/goals.org" locale-notebook-dir)
 			  ))
   ;; (append-to-list 'org-agenda-files locale-custom-projects)
   (setq org-default-notes-file (expand-file-name "inbox/inbox.org" locale-notebook-dir))
   (defun eye/open-inbox-file () (interactive) (find-file org-default-notes-file))
 
   (setq org-refile-targets
-	'(
-          ((expand-file-name "gtd/tasks.org" locale-notebook-dir) :level . 1)
-          ((expand-file-name "gtd/private.org" locale-notebook-dir) :level . 1)
-          ((expand-file-name "gtd/archive.org" locale-notebook-dir) :level . 1)
+	`(
+          (,(expand-file-name "work/todo.org" locale-notebook-dir) :level . 1)
+          (,(expand-file-name "private/todo.org" locale-notebook-dir) :level . 1)
           ))
 
-  (setq org-archive-location (concat (expand-file-name "gtd/archive.org" locale-notebook-dir) "::"))
+  ;; org-archive-subtree moving an tree to archive file
+  ;; settings on org file #+ARCHIVE file head or ARCHIVE PROPERTY
+  ;;(setq org-archive-location (concat (expand-file-name "gtd/archive.org" locale-notebook-dir) "::"))
 
 ;;; custom agenda command
   ;; method 1
@@ -266,24 +266,26 @@
   ;; (add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
   ;; 模板中的file路径不是绝对路径时，将会使用org-directory进行查找
-  (setq org-directory (expand-file-name "gtd" locale-notebook-dir))
+  (setq org-directory (expand-file-name "private" locale-notebook-dir))
 
   ;; capture 的目标路径不能直接使用 concat
-  (defconst my-inbox-file-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
+  (defconst my-inbox-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
+  (defconst my-work-todo-path (expand-file-name "work/todo.org" locale-notebook-dir))
+  (defconst my-priv-todo-path (expand-file-name "private/todo.org" locale-notebook-dir))
   (setq org-capture-templates
 	'(
           ("i"
-           "inbox" entry (file+headline my-inbox-file-path "Inbox")
+           "Inbox" entry (file+headline my-inbox-path "Inbox")
            "* %?\n%i\n"
            :create t)
 
 	  ;; Create Todo under GTD.org -> Work -> Tasks
 	  ;; file+olp specifies to full path to fill the Template
-	  ("w" "Work TODO" entry (file+olp "tasks.org" "Work" "Tasks")
+	  ("w" "Work TODO" entry (file+olp my-work-todo-path "Work" "Tasks")
 	   "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
 	  ;; Create Todo under GTD.org -> Private -> Tasks
 	  ;; file+olp specifies to full path to fill the Template
-	  ("m" "Private TODO" entry (file+olp "private.org" "Private" "Tasks")
+	  ("m" "Private TODO" entry (file+olp my-priv-todo-path "Private" "Tasks")
            "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
 
 	  ("g" "Goals") 
@@ -299,13 +301,13 @@
           ;; org-protocol: https://github.com/sprig/org-capture-extension
 
           ("p" 
-           "收集网页内容（自动调用）" entry (file+headline "inbox.org" "INBOX")
+           "org-protocol(web link)" entry (file+headline my-inbox-path "INBOX")
            "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
                 %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
            :create t)
           
           ("L" 
-           "收集网页链接（自动调用）" entry (file+headline "inbox.org" "LINKS")
+           "org-protocol(web content)" entry (file+headline my-inbox-path "LINKS")
            "* [[%:link][%:description]]\n%?\n"
            :create t)
           
