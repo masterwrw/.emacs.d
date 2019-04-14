@@ -203,6 +203,7 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
     (lisp-interaction-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
     (c++-mode . (lambda () (if (fboundp 'hydra-c++/body) (hydra-c++/body))))
     (python-mode . (lambda () (if (fboundp 'hydra-python/body) (hydra-python/body))))
+    (org-mode . (lambda () (if (fboundp 'hydra-org/body) (hydra-org/body))))
     ))
 
 (defun eye/major-mode-key ()

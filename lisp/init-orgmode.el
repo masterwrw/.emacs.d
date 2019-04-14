@@ -31,13 +31,13 @@
   ;; (setq org-src-window-setup 'current-window) ;; 在当前window打开
   ;; (add-hook 'org-mode-hook 'yas-minor-mode)
   ;; indent content
-  (setq org-edit-src-content-indentation 0) ;; 默认不缩进
-  (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
+  (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
+  (setq org-startup-indented t) ;; 是否自动开启org-indent-mode
   (setq org-startup-folded (quote overview))
   ;; hides blank lines between headings
   (setq org-cycle-separator-lines 0)
   ;; always require new line in header below
-  ;;(setq require-final-newline t)
+  (setq require-final-newline t)
   (setq calendar-week-start-day 1) ;; 日历从周一开始显示
   (setq org-support-shift-select 1) ;; 是否支持shift+方向键选择
   (setq org-hide-emphasis-markers t) ;; 隐藏斜体标记/text/，如果要删除，则确保光标移到斜体文字最后
@@ -54,9 +54,15 @@
 
   (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
+  (defun eye/org-meta-return ()
+    "确保按下M-RET时不会打断当前行"
+    (interactive)
+    (org-end-of-line)
+    (org-meta-return))
+  (define-key org-mode-map (kbd "M-RET") 'eye/org-meta-return)
+
   ;; Exported to HTML
   (require-maybe 'htmlize)
-
 
   ;; Line wrapping
   (add-hook 'org-mode-hook
@@ -116,7 +122,7 @@
   (defun eye/open-password-file ()
     "Open my password manager file"
     (interactive)
-    (find-file locale-password-file))
+    (find-file (expand-file-name "private/password.org" locale-notebook-dir)))
 
 ;;;; gtd
   (require-maybe 'org-agenda)
@@ -182,26 +188,24 @@
   ;; (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent)  %DEADLINE(Deadline)")
   (setq org-columns-default-format "%7Goal(Goal) %12DEADLINE(Deadline) %30SCHEDULED(Scheduled) %8TODO(To Do) %1PRIORITY(P) %150ITEM(Detailes)")
 
-  (setq locale-gtd-inbox (concat locale-gtd-dir "/inbox.org"))
-  (setq locale-gtd-todo (concat locale-gtd-dir "/tasks.org"))
-  (setq locale-gtd-private (concat locale-gtd-dir "/private.org"))
-  (setq locale-gtd-archive (concat locale-gtd-dir "/archive.org"))
-  (setq locale-gtd-goal (concat locale-gtd-dir "/goals.org"))
-  (setq locale-gtd-goal-tpl (concat locale-gtd-dir "/tpl-goals.txt"))
-
-  (setq org-agenda-files (list locale-gtd-todo locale-gtd-private locale-gtd-archive locale-gtd-goal))
+  (setq org-agenda-files (list
+			  (expand-file-name "gtd/tasks.org" locale-notebook-dir)
+			  (expand-file-name "gtd/private.org" locale-notebook-dir)
+			  (expand-file-name "gtd/archive.org" locale-notebook-dir)
+			  (expand-file-name "gtd/goals.org" locale-notebook-dir)
+			  ))
   ;; (append-to-list 'org-agenda-files locale-custom-projects)
-  (setq org-default-notes-file locale-gtd-inbox)
-  (defun eye/open-inbox-file () (interactive) (find-file locale-gtd-inbox))
+  (setq org-default-notes-file (expand-file-name "inbox/inbox.org" locale-notebook-dir))
+  (defun eye/open-inbox-file () (interactive) (find-file org-default-notes-file))
 
   (setq org-refile-targets
 	'(
-          (locale-gtd-todo :level . 1)
-          (locale-gtd-private :level . 1)
-          (locale-gtd-archive :level . 1)
+          ((expand-file-name "gtd/tasks.org" locale-notebook-dir) :level . 1)
+          ((expand-file-name "gtd/private.org" locale-notebook-dir) :level . 1)
+          ((expand-file-name "gtd/archive.org" locale-notebook-dir) :level . 1)
           ))
 
-  (setq org-archive-location (concat locale-gtd-archive "::"))
+  (setq org-archive-location (concat (expand-file-name "gtd/archive.org" locale-notebook-dir) "::"))
 
 ;;; custom agenda command
   ;; method 1
@@ -261,13 +265,14 @@
   ;; (add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
   ;; 模板中的file路径不是绝对路径时，将会使用org-directory进行查找
-  (setq org-directory locale-gtd-dir)
+  (setq org-directory (expand-file-name "gtd" locale-notebook-dir))
 
   ;; capture 的目标路径不能直接使用 concat
+  (defconst my-inbox-file-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
   (setq org-capture-templates
 	'(
           ("i"
-           "inbox" entry (file+headline "inbox.org" "Inbox")
+           "inbox" entry (file+headline my-inbox-file-path "Inbox")
            "* %?\n%i\n"
            :create t)
 
@@ -304,74 +309,123 @@
            :create t)
           
           ))
-
-
+  
 ;;;; Notebook
   (require-maybe 'org-attach)
   (add-to-list 'org-modules 'org-attach)
-  (setq org-attach-directory locale-notebook-attachment-dir)
-
-  (defun eye/notes-search-keyword ()
-    (interactive)
-    (let ((keyword (read-string "Search note keyword: " (eye/current-word))))
-      (counsel-rg keyword locale-notebook-dir)
-      ))
-
-  (defun eye/notes-search-file ()
-    (interactive)
-    (let ((keyword (read-string "Search note file: ")))
-      (dired locale-notebook-dir)
-      (if (fboundp 'swiper)
-	  (swiper keyword)
-	(isearch-forward keyword))
-      ))
-
-  (defun eye/notes-dired ()
-    (interactive)
-    (dired locale-notebook-dir))
-
-  (defun eye/notes-new ()
-    (interactive)
-    (let ((name (read-string "New note(no suffix): ")))
-      (find-file (concat locale-notebook-dir "/" name ".org"))
-      (set-buffer-file-coding-system 'utf-8-with-signature-unix 't) ;; 设置编码
-      (insert (concat "* " name)) ;; 添加一级标题
-      (org-attach-set-inherit)	; use same attach directoryemphatically
-      ))
-
-  (defun eye/notes-create-attachment ()
-    "创建文件对应的附件文件夹"
-    (interactive)
-    (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
-	   (dir (concat locale-notebook-attachment-dir "/" name)))
-      (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
-      (unless (f-directory? dir) ;; 创建附件子目录
-	(f-mkdir dir))
-      ))
-
-  (defun eye/notes-open-attachment ()
-    "打开与当前文件名相同的附件文件夹"
-    (interactive)
-    (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
-	   (dir (concat locale-notebook-attachment-dir "/" name)))
-      (if (f-directory? dir)
-	  (progn
-	    (shell-command (concat "explorer "
-				   (encode-coding-string
-				    (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))) ;; 转换为windows路径后再转换为gbk编码，否则无法打开中文目录
-	    )
-	(message "Attachment folder not exists!")	
-	)))
-
-
-  (defun eye/org-meta-return ()
-    (interactive)
-    (org-end-of-line)
-    (org-meta-return))
-  (define-key org-mode-map (kbd "M-RET") 'eye/org-meta-return)
+  (setq org-attach-directory (expand-file-name "attach" locale-notebook-dir))
   )
 
+(defun eye/notes-search-keyword ()
+  (interactive)
+  (let ((keyword (read-string "Search note keyword: " (eye/current-word))))
+    (counsel-rg keyword locale-notebook-dir)
+    ))
 
+(defun eye/notes-search-file ()
+  (interactive)
+  (let ((keyword (read-string "Search note file: ")))
+    (dired (expand-file-name "tecs" locale-notebook-dir))
+    (if (fboundp 'swiper)
+	(swiper keyword)
+      (isearch-forward keyword))
+    ))
+
+(defun eye/notes-dired ()
+  (interactive)
+  (dired (expand-file-name "tecs" locale-notebook-dir)))
+
+(defun eye/notes-new ()
+  (interactive)
+  (require 'org)
+  (let ((name (read-string "New note(no suffix): "))
+	(timestr (format-time-string "%Y-%m-%dT%H.%M.%S" (current-time)))
+	(tags (read-string "tags:"))
+	(dir (expand-file-name "tecs" locale-notebook-dir)))
+    (when name
+      (find-file (expand-file-name
+		  (format "%s %s -- %s.org" timestr name tags)
+		  dir))
+      (set-buffer-file-coding-system 'utf-8-with-signature-unix 't) ;; 设置编码
+      (insert (concat "* " name)) ;; 添加一级标题
+      (org-attach-set-inherit)	; use same attach directory
+      (org-set-tags-to (replace-regexp-in-string " " ":" tags))
+      )))
+
+(defun eye/clean-attach-dir ()
+  "删除空的附件文件夹"
+  (interactive)
+  (let ((files (delete "." (delete ".." (directory-files org-attach-directory t))))
+	(count 0))
+    (mapcar (lambda (dir)
+	      (when (f-empty? dir)
+		(f-delete dir t)
+		(setq count (1+ count))))
+	    files)
+    (message "clean finished, %s empty dir removed." count)
+    ))
+
+(defun eye/insert-attach-link ()
+  "添加一个附件链接"
+  (interactive)
+  ;; scan ort-attach-dir
+  (message (org-attach-dir))
+  ;; select a file
+  (let* ((attach-dir (org-attach-dir))
+	 (files (delete "." (delete ".." (directory-files attach-dir))))
+	 choice fullpath newname tags link temp)
+    (when files
+      (setq choice (ido-completing-read "file:" files))
+      (when choice
+	(setq fullpath (expand-file-name choice attach-dir))
+	;; ask change file name
+	(if (y-or-n-p "change file name(y/n)?")
+	    (progn
+	      (setq temp (read-string "change name to:" (file-name-base choice)))
+	      (setq tags (read-string "add tag:"))
+	      (setq newname (format "%s %s -- %s.%s"
+				    (format-time-string "%Y-%m-%dT%H.%M.%S" (current-time))
+				    temp
+				    tags
+				    (file-name-extension choice)))
+	      (rename-file fullpath (expand-file-name newname attach-dir))
+	      (setq fullpath (expand-file-name newname attach-dir))
+	      )
+	  (setq newname choice))
+	;; get relative path
+	(setq link (format "[[file:%s][%s]]"
+			   (file-relative-name fullpath (buffer-file-name))
+			   newname))
+	;; insert link
+	(insert link)	
+	))
+      )
+  )
+
+;; 使用org-attache方式管理附件，不再需要下面的函数
+;; (defun eye/notes-create-attachment ()
+;;   "创建文件对应的附件文件夹"
+;;   (interactive)
+;;   (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
+;; 	   (dir (concat locale-notebook-attachment-dir "/" name)))
+;;     (unless (f-directory? locale-notebook-attachment-dir) (f-mkdir locale-notebook-attachment-dir)) ;; 创建附件主目录
+;;     (unless (f-directory? dir) ;; 创建附件子目录
+;; 	(f-mkdir dir))
+;;     ))
+
+;; (defun eye/notes-open-attachment ()
+;;   "打开与当前文件名相同的附件文件夹"
+;;   (interactive)
+;;   (let* ((name (replace-regexp-in-string ".org" "" (buffer-name)))
+;; 	   (dir (concat locale-notebook-attachment-dir "/" name)))
+;;     (if (f-directory? dir)
+;; 	  (progn
+;; 	    (shell-command (concat "explorer "
+;; 				   (encode-coding-string
+;; 				    (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))) ;; 转换为windows路径后再转换为gbk编码，否则无法打开中文目录
+;; 	    )
+;; 	(message "Attachment folder not exists!")	
+;; 	)))
 
 (defhydra+ hydra-funcs (:idle 1.0)
   ("c" org-capture "Capture" :exit t)
@@ -381,14 +435,20 @@
 (defhydra hydra-note (:exit t :idle 1.0)
   ("d" eye/notes-dired "Notes dir")
   ("n" eye/notes-new "New note")
-  ("a" eye/notes-create-attachment "Create attach dir")
-  ("o" eye/notes-open-attachment "Open attach")
+  ;; ("a" eye/notes-create-attachment "Create attach dir")
+  ;; ("o" eye/notes-open-attachment "Open attach")
   ("s" eye/notes-search-keyword "Search word")
   ("f" eye/notes-search-file "Search file"))
 (eye-define-leader-key global-map "n" 'hydra-note/body)
 
 
-
+(defhydra hydra-org (:exit t)
+  ("a" org-attach "attach")
+  ("t" eye/insert-attach-link "insert attach link")
+  ("i" org-insert-link "insert link")
+  ("s" eye/org-insert-src-block "insert src block"))
+  
+  
 (with-eval-after-load 'org
   (eye-setup-orgmode)
   (eye-set-leader-key org-mode-map)

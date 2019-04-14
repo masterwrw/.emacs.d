@@ -1,13 +1,7 @@
 (setq user-full-name "owensys")
-(setq user-mail-address "owensys at hotmail dot com")
+(setq user-mail-address "owensys@hotmail.com")
 
-(setq locale-notebook-dir "~/notebook/org/note")
-(setq locale-notebook-attachment-dir "~/notebook/attach")
-(setq locale-gtd-dir "~/notebook/org/gtd")
-(setq locale-password-file "~/notebook/org/password.org")
-(setq locale-custom-projects (list (concat locale-gtd-dir "/project/ud.org")
-				   (concat locale-gtd-dir "/project/supertool.org")
-				   ))
+(setq locale-notebook-dir "~/org")
 (setq locale-docset-dir "~/software/zeal-portable-0.5.0-windows-x64/docsets")
 
 
@@ -39,7 +33,7 @@
 
 (defun eye/open-goals-file ()
   (interactive)
-  (find-file-existing (concat locale-gtd-dir "/goals.org")))
+  (find-file-existing (expand-file-name "gtd/goals.org" locale-notebook-dir)))
 
 
 (defun eye/open-locale-file ()
