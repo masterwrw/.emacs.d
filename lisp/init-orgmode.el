@@ -32,7 +32,7 @@
   ;; (add-hook 'org-mode-hook 'yas-minor-mode)
   ;; indent content
   (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
-  (setq org-startup-indented t) ;; 是否自动开启org-indent-mode
+  (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
   (setq org-startup-folded (quote overview))
   ;; hides blank lines between headings
   (setq org-cycle-separator-lines 0)
@@ -41,7 +41,6 @@
   (setq calendar-week-start-day 1) ;; 日历从周一开始显示
   (setq org-support-shift-select 1) ;; 是否支持shift+方向键选择
   (setq org-hide-emphasis-markers t) ;; 隐藏斜体标记/text/，如果要删除，则确保光标移到斜体文字最后
-  (setq org-time-stamp-formats '("<%Y-%m-%d>" . "<%Y-%m-%d %H:%M>")) ;去掉默认的%a，避免插入时间时显示“周几”为\x数字
   ;; 用圆形符号表示列表开头，匹配" - "
   (font-lock-add-keywords 'org-mode
                           '(("^ +\\([-*]\\) "
@@ -135,9 +134,11 @@
   (add-to-list 'org-modules 'org-habit)
 
   ;; System locale to use for formatting time values.
-  (setq system-time-locale "C")         ; Make sure that the weekdays in the
-					; time stamps of your Org mode files and
-					; in the agenda appear in English.
+  ;; current is "zh_CN.UTF-8", if set to "C", Make sure that the weekdays in the
+  ;; time stamps of your Org mode files and in the agenda appear in English.
+  (setq system-time-locale "C")
+  ;;%a表示插入时间时显示“周几”，如果没有设置system-time-locale为"C"的话，会显示乱码
+  (setq org-time-stamp-formats '("<%Y-%m-%d %a>" . "<%Y-%m-%d %a %H:%M>"))
 
   (setq org-enforce-todo-dependencies t)
 
