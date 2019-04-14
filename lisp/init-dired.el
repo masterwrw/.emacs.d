@@ -37,10 +37,8 @@
   (define-key dired-mode-map (kbd "<f12>s") 'dired-dotfiles-toggle)
 
   ;; 使用 windows 程序打开文件
-  ;; (when is-windows
-    ;; (require 'w32-browser)
-    ;; (define-key dired-mode-map [f11] 'dired-w32-browser))
-
+   (when is-windows
+    (require 'w32-browser))
   
   )
 
