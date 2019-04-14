@@ -44,7 +44,8 @@
                                                   'face nil
                                                   'help-echo "Buffer is read-only"))))
                "] "
-
+	       "%n " ;; narrow state
+	       
                ;;global-mode-string, org-timer-set-timer in org-mode need this
                (propertize "%M" 'face nil)
 
