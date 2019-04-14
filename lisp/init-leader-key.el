@@ -198,12 +198,18 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("l" global-display-line-numbers-mode "Line number"))
 
 
+(defhydra hydra-dired (:exit t)
+  ("SPC" nil "quit")
+  ("o" dired-w32-browser "open")
+  ("e" dired-w32explorer "explorer"))
+
 (defvar hydra-major-mode-alist
   '((emacs-lisp-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
     (lisp-interaction-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
     (c++-mode . (lambda () (if (fboundp 'hydra-c++/body) (hydra-c++/body))))
     (python-mode . (lambda () (if (fboundp 'hydra-python/body) (hydra-python/body))))
     (org-mode . (lambda () (if (fboundp 'hydra-org/body) (hydra-org/body))))
+    (dired-mode . (lambda () (if (fboundp 'hydra-dired/body) (hydra-dired/body))))
     ))
 
 (defun eye/major-mode-key ()
