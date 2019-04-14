@@ -1,4 +1,7 @@
 ;;;; History
+(setq undo-limit 20000000)
+(setq undo-strong-limit 40000000)
+
 (require-maybe 'saveplace)
 
 
