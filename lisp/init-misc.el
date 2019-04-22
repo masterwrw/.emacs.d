@@ -33,8 +33,8 @@
 ;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
 ;; linux maybe need gdb, and use mouse to set breakpoint on fringe, so only hide fringe on windows.
 (when (and is-windows is-gui)
-  (set-window-fringes nil 5 3) ;; border side
-  (fringe-mode '(0 . 0)) ;; middle of split frame
+  (set-window-fringes nil 10 0) ;; border side
+  (fringe-mode '(10 . 0)) ;; middle of split frame
   )
 
 
