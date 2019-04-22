@@ -236,9 +236,9 @@
 				(org-deadline-warning-days 0)
 				(org-agenda-remove-tags t) ;don't show tags
 				))
-	  ("f" "Test" ((tags "Goal=\"Long\""
+	  ("f" "Test" ((tags "GOAL=\"Long\""
 			     ((org-agenda-overriding-header "Long term goals")))
-		       (tags "Goal=\"Medium\""
+		       (tags "GOAL=\"Medium\""
 			     ((org-agenda-overriding-header "Medium term goals")))
 		       (tags "Goal=\"Short\""
 			     ((org-agenda-overriding-header "Short term goals")))
@@ -272,6 +272,7 @@
   (defconst my-inbox-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
   (defconst my-work-todo-path (expand-file-name "work/todo.org" locale-notebook-dir))
   (defconst my-priv-todo-path (expand-file-name "private/todo.org" locale-notebook-dir))
+  (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
   (setq org-capture-templates
 	'(
           ("i"
@@ -287,6 +288,9 @@
 	  ;; file+olp specifies to full path to fill the Template
 	  ("m" "Private TODO" entry (file+olp my-priv-todo-path "Private" "Tasks")
            "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
+
+	  ("j" "Journal" entry (file+datetree my-journal-path)
+	   "* %?" :emptylines 1)
 
 	  ("g" "Goals") 
 	  ("ge" "Epic goals" entry (file+headline "goals.org" 
@@ -397,7 +401,7 @@
 	  (setq newname choice))
 	;; get relative path
 	(setq link (format "[[file:%s][%s]]"
-			   (file-relative-name fullpath (buffer-file-name))
+			   (file-relative-name fullpath)
 			   newname))
 	;; insert link
 	(insert link)	
@@ -449,7 +453,8 @@
   ("a" org-attach "attach")
   ("t" eye/insert-attach-link "insert attach link")
   ("i" org-insert-link "insert link")
-  ("s" eye/org-insert-src-block "insert src block"))
+  ("s" eye/org-insert-src-block "insert src block")
+  ("d" org-toggle-link-display "toggle display link"))
   
   
 (with-eval-after-load 'org
