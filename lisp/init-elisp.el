@@ -65,9 +65,6 @@
 
 
 
-(eye-set-leader-key emacs-lisp-mode-map)
-(eye-set-leader-key lisp-interaction-mode-map)
-
 
 
 

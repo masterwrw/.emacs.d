@@ -66,9 +66,9 @@ It has the ability to preview the bookmarks like `swiper-all'."
     (counsel-bm query)))
 
 
-(global-set-key (kbd "<f2>")   'bm-next)
-(global-set-key (kbd "<C-f2>") 'bm-previous)
-(global-set-key (kbd "<S-f2>") 'bm-toggle)
+;; (global-set-key (kbd "<f2>")   'bm-next)
+;; (global-set-key (kbd "<C-f2>") 'bm-previous)
+;; (global-set-key (kbd "<S-f2>") 'bm-toggle)
 
 
 (provide 'init-bm)

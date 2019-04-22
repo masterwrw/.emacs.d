@@ -330,9 +330,8 @@
   )
 
 
-(with-eval-after-load 'cc-mode ;can't use c++-mode
-  (eye-setup-c++)
-  (eye-set-leader-key c++-mode-map))
+(with-eval-after-load 'cc-mode
+  (eye-setup-c++))
 
 
 ;;;; company for cpp

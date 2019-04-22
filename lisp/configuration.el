@@ -87,7 +87,7 @@
 
 ;;;; basic configuration
 (eye-require 'init-packages "packages")
-(eye-require 'init-leader-key "leader-key")
+(eye-require 'init-keys "keys")
 (eye-require 'init-misc "misc")
 (eye-require 'init-font "font")
 (eye-require 'init-history "history")

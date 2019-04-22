@@ -125,10 +125,5 @@ If buffer-or-name is nil return current buffer's mode."
 ;;             desktop-minor-mode-table)))
 
 
-(defhydra+ hydra-funcs (:idle 1.0)
-  ("g" global-company-mode "Company" :exit t))
-
-(define-key global-map (kbd "<f7>") 'global-company-mode)
-
 
 (provide 'init-company)

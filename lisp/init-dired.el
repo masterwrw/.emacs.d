@@ -47,9 +47,6 @@
 (defhydra+ hydra-file (:exit t :idle 1.0)
   ("d" dired-jump "Dired"))
 
-(with-eval-after-load 'dired
-  (eye-reset-mode-leader-key dired-mode-map)
-  (eye-set-leader-key dired-mode-map))
 
 
 (provide 'init-dired)

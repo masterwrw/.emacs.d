@@ -1,0 +1,2 @@
+Home::CapsLock
+CapsLock::Home

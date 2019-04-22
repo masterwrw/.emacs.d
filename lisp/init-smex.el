@@ -69,7 +69,6 @@
 
 
 
-(eye-define-leader-key global-map "a" 'smex)
 
 
 

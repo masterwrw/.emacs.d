@@ -107,7 +107,6 @@
   ("c" counsel-imenu "counsel imenu")) ;counsel-semantic-or-imenu is not autoload function, use counsel-imenu
 
 
-(eye-define-key global-map "M-y" 'counsel-yank-pop)
 
 
 

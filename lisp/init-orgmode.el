@@ -445,8 +445,9 @@
   ;; ("a" eye/notes-create-attachment "Create attach dir")
   ;; ("o" eye/notes-open-attachment "Open attach")
   ("s" eye/notes-search-keyword "Search word")
-  ("f" eye/notes-search-file "Search file"))
-(eye-define-leader-key global-map "n" 'hydra-note/body)
+  ("f" eye/notes-search-file "Search file")
+  ("t" deft-or-close "deft")
+  )
 
 
 (defhydra hydra-org (:exit t)
@@ -459,9 +460,9 @@
   
 (with-eval-after-load 'org
   (eye-setup-orgmode)
-  (eye-set-leader-key org-mode-map)
-  (with-eval-after-load 'org-agenda
-    (eye-set-leader-key org-agenda-mode-map))
+  ;; (eye-set-leader-key org-mode-map)
+  ;; (with-eval-after-load 'org-agenda
+    ;; (eye-set-leader-key org-agenda-mode-map))
   )
 
 
