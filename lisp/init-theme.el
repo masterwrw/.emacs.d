@@ -1,12 +1,13 @@
-(require 'solarized)
-;; make the modeline high contrast
-(setq solarized-high-contrast-mode-line nil)
-;; Use less bolding
-(setq solarized-use-less-bold t)
-;; Use more italics
-(setq solarized-use-more-italic t)
+(load-theme 'wombat t)
 
-(load-theme 'solarized-dark t)
+;; (require 'solarized)
+;; make the modeline high contrast
+;; (setq solarized-high-contrast-mode-line nil)
+;; Use less bolding
+;; (setq solarized-use-less-bold t)
+;; Use more italics
+;; (setq solarized-use-more-italic t)
+;; (load-theme 'solarized-dark t)
 
 
 
