@@ -34,7 +34,13 @@
       (set-file-name-coding-system 'gbk)
       (modify-coding-system-alist 'process "*" 'gbk)
       (set-buffer-process-coding-system 'gbk 'gbk)
-      (set-file-name-coding-system 'gbk)))
+      (set-file-name-coding-system 'gbk)
+      ;; file encoding
+      ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
+      (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
+      (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
+      (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
+      ))
   (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
   (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
