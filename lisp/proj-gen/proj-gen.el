@@ -79,7 +79,33 @@
 
 
 (defun proj-gen-win32-project (dir name type)
-  (message "generate win32 project"))
+  (let* ((template-dir (expand-file-name (format "%s" type) proj-gen-template-dir))
+	 (proj-root-dir (expand-file-name name dir))
+	 (proj-dir (expand-file-name name proj-root-dir)) ;;vs项目要多创建一层目录用于放sln文件，git初始化到源文件上一层
+	 (vcxproj (expand-file-name "Win32Console.vcxproj" proj-dir))
+	 (vcxprojfilters (expand-file-name "Win32Console.vcxproj.filters" proj-dir))
+	 (vcxprojuser (expand-file-name "Win32Console.vcxproj.user" proj-dir)))
+      (if (file-directory-p template-dir)
+	  (copy-directory template-dir proj-dir nil t)
+	(message "template directory not exists.%s" template-dir))
+      ;; modify .vcxproj
+      (if (file-exists-p vcxproj)
+	  (progn (with-temp-buffer
+		   (insert-file-contents vcxproj)
+		   (replace-string "%s" name nil (point-min) (point-max))
+		   (set-buffer-file-coding-system proj-gen-file-encoding t nil)
+		   (write-file vcxproj)
+		   (rename-file vcxproj (expand-file-name (concat name ".vcxproj") proj-dir))
+		   (rename-file vcxprojfilters (expand-file-name (concat name ".vcxproj.filters") proj-dir))
+		   (rename-file vcxprojuser (expand-file-name (concat name ".vcxproj.user") proj-dir))
+		   )
+		 (message "Generated finished.")
+		 
+		 ;; git init and commit
+		 (when (and proj-gen-init-git (executable-find "git"))
+		   (proj-gen-git-init proj-root-dir))
+		 )
+	(message "copy failed"))))
 
 (defun proj-gen-cpp-project (type)
   "Create a c++ application project."
