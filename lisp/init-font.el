@@ -6,7 +6,7 @@
   (setq cn-font-size 16)
   )
 (when is-windows
-  (setq en-font-name "Inconsolata")
+  (setq en-font-name "Fira Code Light");;Inconsolata
   (setq cn-font-name "Microsoft YaHei")
   (setq en-font-size 16)
   (setq cn-font-size 13)
