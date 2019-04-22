@@ -5,8 +5,9 @@
   (cond
    ((equal major-mode 'c++-mode)
     (eno-word-copy))
-   ((equal major-mode 'emacs-lisp-mode)
-    (eno-symbol-copy))))
+   ((or (equal major-mode 'emacs-lisp-mode) (equal major-mode 'lisp-interaction-mode))
+    (eno-symbol-copy))
+   (t (eno-word-copy))))
 
 
 (provide 'init-eno)
