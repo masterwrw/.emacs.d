@@ -23,6 +23,15 @@
 (setq-default pathname-coding-system 'utf-8)
 (set-file-name-coding-system 'utf-8)
 
+(when is-windows
+  (setq default-process-coding-system '(gbk . gbk))
+  ;; file encoding
+  ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
+  (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
+  (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
+  (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
+  )
+
 ;; windows shell
 (when (and is-windows is-terminal)
   (defun eye/change-shell-mode-coding ()
@@ -34,12 +43,6 @@
       (set-file-name-coding-system 'gbk)
       (modify-coding-system-alist 'process "*" 'gbk)
       (set-buffer-process-coding-system 'gbk 'gbk)
-      (set-file-name-coding-system 'gbk)
-      ;; file encoding
-      ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
-      (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
-      (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
-      (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
       ))
   (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
   (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
