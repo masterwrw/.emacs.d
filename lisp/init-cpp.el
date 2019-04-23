@@ -1,5 +1,7 @@
 (require-maybe 'cc-mode)
 
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 ;; outline fold
 (add-hook 'c++-mode-hook
 	  (lambda ()
@@ -14,96 +16,39 @@
 ;; (add-hook 'c-mode-hook 'yas-minor-mode)
 
 
-(defun eye/find-corresponding-file ()
-  "Find the file that corresponds to this one."
-  (interactive)
-  (setq CorrespondingFileName nil)
-  (setq BaseFileName (file-name-sans-extension buffer-file-name))
-  (if (string-match "\\.c" buffer-file-name)
-      (setq CorrespondingFileName (concat BaseFileName ".h")))
-  (if (string-match "\\.h" buffer-file-name)
-      (if (file-exists-p (concat BaseFileName ".c")) (setq CorrespondingFileName (concat BaseFileName ".c"))
-        (setq CorrespondingFileName (concat BaseFileName ".cpp"))))
-  (if (string-match "\\.hin" buffer-file-name)
-      (setq CorrespondingFileName (concat BaseFileName ".cin")))
-  (if (string-match "\\.cin" buffer-file-name)
-      (setq CorrespondingFileName (concat BaseFileName ".hin")))
-  (if (string-match "\\.cpp" buffer-file-name)
-      (setq CorrespondingFileName (concat BaseFileName ".h")))
-  (if (string-match "\\.c" buffer-file-name)
-      (setq CorrespondingFileName (concat BaseFileName ".h")))
-  (if CorrespondingFileName (find-file CorrespondingFileName)
-    (error "Unable to find a corresponding file")))
+(defun eye/find-header-or-source-file (&optional is-open-other-window)
+  "Find the header or source file of this one."
+  (interactive "P")
+  (let ((full-base-name (file-name-sans-extension buffer-file-name)) ;;无后缀的文件路径
+	(header-or-source-path nil))
+    
+    (cond ((string-match "\\.h" buffer-file-name)
+	   (if (file-exists-p (concat full-base-name ".c"))
+	       (setq header-or-source-path (concat full-base-name ".c"))
+	     (setq header-or-source-path (concat full-base-name ".cpp"))))
+	  
+	  ((string-match "\\.c" buffer-file-name)
+	   (setq header-or-source-path (concat full-base-name ".h")))
+	  
+	  ((string-match "\\.cpp" buffer-file-name)
+	   (setq header-or-source-path (concat full-base-name ".h")))
 
-(add-hook 'c++-mode-common-hook
-          '(lambda ()
-             (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
-
-(add-hook 'c-mode-common-hook
-          '(lambda ()
-             (local-set-key (kbd "C-c f") 'eye/find-correspoinding-file)))
-
-
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+	  (t (message "File name no suffix")))
+    (if header-or-source-path
+	(if is-open-other-window (find-file-other-window header-or-source-path)
+	  (find-file header-or-source-path))
+      (error "Unable to find a header or source file"))))
 
 
 ;; 奇怪问题：在 emacs 中使用 mingw32-make 编译时总是报错无法找到引用，链接出错。
 ;; 但是在命令行下却又能成功编译。
 ;; 所以不直接调用 mingw32-make，而是调用 build.bat 批处理文件来进行编译。
-(defvar build-script nil)
-(if (eq system-type 'windows-nt)
-    (setq build-script "build.bat")
-  (setq build-script "build.sh")
-  )
-
-(setq qt-dir "C:\\Qt\\Qt4.8.7\\bin")
-(setq qtcreator-dir "C:\\Qt\\qtcreator-4.6.0\\bin")
-(setq gcc-dir "C:\\Qt\\Qt4.8.7\\bin")
-(setq vs-env "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat")
-
-(defun eye/set-gcc-env ()
-  (let (path)
-    (setq path (concat "@echo off\r\n"
-                       "set path=%path%;" qt-dir ";" gcc-dir ";" qtcreator-dir ";" "\r\n"))
-    path))
-
-(defun eye/set-vs-env ()
-  (let (path)
-    (setq path (concat "@echo off\r\n"
-                       "call \"" vs-env "\"" "\r\n"))
-    path))
-
-(defun eye/get-directory ()
-  (let ((dir (read-directory-name "Project Directory: ")))
-    (if (not (file-exists-p dir))
-        (mkdir dir))
-    dir))
-
-(defun eye/create-qt-gcc-build-script ()
-  (interactive)
-  (let (dir file script command)
-    (setq dir (eye/get-directory))
-    (setq file (concat dir build-script))
-    (setq command (format "mingw32-make -w -f Makefile.Release -C %s" dir))
-    (setq script (concat (eye/set-gcc-env) command))
-    (f-write script 'gbk file)
-    ))
-
-(defun eye/create-qt-vs-build-script ()
-  (interactive)
-  (let (dir file script command projectfile)
-    (setq projectfile (read-file-name "Project file:"))
-    (setq dir (file-name-directory projectfile))
-    (setq file (concat dir build-script))
-    (setq command (format "devenv \"%s\" /build" projectfile))
-    (setq script (concat (eye/set-vs-env) command))
-    (f-write script 'gbk file)
-    ))
+(defvar build-script (if is-windows "build.bat" "build.sh")
+  "build script file name")
 
 (require-maybe 'compile)
 (with-eval-after-load 'compile
   (setq compilation-directory-locked nil)
-
   ;; Compilation
   (setq compilation-context-lines 0)
   (setq compilation-error-regexp-alist
@@ -111,100 +56,49 @@
               compilation-error-regexp-alist))
   )
 
-(defun find-project-directory-recursive (x)
-  "Recursively search for a makefile."
-  (interactive)
-  (if (file-exists-p x) t
-    (cd "../")
-    (find-project-directory-recursive x)))
-
-(defun lock-compilation-directory ()
-  "The compilation process should NOT hunt for a makefile"
-  (interactive)
-  (setq compilation-directory-locked t)
-  (message "Compilation directory is locked."))
-
-(defun unlock-compilation-directory ()
-  "The compilation process SHOULD hunt for a makefile"
-  (interactive)
-  (setq compilation-directory-locked nil)
-  (message "Compilation directory is roaming."))
-
-
-(defun find-project-directory ()
-  "Find the project directory."
-  (interactive)
-  (setq find-project-from-directory default-directory)
-  ;;(switch-to-buffer-other-window "*compilation*")
-  (if compilation-directory-locked (cd last-compilation-directory)
-    (cd find-project-from-directory)
-    (find-project-directory-recursive build-script)
-    (setq last-compilation-directory default-directory)))
-
-
-;; 在当前和上级目录中查找 Makefile 文件路径
-(require 'cl) ; If you don't have it already
-(defun* get-closest-pathname (&optional (file "Makefile"))
-  "Determine the pathname of the first instance of FILE starting from the current directory towards root.
-    This may not do the correct thing in presence of links. If it does not find FILE, then it shall return the name
-    of FILE in the current directory, suitable for creation"
-  (let ((root (expand-file-name "/"))) ; the win32 builds should translate this correctly
-    (expand-file-name file
-                      (loop
-                       for d = default-directory then (expand-file-name ".." d)
-                       if (file-exists-p (expand-file-name file d))
-                       return d
-                       if (equal d root)
-                       return nil))))
-
-;; For M-x compile
-(defun build-command ()
-  (set (make-local-variable 'compile-command)
-       (get-closest-pathname build-script)))
-
-(add-hook 'c++-mode-hook 'build-command)
-
-(defun eye/compile-cpp ()
-  (interactive)
-  (let (command (get-closest-pathname build-script))
-    (compile command))
-  )
-
-
 
 ;; Success or failure of compile
 (defun notify-compilation-result(buffer msg)
-  "Notify that the compilation is finished."
-  (if (string-match "^finished" msg)
+  "Notify that the compilation is finished.
+通过build.bat中msbuild编译，有错误，但msg总是为\"finished\"
+"
+  (with-current-buffer buffer
+    ;;0前面增加一个空格，避免匹配到10,20等
+    (if (string-match " 0 个错误" (buffer-substring-no-properties (point-min) (point-max)))
+	(progn
+	  (tooltip-show "\n Compile Success \n ")
+	  ;;自动关闭buffer @see https://emacs.stackexchange.com/questions/62/hide-compilation-window
+          (run-at-time
+           "2 sec" nil 'delete-windows-on
+           (get-buffer-create "*compilation*"))
+          (message "No Compilation Errors!"))
       (progn
-        ;;    (delete-windows-on buffer) ; Auto close compilation buffer
-        (tooltip-show "\n Compilation Successful :-) \n "))
-    (tooltip-show "\n Compilation Failed :-( \n ")))
-
+	(tooltip-show "\n Compile Failed!!! :-( \n ")
+	(message "Compilation Failed!!! :-(")))))
+  
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
+(setq compilation-scroll-output t) ;;自动滚动
+(setq compilation-auto-jump-to-first-error t) ;;编译时有错误，则自动跳转到第一个错误
+(setq compilation-always-kill t) ;;执行编译时，如果有前一个编译命令正在执行，自动kill，不询问
 
-(defun make-without-asking ()
-  "Make the current build."
-  (interactive)
-  (if (find-project-directory) (compile (concat "build.bat " (buffer-name (current-buffer)) )))
-  ;;(switch-to-buffer-other-window "*compilation*")
-  (delete-other-window)
-  (switch-to-buffer "*compilation*"))
+;; For M-x compile
+(defun build-command ()
+  (let ((dir (locate-dominating-file buffer-file-name build-script)))
+    (when dir
+      (set (make-local-variable 'compile-command)
+	   (expand-file-name build-script dir)))))
 
-(defun real-make-without-asking ()
-  "Make the current build."
-  (interactive)
-  (if (find-project-directory) (compile "make" ))
-  (switch-to-buffer-other-window "*compilation*")
-  (other-window 1))
+(add-hook 'c++-mode-hook 'build-command)
+
+;; (defun eye/compile-cpp ()
+;;   (interactive)
+;;   (let ((dir (locate-dominating-file buffer-file-name build-script)))
+;;     (when dir
+;;       (compile (expand-file-name build-script dir)))))
 
 
-(require-maybe 'smart-compile)
-(with-eval-after-load 'smart-compile
-  (setq smart-compile-option-string "-w -s -j4"))
-
-(defun eye/cpp-help ()
+(defun eye/search-cpp-doc ()
   "Find cpp reference document."
   (interactive)
   (let ((url "http://zh.cppreference.com/mwiki/index.php?search="))

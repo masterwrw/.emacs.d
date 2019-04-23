@@ -156,7 +156,16 @@
 
 
 (defhydra hydra-cpp (:exit t)
-  ("l" eye/load-project-root-tags "load root tags"))
+  ("a" counsel-etags-list-tag "list tag")
+  ("c" counsel-etags-scan-code "create TAGS")
+  ("d" counsel-etags-find-tag-at-point "find tag at point")
+  ("e" counsel-etags-find-tag "find tag")
+  ("r" counsel-etags-recent-tag "recent tag")
+  ("t" eye/update-ctags-this-file "update file tags")
+  ("f" eye/find-header-or-source-file "find h or cpp")
+  ("l" eye/load-project-root-tags "load root tags")
+  ("s" eye/search-cpp-doc "cpp doc")
+  ("g" compile "compile"))
 
 
 
