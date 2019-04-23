@@ -26,7 +26,7 @@
 ;;;; org
 (defun eye-setup-orgmode ()
   (setq org-ellipsis " ")
-  (setq org-src-fontify-natively nil) ;; 代码块内语法高亮
+  (setq org-src-fontify-natively t) ;; 代码块内语法高亮
   (setq org-src-tab-acts-natively t)
   ;; (setq org-src-window-setup 'current-window) ;; 在当前window打开
   ;; (add-hook 'org-mode-hook 'yas-minor-mode)
