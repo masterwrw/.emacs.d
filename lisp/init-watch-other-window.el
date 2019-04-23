@@ -9,8 +9,8 @@
   ("SPC" nil "quit")
   ("i" watch-other-window-down-line "Down line")
   ("k" watch-other-window-up-line "Up line")
-  ("l" watch-other-window-down "Down scroll")
-  ("j" watch-other-window-up "Up scroll"))
+  ("p" watch-other-window-down "Down scroll")
+  ("n" watch-other-window-up "Up scroll"))
 
 
 (defhydra+ hydra-window (:idle 1.0)
