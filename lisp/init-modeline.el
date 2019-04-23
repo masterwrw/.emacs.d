@@ -6,13 +6,16 @@
 ;; use setq-default to set it for /all/ modes
 (setq-default mode-line-format
               (list
+	       ;;"%e"
+	       ;;mode-line-front-space
+	       " ["
                ;; the buffer name; the file name as a tool tip
                '(:eval (propertize (if (buffer-modified-p)
-                                                                   "%b* "
-                                                                 "%b ")
-                                                           'face nil
+                                       "%b *"
+                                     "%b")
+                                   'face nil
                                    'help-echo (buffer-file-name)))
-
+	       "] "
                ;; line and column
                "(" ;; '%02' to set to 2 chars at least; prevents flickering
                "%02l" "," "%01c"
@@ -45,7 +48,15 @@
                                                   'help-echo "Buffer is read-only"))))
                "] "
 	       "%n " ;; narrow state
-	       
+
+	       '(:eval (if (string-match-p "wubi" (format "%s" current-input-method))
+			   "WB"
+			 "EN"))
+
+	       " "
+	       '(:eval (if (bound-and-true-p which-function-mode)
+			   which-func-format
+			 ""))
                ;;global-mode-string, org-timer-set-timer in org-mode need this
                (propertize "%M" 'face nil)
 
