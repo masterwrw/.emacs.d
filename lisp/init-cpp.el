@@ -91,12 +91,10 @@
 
 (add-hook 'c++-mode-hook 'build-command)
 
-;; (defun eye/compile-cpp ()
-;;   (interactive)
-;;   (let ((dir (locate-dominating-file buffer-file-name build-script)))
-;;     (when dir
-;;       (compile (expand-file-name build-script dir)))))
-
+(defun eye/auto-compile ()
+  (interactive)
+  (when compile-command
+    (compile compile-command)))
 
 (defun eye/search-cpp-doc ()
   "Find cpp reference document."

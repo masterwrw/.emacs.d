@@ -156,7 +156,10 @@
 
 
 (defhydra hydra-cpp (:exit t)
-  ("a" counsel-etags-list-tag "list tag")
+  "
+_a_: list tags
+"
+  ("a" counsel-etags-list-tag)
   ("c" counsel-etags-scan-code "create TAGS")
   ("d" counsel-etags-find-tag-at-point "find tag at point")
   ("e" counsel-etags-find-tag "find tag")
@@ -165,7 +168,7 @@
   ("f" eye/find-header-or-source-file "find h or cpp")
   ("l" eye/load-project-root-tags "load root tags")
   ("s" eye/search-cpp-doc "cpp doc")
-  ("g" compile "compile"))
+  ("g" eye/auto-compile "compile"))
 
 
 
