@@ -9,7 +9,6 @@
 (setq xah-fly-use-meta-key nil)
 (require 'xah-fly-keys)
 (xah-fly-keys-set-layout "qwerty")
-(xah-fly-keys 1)
 
 ;; use [ESC] replace [C-g]
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -320,6 +319,8 @@ _a_: list tags
 
 
 
+
+(xah-fly-keys 1)
 
 
 (provide 'init-keys)
