@@ -4,7 +4,7 @@
 
 (setq inhibit-startup-message t) ;; 禁用启动后显示的消息 buffer
 (setq initial-scratch-message nil) ;; 禁止显示 *scratch* buffer 中默认出现的文本
-(setq inhibit-compacting-font-caches t) ;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t) ;; 防止卡顿，Don’t compact font caches during GC.
 (setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-screen t)
 (setq use-file-dialog nil)
