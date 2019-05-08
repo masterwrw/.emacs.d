@@ -1,15 +1,15 @@
-(load-theme 'wombat t)
+;; (load-theme 'wombat t)
 
-;; (require 'solarized)
+(require 'solarized)
 ;; make the modeline high contrast
-;; (setq solarized-high-contrast-mode-line nil)
+(setq solarized-high-contrast-mode-line t)
 ;; Use less bolding
-;; (setq solarized-use-less-bold t)
+(setq solarized-use-less-bold t)
 ;; Use more italics
-;; (setq solarized-use-more-italic t)
-;; (load-theme 'solarized-dark t)
+(setq solarized-use-more-italic t)
+(load-theme 'solarized-dark t)
 
-
+(set-face-attribute 'which-func nil :foreground "#003300")
 
 ;; set some faces color
 ;; (set-face-attribute 'default nil :foreground "#daa520")
