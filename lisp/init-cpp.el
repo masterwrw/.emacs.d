@@ -50,10 +50,36 @@
 (with-eval-after-load 'compile
   (setq compilation-directory-locked nil)
   ;; Compilation
-  (setq compilation-context-lines 0)
-  (setq compilation-error-regexp-alist
-	(cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
-              compilation-error-regexp-alist))
+  (setq compilation-context-lines 0)  
+  
+  (setq compilation-scroll-output t) ;;自动滚动
+  (setq compilation-auto-jump-to-first-error t) ;;编译时有错误，则自动跳转到第一个错误
+  (setq compilation-always-kill t) ;;执行编译时，如果有前一个编译命令正在执行，自动kill，不询问
+  ;; 使next-error跳过warning @see https://emacs-china.org/t/compilation-mode-next-error-warning/9095/10
+  ;; 或者使用pcre2el包使用pcre的正则语法来匹配错误
+  (setq compilation-skip-threshold 2)
+  (if (bound-and-true-p rxt-pcre-to-elisp) ;; pcre2el,https://github.com/joddie/pcre2el
+      (progn
+	(add-to-list 'compilation-error-regexp-alist 'fixed-msvc)
+	(add-to-list 'compilation-error-regexp-alist-alist
+		     `(fixed-msvc
+		       ,(rxt-pcre-to-elisp (concat
+					    "^\\s*(?:\\d+>\\s*)?"  ; for msbuild, it will add "\d+>" on each line
+					    "("                    ; group 1: hyperlink
+					    "((?:\\w:)?[^:\t\n]+?)" ; group 2: file path
+					    "(?:\\((\\d+)\\))?"    ; group 3: line number
+					    "\\s*:\\s*"
+					    "(?:(note)|(warning)|(fatal )?error)(\\s+C\\d+)?" ; group 4: note, group 5: warning
+					    "\\s*:"
+					    ")"))
+		       2 3 nil (5 . 4) 1))
+	)
+    ;; emacs本身的正则语法
+    (setq compilation-error-regexp-alist
+	  (cons '("^\\([0-9]+>\\)?\\(\\(?:[a-zA-Z]:\\)?[^:(\t\n]+\\)(\\([0-9]+\\)) : \\(?:fatal error\\|warnin\\(g\\)\\) C[0-9]+:" 2 3 nil (4))
+		compilation-error-regexp-alist)))
+
+
   )
 
 
@@ -78,9 +104,6 @@
   
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
-(setq compilation-scroll-output t) ;;自动滚动
-(setq compilation-auto-jump-to-first-error t) ;;编译时有错误，则自动跳转到第一个错误
-(setq compilation-always-kill t) ;;执行编译时，如果有前一个编译命令正在执行，自动kill，不询问
 
 ;; For M-x compile
 (defun build-command ()
