@@ -58,11 +58,6 @@
 
 
 
-(defhydra hydra-elisp ()
-  ("x" eval-last-sexp "Eval last" :exit t)
-  ("i" imenu "imenu" :exit t)
-  ("SPC" keyboard-quit "quit" :exit t))
-
 
 
 
