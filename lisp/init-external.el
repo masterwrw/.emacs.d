@@ -16,6 +16,7 @@
 			  ("xfce terminal" . "xfce4-terminal")
 			  ("calc" . "c:/Windows/System32/calc.exe")
 			  ("github desktop" . "C:/Users/soeye/AppData/Local/GitHubDesktop/GitHubDesktop.exe")
+			  ("cmake" . "C:/software/cmake-3.14.2-win32-x86/bin/cmake-gui.exe")
 			  ))
 (defun eye/open-external ()
   "Open locale program"
