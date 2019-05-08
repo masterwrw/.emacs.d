@@ -32,7 +32,7 @@
   ;; (add-hook 'org-mode-hook 'yas-minor-mode)
   ;; indent content
   (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
-  (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
+  (setq org-startup-indented t) ;; 是否自动开启org-indent-mode
   (setq org-startup-folded (quote overview))
   ;; hides blank lines between headings
   (setq org-cycle-separator-lines 0)
@@ -147,7 +147,7 @@
 
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-	  (sequence "WAITING(w)" "|" "CANCELLED(c)" "DEFERRED(f)")
+	  (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)" "DEFERRED(f)")
 	  (sequence "GOAL(g)")
           ))
 
@@ -155,12 +155,13 @@
 	'(("REPEAT" . (:foreground "OliveDrab" :bold t :weight bold))
 	  ("NEXT" . (:foreground "SlateBlue3" :bold t :weight bold))
           ("TODO" . (:foreground "cyan" :bold t :weight bold))
-          ("STARTED" . (:foreground "springgreen" :bold t :weight bold))
+          ("STARTED" . (:foreground "#009900" :bold t :weight bold))
           ("CANCELLED" . (:foreground "#DC143C" :bold t :weight bold))
           ("WAITING" . (:foreground "yellow" :bold t :weight bold))
+	  ("SOMEDAY" . (:foreground "yellow" :bold t :weight bold))
           ("DEFERRED" . (:foreground "OrangeRed" :bold t :weight bold))
           ("DONE" . (:foreground "gray50" :background "gray30"))
-	  ("GOAL" . (:foreground "springgreen" :bold t :weight bold))
+	  ("GOAL" . (:foreground "#009900" :bold t :weight bold))
 	  ))
 
   ;; tags
@@ -193,6 +194,7 @@
 			  (expand-file-name "work/todo.org" locale-notebook-dir)
 			  (expand-file-name "private/todo.org" locale-notebook-dir)
 			  (expand-file-name "private/goals.org" locale-notebook-dir)
+			  (expand-file-name "private/journal.org" locale-notebook-dir)
 			  ))
   ;; (append-to-list 'org-agenda-files locale-custom-projects)
   (setq org-default-notes-file (expand-file-name "inbox/inbox.org" locale-notebook-dir))
@@ -236,14 +238,7 @@
 				(org-deadline-warning-days 0)
 				(org-agenda-remove-tags t) ;don't show tags
 				))
-	  ("f" "Test" ((tags "GOAL=\"Long\""
-			     ((org-agenda-overriding-header "Long term goals")))
-		       (tags "GOAL=\"Medium\""
-			     ((org-agenda-overriding-header "Medium term goals")))
-		       (tags "Goal=\"Short\""
-			     ((org-agenda-overriding-header "Short term goals")))
-		       ))
-	  
+
 	  ("g" "Weekly Goals Review"
 	   ((tags "Goal=\"Long\""
 		  ((org-agenda-overriding-header "Long term goals")))
@@ -255,8 +250,7 @@
 		       ((org-agenda-overriding-header "Actions that don't contribute to a goal yet"))))
 	   )
 
-	  ("G" "Goals" tags "GOAL-TODO=\"GOAL\"" nil)
-	  
+	  ;; ("G" "Goals" tags "GOAL-TODO=\"GOAL\"" nil)	  
 	  ))
 
   (defun eye/open-agenda-day-view ()
@@ -275,23 +269,35 @@
   (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
   (setq org-capture-templates
 	'(
-          ("i"
-           "Inbox" entry (file+headline my-inbox-path "Inbox")
-           "* %?\n%i\n"
-           :create t)
+	  ;; Capture information
+          ("i" "Inbox" entry (file+headline my-inbox-path "Inbox")
+           "* %?\n%i\n" :create t)
 
-	  ;; Create Todo under GTD.org -> Work -> Tasks
-	  ;; file+olp specifies to full path to fill the Template
-	  ("w" "Work TODO" entry (file+olp my-work-todo-path "Work" "Tasks")
-	   "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  ;; Create Todo under GTD.org -> Private -> Tasks
-	  ;; file+olp specifies to full path to fill the Template
-	  ("m" "Private TODO" entry (file+olp my-priv-todo-path "Private" "Tasks")
-           "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:")
-
+	  ;; Record event
 	  ("j" "Journal" entry (file+datetree my-journal-path)
-	   "* %?" :emptylines 1)
+           "* %U - %^{heading} %^G\n %?\n")
 
+	  ;; Create a daily plan
+	  ("d" "Daily plan" entry (file+datetree my-journal-path)
+	   "* plan[/]\n - [ ] %?\n")
+
+	  ;; Work task
+	  ;; file+olp specifies to full path to fill the Template
+	  ("w" "Work")
+	  ("wt" "Todo" entry (file+olp my-work-todo-path "Work" "Tasks")
+	   "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ("ws" "Someday" entry (file+olp my-work-todo-path "Work" "Tasks")
+	   "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+
+	  ;; Private task
+	  ;; file+olp specifies to full path to fill the Template
+	  ("m" "My private")
+	  ("mt" "Todo" entry (file+olp my-priv-todo-path "Private" "Tasks")
+           "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ("ms" "Someday" entry (file+olp my-priv-todo-path "Private" "Tasks")
+           "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  
+	  ;; Create goal
 	  ("g" "Goals") 
 	  ("ge" "Epic goals" entry (file+headline "goals.org" 
 						  "Epic goals") (file "tpl-goals.txt") :empty-lines-after 1) 
@@ -302,12 +308,11 @@
 	  ("gs" "Short term goals (next 6 months)" entry (file+headline "goals.org" 
 									"Short term goals (next 6 months)") (file "tpl-goals.txt") :empty-lines-after 1)
 
+	  ;; Web capture
           ;; org-protocol: https://github.com/sprig/org-capture-extension
-
           ("p" 
            "org-protocol(web link)" entry (file+headline my-inbox-path "INBOX")
-           "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] \
-                %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+           "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
            :create t)
           
           ("L" 
@@ -322,6 +327,24 @@
   (add-to-list 'org-modules 'org-attach)
   (setq org-attach-directory (expand-file-name "attach" locale-notebook-dir))
   )
+
+(defun eye/open-journal-file ()
+  (interactive)
+  (if (file-exists-p my-journal-path)
+      (find-file my-journal-path)
+    (message "No journal file.")))
+
+(defun eye/open-attach-dired ()
+  "显示对应的附件目录在下方"
+  (interactive)
+  (when (eq major-mode 'org-mode)
+    (let ((h (- (window-body-height (selected-window)) 10))
+	  (dir (org-attach-dir)))
+      (message dir)
+      (split-window-vertically h)
+      (other-window 1)
+      (dired dir)
+      (other-window 1))))
 
 (defun eye/notes-search-keyword ()
   (interactive)
@@ -433,6 +456,13 @@
 ;; 	    )
 ;; 	(message "Attachment folder not exists!")	
 ;; 	)))
+
+
+(require-maybe 'org-journal)
+(setq org-journal-file-type 'daily)
+(setq org-journal-dir "~/org/private/journal/")
+(setq org-journal-file-format "%Y-%m-%d")
+
 
 (defhydra+ hydra-funcs (:idle 1.0)
   ("c" org-capture "Capture" :exit t)
