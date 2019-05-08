@@ -37,25 +37,28 @@
   )
 
 
-;; ivy-posframe
-;; (when (and is-gui (>= emacs-major-version 26))
-;;   (require 'ivy-posframe)
-;;   ;; (setq ivy-display-function #'ivy-posframe-display)
-;;   ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
-;;   ;; (setq ivy-display-function #'ivy-posframe-display-at-window-center)
-;;   (setq ivy-display-function #'ivy-posframe-display-at-frame-bottom-left)
-;;   ;; (setq ivy-display-function #'ivy-posframe-display-at-window-bottom-left)
-;;   ;; (setq ivy-display-function #'ivy-posframe-display-at-point)
+;; ;; ivy-posframe
+(when (and is-gui (>= emacs-major-version 26))
+  (require 'ivy-posframe)
+  ;; (setq ivy-display-function #'ivy-posframe-display) ;显示在window下边
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-window-center)
+  (setq ivy-display-function #'ivy-posframe-display-at-frame-bottom-left)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-window-bottom-left)
+  ;; (setq ivy-display-function #'ivy-posframe-display-at-point)
 
-;;   (push '(counsel-M-x . ivy-posframe-display-at-window-bottom-left) ivy-display-functions-alist)
-;;   (push '(complete-symbol . ivy-posframe-display-at-point) ivy-display-functions-alist)
-;;   (push '(swiper . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(counsel-M-x . ivy-posframe-display-at-window-bottom-left) ivy-display-functions-alist)
+  (push '(complete-symbol . ivy-posframe-display-at-point) ivy-display-functions-alist)
+  (push '(swiper . ivy-posframe-display-at-point) ivy-display-functions-alist)
 
-;;   ;; show border
-;;   (set-face-attribute 'internal-border nil :background "gray50")
-;;   (setq ivy-posframe-border-width 1)
-;;   (ivy-posframe-enable)
-;;   )
+  ;; show border
+  (set-face-attribute 'internal-border nil :background "red")
+  ;; 设置ivy-posframe中的光标颜色，避免在solarized-dark theme中看不见
+  (set-face-attribute 'ivy-posframe-cursor nil :foreground "#00A876")
+
+  (setq ivy-posframe-border-width 1)
+  (ivy-posframe-enable)  
+  )
 
 
 
