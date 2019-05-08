@@ -82,3 +82,5 @@ wget -O~/packages/find-file-in-tags/find-file-in-tags.el http://www.emacswiki.or
 git clone https://github.com/expez/company-quickhelp.git
 git clone https://github.com/joodland/bm.git
 git clone https://github.com/jrblevin/deft.git
+git clone https://github.com/bastibe/org-journal.git
+git clone https://github.com/mkcms/ivy-yasnippet.git
