@@ -67,7 +67,7 @@
 (with-eval-after-load 'doom-modeline-mode
   (cancel-timer doom-modeline--github-timer))
 
-(doom-modeline-mode 1)
+;; (doom-modeline-mode 1)
 
 ;;;; time
 (require 'time)

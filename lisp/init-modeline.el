@@ -54,12 +54,14 @@
 			 "EN"))
 
 	       " "
+	       ;;global-mode-string, org-timer-set-timer in org-mode need this
+               (propertize "%M" 'face nil)
+
+	       " "
 	       '(:eval (if (bound-and-true-p which-function-mode)
 			   which-func-format
 			 ""))
-               ;;global-mode-string, org-timer-set-timer in org-mode need this
-               (propertize "%M" 'face nil)
-
+               
                " --"
                ;; i don't want to see minor-modes; but if you want, uncomment this:
                ;; minor-mode-alist  ;; list of minor modes
