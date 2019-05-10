@@ -126,7 +126,7 @@
 (eye-require 'init-color-rg "color-rg")
 (eye-require 'init-elisp "elisp")
 (eye-require 'init-orgmode "orgmode")
-(eye-require 'init-yankpad "yankpad")
+(eye-require 'init-yasnippet "yasnippet")
 (eye-require 'init-deft "deft")
 (eye-require 'init-cpp "cpp")
 (eye-require 'init-php "php")
