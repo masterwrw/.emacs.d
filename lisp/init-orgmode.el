@@ -23,6 +23,9 @@
 (require-maybe 'org)
 (require-maybe 'helm-org)
 
+;; (defvar today-journal-path nil "Shold be ~/org/private/journal/y-m-d.org")
+(defvar eye-journal-dir "~/org/private/journal/")
+
 ;;;; org
 (defun eye-setup-orgmode ()
   (setq org-ellipsis " ")
@@ -53,12 +56,12 @@
 
   (defalias 'org-beginning-of-line 'eye/beginniing-of-line)
 
-  (defun eye/org-meta-return ()
-    "确保按下M-RET时不会打断当前行"
-    (interactive)
-    (org-end-of-line)
-    (org-meta-return))
-  (define-key org-mode-map (kbd "M-RET") 'eye/org-meta-return)
+  ;; (defun eye/org-meta-return ()
+  ;;   "确保按下M-RET时不会打断当前行（但是折叠有属性或内容时会打断属性）"
+  ;;   (interactive)
+  ;;   (org-end-of-line)
+  ;;   (org-meta-return))
+  (define-key org-mode-map (kbd "M-RET") 'org-insert-heading-respect-content)
 
   ;; Exported to HTML
   (require-maybe 'htmlize)
@@ -177,6 +180,12 @@
   ;;                       ;; ("FIELD" . ?f)
   ;;                       ("READING" . ?r))) ;; reading
 
+  ;; (require 'org-journal)
+  ;; (setq org-journal-file-type 'daily)
+  ;; (setq org-journal-dir "~/org/private/journal/")
+  ;; (setq org-journal-file-format "%Y-%m-%d.org")
+  ;; (setq today-journal-path (org-journal-find-location))
+
   (require-maybe 'org-protocol)
 
   (defun transform-square-brackets-to-round-ones(string-to-transform)
@@ -191,20 +200,20 @@
   (setq org-columns-default-format "%7Goal(Goal) %12DEADLINE(Deadline) %30SCHEDULED(Scheduled) %8TODO(To Do) %1PRIORITY(P) %150ITEM(Detailes)")
 
   (setq org-agenda-files (list
-			  (expand-file-name "work/todo.org" locale-notebook-dir)
+			  ;; (expand-file-name "work/todo.org" locale-notebook-dir)
 			  (expand-file-name "private/todo.org" locale-notebook-dir)
-			  (expand-file-name "private/goals.org" locale-notebook-dir)
-			  (expand-file-name "private/journal.org" locale-notebook-dir)
+			  ;; (expand-file-name "private/goals.org" locale-notebook-dir)
+			  ;; (expand-file-name "private/journal.org" locale-notebook-dir)
 			  ))
   ;; (append-to-list 'org-agenda-files locale-custom-projects)
   (setq org-default-notes-file (expand-file-name "inbox/inbox.org" locale-notebook-dir))
   (defun eye/open-inbox-file () (interactive) (find-file org-default-notes-file))
 
-  (setq org-refile-targets
-	`(
-          (,(expand-file-name "work/todo.org" locale-notebook-dir) :level . 1)
-          (,(expand-file-name "private/todo.org" locale-notebook-dir) :level . 1)
-          ))
+  ;; (setq org-refile-targets
+  ;; 	`(
+  ;;         (,(expand-file-name "work/todo.org" locale-notebook-dir) :level . 1)
+  ;;         (,(expand-file-name "private/todo.org" locale-notebook-dir) :level . 1)
+  ;;         ))
 
   ;; org-archive-subtree moving an tree to archive file
   ;; settings on org file #+ARCHIVE file head or ARCHIVE PROPERTY
@@ -223,8 +232,8 @@
 	  ("ww" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"work\"")
 
 	  ("p" . "Private")
-	  ("pn" "Next" tags-todo "+CATEGORY=\"private\"")
-	  ("pw" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"private\"")
+	  ("pn" "Next" tags-todo "-CATEGORY=\"work\"") ;;-表示排除
+	  ("pw" "Waiting" tags-todo "+TODO=\"WAITING\"-CATEGORY=\"work\"")
 
 	  ;; can use org-agenda T also
 	  ("n" "All Next" todo "NEXT")
@@ -236,19 +245,21 @@
 				(org-agenda-sorting-strategy
 				 (quote ((agenda time-up priority-down tag-up) )))
 				(org-deadline-warning-days 0)
-				(org-agenda-remove-tags t) ;don't show tags
+				;;(org-agenda-remove-tags t) ;don't show tags
 				))
 
-	  ("g" "Weekly Goals Review"
-	   ((tags "Goal=\"Long\""
-		  ((org-agenda-overriding-header "Long term goals")))
-	    (tags "Goal=\"Medium\""
-		  ((org-agenda-overriding-header "Medium term goals")))
-	    (tags "Goal=\"Short\""
-		  ((org-agenda-overriding-header "Short term goals")))
-	    (tags-todo "Goal=\"\""
-		       ((org-agenda-overriding-header "Actions that don't contribute to a goal yet"))))
-	   )
+	  ("g" "Goals" todo "GOAL")
+	  
+	  ;; ("g" "Weekly Goals Review"
+	  ;;  ((tags "Goal=\"Long\""
+	  ;; 	  ((org-agenda-overriding-header "Long term goals")))
+	  ;;   (tags "Goal=\"Medium\""
+	  ;; 	  ((org-agenda-overriding-header "Medium term goals")))
+	  ;;   (tags "Goal=\"Short\""
+	  ;; 	  ((org-agenda-overriding-header "Short term goals")))
+	  ;;   (tags-todo "Goal=\"\""
+	  ;; 	       ((org-agenda-overriding-header "Actions that don't contribute to a goal yet"))))
+	  ;;  )
 
 	  ;; ("G" "Goals" tags "GOAL-TODO=\"GOAL\"" nil)	  
 	  ))
@@ -266,7 +277,8 @@
   (defconst my-inbox-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
   (defconst my-work-todo-path (expand-file-name "work/todo.org" locale-notebook-dir))
   (defconst my-priv-todo-path (expand-file-name "private/todo.org" locale-notebook-dir))
-  (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
+  ;; (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
+  ;; (defvar my-journal-time-format "%R") ;; like "%H:%M"
   (setq org-capture-templates
 	'(
 	  ;; Capture information
@@ -274,20 +286,24 @@
            "* %?\n%i\n" :create t)
 
 	  ;; Record event
-	  ("j" "Journal" entry (file+datetree my-journal-path)
-           "* %U - %^{heading} %^G\n %?\n")
-
-	  ;; Create a daily plan
-	  ("d" "Daily plan" entry (file+datetree my-journal-path)
-	   "* plan[/]\n - [ ] %?\n")
+	  ;; ("j" "Journal" entry (file+datetree my-journal-path)
+          ;; "* %(format-time-string my-journal-time-format) %^{heading} %^G\n %?\n")
+	  ;; ("j" "Journal entry" entry (function org-journal-find-location)
+          ;; "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+	  ;; ("j" "Journal entry" entry (file+headline today-journal-path "Log")
+          ;; "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+	  ("j" "Journal entry" entry (function eye-journal-find-end)
+           "* %?")
 
 	  ;; Work task
 	  ;; file+olp specifies to full path to fill the Template
 	  ("w" "Work")
-	  ("wt" "Todo" entry (file+olp my-work-todo-path "Work" "Tasks")
-	   "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  ("ws" "Someday" entry (file+olp my-work-todo-path "Work" "Tasks")
-	   "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ("wt" "Todo" entry (file+olp my-priv-todo-path "Work")
+	   "* TODO %^{heading}\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ;; ("ws" "Someday" entry (file+olp my-priv-todo-path "Work" "Tasks")
+	   ;; "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ("wp" "rx" entry (file+olp my-priv-todo-path "Projects" "rx")
+	   "* TODO %^{heading}\n:PROPERTIES:\n:CREATED: %U\n:END:")
 
 	  ;; Private task
 	  ;; file+olp specifies to full path to fill the Template
@@ -328,11 +344,11 @@
   (setq org-attach-directory (expand-file-name "attach" locale-notebook-dir))
   )
 
-(defun eye/open-journal-file ()
-  (interactive)
-  (if (file-exists-p my-journal-path)
-      (find-file my-journal-path)
-    (message "No journal file.")))
+;; (defun eye/open-journal-file ()
+  ;; (interactive)
+  ;; (if (file-exists-p my-journal-path)
+      ;; (find-file my-journal-path)
+    ;; (message "No journal file.")))
 
 (defun eye/open-attach-dired ()
   "显示对应的附件目录在下方"
@@ -458,34 +474,32 @@
 ;; 	)))
 
 
-(require-maybe 'org-journal)
-(setq org-journal-file-type 'daily)
-(setq org-journal-dir "~/org/private/journal/")
-(setq org-journal-file-format "%Y-%m-%d")
+(defun eye-journal-find-location ()
+  (expand-file-name (format-time-string "%Y-%m.org")
+		    eye-journal-dir))
 
+(defun eye-journal-find-end ()
+  (find-file (eye-journal-find-location))
+  (goto-char (point-max)))
+	     
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  ;; (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  ;; (goto-char (point-max)))
 
-(defhydra+ hydra-funcs (:idle 1.0)
-  ("c" org-capture "Capture" :exit t)
-  ("a" org-agenda "Agenda" :exit t))
+(defun eye/open-journal-file ()
+  (interactive)
+  (let* ((path (eye-journal-find-location))
+	 (iscreate (not (file-exists-p path))))
+    (when path
+      ;; (setq today-journal-path path)
+      (find-file path)
+      ;; goto today entry
+      (search-forward (format-time-string "* %Y-%m-%d") nil t)
+      )))
 
-
-(defhydra hydra-note (:exit t :idle 1.0)
-  ("d" eye/notes-dired "Notes dir")
-  ("n" eye/notes-new "New note")
-  ;; ("a" eye/notes-create-attachment "Create attach dir")
-  ;; ("o" eye/notes-open-attachment "Open attach")
-  ("s" eye/notes-search-keyword "Search word")
-  ("f" eye/notes-search-file "Search file")
-  ("t" deft-or-close "deft")
-  )
-
-
-(defhydra hydra-org (:exit t)
-  ("a" org-attach "attach")
-  ("t" eye/insert-attach-link "insert attach link")
-  ("i" org-insert-link "insert link")
-  ("s" eye/org-insert-src-block "insert src block")
-  ("d" org-toggle-link-display "toggle display link"))
   
   
 (with-eval-after-load 'org
