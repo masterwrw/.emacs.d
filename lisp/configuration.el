@@ -115,6 +115,7 @@
 (eye-require 'init-ivy "ivy")
 (eye-require 'init-super-save "super-save")
 (eye-require 'init-eno "eno")
+(eye-require 'init-symbol-overlay "symbol-overlay")
 (eye-require 'init-bm "bm")
 (eye-require 'init-ibuffer "ibuffer")
 (eye-require 'init-hungry-delete "hungry-delete")
@@ -148,7 +149,7 @@
 
 
 
-(provide 'init)
+(provide 'configuration)
 
 ;; Local Variables:
 ;; coding: utf-8
