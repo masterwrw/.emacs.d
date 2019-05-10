@@ -116,12 +116,30 @@
 
 ;;;; funcs
 (defhydra hydra-funcs (:idle 1.0)
+  "
+[_c_] capture
+[_a_] agenda
+[_p_] pop mark
+
+Toggle mode:
+[_l_] line number
+[_r_] readonly
+[_t_] truncate lines
+[_g_] company
+
+[_n_] Note
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"
   ("SPC" nil "quit" :exit t)
-  ("p" pop-global-mark "Pop mark" :exit t)
-  ("r" read-only-mode "Read only" :exit t)
-  ("l" global-display-line-numbers-mode "Line number")
-  ("t" toggle-truncate-lines "Toggle truncate lines")
-  ("g" global-company-mode "Company" :exit t)
+  ("p" pop-global-mark :exit t)
+  ("r" read-only-mode :exit t)
+  ("l" global-display-line-numbers-mode)
+  ("t" toggle-truncate-lines)
+  ("g" global-company-mode :exit t)
+  ("c" org-capture :exit t)
+  ("a" org-agenda :exit t)
+  ("n" hydra-note/body :exit t)
   )
 
 
@@ -155,6 +173,58 @@ _a_: list tags
   ("g" eye/auto-compile "compile"))
 
 
+(defhydra hydra-note (:exit t :idle 1.0)
+  "
+[_d_] open note dired
+[_n_] new note
+[_s_] search by keyword
+[_f_] search by file name
+
+[_t_] deft
+"
+  ("SPC" nil "quit")
+  ("d" eye/notes-dired)
+  ("n" eye/notes-new)
+  ;; ("a" eye/notes-create-attachment "Create attach dir")
+  ;; ("o" eye/notes-open-attachment "Open attach")
+  ("s" eye/notes-search-keyword)
+  ("f" eye/notes-search-file)
+  ("t" deft-or-close)
+  )
+
+
+(defhydra hydra-org (:exit t)
+  "
+[_a_]: attach
+
+Clock:
+[_ci_] in
+[_co_] out
+[_cr_] report
+[_cc_] cancel
+
+Insert:
+[_l_] link                    [_h_] sub heading
+[_t_] attach link
+[_s_] src block
+
+Toggle:
+[_d_] display link
+[_g_] inline image
+
+"
+  ("SPC" nil "quit")
+  ("ci" org-clock-in)
+  ("co" org-clock-out)
+  ("cr" org-clock-report)
+  ("cc" org-clock-cancel)
+  ("a" org-attach)
+  ("t" eye/insert-attach-link)
+  ("l" org-insert-link)
+  ("s" eye/org-insert-src-block)
+  ("h" org-insert-subheading)
+  ("d" org-toggle-link-display)
+  ("g" org-toggle-inline-images))
 
 
 (defhydra hydra-numbers ()

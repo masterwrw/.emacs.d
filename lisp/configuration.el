@@ -87,6 +87,7 @@
 
 ;;;; basic configuration
 (eye-require 'init-packages "packages")
+(eye-require 'init-hydra "hydra")
 (eye-require 'init-keys "keys")
 (eye-require 'init-misc "misc")
 (eye-require 'init-font "font")

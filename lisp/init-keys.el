@@ -25,8 +25,12 @@
   (cond
    ((eq major-mode 'emacs-lisp-mode) (call-interactively 'hydra-elisp/body))
    ((eq major-mode 'lisp-interaction-mode) (call-interactively 'hydra-elisp/body))
+   ((eq major-mode 'c-mode) (call-interactively 'hydra-cpp/body))
    ((eq major-mode 'c++-mode) (call-interactively 'hydra-cpp/body))
    ((eq major-mode 'python-mode) (call-interactively 'hydra-python/body))
+   ((or (eq major-mode 'org-mode)
+	(eq major-mode 'org-journal-mode))
+    (call-interactively 'hydra-org/body))
    (t nil)))
 
 (dkeys (define-prefix-command 'fly-h-keymap)
@@ -88,7 +92,7 @@
 	   ("n" . scroll-up-command)
 	   ("m" . set-mark-command)
 	   ("p" . scroll-down-command)
-	   ("r" . newline)
+	   ("r" . xah-shrink-whitespaces)
 	   ("s" . backward-delete-char)
 	   ("w" . other-window)
 
@@ -122,6 +126,7 @@
   
 (add-hook 'xah-fly-command-mode-activate-hook 'setup-command-fly-key-map)
 (add-hook 'xah-fly-insert-mode-activate-hook 'setup-insert-fly-key-map)
+(add-hook 'org-agenda-mode-hook 'xah-fly-insert-mode-activate)
 
 (xah-fly-keys 1)
 
@@ -135,8 +140,8 @@
 (define-key global-map (kbd "<f2>") 'toggle-input-method)
 (define-key global-map (kbd "<f3>") 'xah-next-window-or-frame)
 (define-key global-map (kbd "<f4>") 'delete-other-windows)
-(define-key global-map (kbd "<f8>") 'org-capture)
-(define-key global-map (kbd "<f9>") 'org-agenda)
+(define-key xah-fly-key-map (kbd "<f8>") 'org-capture)
+(define-key xah-fly-key-map (kbd "<f9>") 'org-agenda)
 (define-key global-map (kbd "<f11>") 'fullscreen-toggle)
 (define-key global-map (kbd "<f12>") 'counsel-etags-find-tag-at-point)
 (define-key global-map (kbd "<C-f12>") 'pop-tag-mark)
