@@ -104,7 +104,9 @@
 (eye-require 'which-key "which-key")
 (with-eval-after-load 'which-key (which-key-mode))
 (when is-gui (eye-require 'init-theme "theme"))
-;;(when is-gui (eye-require 'init-doom "doom"))
+;; (when is-gui (eye-require 'init-doom "doom"))
+(when is-terminal
+  (set-face-attribute 'hl-line nil :background "darkgray"))
 (eye-require 'init-avy "avy")
 (eye-require 'init-avy-zap "avy-zap")
 (eye-require 'init-ace-jump "ace-jump")
