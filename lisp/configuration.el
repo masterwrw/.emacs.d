@@ -77,7 +77,7 @@
 (add-hook 'after-init-hook
           (lambda ()
             (require 'server)
-            (unless (server-running-p)
+            (if (not (equal t (server-running-p)))
 	      (server-start))))
 
 (defun eye-require (feature msg)
