@@ -140,6 +140,7 @@
 (eye-require 'init-ffit "ffit")
 (eye-require 'init-ffip "ffip")
 (eye-require 'init-external "external")
+(eye-require 'init-elfeed "elfeed")
 (when is-linux (eye-require 'init-magit "magit"))
 
 ;;;; load custom-file
