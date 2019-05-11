@@ -1,5 +1,5 @@
 ;;; 实用函数
-(require 'xah-functions)
+;;(require 'xah-functions)
 (defun eye/kill-inner-word ()
   "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
   (interactive)

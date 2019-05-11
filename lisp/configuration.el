@@ -86,6 +86,7 @@
   (eye--print-time msg))
 
 ;;;; basic configuration
+(eye-require 'base-toolkit "base-toolkit")
 (eye-require 'init-packages "packages")
 (eye-require 'init-hydra "hydra")
 (eye-require 'init-keys "keys")
