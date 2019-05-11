@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: set block
-# key: setb
-# --
-{% set $1 %}$2{% endset %}

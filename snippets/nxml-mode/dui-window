@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: dui-window
-# key: dui-window
-# --
-<Window size="900,600" caption="0,0,0,60" showshadow="false">
-  <VerticalLayout bkcolor="#FFFFFFFF" bordercolor="#FFD2D2D2" bordersize="1">
-    $0
-  </VerticalLayout>
-</Window>

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: dui-vlayout
-# key: dui-vlayout
-# --
-<VerticalLayout bkcolor="#FFFFFFFF" bordercolor="#FFD2D2D2" leftbordersize="1" rightbordersize="1" bottombordersize="1" topbordersize="1" >
-$0
-</VerticalLayout>
