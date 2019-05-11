@@ -31,16 +31,6 @@
   (setq locale-system-tags-paths nil))
 
 
-(defun eye/open-goals-file ()
-  (interactive)
-  (find-file-existing (expand-file-name "gtd/goals.org" locale-notebook-dir)))
-
-
-(defun eye/open-locale-file ()
-  (interactive)
-  (find-file locale-config-file))
-
-
 
 (when is-windows
   (with-eval-after-load 'company-c-headers
