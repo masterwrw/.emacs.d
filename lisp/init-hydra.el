@@ -227,6 +227,14 @@ Toggle:
   ("g" org-toggle-inline-images))
 
 
+(defhydra hydra-symbol-overlay ()
+  "
+Highlight:
+[_h_] at point
+"
+  ("h" symbol-overlay-put))
+
+
 (defhydra hydra-numbers ()
   "numbers:"
   ("SPC" nil "quit")

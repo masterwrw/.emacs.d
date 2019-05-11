@@ -1,6 +1,3 @@
-;;; init-leader-key.el --- Basic leader key configuration
-(require 'base-toolkit)
-
 (defvar insert-mode-input-method current-input-method
   "for mini-wubi input method.")
 
@@ -104,9 +101,9 @@
 	   ("7" . xah-select-line)
 	   ("8" . xah-extend-selection)
 	   ("9" . xah-select-text-in-quote)
-	   ("0" . delete-window)
+	   ;; ("0" . delete-window)
 	   
-	   ("," . xah-fly-leader-key-map)
+	   ("0" . xah-fly-leader-key-map)
 	   ("/" . xah-comment-dwim)
 	   ))
   (setq insert-mode-input-method current-input-method)
@@ -119,6 +116,7 @@
 	 '(
 	   ("C-," . xah-fly-leader-key-map)
 	   ("C-k" . xah-fly-leader-key-map)
+	   ("0" . xah-fly-leader-key-map)
 	   ))
   (set-input-method insert-mode-input-method)
   (global-hl-line-mode 1)
