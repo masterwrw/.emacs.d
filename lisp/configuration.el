@@ -85,6 +85,8 @@
   (require feature)
   (eye--print-time msg))
 
+(defvar is-enable-posframe nil)
+
 ;;;; basic configuration
 (eye-require 'base-toolkit "base-toolkit")
 (eye-require 'init-packages "packages")

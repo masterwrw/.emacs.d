@@ -38,7 +38,7 @@
 
 
 ;; ;; ivy-posframe
-(when (and is-gui (>= emacs-major-version 26))
+(when (and is-enable-posframe is-gui (>= emacs-major-version 26))
   (require 'ivy-posframe)
   ;; (setq ivy-display-function #'ivy-posframe-display) ;显示在window下边
   ;; (setq ivy-display-function #'ivy-posframe-display-at-frame-center)
