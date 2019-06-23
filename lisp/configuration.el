@@ -78,8 +78,15 @@
           (lambda ()
             (require 'server)
             (if (not (equal t (server-running-p)))
-	      (server-start))))
+		(server-start))))
 
+;;;; load custom-file before all init-* config
+(setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
+(unless (file-exists-p custom-file)
+  (f-touch custom-file))
+(load custom-file t t)
+
+;;;; load packages
 (defun eye-require (feature msg)
   (eye--reset-time)
   (require feature)
@@ -144,12 +151,6 @@
 (eye-require 'init-external "external")
 (eye-require 'init-elfeed "elfeed")
 (when is-linux (eye-require 'init-magit "magit"))
-
-;;;; load custom-file
-(setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
-(unless (file-exists-p custom-file)
-  (f-touch custom-file))
-(load custom-file t t)
 
 
 
