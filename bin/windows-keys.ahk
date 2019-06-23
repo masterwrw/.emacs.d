@@ -21,19 +21,19 @@ F1::
 return
 
 F2::
-if WinExist("Microsoft Visual Studio")
-  WinActivate, Microsoft Visual Studio
-else
-  Run, "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
-return
-
-F3::
 if WinExist("Mozilla Firefox")
   WinActivate, Mozilla Firefox
 else
   Run, "C:\Program Files\Mozilla Firefox\firefox.exe"
 return
 
+
+F3::
+if WinExist("Microsoft Visual Studio")
+  WinActivate, Microsoft Visual Studio
+else
+  Run, "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
+return
 
 ;------------------------------------------------------------------------------------------------------------
 ; ¿ì½Ý¼ü
