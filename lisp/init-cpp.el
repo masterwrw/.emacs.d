@@ -53,7 +53,8 @@
   (setq compilation-context-lines 0)  
   
   (setq compilation-scroll-output t) ;;自动滚动
-  (setq compilation-auto-jump-to-first-error t) ;;编译时有错误，则自动跳转到第一个错误
+  ;; 编译时有错误，则自动跳转到第一个错误，设置为nil，避免rg搜索出现报错
+  (setq compilation-auto-jump-to-first-error nil)
   (setq compilation-always-kill t) ;;执行编译时，如果有前一个编译命令正在执行，自动kill，不询问
   ;; 使next-error跳过warning @see https://emacs-china.org/t/compilation-mode-next-error-warning/9095/10
   ;; 或者使用pcre2el包使用pcre的正则语法来匹配错误
@@ -90,7 +91,8 @@
 "
   (with-current-buffer buffer
     ;;0前面增加一个空格，避免匹配到10,20等
-    (if (string-match " 0 个错误" (buffer-substring-no-properties (point-min) (point-max)))
+    (if (or (string-match " 0 个错误" (buffer-substring-no-properties (point-min) (point-max)))
+	    (string-match "^rg finished" (buffer-substring-no-properties (point-min) (point-max))))
 	(progn
 	  (tooltip-show "\n Compile Success \n ")
 	  ;;自动关闭buffer @see https://emacs.stackexchange.com/questions/62/hide-compilation-window
