@@ -85,3 +85,6 @@ git clone https://github.com/jrblevin/deft.git
 git clone https://github.com/bastibe/org-journal.git
 git clone https://github.com/mkcms/ivy-yasnippet.git
 git clone https://github.com/wolray/symbol-overlay.git
+git clone https://github.com/joddie/pcre2el.git
+git clone https://github.com/soeye/org-wiki.git
+git clone https://github.com/nickav/naysayer-theme.el.git naysayer-theme
