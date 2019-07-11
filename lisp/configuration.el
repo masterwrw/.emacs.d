@@ -139,6 +139,7 @@
 (eye-require 'init-orgmode "orgmode")
 (eye-require 'init-yasnippet "yasnippet")
 (eye-require 'init-deft "deft")
+(eye-require 'init-org-wiki "org-wiki")
 (eye-require 'init-cpp "cpp")
 (eye-require 'init-php "php")
 (eye-require 'init-qt "qt")
