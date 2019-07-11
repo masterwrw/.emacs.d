@@ -26,9 +26,6 @@
 
 (require-maybe 'find-file-in-tags)
 
-(defhydra+ hydra-file (:exit t :idle 1.0)
-  ("t" find-file-in-tags "find file in tags")) ;need tags-table-files
-
 
 (provide 'init-ffit)
 ;;; init-ffit.el ends here

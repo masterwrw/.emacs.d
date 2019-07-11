@@ -30,17 +30,43 @@
 
 
 (defhydra hydra-file (:exit t :idle 1.0)
-  ("a" switch-to-buffer "Switch buffer")
-  ("s" save-buffer "Save buffer")
-  ("o" find-file "Find file")
-  ("h" recentf-open-files)
-  ("k" kill-this-buffer "Kill buffer")
-  ("z" xah-open-last-closed "Open last closed")
-  ("b" bookmark-set "Set bookmark")
-  ("f" xah-open-file-fast "Jump bookmark")
-  ("l" bookmark-bmenu-list "List bookmark")
-  ("p" xah-previous-user-buffer "Previous buffer")
-  ("n" xah-next-user-buffer "Next buffer")
+  "
+Open
+[_o_] find file
+[_h_] history file
+[_f_] fast bookmark file
+[_z_] last closed
+[_t_] find in tags
+[_g_] find in git
+
+Other
+[_d_] dired
+[_s_] save
+[_k_] kill buffer
+[_b_] set bookmark
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"
+  ;; ("a" switch-to-buffer "Switch buffer" nil)
+  ;; ("l" bookmark-bmenu-list "List bookmark" nil)
+  ;; ("p" xah-previous-user-buffer "Previous buffer" nil)
+  ;; ("n" xah-next-user-buffer "Next buffer")  
+  ;; ("a" ido-switch-buffer "Switch buffer")
+  ;; ("o" ido-find-file "Find file"))
+  ;; ("h" recentf-open-files nil)
+  ;; ("k" kill-this-buffer nil)
+
+  ("d" dired-jump nil)
+  ("s" save-buffer nil)
+  ("o" counsel-find-file nil)
+  ("z" xah-open-last-closed nil)
+  ("k" xah-
+  ("b" bookmark-set nil)
+  ("f" xah-open-file-fast nil)
+  ("t" find-file-in-tags nil) ;need tags-table-files
+  ("a" counsel-ibuffer nil)
+  ("g" counsel-git nil);查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
+  ("h" counsel-recentf nil)
   )
 
 ;;;; select

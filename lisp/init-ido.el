@@ -5,10 +5,6 @@
 (eye--print-time "require ido")
 
 
-(defhydra+ hydra-file (:exit t :idle 1.0)
-  ("a" ido-switch-buffer "Switch buffer")
-  ("o" ido-find-file "Find file"))
-
 
 
 (provide 'init-ido)
