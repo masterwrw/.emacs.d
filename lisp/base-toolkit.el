@@ -444,10 +444,10 @@ The return value is the new value of LIST-VAR."
   (when (and default-directory (file-directory-p default-directory)
 	     (eq system-type 'windows-nt))
     (let ((dir default-directory)
-	  (explorer (replace-regexp-in-string "/" "\\\\\\\\" (executable-find "C:/Windows/SysWOW64/explorer")))
+	  (explorer (replace-regexp-in-string "/" "\\\\" (executable-find "C:/Windows/SysWOW64/explorer")))
 	  (command))
       (setq dir (encode-coding-string
-		 (replace-regexp-in-string "/" "\\\\\\\\" dir) 'gbk-dos))
+		 (replace-regexp-in-string "/" "\\\\" dir) 'gbk-dos))
       (setq command (concat explorer " " dir))
       (shell-command command nil nil)
       (message command))
