@@ -1,3 +1,4 @@
+;; 不能从msys2启动，否则无法从搜索结果进入文件
 (require-maybe 'color-rg)
 
 (autoload 'color-rg-search-input "color-rg" "" t)
