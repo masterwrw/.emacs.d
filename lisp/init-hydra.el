@@ -126,6 +126,7 @@ Toggle mode:
 [_r_] readonly
 [_t_] truncate lines
 [_g_] company
+[_h_] highlight changes
 
 [_n_] Note
 
@@ -140,6 +141,7 @@ Toggle mode:
   ("c" org-capture :exit t)
   ("a" org-agenda :exit t)
   ("n" hydra-note/body :exit t)
+  ("h" highlight-changes-mode :exit t)
   )
 
 

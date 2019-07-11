@@ -62,6 +62,7 @@
 	     ("c" . eye/eno-copy)
 	     ("p" . counsel-yank-pop)
 	     ("TAB" . mode-line-other-buffer)
+	     ;; ("/" . xah-comment-dwim)
 	     ))
 
 
@@ -69,6 +70,11 @@
   (fly-dkeys xah-fly-key-map
 	     '(("DEL" . nil)
 	       ("a" . counsel-M-x)
+	       ("e" . xah-shrink-whitespaces)
+	       ("," . bm-previous)
+	       ("." . bm-next)
+	       ("t" . bm-toggle)
+	       ("g" . counsel-bm)
 	       ))
   (setq insert-mode-input-method current-input-method)
   (set-input-method nil)
