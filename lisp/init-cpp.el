@@ -91,8 +91,10 @@
 "
   (with-current-buffer buffer
     ;;0前面增加一个空格，避免匹配到10,20等
-    (if (or (string-match " 0 个错误" (buffer-substring-no-properties (point-min) (point-max)))
-	    (string-match "^rg finished" (buffer-substring-no-properties (point-min) (point-max))))
+    (let ((content (buffer-substring-no-properties (point-min) (point-max))))
+      (if (or (string-match " 0 个错误" content)
+	      (string-match "^rg finished" content)
+	      (string-match "color-rg finished" content))
 	(progn
 	  (tooltip-show "\n Compile Success \n ")
 	  ;;自动关闭buffer @see https://emacs.stackexchange.com/questions/62/hide-compilation-window
@@ -102,7 +104,8 @@
           (message "No Compilation Errors!"))
       (progn
 	(tooltip-show "\n Compile Failed!!! :-( \n ")
-	(message "Compilation Failed!!! :-(")))))
+	(message "Compilation Failed!!! :-("))))
+    ))
   
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
