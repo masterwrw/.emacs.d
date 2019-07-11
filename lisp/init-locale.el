@@ -1,7 +1,7 @@
 (setq user-full-name "owensys")
 (setq user-mail-address "owensys@hotmail.com")
 
-(setq locale-notebook-dir "~/org")
+(setq locale-notebook-dir "~/org/wiki")
 (setq locale-docset-dir "~/software/zeal-portable-0.5.0-windows-x64/docsets")
 
 
