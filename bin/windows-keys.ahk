@@ -16,23 +16,32 @@ CapsLock::Home
 ;------------------------------------------------------------------------------------------------------------
 ; 快速激活窗口
 ;------------------------------------------------------------------------------------------------------------
-F1::
+F5::
   WinActivate, Editor
 return
 
-F2::
-if WinExist("Mozilla Firefox")
-  WinActivate, Mozilla Firefox
-else
-  Run, "C:\Program Files\Mozilla Firefox\firefox.exe"
+F6::
+; firefox
+;if WinExist("Mozilla Firefox")
+;  WinActivate, Mozilla Firefox
+;else
+;  Run, "C:\Program Files\Mozilla Firefox\firefox.exe"
+
+; chrome
+WinActivate, ahk_class Chrome_WidgetWin_1
 return
 
 
-F3::
+F7::
 if WinExist("Microsoft Visual Studio")
   WinActivate, Microsoft Visual Studio
 else
   Run, "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe"
+return
+
+
+F8::
+WinActivate, ahk_class TMobaXtermForm
 return
 
 ;------------------------------------------------------------------------------------------------------------

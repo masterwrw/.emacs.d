@@ -42,7 +42,7 @@ Open
 Other
 [_d_] dired
 [_s_] save
-[_k_] kill buffer
+[_k_] close buffer
 [_b_] set bookmark
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -60,7 +60,7 @@ Other
   ("s" save-buffer nil)
   ("o" counsel-find-file nil)
   ("z" xah-open-last-closed nil)
-  ("k" xah-
+  ("k" xah-close-current-buffer nil)
   ("b" bookmark-set nil)
   ("f" xah-open-file-fast nil)
   ("t" find-file-in-tags nil) ;need tags-table-files
@@ -153,6 +153,7 @@ Toggle mode:
 [_t_] truncate lines
 [_g_] company
 [_h_] highlight changes
+[_v_] visual line
 
 [_n_] Note
 
@@ -168,6 +169,7 @@ Toggle mode:
   ("a" org-agenda :exit t)
   ("n" hydra-note/body :exit t)
   ("h" highlight-changes-mode :exit t)
+  ("v" global-visual-line-mode :exit t)
   )
 
 
@@ -226,19 +228,19 @@ _a_: list tags
 [_a_]: attach
 
 Clock:
-[_ci_] in
-[_co_] out
-[_cr_] report
-[_cc_] cancel
+[_ci_] in   [_co_] out   [_cr_] report   [_cc_] cancel
 
 Insert:
-[_l_] link                    [_h_] sub heading
-[_t_] attach link
-[_s_] src block
+[_l_] link    [_t_] attach link   [_s_] src block    [_S_] subheading
 
 Toggle:
-[_d_] display link
-[_g_] inline image
+[_d_] display link   [_g_] inline image
+
+Wiki:
+[_wi_] insert new       [_wk_] insert link     [_wc_] insert block
+[_wo_] open at point    [_wh_] wiki helm       [_wn_] wiki nav
+[_wu_] open url         [_wf_] open from url
+[_we_] export page     
 
 "
   ("SPC" nil "quit")
@@ -250,9 +252,19 @@ Toggle:
   ("t" eye/insert-attach-link)
   ("l" org-insert-link)
   ("s" eye/org-insert-src-block)
-  ("h" org-insert-subheading)
+  ("S" org-insert-subheading)
   ("d" org-toggle-link-display)
-  ("g" org-toggle-inline-images))
+  ("g" org-toggle-inline-images)
+  ("we" org-html-export-to-html)
+  ("wi" org-wiki-insert-new)
+  ("wk" org-wiki-insert-link)
+  ("wo" org-open-at-point)
+  ("wh" org-wiki-helm)
+  ("wn" org-wiki-nav)
+  ("wu" org-wiki-open-url)
+  ("wf" org-wiki-from-url)
+  ("wc" org-wiki-insert-block)
+  )
 
 
 (defhydra hydra-symbol-overlay ()
@@ -261,6 +273,27 @@ Highlight:
 [_h_] at point
 "
   ("h" symbol-overlay-put))
+
+
+(defhydra hydra-gtd ()
+  "
+Getting Thing Done system:
+
+  [_ci_] capture收集  [_cr_] capture rx task
+  [_vi_] 查看收集蓝（处理）    [_vt_] 查看任务（建立清单）    [_vo_] 查看TODO项（准备下一步行动）    [_vx_] 查看下一步行动
+
+  [_a_] agenda     [_j_] journal file
+
+"
+  ("a" org-agenda nil :exit t)
+  ("ci" (lambda () (interactive) (org-capture nil "i")) nil :exit t)
+  ("cr" (lambda () (interactive) (org-capture nil "w")) nil :exit t)
+  ("j" eye/open-journal-file nil :exit t)
+  ("vi" (lambda () (interactive) (org-agenda nil "i")))
+  ("vt" (lambda () (interactive) (org-agenda nil "t")))
+  ("vo" (lambda () (interactive) (org-agenda nil "o")))
+  ("vx" (lambda () (interactive) (org-agenda nil "x")))
+)
 
 
 (defhydra hydra-numbers ()

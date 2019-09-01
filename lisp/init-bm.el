@@ -2,7 +2,7 @@
 (require 'bm)
 
 ;; (setq bm-in-lifo-order t)		;; 先入先出
-(setq bm-cycle-all-buffers t)		;; 在所有buffer中循环
+(setq bm-cycle-all-buffers nil)		;; 是否在所有buffer中循环
 (setq bm-restore-repository-on-load t)
 
 ;; where to store persistant files
@@ -42,6 +42,10 @@
 ;; Then new bookmarks can be saved before the buffer is reverted.
 ;; Make sure bookmarks is saved before check-in (and revert-buffer)
 (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+
+;; 设置样式
+(set-face-attribute 'bm-persistent-face nil :foreground "#ff7800" :background "#1142AA")
 
 ;; 结合ivy来使用bm-bookmarks
 ;; @see https://pengpengxp.github.io/emacs/counsel-bm.html

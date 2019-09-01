@@ -24,8 +24,8 @@
   (tool-bar-mode -1)) ;; 禁用工具栏
 (when menu-bar-mode
   (menu-bar-mode -1)) ;; 禁用菜单栏
-(when (and is-gui scroll-bar-mode)
-  (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
+;; (when (and is-gui scroll-bar-mode)
+  ;; (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
 
 (setq frame-title-format "Editor") ;; 自定义标题栏
 
@@ -89,7 +89,8 @@
   (setq ns-pop-up-frames nil))
 
 ;;(setq track-eol t) ;; 保持光标上下移动时一直在行尾，需要设置line-move-visual为nil
-(setq line-move-visual nil)
+;; (setq line-move-visual t)		;在长行中移动
+(global-visual-line-mode 1)
 
 
 ;; display the real names on mode-line when visiting a symbolink

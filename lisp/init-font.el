@@ -1,6 +1,6 @@
 ;;;; font
 (when is-linux
-  (setq en-font-name "DejaVu Sans Mono")
+  (setq en-font-name "Inconsolata")
   (setq cn-font-name "YaHei Consolas Hybrid")
   (setq en-font-size 16)
   (setq cn-font-size 16)
@@ -9,14 +9,15 @@
   ;; Inconsolata
   ;; Fira Code
   ;; Droid Sans Mono Wide
-  (setq en-font-name "Droid Sans Mono Wide")
+  (setq en-font-name "Inconsolata")
   (setq cn-font-name "Microsoft YaHei")
   (setq en-font-size 16)
-  (setq cn-font-size 13)
+  (setq cn-font-size 14)
   )
 
 ;; 获取屏幕分辨率自动增大字体
-(when (and (> (x-display-pixel-width) 1366)
+(when (and is-gui
+	   (> (x-display-pixel-width) 1366)
 	   (> (x-display-pixel-height) 768))
   (setq en-font-size (+ en-font-size 2))
   (setq cn-font-size (+ cn-font-size 2)))
@@ -47,7 +48,7 @@
 (defun eye/increase-font-size ()
   "Increase font size of english and chinese."
   (interactive)
-  (setq en-font-size (+ en-font-size 2))
+  (setq en-font-size (+ en-font-size 1))
   (setq cn-font-size (+ cn-font-size 1))
   (eye-update-font-size)
   )
@@ -55,7 +56,7 @@
 (defun eye/decrease-font-size ()
   "Decrease font size of english and chinese."
   (interactive)
-  (setq en-font-size (- en-font-size 2))
+  (setq en-font-size (- en-font-size 1))
   (setq cn-font-size (- cn-font-size 1))
   (eye-update-font-size)
   (if (equal (frame-parameter nil 'fullscreen) 'maximize)

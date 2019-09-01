@@ -4,6 +4,7 @@
 ;; But I need global-mode-string,
 ;; @see http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_360.html
 ;; use setq-default to set it for /all/ modes
+(setq-default header-line-format nil)
 (setq-default mode-line-format
               (list
 	       ;;"%e"
@@ -16,13 +17,7 @@
                                    'face nil
                                    'help-echo (buffer-file-name)))
 	       "] "
-               ;; line and column
-               "(" ;; '%02' to set to 2 chars at least; prevents flickering
-               "%02l" "," "%01c"
-               ;; (propertize "%02l" 'face 'font-lock-type-face) ","
-               ;; (propertize "%02c" 'face 'font-lock-type-face)
-               ") "
-
+               
                '(:eval (format "%s" buffer-file-coding-system))
                
                " "
@@ -54,6 +49,13 @@
 			 "EN"))
 
 	       " "
+	       ;; line and column
+               "(" ;; '%02' to set to 2 chars at least; prevents flickering
+               "%02l" "," "%01c"
+               ;; (propertize "%02l" 'face 'font-lock-type-face) ","
+               ;; (propertize "%02c" 'face 'font-lock-type-face)
+               ") "
+
 	       ;;global-mode-string, org-timer-set-timer in org-mode need this
                (propertize "%M" 'face nil)
 

@@ -86,6 +86,22 @@
 ;; 如果需要输入长度小于3时不搜索，需要修改内部函数 counsel-ag-function
 
 
+(defun eye/counsel-git (&optional initial-input)
+  "默认的counsel-git只能在有.git的目录下才有效，重新定义一个函数"
+  (interactive)
+  (counsel-require-program counsel-git-cmd)
+  (let* ((default-directory (locate-dominating-file default-directory ".git"))
+	 ;; (default-directory (counsel-locate-git-root))
+         (cands (split-string
+                 (shell-command-to-string counsel-git-cmd)
+                 "\n"
+                 t)))
+    (ivy-read "Find file: " cands
+              :initial-input initial-input
+              :action #'counsel-git-action
+              :caller 'eye/counsel-git)))
+
+
 (defhydra+ hydra-help (:exit t :idle 1.0)
   ("v" counsel-describe-variable "Desc var")
   ("f" counsel-describe-function "Desc fun")

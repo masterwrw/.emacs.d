@@ -21,6 +21,8 @@
 
 (global-auto-revert-mode 1)
 
+(setq delete-by-moving-to-trash t)	;删除文件或目录时，移到回收站
+
 
 
 

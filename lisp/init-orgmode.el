@@ -24,7 +24,7 @@
 (require-maybe 'helm-org)
 
 ;; (defvar today-journal-path nil "Shold be ~/org/private/journal/y-m-d.org")
-(defvar eye-journal-dir "~/org/private/journal/")
+(setq eye-journal-dir (concat locale-notebook-dir "/journal"))
 
 ;;;; org
 (defun eye-setup-orgmode ()
@@ -41,6 +41,8 @@
   (setq org-cycle-separator-lines 0)
   ;; always require new line in header below
   (setq require-final-newline t)
+  (setq org-tags-column 0)		;; 在org文件中，使tags跟在标题后面
+  (setq org-return-follows-link nil) ;; 是否回车打开link
   (setq calendar-week-start-day 1) ;; 日历从周一开始显示
   (setq org-support-shift-select 1) ;; 是否支持shift+方向键选择
   (setq org-hide-emphasis-markers t) ;; 隐藏斜体标记/text/，如果要删除，则确保光标移到斜体文字最后
@@ -118,6 +120,10 @@
     (setq org-crypt-tag-matcher "sec") ;; Custom tag for crypt
     )
 
+  ;; support babel execute
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((emacs-lisp . t)))
+
   ;; password generator
   (require-maybe 'password-generator)
 
@@ -149,42 +155,54 @@
   (setq org-agenda-window-setup 'only-window)
 
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-	  (sequence "WAITING(w)" "SOMEDAY(s)" "|" "CANCELLED(c)" "DEFERRED(f)")
-	  (sequence "GOAL(g)")
+	'((sequence "INBOX(i)")
+	  (sequence "TASK(t)" "SOMEDAY(s)" "REPEAT(r)" "CALENDAR(c)")
+	  (sequence "TODO(T)" "ACTION(a)" "WAIT(w)" "DONE(d!)" "|" "CANCELLED(C)" "DEFERRED(f)")
           ))
 
   (setf org-todo-keyword-faces
-	'(("REPEAT" . (:foreground "OliveDrab" :bold t :weight bold))
-	  ("NEXT" . (:foreground "SlateBlue3" :bold t :weight bold))
-          ("TODO" . (:foreground "cyan" :bold t :weight bold))
-          ("STARTED" . (:foreground "#009900" :bold t :weight bold))
-          ("CANCELLED" . (:foreground "#DC143C" :bold t :weight bold))
-          ("WAITING" . (:foreground "yellow" :bold t :weight bold))
+	'(("INBOX" . (:foreground "OliveDrab" :bold t :weight bold))
+	  ("TASK" . (:foreground "OrangeRed" :bold t :weight bold))
 	  ("SOMEDAY" . (:foreground "yellow" :bold t :weight bold))
-          ("DEFERRED" . (:foreground "OrangeRed" :bold t :weight bold))
+	  ("REPEAT" . (:foreground "#009900" :bold t :weight bold))
+	  ("TODO" . (:foreground "#009900" :bold t :weight bold))
+          ("ACTION" . (:foreground "cyan" :bold t :weight bold))
+	  ("WAIT" . (:foreground "yellow" :bold t :weight bold))
+	  ("DONE" . (:foreground "#009900" :bold t :weight bold))
+          ("CANCELLED" . (:foreground "gray50" :bold t :weight bold))
           ("DONE" . (:foreground "gray50" :background "gray30"))
-	  ("GOAL" . (:foreground "#009900" :bold t :weight bold))
 	  ))
 
   ;; tags
   ;; #+TAGS: { @work(w) @life(l) @thinking(t) @study(s) }
   ;; #+TAGS: { @add(a) @bug(b) @fixed(f) }
-  ;; (setq org-tag-alist '(("STUDIO" . ?s) ;; company studio office
-  ;;                       ("PROJECT" . ?p) ;; difference task at company
-  ;;                       ("HOME" . ?h) ;; home
-  ;;                       ("MAIL" . ?m) ;; mail somebody
-  ;;                       ("LUNCHTIME" . ?l) ;; breakfast lunchtime dinner onway etc. (rest)
-  ;;                       ("TOURISM" . ?t) ;; tourism or not at home/company and any where
-  ;;                       ("COMPUTER" . ?c)
-  ;;                       ;; ("FIELD" . ?f)
-  ;;                       ("READING" . ?r))) ;; reading
+  ;; (setq org-tag-alist '(("work" . ?w)
+  ;; 			("learning" . ?l)
+  ;; 			("english" . ?e)
+  ;; 			("train" . ?t)
+  ;; 			("other" . ?o)))
 
-  ;; (require 'org-journal)
-  ;; (setq org-journal-file-type 'daily)
-  ;; (setq org-journal-dir "~/org/private/journal/")
-  ;; (setq org-journal-file-format "%Y-%m-%d.org")
+  ;; @see https://github.com/batsibe/org-journal
+  (require 'org-journal)
+  (setq org-journal-file-type 'daily)
+  (setq org-journal-dir "h:/wikinote/journal/")
+  (setq org-journal-file-format "%Y-%m-%d.org")
   ;; (setq today-journal-path (org-journal-find-location))
+  (defun org-journal-date-format-func (time)
+  "Custom function to insert journal date header.
+  When buffer is empty prepend a header in front the entry header."
+  (concat (when (= (buffer-size) 0)
+            (concat
+             (pcase org-journal-file-type
+               (`daily "#+TITLE: Daily Journal")
+               (`weekly "#+TITLE: Weekly Journal")
+               (`monthly "#+TITLE: Monthly Journal")
+               (`yearly "#+TITLE: Yearly Journal"))))
+          org-journal-date-prefix
+          (format-time-string "%Y-%m-%d" time)))
+
+  ;; (setq org-journal-date-format 'org-journal-date-format-func)
+  (setq org-journal-date-format "%A, %x")
 
   (require-maybe 'org-protocol)
 
@@ -198,22 +216,30 @@
   ;; column view format, can write "#+COLUMNS: ..." to org file also 
   ;; (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent)  %DEADLINE(Deadline)")
   (setq org-columns-default-format "%7Goal(Goal) %12DEADLINE(Deadline) %30SCHEDULED(Scheduled) %8TODO(To Do) %1PRIORITY(P) %150ITEM(Detailes)")
+  (setq org-agenda-align-tags-to-column 1) ;在agenda视图中，使tags向左边对齐，默认是auto，向右边对齐，会换行显示
 
-  (setq org-agenda-files (list
+  ;; (setq org-agenda-files (list
 			  ;; (expand-file-name "work/todo.org" locale-notebook-dir)
-			  (expand-file-name "private/todo.org" locale-notebook-dir)
+			  ;; (expand-file-name "private/todo.org" locale-notebook-dir)
 			  ;; (expand-file-name "private/goals.org" locale-notebook-dir)
 			  ;; (expand-file-name "private/journal.org" locale-notebook-dir)
-			  ))
+  ;; ))
+  ;; 设置所有以Todo开头的org文件
+  ;; (setq org-agenda-files (directory-files locale-notebook-dir t "Todo.*.org$"))
+  (setq org-agenda-files '("h:/wikinote/ats.org"))
+  ;; 添加日志文件
+  ;; (dolist (file (directory-files locale-notebook-dir t "Journal.*.org$"))
+    ;; (add-to-list 'org-agenda-files file))
   ;; (append-to-list 'org-agenda-files locale-custom-projects)
-  (setq org-default-notes-file (expand-file-name "inbox/inbox.org" locale-notebook-dir))
+  (setq org-default-notes-file (expand-file-name "Inbox.org" locale-notebook-dir))
   (defun eye/open-inbox-file () (interactive) (find-file org-default-notes-file))
 
-  ;; (setq org-refile-targets
-  ;; 	`(
-  ;;         (,(expand-file-name "work/todo.org" locale-notebook-dir) :level . 1)
-  ;;         (,(expand-file-name "private/todo.org" locale-notebook-dir) :level . 1)
-  ;;         ))
+  (setq org-refile-targets
+  	`(
+          (,(expand-file-name "Trash.org" locale-notebook-dir) :level . 1)
+	  (,(expand-file-name "Note.org" locale-notebook-dir) :level . 1)
+          (,(expand-file-name "ats.org" locale-notebook-dir) :level . 1)
+          ))
 
   ;; org-archive-subtree moving an tree to archive file
   ;; settings on org file #+ARCHIVE file head or ARCHIVE PROPERTY
@@ -227,28 +253,45 @@
   ;; (add-to-list 'org-agenda-custom-commands `,eye/gtd-someday-view)
   ;; method 2
   (setq org-agenda-custom-commands
-	'(("w" . "Work")
-	  ("wn" "Next" tags-todo "+CATEGORY=\"work\"")
-	  ("ww" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"work\"")
+	'(
+	  ("i" "View inbox" todo "INBOX")
+	  ("t" "View tasks" todo "TASK|SOMEDAY|REPEAT|CALENDAR")
+	  ("o" "View todo" todo "TODO")
+	  ("x" "View action" todo "ACTION")
 
-	  ("p" . "Private")
-	  ("pn" "Next" tags-todo "-CATEGORY=\"work\"") ;;-表示排除
-	  ("pw" "Waiting" tags-todo "+TODO=\"WAITING\"-CATEGORY=\"work\"")
+	  ("z" "View tasks"
+	   ((todo "TASK"
+	  	  ((org-agenda-overriding-header "任务")))
+	    (todo "SOMEDAY"
+	  	  ((org-agenda-overriding-header "将来/也许")))
+	    (todo "REPEAT"
+	  	  ((org-agenda-overriding-header "重复任务")))
+	    (todo "CALENDAR"
+	  	  ((org-agenda-overriding-header "日程表")))))
+
+	  
+	  ;; ("d" "Day" agenda "" ((org-agenda-span 1) ;limits display to a single day
+	  ;; 			(org-agenda-sorting-strategy
+	  ;; 			 (quote ((agenda time-up priority-down tag-up) )))
+	  ;; 			(org-deadline-warning-days 0)
+	  ;; 			;;(org-agenda-remove-tags t) ;don't show tags
+	  ;; 			))
+
+	  ;; ("w" . "Work")
+	  ;; ("wn" "Next" tags-todo "+CATEGORY=\"work\"")
+	  ;; ("ww" "Waiting" tags-todo "+TODO=\"WAITING\"+CATEGORY=\"work\"")
+
+	  ;; ("p" . "Private")
+	  ;; ("pn" "Next" tags-todo "-CATEGORY=\"work\"-CATEGORY=\"work\"-CATEGORY=\"train\"-CATEGORY=\"thinking\"") ;;-表示排除
+	  ;; ("pw" "Waiting" tags-todo "+TODO=\"WAITING\"-CATEGORY=\"work\"-CATEGORY=\"train\"-CATEGORY=\"thinking\"")
 
 	  ;; can use org-agenda T also
-	  ("n" "All Next" todo "NEXT")
-	  ("v" "All Waiting" todo "WAITING")
-	  ("D" "Agenda(week) + Next" ((agenda) (todo "NEXT")))
-	  
+	  ;; ("n" "All Next" todo "NEXT")
+	  ;; ("v" "All Waiting" todo "WAITING")
+	  ;; ("D" "Agenda(week) + Next" ((agenda) (todo "NEXT")))
 	  ;; ("z" "Waiting" todo "WAITING")
-	  ("d" "Day" agenda "" ((org-agenda-span 1) ;limits display to a single day
-				(org-agenda-sorting-strategy
-				 (quote ((agenda time-up priority-down tag-up) )))
-				(org-deadline-warning-days 0)
-				;;(org-agenda-remove-tags t) ;don't show tags
-				))
 
-	  ("g" "Goals" todo "GOAL")
+	  ;; ("g" "Goals" todo "GOAL")
 	  
 	  ;; ("g" "Weekly Goals Review"
 	  ;;  ((tags "Goal=\"Long\""
@@ -271,78 +314,130 @@
   ;; (add-hook 'after-init-hook #'eye/open-agenda-day-view)
 
   ;; 模板中的file路径不是绝对路径时，将会使用org-directory进行查找
-  (setq org-directory (expand-file-name "private" locale-notebook-dir))
+  (setq org-directory locale-notebook-dir)
 
   ;; capture 的目标路径不能直接使用 concat
-  (defconst my-inbox-path (expand-file-name "inbox/inbox.org" locale-notebook-dir))
-  (defconst my-work-todo-path (expand-file-name "work/todo.org" locale-notebook-dir))
-  (defconst my-priv-todo-path (expand-file-name "private/todo.org" locale-notebook-dir))
+  ;; (defconst my-inbox-path (expand-file-name "Inbox.org" locale-notebook-dir))
+  (setq my-todo-path "h:/wikinote/ats.org")
+  ;; (defconst my-priv-todo-path (expand-file-name "Todo.org" locale-notebook-dir))
+  ;; (defconst my-proj-todo-path (expand-file-name "Todo -- seo.org" locale-notebook-dir))
   ;; (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
   ;; (defvar my-journal-time-format "%R") ;; like "%H:%M"
   (setq org-capture-templates
 	'(
-	  ;; Capture information
-          ("i" "Inbox" entry (file+headline my-inbox-path "Inbox")
-           "* %?\n%i\n" :create t)
-
-	  ;; Record event
-	  ;; ("j" "Journal" entry (file+datetree my-journal-path)
-          ;; "* %(format-time-string my-journal-time-format) %^{heading} %^G\n %?\n")
-	  ;; ("j" "Journal entry" entry (function org-journal-find-location)
-          ;; "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
-	  ;; ("j" "Journal entry" entry (file+headline today-journal-path "Log")
-          ;; "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
-	  ("j" "Journal entry" entry (function eye-journal-find-end)
-           "* %?")
-
-	  ;; Work task
-	  ;; file+olp specifies to full path to fill the Template
-	  ("w" "Work")
-	  ("wt" "Todo" entry (file+olp my-priv-todo-path "Work")
-	   "* TODO %^{heading}\n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  ;; ("ws" "Someday" entry (file+olp my-priv-todo-path "Work" "Tasks")
-	   ;; "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  ("wp" "rx" entry (file+olp my-priv-todo-path "Projects" "rx")
-	   "* TODO %^{heading}\n:PROPERTIES:\n:CREATED: %U\n:END:")
-
-	  ;; Private task
-	  ;; file+olp specifies to full path to fill the Template
-	  ("m" "My private")
-	  ("mt" "Todo" entry (file+olp my-priv-todo-path "Private" "Tasks")
-           "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  ("ms" "Someday" entry (file+olp my-priv-todo-path "Private" "Tasks")
-           "* SOMEDAY %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
-	  
-	  ;; Create goal
-	  ("g" "Goals") 
-	  ("ge" "Epic goals" entry (file+headline "goals.org" 
-						  "Epic goals") (file "tpl-goals.txt") :empty-lines-after 1) 
-	  ("gl" "Long term goal (2-5 years from now)" entry (file+headline "goals.org"
-									   "Long term goals (2-5 years from now)") (file "tpl-goals.txt") :empty-lines-after 1) 
-	  ("gm" "Medium term goal (6 months up to 2 years)" entry (file+headline "goals.org"
-										 "Medium term goalsl (6 months up to 2 years)") (file "tpl-goals.txt") :empty-lines-after 1) 
-	  ("gs" "Short term goals (next 6 months)" entry (file+headline "goals.org" 
-									"Short term goals (next 6 months)") (file "tpl-goals.txt") :empty-lines-after 1)
-
 	  ;; Web capture
           ;; org-protocol: https://github.com/sprig/org-capture-extension
           ("p" 
-           "org-protocol(web link)" entry (file+headline my-inbox-path "INBOX")
+           "org-protocol(web link)" entry (file+headline my-inbox-path "Inbox")
            "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
            :create t)
           
           ("L" 
-           "org-protocol(web content)" entry (file+headline my-inbox-path "LINKS")
+           "org-protocol(web content)" entry (file+headline my-inbox-path "Inbox")
            "* [[%:link][%:description]]\n%?\n"
            :create t)
           
+	  ;; Capture information
+          ("i" "Inbox" entry (file+headline my-todo-path "Inbox")
+           "* INBOX %?\n%i\n" :create t)
+
+	  ("w" "Rx" entry (file+headline my-todo-path "rx")
+           "* TASK %?\n%i\n" :create t)
+	   
+	  ;; Record event
+	  ("j" "Journal entry" entry (function org-journal-find-location)
+           "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+
+	  ;; Work task
+	  ;; file+olp specifies to full path to fill the Template
+	  ;; ("w" "Work")
+	  ;; ("wp" "Project(rx)" entry (file+olp my-todo-path "Projects" "rx")
+	   ;; "* TODO %^{heading}\n:PROPERTIES:\n:CREATED: %U\n:END:")
+
+	  ;; Private task
+	  ;; file+olp specifies to full path to fill the Template
+	  ;; ("m" "My private")
+	  ;; ("mt" "Todo" entry (file+olp my-todo-path "Tasks")
+           ;; "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  ;; ("mp" "Project(so)" entry (file+olp my-todo-path "Projects" "so")
+           ;; "* TODO %^{heading} %^G\n:PROPERTIES:\n:CREATED: %U\n:END:")
+	  
+	  ;; Create goal
+	  ;; ("g" "Goals") 
+	  ;; ("ge" "Epic goals" entry (file+headline "goals.org" 
+	  ;; 					  "Epic goals") (file "tpl-goals.txt") :empty-lines-after 1) 
+	  ;; ("gl" "Long term goal (2-5 years from now)" entry (file+headline "goals.org"
+	  ;; 								   "Long term goals (2-5 years from now)") (file "tpl-goals.txt") :empty-lines-after 1) 
+	  ;; ("gm" "Medium term goal (6 months up to 2 years)" entry (file+headline "goals.org"
+	  ;; 									 "Medium term goalsl (6 months up to 2 years)") (file "tpl-goals.txt") :empty-lines-after 1) 
+	  ;; ("gs" "Short term goals (next 6 months)" entry (file+headline "goals.org" 
+	  ;; 								"Short term goals (next 6 months)") (file "tpl-goals.txt") :empty-lines-after 1)
           ))
   
 ;;;; Notebook
   (require-maybe 'org-attach)
   (add-to-list 'org-modules 'org-attach)
-  (setq org-attach-directory (expand-file-name "attach" locale-notebook-dir))
+  (setq org-attach-directory "~/org/attach")
   )
+
+
+;;;; 时间统计
+(defvar eye-calc-time-tags '("train" "english" "work" "learning" "other"))
+
+(defvar eye--current-tag nil)
+
+;; 过滤headline，返回nil表示排除
+(defun filter-by-tags ()
+   (let ((head-tags (org-get-tags-at)))
+     (member eye--current-tag head-tags)))
+
+(defun org-clock-sum-today-by-tags (timerange &optional tstart tend noinsert)
+  (interactive "P")
+  (let* ((timerange-numeric-value (prefix-numeric-value timerange)) ;得到前缀C-u时的数字值
+         ;; (files (org-add-archive-files (org-agenda-files)))
+	 (files (directory-files locale-notebook-dir t "Journal-.*.org$")) ;只统计日志文件中的
+         (tags-time-alist (mapcar (lambda (tag) `(,tag . 0)) eye-calc-time-tags)) ;关联列表tag和时间，单位是分钟
+         (output-string "")
+         (tstart (or tstart
+		     ;;4表示按了一次C-u，统计前一天，开始时间减去一天的秒数。org-time-today返回的是当天开始的时间戳，减去86400秒则是前一天的开始时间
+                     (and timerange (equal timerange-numeric-value 4) (- (org-time-today) 86400))
+                     (and timerange (equal timerange-numeric-value 16) (org-read-date nil nil nil "Start Date/Time:"))
+		     ;; 没有使用C-u时，默认计算今天
+                     (org-time-today)))
+         (tend (or tend
+                   (and timerange (equal timerange-numeric-value 16) (org-read-date nil nil nil "End Date/Time:"))
+		   ;; 没有使用C-u时，默认计算今天
+                   (+ tstart 86400)))
+         h m file item prompt donesomething)
+
+    ;; (append-to-list 'files (directory-files locale-notebook-dir t "Journal.*.org$"))
+
+    ;; 遍历所有agenda files，根据tag和时间范围统计时间
+    (while (setq file (pop files))
+      ;; 设置agenda buffer
+      (setq org-agenda-buffer (if (file-exists-p file)
+                                  (org-get-agenda-file-buffer file)
+                                (error "No such file %s" file)))
+      (with-current-buffer org-agenda-buffer
+        (dolist (eye--current-tag eye-calc-time-tags) ;由于org-clock-sum的filter function必须是0参数，需要先声明一下eye--current-tag
+          (org-clock-sum tstart tend 'filter-by-tags) ;根据tag统计时间，包含子节点
+          (setcdr (assoc eye--current-tag tags-time-alist)
+		  ;; org-clock-file-total-minutes保存了当前buffer内容的分钟数，加上原来的时间
+                  (+ org-clock-file-total-minutes (cdr (assoc eye--current-tag tags-time-alist)))))))
+    ;; 统计时间完成，准备输出
+    (while (setq item (pop tags-time-alist))
+      (unless (equal (cdr item) 0)	;只输入不为0时间的tag
+        (setq donesomething t)
+        (setq h (/ (cdr item) 60)	;计算小时
+              m (- (cdr item) (* 60 h))) ;计算分钟
+        (setq output-string (concat output-string (format "[-%s-] %.2d:%.2d\n" (car item) h m)))))
+    (unless donesomething
+      (setq output-string (concat output-string "[-Nothing-] Done nothing!!!\n")))
+    (unless noinsert
+        (insert output-string))
+    output-string))
+
+
 
 ;; (defun eye/open-journal-file ()
   ;; (interactive)
@@ -475,12 +570,21 @@
 
 
 (defun eye-journal-find-location ()
-  (expand-file-name (format-time-string "%Y-%m.org")
+  (expand-file-name (format-time-string "%Y-%m-%d.org")
 		    eye-journal-dir))
 
-(defun eye-journal-find-end ()
-  (find-file (eye-journal-find-location))
-  (goto-char (point-max)))
+;; (defun eye-journal-find-end ()
+;;   (find-file (eye-journal-find-location))
+;;   (goto-char (point-max)))
+
+
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
 	     
   ;; Open today's journal, but specify a non-nil prefix argument in order to
   ;; inhibit inserting the heading; org-capture will insert the heading.
@@ -497,7 +601,9 @@
       ;; (setq today-journal-path path)
       (find-file path)
       ;; goto today entry
-      (search-forward (format-time-string "* %Y-%m-%d") nil t)
+      ;; (search-forward (format-time-string "* %Y-%m-%d") nil t)
+      ;; goto end
+      (end-of-buffer)
       )))
 
   
