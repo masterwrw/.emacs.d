@@ -1,8 +1,11 @@
 (setq user-full-name "owensys")
 (setq user-mail-address "owensys@hotmail.com")
 
-(setq locale-notebook-dir "~/org/wiki")
+(setq locale-notebook-dir "H:/wikinote")
 (setq locale-docset-dir "~/software/zeal-portable-0.5.0-windows-x64/docsets")
+
+
+(setenv "GNUPGHOME" "~/.gpgd")
 
 
 ;; PATH and exec-path
@@ -13,8 +16,10 @@
 	   "C:/software/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
 	   "C:/software/Emacs26.1/Searcher"
 	   "C:/software/Emacs26.1/global663wb/bin"
+	   "D:/portable/putty"
 	   ;;msys2
-	   "C:/msys32/usr/bin"
+	   "D:/msys32/usr/bin"
+	   "C:/software/Java/bin"
 	   )))
     (setenv "PATH" (mapconcat 'identity path-list ";"))
     (setq exec-path (append path-list (list "." exec-directory)))
@@ -41,6 +46,15 @@
   )
 
 
+(defun eye/run-exe ()
+  (interactive)
+  (async-shell-command "c:/work/xxx/xxx.exe")
+  (delete-other-windows))
+
+
+(with-eval-after-load 'cc-mode
+  (define-key c++-mode-map (kbd "C-<f5>") 'eye/run-exe)
+  (define-key c++-mode-map (kbd "<f5>") 'eye/auto-compile))
 
 
 (provide 'init-locale)

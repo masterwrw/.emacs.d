@@ -204,7 +204,7 @@
   ;; (setq org-journal-date-format 'org-journal-date-format-func)
   (setq org-journal-date-format "%A, %x")
 
-  (require-maybe 'org-protocol)
+  (require 'org-protocol)
 
   (defun transform-square-brackets-to-round-ones(string-to-transform)
     "Transforms [ into ( and ] into ), other chars left unchanged."
@@ -325,20 +325,21 @@
   ;; (defvar my-journal-time-format "%R") ;; like "%H:%M"
   (setq org-capture-templates
 	'(
-	  ;; Web capture
-          ;; org-protocol: https://github.com/sprig/org-capture-extension
-          ("p" 
-           "org-protocol(web link)" entry (file+headline my-inbox-path "Inbox")
-           "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
-           :create t)
-          
-          ("L" 
-           "org-protocol(web content)" entry (file+headline my-inbox-path "Inbox")
-           "* [[%:link][%:description]]\n%?\n"
-           :create t)
-          
+	  ;; ;; Web capture org-protocol: https://github.com/sprig/org-capture-extension
+          ;; ("p" 
+          ;;  "org-protocol(web link)" entry (file+headline my-todo-path "Inbox")
+          ;;  "* [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]] %^G\n:PROPERTIES:\n:Created: %U\n:END:\n\n%i\n%?"
+          ;;  :create t)
+	  
+          ;; ("L"
+          ;;  "org-protocol(web content)" entry (file+headline my-inbox-path "Inbox")
+          ;;  "* [[%:link][%:description]]\n%?\n"
+          ;;  :create t)
+	  ;; ("l" "Protocol Link" entry (file+headline my-todo-path "Inbox")
+          ;; "* [[%:link][%:description]] \nCREATED: %u" :prepend t :immediate-finish t)
+	  
 	  ;; Capture information
-          ("i" "Inbox" entry (file+headline my-todo-path "Inbox")
+          ("i" "Inbox" entry (file+headline my-todo-path "gtd")
            "* INBOX %?\n%i\n" :create t)
 
 	  ("w" "Rx" entry (file+headline my-todo-path "rx")
