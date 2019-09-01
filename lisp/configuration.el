@@ -127,6 +127,7 @@
 (eye-require 'init-eno "eno")
 (eye-require 'init-symbol-overlay "symbol-overlay")
 (eye-require 'init-bm "bm")
+(eye-require 'init-keyfreq "keyfreq")
 (eye-require 'init-ibuffer "ibuffer")
 (eye-require 'init-hungry-delete "hungry-delete")
 (eye-require 'init-rainbow "rainbow")

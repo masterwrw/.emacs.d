@@ -88,3 +88,4 @@ git clone https://github.com/wolray/symbol-overlay.git
 git clone https://github.com/joddie/pcre2el.git
 git clone https://github.com/soeye/org-wiki.git
 git clone https://github.com/nickav/naysayer-theme.el.git naysayer-theme
+git clone https://github.com/dacap/keyfreq.git
