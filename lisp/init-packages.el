@@ -1,22 +1,36 @@
 ;;; init-packages.el --- Custom package manager -*- lexical-binding: t -*-
 ;;
+;; TODO:
+;; 1.移除dash, s, f依赖 => ok
+;; 2.git clone 增加 --depth=1 => ok
+;; 3.把下载包的命令自动添加到shell脚本（或者使用变量保存命令列表）
+;; 4.采用异步执行命令
+;; 5.增加删除包的函数（删除目录，删除load-path，删除shell脚本中，更新autoloads）
+;; 6.启动时调用安装包（判断本地目录是否存在，不存在则异步安装）
 
 (defvar eye-packages-dir (expand-file-name "emacs-packages" "~/src")
   "All packages main directory.")
 
+(defvar eye-git-bin-dir nil "The git directory")
+(defvar eye-wget-bin-dir nil "The wget directory")
 
-(add-to-list 'load-path (expand-file-name "dash" eye-packages-dir))
-(add-to-list 'load-path (expand-file-name "s" eye-packages-dir))
-(add-to-list 'load-path (expand-file-name "f" eye-packages-dir))
-(require 'dash)
-(require 's)
-(require 'f)
+;; (setq eye-git-bin-dir "d:/msys32/usr/bin")
+;; (setq eye-wget-bin-dir "d:/msys32/usr/bin")
+
+(if eye-git-bin-dir
+    (progn
+      (setenv "PATH" (concat (getenv "PATH") ";" eye-git-bin-dir))
+      (add-to-list 'exec-path eye-git-bin-dir)))
+(if eye-wget-bin-dir
+    (progn
+      (setenv "PATH" (concat (getenv "PATH") ";" eye-wget-bin-dir))
+      (add-to-list 'exec-path eye-wget-bin-dir)))
 
 ;;1.download: git clone / mkdir xx && wget -Oxx/xx.el url
 (defun eye-package-download(url path &optional name)
   (let (command)
-    (if (s-contains-p "github" url)
-	(setq command (concat "git clone " url " " path))
+    (if (string-match "github" url)
+	(setq command (concat "git clone --depth=1 " url " " path))
       (progn
 	(shell-command (concat "mkdir " path))
 	(setq command (concat "wget -O" path "/" name ".el " url))
@@ -67,7 +81,7 @@ git-bash进入包目录后执行
   "Compile a directory"
   (interactive)
   (let ((path (ido-read-directory-name "Select dir:")))
-    (when (and path (f-dir-p path))
+    (when (and path (file-exists-p path))
       (message "Compile %s" path)
       (byte-recompile-directory path 0))))
 
@@ -80,7 +94,7 @@ git-bash进入包目录后执行
 	path)
     (when name
       (setq path (concat eye-packages-dir "/" name))
-      (if (f-dir-p path)
+      (if (file-exists-p path)
 	  (message "Update autoloads: %s" name)
 	  (update-directory-autoloads path)))))
 
@@ -89,11 +103,11 @@ git-bash进入包目录后执行
   (interactive)
   ;; delete autoload file
   (if (file-exists-p generated-autoload-file)
-      (f-delete generated-autoload-file))
+      (delete-file generated-autoload-file t))
   ;; update all subdir autoloads of packages directory
   (mapc (lambda (x)
 	  (let ((path (expand-file-name x eye-packages-dir)))
-	    (when (and (f-dir-p path)
+	    (when (and (file-exists-p path)
 		       (not (string-equal x "."))
 		       (not (string-equal x "..")))
 	      (update-directory-autoloads path)
@@ -119,7 +133,7 @@ git-bash进入包目录后执行
     (setq path (concat eye-packages-dir "/" name))
     (if (file-exists-p path)
 	(progn
-	  (f-delete path t) ;force delete recursively
+	  (delete-directory path t t) ;force delete recursively
 	  (message "delete package finished."))
       (message "package not exists."))))
 
