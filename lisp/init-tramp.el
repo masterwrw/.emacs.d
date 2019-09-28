@@ -12,6 +12,20 @@
 
 ;; (setq filepath "e:/@192.168.199.128_owensys/home/owensys/tmp/main.cpp")
 
+
+;; (setq server-list '(("192.168.199.128_owensys" "testpwd")
+;; 		    ("192.168.199.131_oracle" "testpwd2")))
+
+;; (setq selserver (completing-read "Select server: " server-list))
+
+;; (dolist (sv server-list)
+;;   (if (string-equal selserver (car sv))
+;;       (let ((pwd (car (cdr sv)))
+;; 	    (prepath (concat "/@" selserver)))
+;; 	(message (format "%s" prepath))
+;; 	)))
+
+
 (defun remote-file ()
   (interactive)
   (let* ((filepath (read-file-name "Remote path:" "/@ip_user/"))
