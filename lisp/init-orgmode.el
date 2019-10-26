@@ -189,7 +189,7 @@
   ;; @see https://github.com/batsibe/org-journal
   (require 'org-journal)
   (setq org-journal-file-type 'daily)
-  (setq org-journal-dir "h:/wikinote/journal/")
+  (setq org-journal-dir (concat locale-notebook-dir "/journal/"))
   (setq org-journal-file-format "%Y-%m-%d.org")
   ;; (setq today-journal-path (org-journal-find-location))
   (defun org-journal-date-format-func (time)
@@ -230,7 +230,7 @@
   ;; ))
   ;; 设置所有以Todo开头的org文件
   ;; (setq org-agenda-files (directory-files locale-notebook-dir t "Todo.*.org$"))
-  (setq org-agenda-files '("h:/wikinote/ats.org"))
+  (setq org-agenda-files `(,(concat locale-notebook-dir "/ats.org")))
   ;; 添加日志文件
   ;; (dolist (file (directory-files locale-notebook-dir t "Journal.*.org$"))
     ;; (add-to-list 'org-agenda-files file))
@@ -322,7 +322,7 @@
 
   ;; capture 的目标路径不能直接使用 concat
   ;; (defconst my-inbox-path (expand-file-name "Inbox.org" locale-notebook-dir))
-  (setq my-todo-path "h:/wikinote/ats.org")
+  (setq my-todo-path (concat locale-notebook-dir "/ats.org"))
   ;; (defconst my-priv-todo-path (expand-file-name "Todo.org" locale-notebook-dir))
   ;; (defconst my-proj-todo-path (expand-file-name "Todo -- seo.org" locale-notebook-dir))
   ;; (defconst my-journal-path (expand-file-name "private/journal.org" locale-notebook-dir))
