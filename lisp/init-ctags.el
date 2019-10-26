@@ -57,7 +57,8 @@
       (delete-other-windows))))
 
 ;; company-etags要么使用当前项目的TAGS，要么使用tags-table-list定义的TAGS文件，所以干脆直接配置tags-table-list
-(append-to-list 'tags-table-list locale-system-tags-paths)
+(if locale-system-tags-paths
+(append-to-list 'tags-table-list locale-system-tags-paths))
 ;; Don't ask before rereading the TAGS files if they have changed
 (setq tags-revert-without-query t)
 ;; Do case-sensitive tag searches

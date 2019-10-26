@@ -1,4 +1,4 @@
-(require-maybe 'magit)
+(require 'magit)
 
 (with-eval-after-load 'magit  
   (setq magit-push-always-verify nil)
@@ -18,9 +18,6 @@
 
   (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
   )
-
-(defhydra+ hydra-global-func (:exit t)
-  ("g" magit-status))
 
 
 

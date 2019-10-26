@@ -29,11 +29,13 @@
 ;; Windows平台必须设置，否则执行ffip会直占用CPU。
 (when is-windows (setq ffip-find-executable "find"))
 
-(if (executable-find ffip-find-executable)
-    (progn
-      (defhydra+ hydra-file (:exit t :idle 1.0)
-	("e" ffip "ffip")))
-  (warn "Can't find program \"find\", so you can not use command \"ffip\""))
+(setq ffip-find-executable "find")
+
+;(if (executable-find ffip-find-executable)
+;    (progn
+;      (defhydra+ hydra-file (:exit t :idle 1.0)
+;	("e" ffip "ffip")))
+;  (warn "Can't find program \"find\", so you can not use command \"ffip\""))
 
 
 
