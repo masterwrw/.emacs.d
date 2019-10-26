@@ -121,8 +121,8 @@
     )
 
   ;; support babel execute
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((emacs-lisp . t)))
+  ;; (org-babel-do-load-languages
+   ;; 'org-babel-load-languages '((emacs-lisp . t)))
 
   ;; password generator
   (require-maybe 'password-generator)
@@ -133,7 +133,7 @@
     (find-file (expand-file-name "private/password.org" locale-notebook-dir)))
 
 ;;;; gtd
-  (require-maybe 'org-agenda)
+  (require 'org-agenda)
   (require-maybe 'org-capture)
   (require-maybe 'find-lisp)
 
@@ -154,10 +154,14 @@
   ;; full frame show
   (setq org-agenda-window-setup 'only-window)
 
+  (setq org-agenda-align-tags-to-column 1) ;; 在agenda中，使tags跟在标题后面
+
+
   (setq org-todo-keywords
 	'((sequence "INBOX(i)")
 	  (sequence "TASK(t)" "SOMEDAY(s)" "REPEAT(r)" "CALENDAR(c)")
 	  (sequence "TODO(T)" "ACTION(a)" "WAIT(w)" "DONE(d!)" "|" "CANCELLED(C)" "DEFERRED(f)")
+	  (sequence "PLAN(p)")
           ))
 
   (setf org-todo-keyword-faces
@@ -340,14 +344,14 @@
 	  
 	  ;; Capture information
           ("i" "Inbox" entry (file+headline my-todo-path "gtd")
-           "* INBOX %?\n%i\n" :create t)
+           "* INBOX %?\n%i\n" :create t :empty-lines-after 1)
 
 	  ("w" "Rx" entry (file+headline my-todo-path "rx")
-           "* TASK %?\n%i\n" :create t)
+           "* TASK %?\n%i\n" :create t :empty-lines-after 1)
 	   
 	  ;; Record event
-	  ("j" "Journal entry" entry (function org-journal-find-location)
-           "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
+	  ;; ("j" "Journal entry" entry (function org-journal-find-location)
+           ;; "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")
 
 	  ;; Work task
 	  ;; file+olp specifies to full path to fill the Template
