@@ -1,11 +1,17 @@
 (setq user-full-name "owensys")
 (setq user-mail-address "owensys@hotmail.com")
 
-(setq locale-notebook-dir "H:/wikinote")
-(setq locale-docset-dir "~/software/zeal-portable-0.5.0-windows-x64/docsets")
+(if is-windows
+    (progn
+      (setq locale-notebook-dir "F:/wikinote")
+      (setq locale-docset-dir "D:/portable/zeal-portable-0.5.0-windows-x64/docsets"))
+  (progn
+    (setq locale-notebook-dir "/mnt/windows/note/wikinote")
+    ))
+    
 
 
-(setenv "GNUPGHOME" "~/.gpgd")
+;; (setenv "GNUPGHOME" "~/.gpgd")
 
 
 ;; PATH and exec-path
@@ -13,13 +19,14 @@
 (when is-windows
   (let ((path-list
 	 '(
-	   "C:/software/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
-	   "C:/software/Emacs26.1/Searcher"
-	   "C:/software/Emacs26.1/global663wb/bin"
+	   "D:/portable/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
+	   "D:/portable/Emacs26.1/Searcher"
+	   "D:/portable/Emacs26.1/global663wb/bin"
 	   "D:/portable/putty"
 	   ;;msys2
 	   "D:/msys32/usr/bin"
 	   "C:/software/Java/bin"
+	   "D:/portable/WinSCP-5.15.3-Portable"
 	   )))
     (setenv "PATH" (mapconcat 'identity path-list ";"))
     (setq exec-path (append path-list (list "." exec-directory)))
