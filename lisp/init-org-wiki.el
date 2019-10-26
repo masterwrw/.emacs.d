@@ -1,11 +1,12 @@
 (require 'org-wiki)
-(setq org-wiki-location-list '("H:/wikinote"))
+(setq org-wiki-location-list `(,locale-notebook-dir))
 (setq org-wiki-location (car org-wiki-location-list))
 ;; (setq org-wiki-attach-directory "~/org/attach")
 (setq org-wiki-clip-jar-path (expand-file-name "bin/Clip.jar" user-emacs-directory))
 
 ;; for export
-(setq org-wiki-emacs-path "C:\\software\\Emacs26.1\\emacs-26.1-x86_64\\bin\\runemacs.exe")
+(when is-windows
+  (setq org-wiki-emacs-path "D:\\portable\\Emacs26.1\\emacs-26.1-x86_64\\bin\\runemacs.exe"))
 (setq org-wiki-user-init-file (concat (file-name-as-directory user-emacs-directory) "lisp/wiki-export.el"))
 
 ;; (setq org-wiki-template
