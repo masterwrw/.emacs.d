@@ -111,11 +111,24 @@
 
 
 ;; For M-x compile
+
+;; 必须判断一下buffer-file-name是否是nil，否则出现奇怪问题，org导出html时，也会调用c++-mode-hook，但是这个为nil，导致导出不了，并卡顿，错误如下：
+;; Debugger entered--Lisp error: (wrong-type-argument stringp nil)
+;;   expand-file-name(nil)
+;;   locate-dominating-file(nil "build.bat")
+;;   (let ((dir (locate-dominating-file buffer-file-name build-script))) (if dir (progn (set (make-local-variable 'compile-command) (expand-file-name build-script dir)))))
+;;   build-command()
+;;   run-hooks(change-major-mode-after-body-hook prog-mode-hook c-mode-common-hook c++-mode-hook)
+;;   apply(run-hooks (change-major-mode-after-body-hook prog-mode-hook c-mode-common-hook c++-mode-hook))
+;;   run-mode-hooks(c++-mode-hook)
+;;   c++-mode()
+;;   org-html-fontify-code("" "C++")
 (defun build-command ()
-  (let ((dir (locate-dominating-file buffer-file-name build-script)))
-    (when dir
-      (set (make-local-variable 'compile-command)
-	   (expand-file-name build-script dir)))))
+  (when buffer-file-name
+    (let ((dir (locate-dominating-file buffer-file-name build-script)))
+      (when dir
+	(set (make-local-variable 'compile-command)
+	     (expand-file-name build-script dir))))))
 
 (add-hook 'c++-mode-hook 'build-command)
 
