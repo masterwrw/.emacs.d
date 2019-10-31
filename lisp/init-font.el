@@ -1,9 +1,9 @@
 ;;;; font
 (when is-linux
   (setq en-font-name "Inconsolata")
-  (setq cn-font-name "YaHei Consolas Hybrid")
-  (setq en-font-size 16)
-  (setq cn-font-size 16)
+  (setq cn-font-name "文泉驿等宽微米黑")
+  (setq en-font-size 14)
+  (setq cn-font-size 12)
   )
 (when is-windows
   ;; Inconsolata
