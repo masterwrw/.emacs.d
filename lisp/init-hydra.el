@@ -226,15 +226,16 @@ _a_: list tags
 (defhydra hydra-org (:exit t)
   "
 [_a_]: attach
+[_gp_]: previous block
 
 Clock:
 [_ci_] in   [_co_] out   [_cr_] report   [_cc_] cancel
 
 Insert:
-[_l_] link    [_t_] attach link   [_s_] src block    [_S_] subheading
+[_il_] link    [_ia_] attach link   [_s_] src block    [_S_] subheading
 
 Toggle:
-[_d_] display link   [_g_] inline image
+[_tl_] display link   [_ti_] inline image
 
 Wiki:
 [_wi_] insert new       [_wk_] insert link     [_wc_] insert block
@@ -249,12 +250,13 @@ Wiki:
   ("cr" org-clock-report)
   ("cc" org-clock-cancel)
   ("a" org-attach)
-  ("t" eye/insert-attach-link)
-  ("l" org-insert-link)
+  ("gp" org-previous-block)
+  ("ia" eye/insert-attach-link)
+  ("il" org-insert-link)
   ("s" eye/org-insert-src-block)
   ("S" org-insert-subheading)
-  ("d" org-toggle-link-display)
-  ("g" org-toggle-inline-images)
+  ("tl" org-toggle-link-display)
+  ("ti" org-toggle-inline-images)
   ("we" org-html-export-to-html)
   ("wi" org-wiki-insert-new)
   ("wk" org-wiki-insert-link)
@@ -265,7 +267,6 @@ Wiki:
   ("wf" org-wiki-from-url)
   ("wc" org-wiki-insert-block)
   )
-
 
 (defhydra hydra-symbol-overlay ()
   "
