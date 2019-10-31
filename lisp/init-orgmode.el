@@ -121,8 +121,11 @@
     )
 
   ;; support babel execute
-  ;; (org-babel-do-load-languages
-   ;; 'org-babel-load-languages '((emacs-lisp . t)))
+  (require 'ob-shell)
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((emacs-lisp . t)
+			       (shell . t)))
+
 
   ;; password generator
   (require-maybe 'password-generator)

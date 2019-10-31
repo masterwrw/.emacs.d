@@ -104,7 +104,7 @@
 (eye-require 'init-history "history")
 (eye-require 'init-backup "backup")
 (eye-require 'init-encoding "encoding")
-(eye-require 'init-modeline "modeline")
+;; (eye-require 'init-modeline "modeline")
 (eye-require 'init-bookmark "bookmark")
 (eye-require 'init-ido "ido")
 (eye-require 'init-smex "smex")
@@ -114,8 +114,8 @@
 ;;;; site packages
 (eye-require 'which-key "which-key")
 (with-eval-after-load 'which-key (which-key-mode))
-(when is-gui (eye-require 'init-theme "theme"))
-;; (when is-gui (eye-require 'init-doom "doom"))
+;; (when is-gui (eye-require 'init-theme "theme"))
+(when is-gui (eye-require 'init-doom "doom"))
 (when is-terminal
   (set-face-attribute 'hl-line nil :background "darkgray"))
 (eye-require 'init-avy "avy")
@@ -140,7 +140,8 @@
 (eye-require 'init-orgmode "orgmode")
 (eye-require 'init-yasnippet "yasnippet")
 (eye-require 'init-deft "deft")
-(eye-require 'init-org-wiki "org-wiki")
+;; (eye-require 'init-org-wiki "org-wiki")
+(eye-require 'init-org-note "org-note")
 (eye-require 'init-cpp "cpp")
 (eye-require 'init-php "php")
 (eye-require 'init-qt "qt")
@@ -153,6 +154,7 @@
 (eye-require 'init-external "external")
 (eye-require 'init-elfeed "elfeed")
 (when is-linux (eye-require 'init-magit "magit"))
+(when is-linux (require 'apt-utils))
 
 
 
