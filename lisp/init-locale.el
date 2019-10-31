@@ -16,21 +16,34 @@
 
 ;; PATH and exec-path
 ;; @see http://ergoemacs.org/emacs/emacs_env_var_paths.html
+(defvar system-path-var nil)
 (when is-windows
-  (let ((path-list
-	 '(
-	   "D:/portable/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
-	   "D:/portable/Emacs26.1/Searcher"
-	   "D:/portable/Emacs26.1/global663wb/bin"
-	   "D:/portable/putty"
-	   ;;msys2
-	   "D:/msys32/usr/bin"
-	   "C:/software/Java/bin"
-	   "D:/portable/WinSCP-5.15.3-Portable"
-	   )))
-    (setenv "PATH" (mapconcat 'identity path-list ";"))
-    (setq exec-path (append path-list (list "." exec-directory)))
-    ))
+  (setq system-path-list
+	'(
+	  "D:/portable/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
+	  "D:/portable/Emacs26.1/Searcher"
+	  "D:/portable/Emacs26.1/global663wb/bin"
+	  "D:/portable/putty"
+	  ;;msys2
+	  "D:/msys32/usr/bin"
+	  "C:/software/Java/bin"
+	  "D:/portable/WinSCP-5.15.3-Portable"
+	  ))
+  (setenv "PATH" (mapconcat 'identity system-path-list ";")))
+
+(when is-linux
+  (setq system-path-list
+	'(
+	  "/usr/local/sbin" "/usr/local/bin" "/usr/sbin" "/usr/bin" "/sbin" "/bin" "/usr/games" "/usr/local/games"
+	  "/home/owen/opt/emacs-26.3/bin"
+	  "/home/owen/opt/universal-ctags/bin"
+	  "/home/owen/src/emacs-packages/fuz"
+	  ))
+  (setenv "PATH" (mapconcat 'identity system-path-list ":")))
+
+
+(setq exec-path (append system-path-list (list "." exec-directory)))
+
 
 
 ;;; tags
