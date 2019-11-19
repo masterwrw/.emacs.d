@@ -248,6 +248,7 @@ Getting Thing Done system:
 (bind-key global-map ",tw" #'whitespace-mode)
 (bind-key global-map ",tf" #'global-font-lock-mode)
 (bind-key global-map ",tC" #'centered-cursor-mode "centered-cursor-mode")
+(bind-key global-map ",tW" #'writeroom-mode)
 
 (bind-key global-map ",fd" #'dired-jump "dired-x")
 (bind-key global-map ",ff" #'helm-find-files "helm-files")
