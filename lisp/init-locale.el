@@ -28,6 +28,7 @@
 	  "D:/msys32/usr/bin"
 	  "C:/software/Java/bin"
 	  "D:/portable/WinSCP-5.15.3-Portable"
+	  "D:/portable/Emacs26.1/newlisp"
 	  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ";")))
 
@@ -35,9 +36,11 @@
   (setq system-path-list
 	'(
 	  "/usr/local/sbin" "/usr/local/bin" "/usr/sbin" "/usr/bin" "/sbin" "/bin" "/usr/games" "/usr/local/games"
+	  "/home/owen/opt"
 	  "/home/owen/opt/emacs-26.3/bin"
 	  "/home/owen/opt/universal-ctags/bin"
 	  "/home/owen/src/emacs-packages/fuz"
+	  "/home/owen/opt/oracle/home/bin"
 	  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ":")))
 

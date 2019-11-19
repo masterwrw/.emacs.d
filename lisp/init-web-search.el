@@ -25,22 +25,5 @@
 
 
 
-(defhydra hydra-web-search (:exit t)
-  ("SPC" nil "quit" :exit t)
-  ("w" prelude-google "Google")
-  ("d" prelude-duckduckgo "DuckduckGo")
-  ("g" prelude-github "Github")
-  ("b" prelude-bing "Bing")
-  ("y" prelude-youtube "Youtube"))
-
-
-(defhydra+ hydra-funcs (:idle 1.0)
-  ("SPC" nil "quit" :exit t)
-  ("w" hydra-web-search/body "Web" :exit t))
-
-
-
-
-
 
 (provide 'init-web-search)

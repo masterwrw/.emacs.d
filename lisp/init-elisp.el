@@ -8,7 +8,7 @@
 
 (defun eye/open-init-file ()
   (interactive)
-  (find-file-existing (expand-file-name "init.el" user-emacs-directory)))
+  (find-file-existing (expand-file-name "lisp/configuration.el" user-emacs-directory)))
 
 ;; @See http://metasandwich.com/2013/01/19/emacs-config-youre-doing-it-wrong
 (defun eye/imenu-init ()

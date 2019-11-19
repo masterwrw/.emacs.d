@@ -1,4 +1,4 @@
-(require-maybe 'cc-mode)
+(require 'cc-mode)
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
@@ -6,7 +6,8 @@
 (add-hook 'c++-mode-hook
 	  (lambda ()
 	    (outline-minor-mode 1)
-	    (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")))
+	    (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
+	    ))
 
 ;; show current function name
 ;; (if (fboundp 'set-header-line)
@@ -46,7 +47,7 @@
 (defvar build-script (if is-windows "build.bat" "build.sh")
   "build script file name")
 
-(require-maybe 'compile)
+(require 'compile)
 (with-eval-after-load 'compile
   (setq compilation-directory-locked nil)
   ;; Compilation
@@ -229,7 +230,7 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
-(require-maybe 'autoinsert)
+(require 'autoinsert)
 (defun eye-setup-c++ ()
   (define-auto-insert '(c++-mode . "C++ skeleton")
     '(
@@ -252,32 +253,14 @@
 
   (defun set-tab-width-hook ()
     (setq indent-tabs-mode nil)
-    (setq default-tab-width 4)
-    (setq tab-width 4)
-    (setq c-basic-offset 4) ;; tab 缩进量
+    (setq default-tab-width 2)
+    (setq tab-width 2)
+    (setq c-basic-offset 2) ;; tab 缩进量
     (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
     (setq tab-stop-list ()))
   (add-hook 'c-mode-hook 'set-tab-width-hook)
   (add-hook 'c++-mode-hook 'set-tab-width-hook)
-
   )
-
-
-(with-eval-after-load 'cc-mode
-  (eye-setup-c++))
-
-
-;;;; company for cpp
-(require-maybe 'company-c-headers)
-(with-eval-after-load 'company-c-headers
-  (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
-  (when is-windows
-    (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
-					  "C:/Program Files (x86)/Microsoft SDKs/Windows\v7.1A/Include")))
-  )
-
-
-
 
 
 (provide 'init-cpp)

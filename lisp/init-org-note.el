@@ -48,9 +48,9 @@ http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
 ;; 自动添加的文件头
 (setq org-note-template
       (concat "#+TITLE: %n\n"
+	      "#+KEYWORDS: \n"
 	      "#+DATE: %d\n"
 	      "#+INCLUDE: style.org\n"
-	      "#+KEYWORDS: \n"
 	      "#+OPTIONS: ^:nil \\n:t\n"
 	      "#+STARTUP: hideblocks\n"
 	      "- [[file:index.org][Index]]\n\n"

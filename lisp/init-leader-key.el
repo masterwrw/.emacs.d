@@ -1,89 +1,23 @@
 ;;; init-leader-key.el --- Basic leader key configuration
+(defun bind-key (keymap keycode function &optional file)
+  "绑定全局按键，或者已经存在的keymap，file参数用于autoload"
+  (if file
+      (autoload function file))
+  (define-key keymap (kbd keycode) function))
 
-(defun eye-reset-mode-leader-key (modmap)
-  (define-key modmap (kbd ",") nil)
-  (define-key modmap (kbd "M-,") (lambda () (interactive) (insert ","))))
-
-(eye-reset-mode-leader-key global-map)
-
-(defun eye-define-key (modmap keychar func)
-  (define-key modmap (kbd keychar) func))
-
-(defun eye-define-leader-key (modmap keychar func)
-  (define-key modmap (kbd (concat "," keychar)) func))
-
-
-
-;;;; basic keys
-(add-to-list 'load-path "~/packages/hydra")
-(add-to-list 'load-path (concat user-emacs-directory "lisp/xah-functions"))
-(require 'hydra)
-(require 'base-toolkit)
-(require 'xah-functions)
-
-;;;; move cursor
-(defhydra hydra-move (:idle 1.0)
-  "
-_a_:Begin defun    _w_:Begin buffer   _r_:Forward para    _b_:Brackets match
-_s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
+(defmacro bind-mode-key (mode keymap keycode function &optional file)
+  "定义和模式相关的key，由于keymap需要存在才能调用define-key，这里使用defmacro，mode加载后才执行define-key。
+示例：(bind-mode-key 'cc-mode c++-mode-map \"M-p\" 'find-file)
 "
-  ("j" left-char)
-  ("M-j" left-char nil)
-  ("l" right-char)
-  ("M-l" right-char nil)
-  ("u" left-word)
-  ("M-u" left-word nil)
-  ("o" right-word)
-  ("M-o" right-word nil)
-  ("i" previous-line)
-  ("M-i" previous-line nil)
-  ("k" next-line)
-  ("M-k" next-line nil)
-  ("h" eye/beginning-of-line-or-block)
-  ("M-h" eye/beginning-of-line-or-block nil)
-  (";" xah-end-of-line-or-block)
-  ("M-;" xah-end-of-line-or-block nil)
-  ("n" scroll-up-command)
-  ("M-n" scroll-up-command nil)
-  ("p" scroll-down-command)
-  ("M-p" scroll-down-command nil)
-  ("m" set-mark-command)
-  ("b" xah-goto-matching-bracket nil)
-  ("/" xah-comment-dwim)
-  ("M-/" xah-comment-dwim nil)
-  ("a" beginning-of-defun nil)
-  ("s" end-of-defun nil)
-  ("w" beginning-of-buffer nil)
-  ("e" end-of-buffer nil)
-  ("r" forward-paragraph nil)
-  ("t" backward-paragraph nil)
-  ("SPC" keyboard-quit "quit" :exit t) 		;keyboard-quit to quit mark state
-  )
-
-(defun eye-define-mode-basic-keys (modmap)
-  (interactive)
-  (eye-define-key modmap "M-j" '(lambda () (interactive) (left-char) (hydra-move/body)))
-  (eye-define-key modmap "M-l" '(lambda () (interactive) (right-char) (hydra-move/body)))
-  (eye-define-key modmap "M-u" '(lambda () (interactive) (left-word) (hydra-move/body)))
-  (eye-define-key modmap "M-o" '(lambda () (interactive) (right-word) (hydra-move/body)))
-  (eye-define-key modmap "M-i" '(lambda () (interactive) (previous-line) (hydra-move/body)))
-  (eye-define-key modmap "M-k" '(lambda () (interactive) (next-line) (hydra-move/body)))
-  (eye-define-key modmap "M-h" '(lambda () (interactive) (eye/beginning-of-line-or-block) (hydra-move/body)))
-  (eye-define-key modmap "M-;" '(lambda () (interactive) (xah-end-of-line-or-block) (hydra-move/body)))
-  (eye-define-key modmap "M-n" '(lambda () (interactive) (scroll-up-command) (hydra-move/body)))
-  (eye-define-key modmap "M-p" '(lambda () (interactive) (scroll-down-command) (hydra-move/body)))
-  (eye-define-key modmap "M-/" '(lambda () (interactive) (xah-comment-dwim) (hydra-move/body)))
-  (eye-define-key modmap "M-m" 'set-mark-command)
-  (eye-define-key modmap "M-w" 'xah-copy-line-or-region)
-  (eye-define-key modmap "M-e" 'xah-copy-line-or-region) ;sometimes M-w not working, then use M-e
-  (eye-define-key modmap "M-q" 'xah-cut-line-or-region)
-  (eye-define-key modmap "M-a" 'yank)
-  (eye-define-key modmap "M-z" 'undo))
-
-(eye-define-mode-basic-keys global-map)
+  `(progn
+     (if ,file
+	 (autoload ,function ,file))
+     (with-eval-after-load ,mode
+       (define-key ,keymap (kbd ,keycode) ,function))))
 
 
-;;; more hydra define
+(require 'hydra)
+;;;; hydra: help
 (defhydra hydra-help (:exit t :idle 1.0)
   ("v" describe-variable "Desc var")
   ("f" describe-function "Desc fun")
@@ -94,32 +28,6 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("i" info "Info")
   ("c" list-colors-display "List colors")
   ("s" list-faces-display "List faces"))
-
-;;;; rectangle
-(defhydra hydra-rect (:idle 1.0)
-  ("r" replace-rectangle "Replace rectangle" :exit t)
-  ("k" kill-rectangle "Kill rectangle" :exit t))
-
-
-
-(defhydra hydra-jump (:exit t :idle 1.0)
-  ("SPC" keyboard-quit "quit")
-  ("g" goto-line "Goto line"))
-
-
-(defhydra hydra-file (:exit t :idle 1.0)
-  ("a" switch-to-buffer "Switch buffer")
-  ("s" save-buffer "Save buffer")
-  ("o" find-file "Find file")
-  ("h" recentf-open-files)
-  ("k" kill-this-buffer "Kill buffer")
-  ("z" xah-open-last-closed "Open last closed")
-  ("b" bookmark-set "Set bookmark")
-  ("f" xah-open-file-fast "Jump bookmark")
-  ("l" bookmark-bmenu-list "List bookmark")
-  ("p" xah-previous-user-buffer "Previous buffer")
-  ("n" xah-next-user-buffer "Next buffer")
-  )
 
 ;;;; select
 (defhydra hydra-select (:idle 1.0)
@@ -132,45 +40,6 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("n" narrow-to-region "Narrorw" :exit t)
   ("w" widen "widen" :exit t)
   )
-
-;;;; delete
-(defhydra hydra-delete (:idle 1.0)
-  "delete:"
-  ("SPC" nil "quit")
-  ("d" delete-line-no-copy :exit t)
-  ("l" delete-char)
-  ("j" backward-delete-char)
-  ("u" delete-inner-word-no-copy "backward word")
-  ("o" delete-forward-word-no-copy "forward word")
-  ("h" delete-beginning-of-line-no-copy "begin line" :exit t)
-  (";" delete-end-of-line-no-copy "end line" :exit t)
-  ("b" xah-delete-current-text-block "block" :exit t)
-  )
-
-
-;;;; window
-(defhydra hydra-window (:idle 1.0)
-  ("SPC" nil "quit")
-  ("n" eye/new-frame)
-  ("o" xah-next-window-or-frame "Next window/frame")
-  ("0" delete-window-or-frame "Delete window/frame" :exit t)
-  ("1" delete-other-windows "Delete other window" :exit t)
-  ("3" split-window-horizontally "Split hor" :exit t)
-  ("4" split-window-vertically "Split ver" :exit t))
-
-;;;; search
-(defhydra hydra-search (:idle 1.0)
-  ("SPC" nil "quit" :exit t)
-  ("s" occur "Occur" :exit t)
-  ("f" isearch-forward "isearch-forward" :exit t)
-  ("b" isearch-backward "isearch-backward" :exit t)
-  ("q" query-replace "query-replace" :exit t)
-  ("r" eye/replace-string-buffer "Replace all" :exit t)
-  ("o" multi-occur-in-matching-buffers "Occur buffers" :exit t)
-  )
-(define-key isearch-mode-map (kbd "M-k") 'isearch-repeat-forward)
-(define-key isearch-mode-map (kbd "M-i") 'isearch-repeat-backward)
-
 
 ;;;; outline
 (defhydra hydra-outline ()
@@ -187,87 +56,253 @@ _s_:End defun      _e_:End buffer     _t_:Backward para   _/_:Comment
   ("p" outline-previous-heading nil)
   ("t" outline-toggle-children nil))
 
-;;;; imenu
-(defhydra hydra-imenu (:exit t :idle 1.0)
-  ("SPC" nil "quit" :exit t))
-
-
-;;;; funcs
-(defhydra hydra-funcs (:idle 1.0)
-  ("SPC" nil "quit" :exit t)
-  ("p" pop-global-mark "Pop mark" :exit t)
-  ("r" read-only-mode "Read only" :exit t)
-  ("l" global-display-line-numbers-mode "Line number"))
-
 
 (defhydra hydra-dired (:exit t)
   ("SPC" nil "quit")
   ("o" dired-w32-browser "open")
   ("e" dired-w32explorer "explorer"))
 
-(defvar hydra-major-mode-alist
-  '((emacs-lisp-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
-    (lisp-interaction-mode . (lambda () (if (fboundp 'hydra-elisp/body) (hydra-elisp/body))))
-    (c++-mode . (lambda () (if (fboundp 'hydra-c++/body) (hydra-c++/body))))
-    (python-mode . (lambda () (if (fboundp 'hydra-python/body) (hydra-python/body))))
-    (org-mode . (lambda () (if (fboundp 'hydra-org/body) (hydra-org/body))))
-    (dired-mode . (lambda () (if (fboundp 'hydra-dired/body) (hydra-dired/body))))
-    ))
+
+(defhydra hydra-elisp (:exit t)
+  ("x" eval-last-sexp "Eval last")
+  ("e" eval-expression "Eval exp")
+  ("b" eval-buffer "Eval buffer")
+  ("r" eval-region "Eval region")
+  ("i" info "info")
+  ("c" list-colors-display "colors")
+  ("f" list-faces-display "faces")
+  ("SPC" keyboard-quit "quit"))
+
+
+(defhydra hydra-cpp (:exit t)
+  "
+_a_: list tags
+"
+  ("a" counsel-etags-list-tag)
+  ("c" counsel-etags-scan-code "create TAGS")
+  ("d" counsel-etags-find-tag-at-point "find tag at point")
+  ("e" counsel-etags-find-tag "find tag")
+  ("r" counsel-etags-recent-tag "recent tag")
+  ("t" eye/update-ctags-this-file "update file tags")
+  ("f" eye/find-header-or-source-file "find h or cpp")
+  ("l" eye/load-project-root-tags "load root tags")
+  ("s" eye/search-cpp-doc "cpp doc")
+  ("g" eye/auto-compile "compile"))
+
+
+(defhydra hydra-note (:exit t :idle 1.0)
+  "note:"
+  ("SPC" nil "quit")
+  ("n" org-note-new "new note")
+  ("w" org-note-search-keywords "search keywords")
+  ("f" org-note-search-title "search title")
+  )
+
+
+(defhydra hydra-org (:exit t)
+  "
+[_a_]: attach
+[_gp_]: previous block
+
+Clock:
+[_ci_] in   [_co_] out   [_cr_] report   [_cc_] cancel
+
+Insert:
+[_il_] link    [_ia_] attach link   [_s_] src block    [_S_] subheading
+
+Toggle:
+[_tl_] display link   [_ti_] inline image
+
+Wiki:
+[_wi_] insert new       [_wk_] insert link     [_wc_] insert block
+[_wo_] open at point    [_wn_] wiki nav
+[_wu_] open url         [_wf_] open from url
+[_we_] export page     
+
+"
+  ("SPC" nil "quit")
+  ("ci" org-clock-in)
+  ("co" org-clock-out)
+  ("cr" org-clock-report)
+  ("cc" org-clock-cancel)
+  ("a" org-attach)
+  ("gp" org-previous-block)
+  ("ia" eye/insert-attach-link)
+  ("il" org-insert-link)
+  ("s" eye/org-insert-src-block)
+  ("S" org-insert-subheading)
+  ("tl" org-toggle-link-display)
+  ("ti" org-toggle-inline-images)
+  ("we" org-note-export-to-html)
+  ("wi" org-note-new)
+  ("wk" org-wiki-insert-link)
+  ("wo" org-open-at-point)
+  ;; ("wh" org-wiki-helm)
+  ("wn" org-wiki-nav)
+  ("wu" org-note-export-and-open)
+  ("wf" org-wiki-from-url)
+  ("wc" org-wiki-insert-block)
+  )
+
+(defhydra hydra-highlight ()
+  "symbol-overlay"
+  ("h" symbol-overlay-put "put")
+  ("n" symbol-overlay-jump-next "next")
+  ("p" symbol-overlay-jump-prev "prev")
+  ("f" symbol-overlay-jump-first "first")
+  ("l" symbol-overlay-jump-last "last")
+  ("r" symbol-overlay-remove-all "remove all"))
+
+
+(defhydra hydra-watch-other ()
+  ("SPC" nil "quit")
+  ("i" watch-other-window-down-line "Down line")
+  ("k" watch-other-window-up-line "Up line")
+  ("p" watch-other-window-down "Down scroll")
+  ("n" watch-other-window-up "Up scroll"))
+
+
+(defhydra hydra-gtd ()
+  "
+Getting Thing Done system:
+
+  [_ci_] capture收集  [_cr_] capture rx task
+  [_vi_] 查看收集蓝（处理）    [_vt_] 查看任务（建立清单）    [_vo_] 查看TODO项（准备下一步行动）    [_vx_] 查看下一步行动
+
+  [_a_] agenda     [_j_] journal file
+
+"
+  ("a" org-agenda nil :exit t)
+  ("ci" (lambda () (interactive) (org-capture nil "i")) nil :exit t)
+  ("cr" (lambda () (interactive) (org-capture nil "w")) nil :exit t)
+  ("j" eye/open-journal-file nil :exit t)
+  ("vi" (lambda () (interactive) (org-agenda nil "i")))
+  ("vt" (lambda () (interactive) (org-agenda nil "t")))
+  ("vo" (lambda () (interactive) (org-agenda nil "o")))
+  ("vx" (lambda () (interactive) (org-agenda nil "x")))
+  )
 
 (defun eye/major-mode-key ()
   (interactive)
-  (let ((v (assoc major-mode hydra-major-mode-alist)))
-    (when v
-      (funcall (cdr v)))))
+  (cond
+   ((eq major-mode 'emacs-lisp-mode) (call-interactively 'hydra-elisp/body))
+   ((eq major-mode 'lisp-interaction-mode) (call-interactively 'hydra-elisp/body))
+   ((eq major-mode 'c-mode) (call-interactively 'hydra-cpp/body))
+   ((eq major-mode 'c++-mode) (call-interactively 'hydra-cpp/body))
+   ((eq major-mode 'python-mode) (call-interactively 'hydra-python/body))
+   ((or (eq major-mode 'org-mode)
+	(eq major-mode 'org-journal-mode))
+    (call-interactively 'hydra-org/body))
+   (t nil)))
 
-(defun eye-set-leader-key (modmap)
-  (interactive)
-  (eye-reset-mode-leader-key modmap)
-  (eye-define-mode-basic-keys modmap)
-  (eye-define-leader-key modmap "h" 'hydra-help/body)
-  (eye-define-leader-key modmap "r" 'hydra-rect/body)
-  (eye-define-leader-key modmap "f" 'hydra-file/body)
-  (eye-define-leader-key modmap "e" 'hydra-select/body)
-  (eye-define-leader-key modmap "c" 'hydra-jump/body)
-  (eye-define-leader-key modmap "d" 'hydra-delete/body)
-  (eye-define-leader-key modmap "w" 'hydra-window/body)
-  (eye-define-leader-key modmap "s" 'hydra-search/body)
-  (eye-define-leader-key modmap "i" 'hydra-imenu/body)
-  (eye-define-leader-key modmap "o" 'hydra-outline/body)
-  (eye-define-leader-key modmap "x" 'hydra-funcs/body)
-  (eye-define-leader-key modmap "m" 'eye/major-mode-key))
 
-(eye-set-leader-key global-map)
-
-(if is-terminal
-    (eye-define-leader-key global-map " TAB" 'mode-line-other-buffer)
-  (eye-define-leader-key global-map " <tab>" 'mode-line-other-buffer))
-
-;;;; Fn keys
-(define-key global-map (kbd "<f1>") (lambda ()
-				      (interactive)
-				      (if (fboundp 'counsel-ibuffer)
-					  (counsel-ibuffer)
-					(switch-to-buffer))))
-(define-key global-map (kbd "<f2>") 'toggle-input-method)
-(define-key global-map (kbd "<f3>") 'xah-next-window-or-frame)
-(define-key global-map (kbd "<f4>") 'delete-other-windows)
-(define-key global-map (kbd "<f8>") 'org-capture)
-(define-key global-map (kbd "<f9>") 'org-agenda)
-(define-key global-map (kbd "<f11>") 'fullscreen-toggle)
-(define-key global-map (kbd "<f12>") 'counsel-etags-find-tag-at-point)
-(define-key global-map (kbd "<C-f12>") 'pop-tag-mark)
-
+;;;; bind keys
+(bind-key global-map "C-x C-b" #'switch-to-buffer)
+(bind-key global-map "<C-wheel-up>" #'eye/increase-font-size)
+(bind-key global-map "<C-wheel-down>" #'eye/decrease-font-size)
+(bind-key global-map "<M-backspace>" #'eye/kill-inner-word)
+(bind-key global-map "<C-backspace>" #'eye/kill-inner-word)
 ;; running on msys2, can't use C-c, it is <pause>
-(when is-terminal
-  (eye-define-key global-map "C-x <pause>" 'kill-emacs))
-
-
+(when is-terminal (bind-key global-map "C-x <pause>" #'kill-emacs))
 (defalias 'backward-kill-word 'eye/kill-inner-word)
-(define-key global-map (kbd "<M-backspace>") 'eye/kill-inner-word)
-(define-key global-map (kbd "<C-backspace>") 'eye/kill-inner-word)
-(define-key global-map (kbd "<C-wheel-up>") 'eye/increase-font-size)
-(define-key global-map (kbd "<C-wheel-down>") 'eye/decrease-font-size)
+;; use [ESC] replace [C-g]
+;; 终端下不替换，否则alt+x失效，alt是ESC
+(when is-gui (define-key key-translation-map (kbd "ESC") (kbd "C-g")))
+
+(bind-key global-map "," nil)
+(bind-key global-map "M-k" nil)
+(bind-key global-map "M-," #'(lambda () (interactive) (insert ",")))
+
+(bind-key global-map "M-x" #'helm-M-x)
+
+(bind-key global-map ",1" #'delete-other-windows)
+(bind-key global-map ",2" #'split-window-below)
+(bind-key global-map ",3" #'split-window-right)
+(bind-key global-map ",4g" #'awesome-tab-switch-group "awesome-tab")
+(bind-key global-map ",4f" #'awesome-tab-forward-tab "awesome-tab")
+(bind-key global-map ",4b" #'awesome-tab-backward-tab "awesome-tab")
+(bind-key global-map ",4n" #'awesome-tab-forward-group "awesome-tab")
+(bind-key global-map ",4p" #'awesome-tab-backward-group "awesome-tab")
+(bind-key global-map ",8" #'hydra-select/body)
+(bind-key global-map ",a" #'beginning-of-line)
+(bind-key global-map ",b" #'switch-to-buffer)
+(bind-key global-map ",c" #'kill-ring-save)
+
+(bind-key global-map ",dd" #'delete-line-no-copy "base-toolkit")
+(bind-key global-map ",db" #'delete-beginning-of-line-no-copy)
+(bind-key global-map ",de" #'delete-end-of-line-no-copy)
+
+(bind-key global-map ",e" #'end-of-line)
+
+(bind-key global-map ",ii" #'counsel-imenu "counsel")
+(bind-key global-map ",ie" #'eye/imenu-init)
+(bind-key global-map ",m" #'set-mark-command)
+
+(bind-key global-map ",tr" #'global-readonly-toggle "global-readonly-mode")
+(bind-key global-map ",tl" #'global-display-line-numbers-mode)
+(bind-key global-map ",tt" #'toggle-truncate-lines)
+(bind-key global-map ",tc" #'global-company-mode)
+(bind-key global-map ",th" #'highlight-changes-mode)
+(bind-key global-map ",tv" #'global-visual-line-mode)
+(bind-key global-map ",tR" #'rainbow-mode "rainbow-mode")
+(bind-key global-map ",tw" #'whitespace-mode)
+(bind-key global-map ",tf" #'global-font-lock-mode)
+(bind-key global-map ",tC" #'centered-cursor-mode "centered-cursor-mode")
+
+(bind-key global-map ",fd" #'dired-jump "dired-x")
+(bind-key global-map ",ff" #'helm-find-files "helm-files")
+(bind-key global-map ",fh" #'helm-recentf "helm-for-files")
+(bind-key global-map ",fo" #'find-file-other-window)
+(bind-key global-map ",fk" #'kill-buffer)
+(bind-key global-map ",fs" #'save-buffer)
+(bind-key global-map ",fg" #'counsel-git "counsel") ;;查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
+
+(bind-key global-map ",sa" #'counsel-ag "counsel")
+(bind-key global-map ",ss" #'occur)
+(bind-key global-map ",so" #'multi-occur-in-matching-buffers)
+(bind-key global-map ",sr" #'color-rg-search-input "color-rg")
+(bind-key global-map ",sq" #'query-replace)
+
+(bind-key global-map ",gg" #'goto-line)
+(bind-key global-map ",gc" #'ace-jump-char-mode "ace-jump-mode")
+(bind-key global-map ",gl" #'ace-jump-line-mode "ace-jump-mode")
+(bind-key global-map ",gi" #'avy-goto-char-in-line "avy")
+(bind-key global-map ",gt" #'bm-toggle)
+(bind-key global-map ",gp" #'bm-previous)
+(bind-key global-map ",gn" #'bm-next)
+(bind-key global-map ",gs" #'counsel-bm)
+
+(bind-key global-map ",h" #'hydra-highlight/body)
+(bind-key global-map ",o" #'hydra-outline/body)
+(bind-key global-map ",rr" #'replace-rectangle)
+(bind-key global-map ",rk" #'kill-rectangle)
+
+(bind-key global-map ",v" #'yank)
+(bind-key global-map ",w" #'other-window)
+(bind-key global-map ",W" #'hydra-watch-other/body)
+
+(bind-key global-map ",x" #'kill-region)
+(bind-key global-map ",z" #'undo)
+
+(bind-key global-map ",/" #'comment-dwim)
+(bind-key global-map ",." #'eye/major-mode-key)
+
+
+
+(bind-key global-map "M-k aa" #'aweshell-toggle "aweshell")
+(bind-key global-map "M-k aN" #'aweshell-new "aweshell")
+(bind-key global-map "M-k an" #'aweshell-next "aweshell")
+(bind-key global-map "M-k ap" #'aweshell-prev "aweshell")
+
+(bind-key global-map "M-k wg" #'prelude-google "init-web-search")
+(bind-key global-map "M-k wb" #'prelude-bing "init-web-search")
+(bind-key global-map "M-k wd" #'prelude-duckduckgo "init-web-search")
+(bind-key global-map "M-k wG" #'prelude-github "init-web-search")
+(bind-key global-map "M-k wy" #'prelude-youtube "init-web-search")
+
+(bind-key global-map "M-k o" #'hydra-watch-other/body "init-watch-other-window")
+
+(bind-key global-map "M-k n" #'hydra-note/body)
 
 
 (provide 'init-leader-key)

@@ -70,21 +70,21 @@
 (defun setup-command-fly-key-map ()
   (fly-dkeys xah-fly-key-map
 	     '(("DEL" . nil)
-	       ("a" . counsel-M-x)
+	       ("a" . helm-M-x)
 	       ("e" . xah-shrink-whitespaces)
 	       ("," . bm-previous)
 	       ("." . bm-next)
 	       ("t" . bm-toggle)
 	       ("g" . counsel-bm)
 	       ))
-  (setq insert-mode-input-method current-input-method)
-  (set-input-method nil)
-  (global-hl-line-mode 0)
+  ;; (setq insert-mode-input-method current-input-method)
+  ;; (set-input-method nil)
+  ;; (global-hl-line-mode 0)
   )
 
 (defun setup-insert-fly-key-map ()
-  (set-input-method insert-mode-input-method)
-  (global-hl-line-mode 1)
+  ;; (set-input-method insert-mode-input-method)
+  ;; (global-hl-line-mode 1)
   )
 
 (add-hook 'xah-fly-command-mode-activate-hook 'setup-command-fly-key-map)
@@ -122,5 +122,7 @@
 
 ;; use [ESC] replace [C-g]
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+(define-key xah-fly-key-map (kbd "M-SPC") 'xah-fly-command-mode-activate)
 
 (provide 'init-keys)

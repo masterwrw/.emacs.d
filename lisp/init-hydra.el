@@ -58,7 +58,7 @@ Other
 
   ("d" dired-jump nil)
   ("s" save-buffer nil)
-  ("o" counsel-find-file nil)
+  ("o" helm-find-files nil)
   ("z" xah-open-last-closed nil)
   ("k" xah-close-current-buffer nil)
   ("b" bookmark-set nil)
@@ -66,7 +66,7 @@ Other
   ("t" find-file-in-tags nil) ;need tags-table-files
   ("a" counsel-ibuffer nil)
   ("g" counsel-git nil);查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
-  ("h" counsel-recentf nil)
+  ("h" helm-recentf nil)
   )
 
 ;;;; select
@@ -239,7 +239,7 @@ Toggle:
 
 Wiki:
 [_wi_] insert new       [_wk_] insert link     [_wc_] insert block
-[_wo_] open at point    [_wh_] wiki helm       [_wn_] wiki nav
+[_wo_] open at point    [_wn_] wiki nav
 [_wu_] open url         [_wf_] open from url
 [_we_] export page     
 
@@ -257,23 +257,25 @@ Wiki:
   ("S" org-insert-subheading)
   ("tl" org-toggle-link-display)
   ("ti" org-toggle-inline-images)
-  ("we" org-html-export-to-html)
-  ("wi" org-wiki-insert-new)
+  ("we" org-note-export-to-html)
+  ("wi" org-note-new)
   ("wk" org-wiki-insert-link)
   ("wo" org-open-at-point)
-  ("wh" org-wiki-helm)
+  ;; ("wh" org-wiki-helm)
   ("wn" org-wiki-nav)
-  ("wu" org-wiki-open-url)
+  ("wu" org-note-export-and-open)
   ("wf" org-wiki-from-url)
   ("wc" org-wiki-insert-block)
   )
 
-(defhydra hydra-symbol-overlay ()
-  "
-Highlight:
-[_h_] at point
-"
-  ("h" symbol-overlay-put))
+(defhydra hydra-highlight ()
+  "symbol-overlay"
+  ("h" symbol-overlay-put "put")
+  ("n" symbol-overlay-jump-next "next")
+  ("p" symbol-overlay-jump-prev "prev")
+  ("f" symbol-overlay-jump-first "first")
+  ("l" symbol-overlay-jump-last "last")
+  ("r" symbol-overlay-remove-all "remove all"))
 
 
 (defhydra hydra-gtd ()
@@ -295,21 +297,6 @@ Getting Thing Done system:
   ("vo" (lambda () (interactive) (org-agenda nil "o")))
   ("vx" (lambda () (interactive) (org-agenda nil "x")))
 )
-
-
-(defhydra hydra-numbers ()
-  "numbers:"
-  ("SPC" nil "quit")
-  ("1" (lambda () (interactive) (insert "1")))
-  ("2" (lambda () (interactive) (insert "2")))
-  ("3" (lambda () (interactive) (insert "3")))
-  ("4" (lambda () (interactive) (insert "4")))
-  ("5" (lambda () (interactive) (insert "5")))
-  ("6" (lambda () (interactive) (insert "6")))
-  ("7" (lambda () (interactive) (insert "7")))
-  ("8" (lambda () (interactive) (insert "8")))
-  ("9" (lambda () (interactive) (insert "9")))
-  ("0" (lambda () (interactive) (insert "0"))))
 
 
 (provide 'init-hydra)

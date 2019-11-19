@@ -35,7 +35,7 @@
   ;; (add-hook 'org-mode-hook 'yas-minor-mode)
   ;; indent content
   (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
-  (setq org-startup-indented t) ;; 是否自动开启org-indent-mode
+  (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
   (setq org-startup-folded (quote overview))
   ;; hides blank lines between headings
   (setq org-cycle-separator-lines 0)

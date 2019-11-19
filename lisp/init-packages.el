@@ -169,7 +169,7 @@ git-bash进入包目录后执行
   (require 'autoload.pkg generated-autoload-file))
 
 (message
- (format "-----------------------------------%.6f sec: require autoload.pkg"
+ (format "%.6f sec: require autoload.pkg"
 	 (- (float-time (current-time))
 	    (float-time test-time))))
 

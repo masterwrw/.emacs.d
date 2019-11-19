@@ -14,6 +14,11 @@
   (define-key ivy-minibuffer-map (kbd "M-k") 'ivy-next-line)
   (define-key ivy-minibuffer-map (kbd "M-o") 'ivy-occur)
 
+  ;; 防止鼠标误点击
+  (add-hook 'ivy-occur-grep-mode-hook
+      (lambda ()
+        (set (make-local-variable 'mouse-1-click-follows-link) nil)))
+
   ;; 不想让分割左右窗口后还是在左下角弹出ivy
   ;; @see https://emacs-china.org/t/topic/5754/9
   ;; (defvar maple/ivy-format-padding nil)
@@ -102,22 +107,22 @@
               :caller 'eye/counsel-git)))
 
 
-(defhydra+ hydra-help (:exit t :idle 1.0)
-  ("v" counsel-describe-variable "Desc var")
-  ("f" counsel-describe-function "Desc fun")
-  ("a" counsel-describe-face "Desc face")
-  ("b" counsel-descbinds "Desc bind"))
+;(defhydra+ hydra-help (:exit t :idle 1.0)
+;  ("v" counsel-describe-variable "Desc var")
+;  ("f" counsel-describe-function "Desc fun")
+;  ("a" counsel-describe-face "Desc face")
+;  ("b" counsel-descbinds "Desc bind"))
 
 
 
-(defhydra+ hydra-search (:idle 1.0)
-  ("s" swiper-dwim "swiper" :exit t)
-  ("l" counsel-rg "counsel-rg" :exit t)
-  ("k" counsel-rg-marked "rg marked" :exit t))
+;(defhydra+ hydra-search (:idle 1.0)
+;  ("s" swiper-dwim "swiper" :exit t)
+;  ("l" counsel-rg "counsel-rg" :exit t)
+;  ("k" counsel-rg-marked "rg marked" :exit t))
 
 
-(defhydra+ hydra-imenu (:exit t :idle 1.0)
-  ("c" counsel-imenu "counsel imenu")) ;counsel-semantic-or-imenu is not autoload function, use counsel-imenu
+;(defhydra+ hydra-imenu (:exit t :idle 1.0)
+;  ("c" counsel-imenu "counsel imenu")) ;counsel-semantic-or-imenu is not autoload function, use counsel-imenu
 
 
 
