@@ -40,3 +40,8 @@ srecode-map.el
 /.elfeed
 GPUCache/
 *-bak/
+.#ido*
+bm-repository
+*-terminal
+session.*
+.moomin_history
