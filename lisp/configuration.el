@@ -963,7 +963,15 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	     (add-package-path "rainbow-delimiters")
 	     (autoload 'rainbow-delimiters-mode "rainbow-delimiters" nil t)
 	     (with-eval-after-load 'cc-mode
-	       (add-hook 'c++-mode-hook 'rainbow-delimiters-mode))))
+	       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))))
+
+;;;; highlight-numbers
+(idle-load 'highlight-numbers
+	   :before
+	   (progn
+	     (add-package-path '("highlight-numbers" "parent-mode"))
+	     (autoload 'highlight-numbers-mode "highlight-numbers" nil t)
+	     (add-hook 'prog-mode-hook 'highlight-numbers-mode)))
 
 ;;;; whitespace
 ;; http://ergoemacs.org/emacs/whitespace-mode.html

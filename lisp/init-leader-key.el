@@ -253,6 +253,8 @@ Getting Thing Done system:
 (bind-key global-map ",tt" #'toggle-truncate-lines)
 (bind-key global-map ",tc" #'global-company-mode)
 (bind-key global-map ",th" #'highlight-changes-mode)
+(bind-key global-map ",tn" #'highlight-numbers-mode)
+(bind-key global-map ",tp" #'rainbow-delimiters-mode)
 (bind-key global-map ",tv" #'global-visual-line-mode)
 (bind-key global-map ",tR" #'rainbow-mode "rainbow-mode")
 (bind-key global-map ",tw" #'whitespace-mode)
