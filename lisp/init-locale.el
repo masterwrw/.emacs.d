@@ -4,9 +4,13 @@
 (if is-windows
     (progn
       (setq locale-notebook-dir "F:/wikinote")
-      (setq locale-docset-dir "D:/portable/zeal-portable-0.5.0-windows-x64/docsets"))
+      (setq locale-docset-dir "~/.docsets")
+      (setq locale-browser-path "C:/Program Files (x86)/Maxthon5/Bin/Maxthon.exe")
+      )
   (progn
     (setq locale-notebook-dir "/mnt/windows/note/wikinote")
+    (setq locale-browser-path "/usr/bin/firefox")
+    (setq locale-docset-dir "~/.docsets")
     ))
     
 

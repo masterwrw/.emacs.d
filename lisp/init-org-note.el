@@ -10,10 +10,16 @@
 (require 'ox-html)
 (require 'htmlize)
 
-(setq org-note-root-dir "/mnt/windows/note")
-(setq org-note-files-dir "/mnt/windows/note/wikinote")
-(setq org-note-html-dir "/mnt/windows/note/html")
-(setq org-note-attach-dir "/mnt/windows/note/a")
+(if is-linux
+    (progn
+      (setq org-note-files-dir "/mnt/windows/note/wikinote")
+      (setq org-note-html-dir "/mnt/windows/note/html")
+      (setq org-note-attach-dir "/mnt/windows/note/a"))
+  (progn
+    (setq org-note-files-dir "f:/wikinote")
+    (setq org-note-html-dir "f:/html")
+    (setq org-note-attach-dir "f:/a")))
+    
 
 
 (defun org-note-export-to-html

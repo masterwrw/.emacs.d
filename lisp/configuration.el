@@ -154,10 +154,10 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
   ;; Inconsolata
   ;; Fira Code
   ;; Droid Sans Mono Wide
-  (setq en-font-name "Inconsolata")
+  (setq en-font-name "Bitstream Vera Serif")
   (setq cn-font-name "WenQuanYi Micro Hei Mono")
   (setq en-font-size 14)
-  (setq cn-font-size 12)
+  (setq cn-font-size 14)
   )
 
 ;; 获取屏幕分辨率自动增大字体
@@ -410,7 +410,10 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 
 
 ;;;; load-path
-(idle-load 'init-packages :req t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+;;(idle-load 'init-packages :req t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'init-packages)
+
 
 ;;;; fly keys
 ;; disable all mouse key
@@ -427,9 +430,11 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 (idle-load 'which-key
 	   :req t
 	   :before
-	   (add-to-list 'load-path "~/src/emacs-packages/emacs-which-key")
+	   (add-package-path "emacs-which-key")
 	   :after
-	   (which-key-mode 1))
+	   (progn
+	     (which-key-mode 1)
+	     (which-key-setup-side-window-right-bottom)))
 
 ;;;; saveplace
 (idle-load 'saveplace
@@ -479,9 +484,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 ;;;; helm
 (idle-load 'helm-mode
 	   :before
-	   (progn
-	     (add-to-list 'load-path "~/src/emacs-packages/emacs-async")
-	     (add-to-list 'load-path "~/src/emacs-packages/helm"))
+	   (add-package-path '("emacs-async" "helm"))
 	   :after
 	   (progn
 	     (setq helm-autoresize-max-height 8
@@ -506,21 +509,16 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 ;; must install sqlite3
 (idle-load 'helm-dash
 	   :before
-	   (progn
-	     (add-to-list 'load-path "~/src/emacs-packages/helm")
-	     (add-to-list 'load-path "~/src/emacs-packages/helm-dash"))
+	   (add-package-path '("helm" "helm-dash"))
 	   :after
 	   (progn
-	     (setq helm-dash-docsets-path "~/.docsets"
+	     (setq helm-dash-docsets-path locale-docset-dir
 		   ;; helm-dash-common-docsets '("CMake")
 		   helm-dash-min-length 3
 		   helm-dash-browser-func 'browse-url-generic) ;; or 'eww
 
 	     (setq browse-url-browser-function 'browse-url-generic
-		   browse-url-generic-program (if is-windows
-						  "C:/Program Files (x86)/Maxthon5/Bin/Maxthon.exe"
-						"/usr/bin/firefox"
-						))
+		   browse-url-generic-program locale-browser-path)
 	     (defun emacs-lisp-dash ()
 	       (interactive)
 	       (setq-local helm-dash-docsets '("Emacs Lisp")))
@@ -614,7 +612,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 
 (idle-load 'smex
 	   :req t
-	   :before (add-to-list 'load-path "~/src/emacs-packages/smex")
+	   :before (add-package-path "smex")
 	   :after
 	   (progn
 	     ;; modify smex so that typing a space will insert a hyphen ‘-’ like in normal M-x
@@ -640,8 +638,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	   :req nil
 	   :before
 	   (progn
-	     (add-to-list 'load-path "~/src/emacs-packages/emacs-async")
-	     (add-to-list 'load-path "~/src/emacs-packages/w32-browser")
+	     (add-package-path '("emacs-async" "w32-browser"))
 	     (defun dired-dotfiles-toggle ()
 	       "Show/hide dot-files"
 	       (interactive)
@@ -684,13 +681,19 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	     ))
 
 ;;;; org note
-(idle-load 'init-org-note)
+(idle-load 'init-org-note
+	   :before
+	   (progn
+	     (autoload 'org-note-new "init-org-note" "" t)
+	     (autoload 'org-note-search-keywords "init-org-note" "" t)
+	     (autoload 'org-note-search-title "init-org-note" "" t)
+	     ))
 
 ;;;; keyfreq
 (idle-load 'keyfreq
 	   :req t
 	   :before
-	   (add-to-list 'load-path "~/src/emacs-packages/keyfreq")
+	   (add-package-path "keyfreq")
 	   :after
 	   (progn
 	     (keyfreq-mode 1)
@@ -708,10 +711,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 ;;;; site packages
 (idle-load 'eno
 	   :before
-	   (progn
-	     (add-to-list 'load-path "~/src/emacs-packages/edit-at-point")
-	     (add-to-list 'load-path "~/src/emacs-packages/dash")
-	     (add-to-list 'load-path "~/src/emacs-packages/eno"))
+	   (add-package-path '("edit-at-point" "dash" "eno"))
 	   :after
 	   (progn
 	     (defun eye/eno-copy ()
@@ -954,6 +954,16 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	   (progn
 	     (add-hook 'c++-mode-hook #'eye-setup-c++)
 	     (define-key c++-mode-map (kbd ",") nil)))
+
+;;;; rainbow-delimiters
+;; 括号高亮
+(idle-load 'rainbow-delimiters
+	   :before
+	   (progn
+	     (add-package-path "rainbow-delimiters")
+	     (autoload 'rainbow-delimiters-mode "rainbow-delimiters" nil t)
+	     (with-eval-after-load 'cc-mode
+	       (add-hook 'c++-mode-hook 'rainbow-delimiters-mode))))
 
 ;;;; whitespace
 ;; http://ergoemacs.org/emacs/whitespace-mode.html

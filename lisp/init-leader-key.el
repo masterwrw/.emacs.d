@@ -162,24 +162,27 @@ Wiki:
   ("n" watch-other-window-up "Up scroll"))
 
 
-(defhydra hydra-gtd ()
+(defhydra hydra-gtd (:exit t)
   "
 Getting Thing Done system:
 
-  [_ci_] capture收集  [_cr_] capture rx task
-  [_vi_] 查看收集蓝（处理）    [_vt_] 查看任务（建立清单）    [_vo_] 查看TODO项（准备下一步行动）    [_vx_] 查看下一步行动
+  [_c_] capture    [_w_] capture rx task
+  [_i_] 查看收集蓝（处理）
+  [_t_] 查看任务（建立清单）
+  [_o_] 查看TODO项（准备下一步行动） 
+  [_x_] 查看下一步行动
 
-  [_a_] agenda     [_j_] journal file
+  [_a_] agenda    [_j_] journal file
 
 "
-  ("a" org-agenda nil :exit t)
-  ("ci" (lambda () (interactive) (org-capture nil "i")) nil :exit t)
-  ("cr" (lambda () (interactive) (org-capture nil "w")) nil :exit t)
-  ("j" eye/open-journal-file nil :exit t)
-  ("vi" (lambda () (interactive) (org-agenda nil "i")))
-  ("vt" (lambda () (interactive) (org-agenda nil "t")))
-  ("vo" (lambda () (interactive) (org-agenda nil "o")))
-  ("vx" (lambda () (interactive) (org-agenda nil "x")))
+  ("a" org-agenda nil)
+  ("c" (lambda () (interactive) (org-capture nil "i")) nil)
+  ("w" (lambda () (interactive) (org-capture nil "w")) nil)
+  ("j" eye/open-journal-file nil)
+  ("i" (lambda () (interactive) (org-agenda nil "i")) nil)
+  ("t" (lambda () (interactive) (org-agenda nil "t")) nil)
+  ("o" (lambda () (interactive) (org-agenda nil "o")) nil)
+  ("x" (lambda () (interactive) (org-agenda nil "x")) nil)
   )
 
 (defun eye/major-mode-key ()
@@ -209,9 +212,16 @@ Getting Thing Done system:
 ;; 终端下不替换，否则alt+x失效，alt是ESC
 (when is-gui (define-key key-translation-map (kbd "ESC") (kbd "C-g")))
 
+
 (bind-key global-map "," nil)
 (bind-key global-map "M-k" nil)
 (bind-key global-map "M-," #'(lambda () (interactive) (insert ",")))
+(with-eval-after-load 'org-agenda-mode
+  (progn
+    (bind-key org-agenda-mode-map "," nil)
+    (bind-key org-agenda-mode-map "M-k" nil)
+    (bind-key org-agenda-mode-map "M-," #'(lambda () (interactive) (insert ",")))))
+
 
 (bind-key global-map "M-x" #'helm-M-x)
 
@@ -254,7 +264,7 @@ Getting Thing Done system:
 (bind-key global-map ",ff" #'helm-find-files "helm-files")
 (bind-key global-map ",fh" #'helm-recentf "helm-for-files")
 (bind-key global-map ",fo" #'find-file-other-window)
-(bind-key global-map ",fk" #'kill-buffer)
+(bind-key global-map ",fk" #'kill-this-buffer)
 (bind-key global-map ",fs" #'save-buffer)
 (bind-key global-map ",fg" #'counsel-git "counsel") ;;查找在git仓库中的文件，注意最好子目录下没有.git目录，否则可能不会显示出文件列表
 
@@ -304,6 +314,7 @@ Getting Thing Done system:
 (bind-key global-map "M-k o" #'hydra-watch-other/body "init-watch-other-window")
 
 (bind-key global-map "M-k n" #'hydra-note/body)
+(bind-key global-map "M-k g" #'hydra-gtd/body)
 
 
 (provide 'init-leader-key)
