@@ -962,8 +962,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	   (progn
 	     (add-package-path "rainbow-delimiters")
 	     (autoload 'rainbow-delimiters-mode "rainbow-delimiters" nil t)
-	     (with-eval-after-load 'cc-mode
-	       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))))
+	     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
 
 ;;;; highlight-numbers
 (idle-load 'highlight-numbers
