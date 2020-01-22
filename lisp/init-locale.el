@@ -45,6 +45,7 @@
 	  "/home/owen/opt/universal-ctags/bin"
 	  "/home/owen/src/emacs-packages/fuz"
 	  "/home/owen/opt/oracle/home/bin"
+	  "/home/owen/opt/xapian/bin"
 	  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ":")))
 

@@ -41,6 +41,25 @@
   ("w" widen "widen" :exit t)
   )
 
+;;;; hydra-move
+(defhydra hydra-move ()
+  ("SPC" nil :exit t)
+  ("q" nil :exit t)
+  ("j" left-char)
+  ("l" right-char)
+  ("i" previous-line)
+  ("k" next-line)
+  ("h" beginning-of-line)
+  (";" end-of-line)
+  ("u" left-word)
+  ("o" right-word)
+  ("c" kill-ring-save)
+  ("x" kill-region)
+  ("v" yank :exit t)
+  ("e" exchange-point-and-mark "exchange")
+  ("m" set-mark-command)
+  ("w" other-window))
+
 ;;;; outline
 (defhydra hydra-outline ()
   "
@@ -90,22 +109,10 @@ _a_: list tags
   ("g" eye/auto-compile "compile"))
 
 
-(defhydra hydra-note (:exit t :idle 1.0)
-  "note:"
-  ("SPC" nil "quit")
-  ("n" org-note-new "new note")
-  ("w" org-note-search-keywords "search keywords")
-  ("f" org-note-search-title "search title")
-  )
-
-
 (defhydra hydra-org (:exit t)
   "
 [_a_]: attach
 [_gp_]: previous block
-
-Clock:
-[_ci_] in   [_co_] out   [_cr_] report   [_cc_] cancel
 
 Insert:
 [_il_] link    [_ia_] attach link   [_s_] src block    [_S_] subheading
@@ -117,14 +124,12 @@ Wiki:
 [_wi_] insert new       [_wk_] insert link     [_wc_] insert block
 [_wo_] open at point    [_wn_] wiki nav
 [_wu_] open url         [_wf_] open from url
-[_we_] export page     
+[_we_] export page   
+
+Publish: [_wp_] Publish to note
 
 "
   ("SPC" nil "quit")
-  ("ci" org-clock-in)
-  ("co" org-clock-out)
-  ("cr" org-clock-report)
-  ("cc" org-clock-cancel)
   ("a" org-attach)
   ("gp" org-previous-block)
   ("ia" eye/insert-attach-link)
@@ -142,6 +147,7 @@ Wiki:
   ("wu" org-note-export-and-open)
   ("wf" org-wiki-from-url)
   ("wc" org-wiki-insert-block)
+  ("wp" org2nikola-export-subtree)
   )
 
 (defhydra hydra-highlight ()
@@ -165,25 +171,35 @@ Wiki:
 (defhydra hydra-gtd (:exit t)
   "
 Getting Thing Done system:
-
-  [_c_] capture    [_w_] capture rx task
-  [_i_] 查看收集蓝（处理）
-  [_t_] 查看任务（建立清单）
+  [_c_] org-capture [_n_] new note    [_s_] search note keyword    [_f_] search note file
+  [_i_] 查看收集蓝（处理）                             
+  [_t_] 查看任务（建立清单）                           
   [_o_] 查看TODO项（准备下一步行动） 
   [_x_] 查看下一步行动
+  [_T_] org-clock-sum-today-by-tags
 
-  [_a_] agenda    [_j_] journal file
+  [_a_] agenda    [_j_] open journal file    [_d_] notdeft
 
+Clock:
+  [_1_] in   [_2_] out   [_3_] report   [_4_] cancel
 "
+  ("SPC" nil "quit")
   ("a" org-agenda nil)
-  ("c" (lambda () (interactive) (org-capture nil "i")) nil)
-  ("w" (lambda () (interactive) (org-capture nil "w")) nil)
+  ("c" org-capture nil)
+  ("d" notdeft nil)
   ("j" eye/open-journal-file nil)
   ("i" (lambda () (interactive) (org-agenda nil "i")) nil)
   ("t" (lambda () (interactive) (org-agenda nil "t")) nil)
   ("o" (lambda () (interactive) (org-agenda nil "o")) nil)
   ("x" (lambda () (interactive) (org-agenda nil "x")) nil)
-  )
+  ("T" org-clock-sum-today-by-tags)
+  ("n" org-note-new)
+  ("s" org-note-search-keywords)
+  ("f" org-note-search-title)
+  ("1" org-clock-in)
+  ("2" org-clock-out)
+  ("3" org-clock-report)
+  ("4" org-clock-cancel))
 
 (defun eye/major-mode-key ()
   (interactive)
@@ -203,6 +219,9 @@ Getting Thing Done system:
 (bind-key global-map "C-x C-b" #'switch-to-buffer)
 (bind-key global-map "<C-wheel-up>" #'eye/increase-font-size)
 (bind-key global-map "<C-wheel-down>" #'eye/decrease-font-size)
+(bind-key global-map "C-=" #'eye/increase-font-size)
+(bind-key global-map "C--" #'eye/decrease-font-size)
+(autoload 'eye/kill-inner-word "base-toolkit" "" t)
 (bind-key global-map "<M-backspace>" #'eye/kill-inner-word)
 (bind-key global-map "<C-backspace>" #'eye/kill-inner-word)
 ;; running on msys2, can't use C-c, it is <pause>
@@ -211,6 +230,16 @@ Getting Thing Done system:
 ;; use [ESC] replace [C-g]
 ;; 终端下不替换，否则alt+x失效，alt是ESC
 (when is-gui (define-key key-translation-map (kbd "ESC") (kbd "C-g")))
+
+;;;; windmove
+(bind-key global-map "C-<left>" #'windmove-left)
+(bind-key global-map "C-<up>" #'windmove-up)
+(bind-key global-map "C-<right>" #'windmove-right)
+(bind-key global-map "C-<down>" #'windmove-down)
+
+(bind-key global-map "<f6>" #'org-capture)
+(bind-key global-map "<f7>" #'org-agenda)
+(bind-key global-map "<f8>" #'notdeft)
 
 
 (bind-key global-map "," nil)
@@ -221,6 +250,7 @@ Getting Thing Done system:
     (bind-key org-agenda-mode-map "," nil)
     (bind-key org-agenda-mode-map "M-k" nil)
     (bind-key org-agenda-mode-map "M-," #'(lambda () (interactive) (insert ",")))))
+
 
 
 (bind-key global-map "M-x" #'helm-M-x)
@@ -246,7 +276,10 @@ Getting Thing Done system:
 
 (bind-key global-map ",ii" #'counsel-imenu "counsel")
 (bind-key global-map ",ie" #'eye/imenu-init)
-(bind-key global-map ",m" #'set-mark-command)
+(bind-key global-map ",m" (lambda ()
+			     (interactive)
+			     (call-interactively 'set-mark-command)
+			     (call-interactively 'hydra-move/body)))
 
 (bind-key global-map ",tr" #'global-readonly-toggle "global-readonly-mode")
 (bind-key global-map ",tl" #'global-display-line-numbers-mode)
@@ -255,6 +288,7 @@ Getting Thing Done system:
 (bind-key global-map ",th" #'highlight-changes-mode)
 (bind-key global-map ",tn" #'highlight-numbers-mode)
 (bind-key global-map ",tp" #'rainbow-delimiters-mode)
+(bind-key global-map ",tP" #'show-paren-mode)
 (bind-key global-map ",tv" #'global-visual-line-mode)
 (bind-key global-map ",tR" #'rainbow-mode "rainbow-mode")
 (bind-key global-map ",tw" #'whitespace-mode)
@@ -300,6 +334,8 @@ Getting Thing Done system:
 (bind-key global-map ",/" #'comment-dwim)
 (bind-key global-map ",." #'eye/major-mode-key)
 
+(bind-key global-map ",," #'hydra-move/body)
+
 
 
 (bind-key global-map "M-k aa" #'aweshell-toggle "aweshell")
@@ -315,8 +351,7 @@ Getting Thing Done system:
 
 (bind-key global-map "M-k o" #'hydra-watch-other/body "init-watch-other-window")
 
-(bind-key global-map "M-k n" #'hydra-note/body)
 (bind-key global-map "M-k g" #'hydra-gtd/body)
-
+(bind-key global-map "M-k d" #'bing-dict-brief)
 
 (provide 'init-leader-key)

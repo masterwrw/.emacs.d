@@ -50,7 +50,10 @@
 (setq is-terminal (not (display-graphic-p)))
 
 ;;;; load custom-file before all init-* config
-(setq custom-file (expand-file-name "custom-set-variables.el" user-emacs-directory))
+(setq custom-file (expand-file-name (if is-windows
+					"custom-set-variables-win.el"
+				      "custom-set-variables-linux.el"
+				      user-emacs-directory)))
 (unless (file-exists-p custom-file)
   (shell-command (concat "touch " custom-file)))
 (load custom-file t t)
@@ -79,45 +82,74 @@
   (eye--print-time msg))
 
 
-;;(add-to-list 'load-path "~/src/emacs-packages/idle-require")
 (require 'cl-lib)
-;;(require 'idle-require)
-;;(setq idle-require-idle-delay 0.5)
-(defvar idle-load-features nil)
-(cl-defmacro idle-load (feature &key req before after)
-  "自动使用idle-require加载配置
-需要先require cl-lib和 idle-require
-比如加载apt-utils，require前的内容放在:before参数中，require后的配置放在:after中
-req：t或nil，表示是否添加到idle-require中，在idle-require中的，启动后开始加载。nil则会根据按键调用，自动加载
-(idle-load 'apt-utils
-     :req t
-     :before  (message \"idle-load:before finished\")
-     :after   (message \"idle-load:after finished\"))
-最后调用(idle-require-mode 1)进行加载
-"
-  `(progn ,before
-	  (with-eval-after-load ,feature ,after)
-	  ;;(if ,req (add-to-list 'idle-require-symbols ,feature t))
-	  (if ,req (add-to-list 'idle-load-features ,feature t))
-	  ))
+(defvar auto-require-packages-dir "~/src/emacs-packages")
 
+(defun add-package-path (dirlist)
+  (cond ((stringp dirlist)
+	 (add-to-list 'load-path (concat auto-require-packages-dir "/" dirlist)))
+	((listp dirlist)
+	 (dolist (dir dirlist)
+	   (add-to-list 'load-path (concat auto-require-packages-dir "/" dir))))
+	(t (error "Wrong arg for add-package-path"))))
+
+(defun add-autoload (functions file)
+  (let ((fv (if (stringp file)
+		file (car file))))
+    (if (listp functions)  ;; functions是列表时
+	(dolist (fun functions)
+	  (if (listp fun)   ;; 支持 '((helm-find-files . "helm-find")) 的形式
+	      (autoload (car fun) (cdr fun) "" t)
+	    (autoload fun fv "" t)))  ;; functions是列表，且列表中直接是函数时，如 '(foo bar)
+      (autoload functions fv "" t))))  ;; functions直接是 'foo 的形式
+
+(cl-defmacro auto-require (feature &key load reqby paths functions before after)
+  "自动加载插件
+由于自行生成的autoload.pkg.el文件过大，加载时间变长，在这个宏中调用autoload，删除不用的插件时，autoload也就删除了。不会影响启动速度。
+
+示例：(auto-require 'idle-require
+;;                       :load t                       ;;load是指是否立即require，可以是t或nil，有reqby时，会等到指定的插件加载后才require
+;;                       :reqby 'dash                  ;;dep是指需要哪个插件先加载，目前只支持写一个
+;;                       :paths \"idle-require\"       ;;paths是指要添加的load-path的路径，
+;;                       :functions 'idle-require-mode ;;functions是指要使用autoload的函数，autoload的file参数使用paths中的第一个，支持单独设置函数所在的file
+;;                                                     ;;如：'((foo . \"foo\") (bar . \"bar\"))，此时不使用paths作为autoload的file参数
+;;                       :before (setq somevar t)      ;; before是指require前的配置
+;;                       :after (progn ....))          ;;after是指require后的配置
+
+paths只需要设置插件存放的目录名，统一在auto-require-packages-dir下，可以是单个字符串，或者字符串列表
+如果有functions参数，第一个字符串需要是插件存放的目录名，才能正确autoload
+如果没有指定paths，就不要指定functions参数。
+"
+  `(progn
+     (when ,paths
+       (add-package-path ,paths)
+       (if ,functions
+	   (add-autoload ,functions ,paths)))
+     ,before
+     (if ,reqby
+	 (with-eval-after-load ,reqby
+	   (when ,load (require ,feature))
+	   (with-eval-after-load ,feature ,after))
+       (progn
+	 (when ,load (require ,feature))
+	 (with-eval-after-load ,feature ,after)))))
+
+(defvar idle-load-features nil "用于启动后空闲加载的列表")
 (defun idle-load-startup ()
+  "放到配置最后"
   (run-with-idle-timer 1 nil
 		       #'(lambda ()
 			   (dolist (feature idle-load-features)
-			     ;;(message "idle load: %s" feature)
 			     (require feature))
 			   (message "Idle load finished!"))))
-			   
 
 
 ;;;; server-mdoe
 ;; 使用 emacsclient 需要先启动服务
-(idle-load 'server
-	   :req t
-	   :after
-	   (if (not (equal t (server-running-p)))
-	       (server-start)))
+(auto-require 'server
+	      :after
+	      (if (not (equal t (server-running-p)))
+		  (server-start)))
 
 ;;;; color theme
 ;;(load-theme 'wombat t)
@@ -144,21 +176,13 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 
 
 ;;;; font
-(when is-linux
-  (setq en-font-name "Inconsolata")
-  (setq cn-font-name "文泉驿等宽微米黑")
-  (setq en-font-size 14)
-  (setq cn-font-size 12)
-  )
-(when is-windows
-  ;; Inconsolata
-  ;; Fira Code
-  ;; Droid Sans Mono Wide
-  (setq en-font-name "Bitstream Vera Serif")
-  (setq cn-font-name "WenQuanYi Micro Hei Mono")
-  (setq en-font-size 14)
-  (setq cn-font-size 14)
-  )
+;; Inconsolata
+;; Fira Code
+;; Droid Sans Mono Wide
+(setq en-font-name "Inconsolata"                ;;"Inconsolata"
+      cn-font-name "Noto Sans CJK SC Regular" ;; "WenQuanYi Micro Hei Mono"
+      en-font-size 14
+      cn-font-size 12)
 
 ;; 获取屏幕分辨率自动增大字体
 (when (and is-gui
@@ -214,17 +238,21 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 ;; But I need global-mode-string,
 ;; @see http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_360.html
 ;; use setq-default to set it for /all/ modes
-(defun set-header-line-format ()
-  (setq-default header-line-format
+(defun set-mode-line-format ()
+  (setq-default mode-line-format
 		(list
 		 ;;"%e"
 		 ;;mode-line-front-space
 		 " "
 		 ;; the buffer name; the file name as a tool tip
-		 '(:eval (propertize (if (buffer-modified-p)
-					 "%b *"
-                                       "%b")
-                                     'face nil))
+;;		 '(:eval (propertize (if (buffer-modified-p)
+;;					 "%b *"
+;;                                       "%b")
+		 ;;                                     'face nil))
+		 ;; 显示完整路径
+		 '(:eval (concat
+			  (or (buffer-file-name) (buffer-name))
+			  (if (buffer-modified-p) " *")))
 		 " "
 		 ;; the current major mode for the buffer.
 		 "["
@@ -254,11 +282,25 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 ;; Show modeline information on top header
 ;; (setq header-line-format mode-line-format)
 ;; (setq-default header-line-format mode-line-format) ; Copy mode-line
+
+(set-mode-line-format)
 ;; Remove mode-line
 ;;(setq mode-line-format nil)
 ;;(setq-default mode-line-format nil)
-;;(force-mode-line-update)
 ;;(set-face-attribute 'header-line nil :background "grey70" :foreground "purple4")
+
+(set-face-attribute 'mode-line nil :background "grey70" :foreground "purple4")
+(force-mode-line-update)
+
+
+
+;;;; time
+;; 显示在modeline上
+(require 'time)
+(setq display-time-24hr-format t) ;; 显示为24小时格式
+(setq display-time-day-and-date t) ;; 是否显示日期
+(setq display-time-format "%Y-%m-%d %H:%M") ;; 自定义日期格式
+(display-time-mode t)
 
 ;; display the real names on mode-line when visiting a symbolink
 (setq find-file-visit-truename t)
@@ -332,7 +374,7 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
   )
 
 (when is-gui
-  (blink-cursor-mode -1) ;; 取消光标闪烁
+  ;;(blink-cursor-mode -1) ;; 取消光标闪烁
   (add-hook 'after-init-hook
 	    (lambda ()
 	      (set-cursor-color "#00A876"))))
@@ -355,9 +397,9 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 
 
 ;; (setq electric-pair-pairs '((?\{ . ?\})
-                            ;; (?\( . ?\))
-                            ;; (?\[ . ?\])
-                            ;; (?\" . ?\")))
+;; (?\( . ?\))
+;; (?\[ . ?\])
+;; (?\" . ?\")))
 ;; (electric-pair-mode t) ;;自动输出成对括号
 
 (show-paren-mode 1) ;;高亮匹配的括号
@@ -406,55 +448,700 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 
 
 (when is-gui
-    (add-hook 'after-init-hook 'maximize-frame))
+  (add-hook 'after-init-hook 'maximize-frame))
 
 
 ;;;; load-path
-;;(idle-load 'init-packages :req t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+;;(auto-require 'init-packages :load t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-packages)
+;;(require 'init-packages)
+
+;;;; hydra
+(auto-require 'hydra
+	      :load t
+	      :paths "hydra")
 
 
-;;;; fly keys
-;; disable all mouse key
-(dolist (k '([mouse-1] [down-mouse-1] [drag-mouse-1] [double-mouse-1] [triple-mouse-1]  
-             [mouse-2] [down-mouse-2] [drag-mouse-2] [double-mouse-2] [triple-mouse-2]
-             [mouse-3] [down-mouse-3] [drag-mouse-3] [double-mouse-3] [triple-mouse-3]
-             [mouse-4] [down-mouse-4] [drag-mouse-4] [double-mouse-4] [triple-mouse-4]
-             [mouse-5] [down-mouse-5] [drag-mouse-5] [double-mouse-5] [triple-mouse-5]))
-  (global-unset-key k))
-
-(idle-load 'init-leader-key :req t)
+;;;; leader-key
+(auto-require 'init-leader-key
+	      :load t
+	      :reqby 'hydra)
 
 ;;;; which-key
-(idle-load 'which-key
-	   :req t
-	   :before
-	   (add-package-path "emacs-which-key")
-	   :after
-	   (progn
-	     (which-key-mode 1)
-	     (which-key-setup-side-window-right-bottom)))
+(auto-require 'which-key
+	      :load t
+	      :paths "emacs-which-key"
+	      :after
+	      (progn
+		(which-key-mode 1)
+		(which-key-setup-side-window-right-bottom)))
 
 ;;;; saveplace
-(idle-load 'saveplace
-	   :req t
-	   :after (setq save-place-file "~/tmp/emacs_cache/places"))
+(auto-require 'saveplace
+	      :load t
+	      :after (setq save-place-file "~/tmp/emacs_cache/places"))
 
 ;;;; recentf
-(idle-load 'recentf
-	   :req t
-	   :after
-	   (progn
-	     (setq recentf-max-saved-items 100)
-	     ;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
-	     (add-to-list 'recentf-exclude ".cache")
-	     (add-to-list 'recentf-exclude ".cask")
-	     (add-to-list 'recentf-exclude "ido.last")
-	     (add-to-list 'recentf-exclude "bookmarks")
-	     (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
-	     ))
+(auto-require 'recentf
+	      :load t
+	      :after
+	      (progn
+		(setq recentf-max-saved-items 100)
+		(setq recentf-save-file "~/tmp/emacs_cache/recentf") ;;使双系统切换后不清空记录
+		;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
+		(add-to-list 'recentf-exclude ".cache")
+		(add-to-list 'recentf-exclude ".cask")
+		(add-to-list 'recentf-exclude "ido.last")
+		(add-to-list 'recentf-exclude "bookmarks")
+		(add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
+		))
 
+;;;; savehist
+;; save minibuffer history
+(auto-require 'savehist
+	      :load t
+	      :after
+	      (progn
+		(setq enable-recursive-minibuffers t ; Allow commands in minibuffers
+		      history-length 100
+		      savehist-autosave-interval nil ;;不开启自动保存，否则会不断的分配内存
+		      savehist-additional-variables '(mark-ring global-mark-ring search-ring regexp-search-ring extended-command-history))
+		))
+
+;;;; windmove
+(auto-require 'windmove)
+
+;;;; helm
+(auto-require 'helm-mode
+	      :paths '("helm" "emacs-async")
+	      :functions '((helm-find-files . "helm-find")
+			   (helm-M-x . "helm-command")
+			   (helm-recentf . "helm-for-files"))
+	      :after
+	      (progn
+		(setq helm-autoresize-max-height 50
+		      helm-autoresize-min-height 20
+		      helm-display-buffer-default-height 20
+		      helm-display-buffer-height 20
+		      helm-M-x-fuzzy-match t
+		      helm-buffers-fuzzy-matching t
+		      helm-recentf-fuzzy-match t
+		      helm-semantic-fuzzy-match t
+		      helm-imenu-fuzzy-match t
+		      helm-split-window-in-side-p nil
+		      helm-move-to-line-cycle-in-source nil
+		      helm-ff-search-library-in-sexp t
+		      helm-scroll-amount 20
+		      helm-echo-input-in-header-line nil)
+		(helm-mode 1)
+		))
+
+;;;; helm-org
+;; (auto-require 'helm-org
+;; 	      :paths "helm"
+;; 	      :reqby 'org
+;; 	      :functions '((helm-org-completing-read-tags . "helm-org")))
+
+;;;; helm-dash
+;; must install sqlite3
+(auto-require 'helm-dash
+	      :paths '("helm-dash" "helm")
+	      :functions '(helm-dash helm-dash-at-point)
+	      :after
+	      (progn
+		(setq helm-dash-docsets-path locale-docset-dir
+		      ;; helm-dash-common-docsets '("CMake")
+		      helm-dash-min-length 3
+		      helm-dash-browser-func 'browse-url-generic) ;; or 'eww
+
+		(setq browse-url-browser-function 'browse-url-generic
+		      browse-url-generic-program locale-browser-path)
+		(defun emacs-lisp-dash ()
+		  (interactive)
+		  (setq-local helm-dash-docsets '("Emacs Lisp")))
+		(add-hook 'emacs-lisp-mode-hook 'emacs-lisp-dash)
+		(add-hook 'lisp-interaction-mode-hook 'emacs-lisp-dash)
+		))
+
+
+;;;; load packages
+(defvar is-enable-posframe nil)
+(auto-require 'base-toolkit  :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+;; (auto-require 'init-hydra    :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+;; (auto-require 'init-keys     :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+(auto-require 'init-locale   :load t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+;;(auto-require 'init-orgmode  :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
+
+
+;;;; encodings
+(auto-require 'mule
+	      :load t
+	      :after
+	      (progn
+		(setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
+		(set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
+		(set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
+		;; 解决粘贴中文出现乱码的问题
+		(if (eq system-type 'windows-nt)
+		    (progn
+		      ;; (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
+		      ;; (set-default selection-coding-system 'utf-16le-dos)
+		      (set-selection-coding-system 'utf-16le-dos) ;; 别名set-clipboard-coding-system
+		      )
+		  (set-selection-coding-system 'utf-8))
+		(prefer-coding-system 'utf-8)
+		;; 文件默认保存为 utf-8
+		(set-buffer-file-coding-system 'utf-8)
+		(set-default buffer-file-coding-system 'utf8)
+		(set-default-coding-systems 'utf-8)
+		;; 防止终端中文乱码
+		(set-terminal-coding-system 'utf-8)
+		(modify-coding-system-alist 'process "*" 'utf-8)
+		(setq default-process-coding-system '(utf-8 . utf-8))
+		;; 解决文件目录的中文名乱码
+		(setq-default pathname-coding-system 'utf-8)
+		(set-file-name-coding-system 'utf-8)
+
+		(when is-windows
+		  (setq default-process-coding-system '(gbk . gbk))
+		  ;; file encoding
+		  ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
+		  (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
+		  (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
+		  (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
+		  )
+
+		;; windows shell
+		(when (and is-windows is-terminal)
+		  (defun eye/change-shell-mode-coding ()
+		    (progn
+		      (set-terminal-coding-system 'gbk)
+		      (set-keyboard-coding-system 'gbk)
+		      ;; (set-selection-coding-system 'gbk)
+		      (set-buffer-file-coding-system 'gbk)
+		      (set-file-name-coding-system 'gbk)
+		      (modify-coding-system-alist 'process "*" 'gbk)
+		      (set-buffer-process-coding-system 'gbk 'gbk)
+		      ))
+		  (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
+		  (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+		  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
+		))
+
+(auto-require 'bookmark
+	      :load nil
+	      :after
+	      (progn
+		;; 自动保存书签
+		(add-hook 'kill-emacs-hook
+			  '(lambda ()
+			     (bookmark-save)))
+		))
+
+;;;; ido
+(auto-require 'ido
+	      :load t
+	      :before
+	      (progn (setq ido-save-directory-list-file "~/tmp/emacs_cache/ido.last"))
+	      :after
+	      (progn
+		(ido-mode t)
+		(setq ido-enable-flex-matching t) ;; enable fuzzy matching
+		(setq ido-auto-merge-delay-time 10000) ;; disable auto search file
+		))
+
+(auto-require 'smex
+	      :load t
+	      :before (add-package-path "smex")
+	      :after
+	      (progn
+		;; modify smex so that typing a space will insert a hyphen ‘-’ like in normal M-x
+		;; @see https://www.emacswiki.org/emacs/Smex
+		(defadvice smex (around space-inserts-hyphen activate compile)
+		  (let ((ido-cannot-complete-command 
+			 `(lambda ()
+			    (interactive)
+			    (if (string= " " (this-command-keys))
+				(insert ?-)
+			      (funcall ,ido-cannot-complete-command)))))
+		    ad-do-it))
+		))
+
+(auto-require 'imenu
+	      :after
+	      (progn
+		(add-to-list 'imenu-generic-expression '("sections" "^;;;; \\(.+\\)$" 1) t)
+		(setq imenu-auto-rescan t
+		      imenu-auto-rescan-maxout 500000)))
+
+(auto-require 'dired
+	      :load nil
+	      :before
+	      (progn
+		(add-package-path '("emacs-async" "w32-browser"))
+		(defun dired-dotfiles-toggle ()
+		  "Show/hide dot-files"
+		  (interactive)
+		  (when (equal major-mode 'dired-mode)
+		    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
+			(progn 
+			  (set (make-local-variable 'dired-dotfiles-show-p) nil)
+			  (message "h")
+			  (dired-mark-files-regexp "^\\\.")
+			  (dired-do-kill-lines))
+		      (progn (revert-buffer) ; otherwise just revert to re-show
+			     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+		;; 隐藏 dired 中文件拥有者和文件权限等信息
+		(defun eye-dired-mode-setup ()
+		  "hide the file's unix owner and permission info"
+		  (dired-hide-details-mode 1)		;隐藏以.开头的文件
+		  (dired-omit-mode 1)			;隐藏.和..本身 @see https://stackoverflow.com/questions/43628315/how-to-hide-one-dot-current-directory-in-dired-mode
+		  )
+		(add-hook 'dired-mode-hook 'eye-dired-mode-setup)
+		)
+	      
+	      :after
+	      (progn
+		(require 'wdired)
+		(require 'dired-x) ;; 支持 dired-jump 进入后自动定位到当前文件名位置
+		(require 'async) ;; 目录有变化时及时更新
+		(setq dired-async-mode 1)
+
+		;; 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
+		(setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
+					    auto-mode-alist))
+
+		(add-hook 'imenu-after-jump-hook (lambda () (recenter 0)))
+		
+		(define-key dired-mode-map (kbd "<f12>s") 'dired-dotfiles-toggle)
+
+		;; 使用 windows 程序打开文件
+		;;	(when is-windows
+		;;	 (require 'w32-browser))
+		))
+
+;;;; org note
+(auto-require 'init-org-note
+	      :before
+	      (progn
+		(autoload 'org-note-new "init-org-note" "" t)
+		(autoload 'org-note-search-keywords "init-org-note" "" t)
+		(autoload 'org-note-search-title "init-org-note" "" t)
+		))
+
+;;;; org2nikola
+;; 需要安装插件nikola plugin -i upgrade_metadata
+;; 光标要放到标题节点上，导出时才有文件名，否则只有一个posts/.wp和posts/.meta文件
+(auto-require 'org2nikola
+	      :paths "org2nikola"
+	      :reqby 'org
+	      :functions '(org2nikola-export-subtree org2nikola-rerender-published-posts)
+	      :after
+	      (progn
+		(setq org2nikola-output-root-directory "~/org/blog")
+		(setq org2nikola-use-verbose-metadata t)
+		
+		(defun org2nikola-after-hook-setup (title slug)
+		  "see https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/ for setup
+Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
+		  (let ((url (concat "https://owensys.github.io/posts/" slug ".html"))
+			(nikola-dir (file-truename "~/org/blog"))
+			cmd)
+		    ;; copy the blog url into kill-ring
+		    (kill-new url)
+		    (message "%s => kill-ring" url)
+		    ;; nikola is building posts ...
+		    (shell-command (format "source ~/nikola/bin/activate; cd %s; nikola build" nikola-dir))
+		    (setq cmd "cd ~/org/owensys.github.io;git add .;git commit -m 'updated';git push origin master")
+		    (shell-command cmd)
+		    ))
+		;;(add-hook 'org2nikola-after-hook 'org2nikola-after-hook-setup)
+
+		))
+
+;;;; keyfreq
+(auto-require 'keyfreq
+	      :paths "keyfreq"
+	      :load t
+	      :before
+	      (add-package-path "keyfreq")
+	      :after
+	      (progn
+		(keyfreq-mode 1)
+		(keyfreq-autosave-mode 1)))
+
+;;;; tramp
+(auto-require 'tramp
+	      :after
+	      (progn
+		(setq password-cache-expiry 360000000      ;设置密码过期时间，避免每次询问密码
+		      tramp-default-method "ssh")
+		))
+
+
+;;;; site packages
+(auto-require 'eno
+	      :paths '("eno" "dash" "edit-at-point")
+	      :functions '(eno-word-copy eno-word-copy-in-line eno-line-copy)
+	      :before
+	      (add-package-path '("edit-at-point" "dash" "eno"))
+	      :after
+	      (progn
+		(defun eye/eno-copy ()
+		  (interactive)
+		  (cond
+		   ((equal major-mode 'c++-mode)
+		    (eno-word-copy))
+		   ((or (equal major-mode 'emacs-lisp-mode) (equal major-mode 'lisp-interaction-mode))
+		    (eno-symbol-copy))
+		   (t (eno-word-copy))))
+		))
+;;(when is-gui (eye-require 'init-theme "theme"))
+
+;;;; all-the-icons
+(auto-require 'all-the-icons
+	      :paths "all-the-icons"
+	      :before
+	      (progn
+		(unless (or is-windows (member "all-the-icons" (font-family-list)))
+		  (all-the-icons-install-fonts t)))
+	      :after
+	      (progn
+		(add-to-list 'all-the-icons-icon-alist '("\\.ipynb" all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
+		(add-to-list 'all-the-icons-mode-icon-alist '(ein:notebooklist-mode all-the-icons-faicon "book" :face all-the-icons-orange))
+		(add-to-list 'all-the-icons-mode-icon-alist '(ein:notebook-mode all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
+		(add-to-list 'all-the-icons-mode-icon-alist '(ein:notebook-multilang-mode all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
+		(add-to-list 'all-the-icons-icon-alist '("\\.epub$" all-the-icons-faicon "book" :face all-the-icons-green))
+		(add-to-list 'all-the-icons-mode-icon-alist '(nov-mode all-the-icons-faicon "book" :face all-the-icons-green))
+		(add-to-list 'all-the-icons-mode-icon-alist '(gfm-mode  all-the-icons-octicon "markdown" :face all-the-icons-lblue))))
+
+;;;; solaire-mode
+(auto-require 'solaire-mode
+	      :paths "emacs-solaire-mode"
+	      :functions 'solaire-mode
+	      :after
+	      (progn
+		;; Enable solaire-mode anywhere it can be enabled
+		(solaire-global-mode +1)
+		;; To enable solaire-mode unconditionally for certain modes:
+		(add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
+
+		;; ...if you use auto-revert-mode, this prevents solaire-mode from turning
+		;; itself off every time Emacs reverts the file
+		(add-hook 'after-revert-hook #'turn-on-solaire-mode)
+
+		;; highlight the minibuffer when it is activated:
+		(add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+
+		;; if the bright and dark background colors are the wrong way around, use this
+		;; to switch the backgrounds of the `default` and `solaire-default-face` faces.
+		;; This should be used *after* you load the active theme!
+		;;
+		;; NOTE: This is necessary for themes in the doom-themes package!
+		(solaire-mode-swap-bg)))
+
+;;;; doom-theme
+;; (when is-gui (auto-require 'doom-themes
+;; 			   :paths "emacs-doom-themes"
+;; 			   :load t
+;; 			   :after
+;; 			   (progn
+;; 			     ;; Enable flashing mode-line on errors
+;; 			     (doom-themes-visual-bell-config)
+;; 			     ;; Corrects (and improves) org-mode's native fontification.
+;; 			     (doom-themes-org-config)
+;; 			     (load-theme 'doom-dracula t)
+;; 			     )))
+
+;; ;;;; doom-modeline
+;; (auto-require 'doom-modeline
+;; 	      :paths '("doom-modeline" "all-the-icons" "eldoc-eval" "shrink-path" "emacs-memoize" "s" "f" "dash")
+;; 	      :load t
+;; 	      :before
+;; 	      (progn
+;; 		(setq doom-modeline-major-mode-color-icon t
+;; 		      doom-modeline-github t
+;; 		      ;;How tall the mode-line should be (only respected in GUI Emacs).
+;; 		      doom-modeline-height 25
+;; 		      ;;How wide the mode-line bar should be (only respected in GUI Emacs).
+;; 		      doom-modeline-bar-width 3
+;; 		      ;;don't use github notifications, because must set github.user, if not, will has a lot of emacs error process
+;; 		      doom-modeline-github nil
+;; 		      ))
+;; 	      :after
+;; 	      (progn
+;; 		(doom-modeline-mode 1)
+;; 		;;(cancel-timer doom-modeline--github-timer)
+;;		))
+
+
+;; (when is-terminal
+;; (set-face-attribute 'hl-line nil :background "darkgray"))
+
+;;;; avy
+(auto-require 'avy
+	      :paths "avy"
+	      :functions '(avy-goto-char avy-goto-line))
+
+;;;; avy-zap
+(auto-require 'avy-zap
+	      :paths "avy-zap"
+	      :functions '(avy-zap-to-char))
+
+;;;; ace-jump
+(auto-require 'ace-jump
+	      :paths "ace-jump-mode"
+	      :functions 'ace-jump-mode)
+
+;;;; ido-menu
+(auto-require 'init-idomenu)
+
+;;;; ivy swiper counsel
+(auto-require 'swiper
+	      :paths "swiper"
+	      :functions '(counsel-imenu counsel-ag counsel-rg counsel-git)
+	      :after
+	      (progn
+		(require 'smex)
+		(require 'counsel)
+		(require 'swiper)
+		(setq ivy-initial-inputs-alist nil) ;;不需要自动添加^符号
+		(setq ivy-count-format "(%d/%d)") ;; display both the index and the count
+		))
+
+;;;; super-save
+(auto-require 'super-save
+	      :load t
+	      :paths "super-save"
+	      :after
+	      (progn
+		(setq super-save-remote-files nil)
+		(super-save-mode 1)))
+
+(auto-require 'symbol-overlay
+	      :paths "symbol-overlay"
+	      :functions '(symbol-overlay-mode symbol-overlay-put))
+
+;;;; bm
+(auto-require 'bm
+	      :paths "bm"
+	      :functions '(bm-toggle bm-next bm-previous)
+	      :before
+	      (setq bm-cycle-all-buffers nil		;; 是否在所有buffer中循环
+		    ;; (setq bm-in-lifo-order t)		;; 先入先出
+		    bm-restore-repository-on-load t
+		    ;; where to store persistant files
+		    bm-repository-file "~/.emacs.d/bm-repository"
+		    ;; save bookmarks
+		    bm-buffer-persistence t)
+	      :after
+	      (progn
+		;; Loading the repository from file when on start up.
+		(bm-repository-load)
+		;; Saving bookmarks
+		(add-hook 'kill-buffer-hook #'bm-buffer-save)
+
+		;; Saving the repository to file when on exit.
+		;; kill-buffer-hook is not called when Emacs is killed, so we
+		;; must save all bookmarks first.
+		(add-hook 'kill-emacs-hook #'(lambda nil
+					       (bm-buffer-save-all)
+					       (bm-repository-save)))
+
+		;; The `after-save-hook' is not necessary to use to achieve persistence,
+		;; but it makes the bookmark data in repository more in sync with the file
+		;; state.
+		(add-hook 'after-save-hook #'bm-buffer-save)
+
+		;; Restoring bookmarks
+		(add-hook 'find-file-hooks   #'bm-buffer-restore)
+		(add-hook 'after-revert-hook #'bm-buffer-restore)
+
+		;; The `after-revert-hook' is not necessary to use to achieve persistence,
+		;; but it makes the bookmark data in repository more in sync with the file
+		;; state. This hook might cause trouble when using packages
+		;; that automatically reverts the buffer (like vc after a check-in).
+		;; This can easily be avoided if the package provides a hook that is
+		;; called before the buffer is reverted (like `vc-before-checkin-hook').
+		;; Then new bookmarks can be saved before the buffer is reverted.
+		;; Make sure bookmarks is saved before check-in (and revert-buffer)
+		(add-hook 'vc-before-checkin-hook #'bm-buffer-save)
+
+		;; 设置样式
+		(set-face-attribute 'bm-persistent-face nil :foreground "#ff7800" :background "#1142AA")
+		(require 'ext-bm)
+		))	   
+
+;;;; ibuffer
+(auto-require 'ibuffer
+	      :before
+	      (progn
+		(setq ibuffer-saved-filter-groups
+		      '(("Default"
+			 ("Hidden(g则不显示此分组)"  (name . "^ "))
+			 ("Helm"  (or (name . "^\\*helm\\|^\\*ac-mode-")))
+			 ("Help"  (or (name . "^\\*help\\|^\\*ac-mode-")))
+			 ("Woman"  (name . "^\\*WoMan.*\\*$"))
+			 ("Compile"  (name . "^*.*compil[ea].*$"))
+			 ("Gtalk"  (or (name . "^\\*.*jabber") (name . "*fsm-debug*")))
+			 ("ERC"  (mode . erc-mode))
+			 ("Custom"  (mode . Custom-mode))
+			 ("Shell"  (mode . shell-mode))
+			 ("Mail" (or (mode . mew-summary-mode) (mode . mew-draft-mode)(mode . mew-message-mode)))
+			 ("VC"  (or (name . "*magit-") (name . "^\\*vc")(mode . diff-mode) (mode . vc-dir-mode)))
+			 ("Magit "  (name . "*magit:"))
+			 ("Emacs"  (name . "^\\*.*$"))
+			 ("Dired"  (mode . dired-mode))
+			 ("Go"  (mode . go-mode))
+			 ("Python"  (mode . python-mode))
+			 ("EL"  (or (mode . emacs-lisp-mode) (mode . lisp-interaction-mode)))
+			 ("C++" (mode . c++-mode))
+			 ("Text" (name . ".txt"))
+			 ))))
+	      :after
+	      (progn
+		(add-hook 'ibuffer-mode-hook
+			  '(lambda ()
+			     (ibuffer-auto-mode 1)
+			     (ibuffer-switch-to-saved-filter-groups "EL")))
+		(setq ibuffer-show-empty-filter-groups nil)
+		))
+
+;;;; hungry-delete
+(auto-require 'hungry-delete
+	      :load t
+	      :paths "hungry-delete"
+	      :after (global-hungry-delete-mode 1))
+
+;;;; rainbow-mode
+(auto-require 'rainbow-mode
+	      :paths "rainbow-mode"
+	      :functions 'rainbow-mode)
+
+;;;; aweshell
+(auto-require 'aweshell
+	      :paths "aweshell"
+	      :functions '(aweshell-new aweshell-next aweshell-prev aweshell-toggle))
+
+;;;; web search
+(auto-require 'init-web-search)
+
+;;;; watch-other-window
+(auto-require 'watch-other-window
+	      :paths "watch-other-window"
+	      :functions '(watch-other-window-up watch-other-window-down watch-other-window-up-line watch-other-window-down-line))
+
+;;;; rg
+(auto-require 'rg
+	      :paths "rg"
+	      :functions 'rg)
+
+;;;; color-rg
+(auto-require 'color-rg
+	      :paths "color-rg"
+	      :functions '(color-rg-search-input))
+
+(auto-require 'init-elisp :load t)
+
+;;;; orgmode
+(auto-require 'init-orgmode :load t)
+
+;; Advise set auto-save-default to nil
+(auto-require 'org-crypt
+	      :reqby 'org
+	      :after
+	      (progn
+		(org-crypt-use-before-save-magic)
+		(setq org-tags-exclude-from-inheritance (quote("crypt")))
+		(setq org-crypt-key nil)
+		(setq org-crypt-tag-matcher "sec") ;; Custom tag for crypt
+		))
+
+(auto-require 'helm-org
+	      :paths "helm")
+
+;;;; deft
+(auto-require 'deft
+	      :paths "deft"
+	      :functions 'deft
+	      :after
+	      (progn
+		(setq deft-recursive t)
+		(setq deft-use-filename-as-title t) ;;是否把文件名作为标题
+		(setq deft-extensions '("txt" "tex" "org"))
+		(setq deft-directory locale-notebook-dir)
+		(setq deft-file-limit 200) ;;最多显示多少文件，nil不限制
+		(setq deft-filter-only-filenames t) ;;只搜索文件名
+		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
+		(setq deft-current-sort-method 'mtime) ;;排序方式
+		(setq deft-strip-summary-regexp ".*")))
+
+(defun deft-or-close ()
+  (interactive)
+  (if (eq major-mode 'deft-mode)
+      (progn (kill-buffer "*Deft*"))
+    (deft)
+    ))
+
+;;;; notdeft
+(auto-require 'notdeft
+	      :paths "notdeft"
+	      :functions 'notdeft
+	      :before
+	      (require 'notdeft-autoloads)
+	      :after
+	      (progn
+		(require 'notdeft)
+		(setq notdeft-xapian-program "notdeft-xapian") ;; 设置notdef-xapian程序名
+		(setq-default notdeft-directories `(,(expand-file-name locale-notebook-dir)))
+		(require 'notdeft-org)
+		(require 'notdeft-global-hydra)
+		;; 通过notdeft自动创建文件时，使用输入的字符串作文件名
+		(setq notdeft-notename-function '(lambda (str) str))
+		))
+
+
+
+;; password-generator
+(auto-require 'password-generator
+	      :paths "emacs-password-generateor"
+	      :functions '(password-generator-simple
+			   password-generator-strong
+			   password-generator-paranoid
+			   password-generator-numeric))
+
+(defun eye/open-password-file ()
+  "Open my password manager file"
+  (interactive)
+  (find-file (expand-file-name "password.org" locale-notebook-dir)))
+
+
+;;;; yasnippet
+(auto-require 'yasnippet
+	      :paths "yasnippet"
+	      :functions '(yas-minor-mode yas-global-mode))
+
+;;;; ivy-yasnippet
+(auto-require 'ivy-yasnippet
+	      :paths '("ivy-yasnippet" "swiper" "dash" "yasnippet")
+	      :reqby 'yasnippet
+	      :functions 'ivy-yasnippet)
+
+;;;; yankpad
+(auto-require 'yankpad
+	      :paths "yankpad"
+	      :reqby 'org
+	      :functions 'yankpad-insert
+	      :after
+	      (progn
+		;; ~/.emacs.d/snippets is yas--default-user-snippets-dir
+		;;如果手动更换orgmode9后，这句执行后出现Not a face: nil的奇怪问题，终端下ivy无法弹出来，如果是赋值为不带/的字符串，又不会出现问题
+		(setq yankpad-file (expand-file-name "Yankpad.org" locale-notebook-dir))
+		;; (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
+		))
+
+
+;;;; lisp-mode
 (require 'lisp-mode
 	 :after
 	 (progn
@@ -462,551 +1149,69 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
 	     (setq tab-with 2))
 	   (add-hook 'emacs-lisp-mode-hook 'setup-lisp-mode)))
 
-;;;; savehist: save minibuffer history
-(idle-load 'savehist
-	   :req t
-	   :after
-	   (progn
-	     (setq enable-recursive-minibuffers t ; Allow commands in minibuffers
-		   history-length 100
-		   savehist-autosave-interval nil ;;不开启自动保存，否则会不断的分配内存
-		   savehist-additional-variables '(mark-ring global-mark-ring search-ring regexp-search-ring extended-command-history))
-	     ))
 
-
-;; for quick startup
-(add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (save-place-mode 1)
-	    (recentf-mode 1)
-	    (savehist-mode 1)))
-
-;;;; helm
-(idle-load 'helm-mode
-	   :before
-	   (add-package-path '("emacs-async" "helm"))
-	   :after
-	   (progn
-	     (setq helm-autoresize-max-height 8
-		   helm-autoresize-min-height 8
-		   helm-display-buffer-default-height 8
-		   helm-display-buffer-height 8
-		   helm-M-x-fuzzy-match t
-		   helm-buffers-fuzzy-matching t
-		   helm-recentf-fuzzy-match t
-		   helm-semantic-fuzzy-match t
-		   helm-imenu-fuzzy-match t
-		   helm-split-window-in-side-p nil
-		   helm-move-to-line-cycle-in-source nil
-		   helm-ff-search-library-in-sexp t
-		   helm-scroll-amount 8 
-		   helm-echo-input-in-header-line nil)
-	     (helm-mode 1)
-	     ))
-
-
-;;;; helm-dash
-;; must install sqlite3
-(idle-load 'helm-dash
-	   :before
-	   (add-package-path '("helm" "helm-dash"))
-	   :after
-	   (progn
-	     (setq helm-dash-docsets-path locale-docset-dir
-		   ;; helm-dash-common-docsets '("CMake")
-		   helm-dash-min-length 3
-		   helm-dash-browser-func 'browse-url-generic) ;; or 'eww
-
-	     (setq browse-url-browser-function 'browse-url-generic
-		   browse-url-generic-program locale-browser-path)
-	     (defun emacs-lisp-dash ()
-	       (interactive)
-	       (setq-local helm-dash-docsets '("Emacs Lisp")))
-	     (add-hook 'emacs-lisp-mode-hook 'emacs-lisp-dash)
-	     (add-hook 'lisp-interaction-mode-hook 'emacs-lisp-dash)
-	     ))
-
-
-;;;; load packages
-(defvar is-enable-posframe nil)
-(idle-load 'base-toolkit  :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
-;; (idle-load 'init-hydra    :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
-;; (idle-load 'init-keys     :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
-(idle-load 'init-locale   :req t :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
-(idle-load 'init-orgmode  :before (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory)))
-      
-
-;;;; encodings
-(idle-load 'mule
-	   :req t
-	   :after
-	   (progn
-	     (setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
-	     (set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
-	     (set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
-	     ;; 解决粘贴中文出现乱码的问题
-	     (if (eq system-type 'windows-nt)
-		 (progn
-		   ;; (setq selection-coding-system 'utf-16le-dos) ;; 修复从网页剪切文本过来时显示 \nnn \nnn 的问题
-		   ;; (set-default selection-coding-system 'utf-16le-dos)
-		   (set-selection-coding-system 'utf-16le-dos) ;; 别名set-clipboard-coding-system
-		   )
-	       (set-selection-coding-system 'utf-8))
-	     (prefer-coding-system 'utf-8)
-	     ;; 文件默认保存为 utf-8
-	     (set-buffer-file-coding-system 'utf-8)
-	     (set-default buffer-file-coding-system 'utf8)
-	     (set-default-coding-systems 'utf-8)
-	     ;; 防止终端中文乱码
-	     (set-terminal-coding-system 'utf-8)
-	     (modify-coding-system-alist 'process "*" 'utf-8)
-	     (setq default-process-coding-system '(utf-8 . utf-8))
-	     ;; 解决文件目录的中文名乱码
-	     (setq-default pathname-coding-system 'utf-8)
-	     (set-file-name-coding-system 'utf-8)
-
-	     (when is-windows
-	       (setq default-process-coding-system '(gbk . gbk))
-	       ;; file encoding
-	       ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
-	       (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
-	       (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
-	       (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
-	       )
-
-	     ;; windows shell
-	     (when (and is-windows is-terminal)
-	       (defun eye/change-shell-mode-coding ()
-		 (progn
-		   (set-terminal-coding-system 'gbk)
-		   (set-keyboard-coding-system 'gbk)
-		   ;; (set-selection-coding-system 'gbk)
-		   (set-buffer-file-coding-system 'gbk)
-		   (set-file-name-coding-system 'gbk)
-		   (modify-coding-system-alist 'process "*" 'gbk)
-		   (set-buffer-process-coding-system 'gbk 'gbk)
-		   ))
-	       (add-hook 'shell-mode-hook 'eye/change-shell-mode-coding)
-	       (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-	       (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
-	     ))
-
-(idle-load 'bookmark
-	   :req nil
-	   :after
-	   (progn
-	     ;; 自动保存书签
-	     (add-hook 'kill-emacs-hook
-		       '(lambda ()
-			  (bookmark-save)))
-	     ))
-
-(idle-load 'ido
-	   :req t
-	   :after
-	   (progn
-	     (ido-mode t)
-	     (setq ido-enable-flex-matching t) ;; enable fuzzy matching
-	     (setq ido-auto-merge-delay-time 10000) ;; disable auto search file
-	     ))
-
-(idle-load 'smex
-	   :req t
-	   :before (add-package-path "smex")
-	   :after
-	   (progn
-	     ;; modify smex so that typing a space will insert a hyphen ‘-’ like in normal M-x
-	     ;; @see https://www.emacswiki.org/emacs/Smex
-	     (defadvice smex (around space-inserts-hyphen activate compile)
-               (let ((ido-cannot-complete-command 
-		      `(lambda ()
-			 (interactive)
-			 (if (string= " " (this-command-keys))
-			     (insert ?-)
-			   (funcall ,ido-cannot-complete-command)))))
-		 ad-do-it))
-	     ))
-
-(idle-load 'imenu
-	   :after
-	   (progn
-	     (add-to-list 'imenu-generic-expression '("sections" "^;;;; \\(.+\\)$" 1) t)
-	     (setq imenu-auto-rescan t
-		   imenu-auto-rescan-maxout 500000)))
-
-(idle-load 'dired
-	   :req nil
-	   :before
-	   (progn
-	     (add-package-path '("emacs-async" "w32-browser"))
-	     (defun dired-dotfiles-toggle ()
-	       "Show/hide dot-files"
-	       (interactive)
-	       (when (equal major-mode 'dired-mode)
-		 (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
-		     (progn 
-		       (set (make-local-variable 'dired-dotfiles-show-p) nil)
-		       (message "h")
-		       (dired-mark-files-regexp "^\\\.")
-		       (dired-do-kill-lines))
-		   (progn (revert-buffer) ; otherwise just revert to re-show
-			  (set (make-local-variable 'dired-dotfiles-show-p) t)))))
-	     ;; 隐藏 dired 中文件拥有者和文件权限等信息
-	     (defun eye-dired-mode-setup ()
-	       "hide the file's unix owner and permission info"
-	       (dired-hide-details-mode 1)		;隐藏以.开头的文件
-	       (dired-omit-mode 1)			;隐藏.和..本身 @see https://stackoverflow.com/questions/43628315/how-to-hide-one-dot-current-directory-in-dired-mode
-	       )
-	     (add-hook 'dired-mode-hook 'eye-dired-mode-setup)
-	     )
-	     
-	   :after
-	   (progn
-	     (require 'wdired)
-	     (require 'dired-x) ;; 支持 dired-jump 进入后自动定位到当前文件名位置
-	     (require 'async) ;; 目录有变化时及时更新
-	     (setq dired-async-mode 1)
-
-	     ;; 打开 .dired 后缀文件时，自动进入 dired-virtual-mode 模式。
-	     (setq auto-mode-alist (cons '("[^/]\\.dired$" . dired-virtual-mode)
-					 auto-mode-alist))
-
-	     (add-hook 'imenu-after-jump-hook (lambda () (recenter 0)))
-	     
-	     (define-key dired-mode-map (kbd "<f12>s") 'dired-dotfiles-toggle)
-
-	     ;; 使用 windows 程序打开文件
-	     ;;	(when is-windows
-	     ;;	 (require 'w32-browser))
-	     ))
-
-;;;; org note
-(idle-load 'init-org-note
-	   :before
-	   (progn
-	     (autoload 'org-note-new "init-org-note" "" t)
-	     (autoload 'org-note-search-keywords "init-org-note" "" t)
-	     (autoload 'org-note-search-title "init-org-note" "" t)
-	     ))
-
-;;;; keyfreq
-(idle-load 'keyfreq
-	   :req t
-	   :before
-	   (add-package-path "keyfreq")
-	   :after
-	   (progn
-	     (keyfreq-mode 1)
-	     (keyfreq-autosave-mode 1)))
-
-;;;; tramp
-(idle-load 'tramp
-	   :after
-	   (progn
-	     (setq password-cache-expiry 360000000      ;设置密码过期时间，避免每次询问密码
-		   tramp-default-method "ssh")
-	     ))
-
-
-;;;; site packages
-(idle-load 'eno
-	   :before
-	   (add-package-path '("edit-at-point" "dash" "eno"))
-	   :after
-	   (progn
-	     (defun eye/eno-copy ()
-	       (interactive)
-	       (cond
-		((equal major-mode 'c++-mode)
-		 (eno-word-copy))
-		((or (equal major-mode 'emacs-lisp-mode) (equal major-mode 'lisp-interaction-mode))
-		 (eno-symbol-copy))
-		(t (eno-word-copy))))
-	     ))
-;;(when is-gui (eye-require 'init-theme "theme"))
-
-;;;; all-the-icons
-(idle-load 'all-the-icons
-	   :req t
-	   :before
-	   (progn
-	     (unless (or is-windows (member "all-the-icons" (font-family-list)))
-	       (all-the-icons-install-fonts t)))
-	   :after
-	   (progn
-	     (add-to-list 'all-the-icons-icon-alist '("\\.ipynb" all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
-	     (add-to-list 'all-the-icons-mode-icon-alist '(ein:notebooklist-mode all-the-icons-faicon "book" :face all-the-icons-orange))
-	     (add-to-list 'all-the-icons-mode-icon-alist '(ein:notebook-mode all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
-	     (add-to-list 'all-the-icons-mode-icon-alist '(ein:notebook-multilang-mode all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
-	     (add-to-list 'all-the-icons-icon-alist '("\\.epub$" all-the-icons-faicon "book" :face all-the-icons-green))
-	     (add-to-list 'all-the-icons-mode-icon-alist '(nov-mode all-the-icons-faicon "book" :face all-the-icons-green))
-	     (add-to-list 'all-the-icons-mode-icon-alist '(gfm-mode  all-the-icons-octicon "markdown" :face all-the-icons-lblue))))
-
-;;;; solaire-mode
-(idle-load 'solaire-mode
-	   :req t
-	   :after
-	   (progn
-	     ;; Enable solaire-mode anywhere it can be enabled
-	     (solaire-global-mode +1)
-	     ;; To enable solaire-mode unconditionally for certain modes:
-	     (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
-
-	     ;; ...if you use auto-revert-mode, this prevents solaire-mode from turning
-	     ;; itself off every time Emacs reverts the file
-	     (add-hook 'after-revert-hook #'turn-on-solaire-mode)
-
-	     ;; highlight the minibuffer when it is activated:
-	     (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
-
-	     ;; if the bright and dark background colors are the wrong way around, use this
-	     ;; to switch the backgrounds of the `default` and `solaire-default-face` faces.
-	     ;; This should be used *after* you load the active theme!
-	     ;;
-	     ;; NOTE: This is necessary for themes in the doom-themes package!
-	     (solaire-mode-swap-bg)))
-
-;;;; doom-theme
-(when is-gui (idle-load 'doom-themes
-			:req t
-			:after
-			(progn
-			  ;; Enable flashing mode-line on errors
-			  (doom-themes-visual-bell-config)
-			  ;; Corrects (and improves) org-mode's native fontification.
-			  (doom-themes-org-config)
-			  (load-theme 'doom-one t)
-			  )))
-
-;;;; doom modeline
-(idle-load 'doom-modeline
-	   :req t
-	   :before
-	   (progn
-	     (setq doom-modeline-major-mode-color-icon t
-		   doom-modeline-github t
-		   ;;How tall the mode-line should be (only respected in GUI Emacs).
-		   doom-modeline-height 25
-		   ;;How wide the mode-line bar should be (only respected in GUI Emacs).
-		   doom-modeline-bar-width 3
-		   ;;don't use github notifications, because must set github.user, if not, will has a lot of emacs error process
-		   doom-modeline-github nil
-		   ))
-	   :after
-	   (progn
-	     (doom-modeline-mode 1)
-	     ;;(cancel-timer doom-modeline--github-timer)
-	     ))
-
-;;;; time
-;(require 'time)
-;(setq display-time-24hr-format t)
-;(setq display-time-day-and-date nil)
-;(display-time-mode)
-
-;; (when is-terminal
-  ;; (set-face-attribute 'hl-line nil :background "darkgray"))
-
-(idle-load 'avy)
-
-(idle-load 'avy-zap)
-
-(idle-load 'ace-jump)
-
-(idle-load 'init-idomenu)
-
-(idle-load 'init-ivy)
-
-(idle-load 'super-save :req t
-	   :after
-	   (progn
-	     (setq super-save-remote-files nil)
-	     (super-save-mode 1)))
-
-(idle-load 'symbol-overlay)
-
-;;;; bm
-(idle-load 'bm
-	   :before
-	   (setq bm-cycle-all-buffers nil		;; 是否在所有buffer中循环
-		 ;; (setq bm-in-lifo-order t)		;; 先入先出
-		 bm-restore-repository-on-load t
-		 ;; where to store persistant files
-		 bm-repository-file "~/.emacs.d/bm-repository"
-		 ;; save bookmarks
-		 bm-buffer-persistence t)
-	   :after
-	   (progn
-	     ;; Loading the repository from file when on start up.
-	     (bm-repository-load)
-	     ;; Saving bookmarks
-	     (add-hook 'kill-buffer-hook #'bm-buffer-save)
-
-	     ;; Saving the repository to file when on exit.
-	     ;; kill-buffer-hook is not called when Emacs is killed, so we
-	     ;; must save all bookmarks first.
-	     (add-hook 'kill-emacs-hook #'(lambda nil
-					    (bm-buffer-save-all)
-					    (bm-repository-save)))
-
-	     ;; The `after-save-hook' is not necessary to use to achieve persistence,
-	     ;; but it makes the bookmark data in repository more in sync with the file
-	     ;; state.
-	     (add-hook 'after-save-hook #'bm-buffer-save)
-
-	     ;; Restoring bookmarks
-	     (add-hook 'find-file-hooks   #'bm-buffer-restore)
-	     (add-hook 'after-revert-hook #'bm-buffer-restore)
-
-	     ;; The `after-revert-hook' is not necessary to use to achieve persistence,
-	     ;; but it makes the bookmark data in repository more in sync with the file
-	     ;; state. This hook might cause trouble when using packages
-	     ;; that automatically reverts the buffer (like vc after a check-in).
-	     ;; This can easily be avoided if the package provides a hook that is
-	     ;; called before the buffer is reverted (like `vc-before-checkin-hook').
-	     ;; Then new bookmarks can be saved before the buffer is reverted.
-	     ;; Make sure bookmarks is saved before check-in (and revert-buffer)
-	     (add-hook 'vc-before-checkin-hook #'bm-buffer-save)
-
-	     ;; 设置样式
-	     (set-face-attribute 'bm-persistent-face nil :foreground "#ff7800" :background "#1142AA")
-	     (require 'ext-bm)
-	     ))	   
-
-(idle-load 'ibuffer
-	   :before
-	   (progn
-	     (setq ibuffer-saved-filter-groups
-		   '(("Default"
-		      ("Hidden(g则不显示此分组)"  (name . "^ "))
-		      ("Helm"  (or (name . "^\\*helm\\|^\\*ac-mode-")))
-		      ("Help"  (or (name . "^\\*help\\|^\\*ac-mode-")))
-		      ("Woman"  (name . "^\\*WoMan.*\\*$"))
-		      ("Compile"  (name . "^*.*compil[ea].*$"))
-		      ("Gtalk"  (or (name . "^\\*.*jabber") (name . "*fsm-debug*")))
-		      ("ERC"  (mode . erc-mode))
-		      ("Custom"  (mode . Custom-mode))
-		      ("Shell"  (mode . shell-mode))
-		      ("Mail" (or (mode . mew-summary-mode) (mode . mew-draft-mode)(mode . mew-message-mode)))
-		      ("VC"  (or (name . "*magit-") (name . "^\\*vc")(mode . diff-mode) (mode . vc-dir-mode)))
-		      ("Magit "  (name . "*magit:"))
-		      ("Emacs"  (name . "^\\*.*$"))
-		      ("Dired"  (mode . dired-mode))
-		      ("Go"  (mode . go-mode))
-		      ("Python"  (mode . python-mode))
-		      ("EL"  (or (mode . emacs-lisp-mode) (mode . lisp-interaction-mode)))
-		      ("C++" (mode . c++-mode))
-		      ("Text" (name . ".txt"))
-		      ))))
-	   :after
-	   (progn
-	     (add-hook 'ibuffer-mode-hook
-		       '(lambda ()
-			  (ibuffer-auto-mode 1)
-			  (ibuffer-switch-to-saved-filter-groups "EL")))
-	     (setq ibuffer-show-empty-filter-groups nil)
-	     ))
-
-(idle-load 'init-hungry-delete :req t :after (global-hungry-delete-mode 1))
-(idle-load 'rainbow-mode)
-
-(idle-load 'aweshell)
-(idle-load 'init-web-search)
-
-(idle-load 'watch-other-window
-	   :before
-	   (progn
-	     (autoload 'watch-other-window-up "watch-other-window" "" t)
-	     (autoload 'watch-other-window-down "watch-other-window" "" t)
-	     (autoload 'watch-other-window-up-line "watch-other-window" "" t)
-	     (autoload 'watch-other-window-down-line "watch-other-window" "" t)))
-
-(idle-load 'rg)
-(idle-load 'color-rg)
-
-(idle-load 'init-elisp :req t)
-
-;;;; orgmode
-(idle-load 'init-orgmode :req t)
-
-;;;; yasnippet
-(idle-load 'yasnippet)
-
-;;;; ivy-yasnippet
-(idle-load 'ivy-yasnippet)
-
-;;;; yankpad
-(idle-load 'yankpad
-	   :after
-	   (progn
-	     ;; ~/.emacs.d/snippets is yas--default-user-snippets-dir
-	     ;;如果手动更换orgmode9后，这句执行后出现Not a face: nil的奇怪问题，终端下ivy无法弹出来，如果是赋值为不带/的字符串，又不会出现问题
-	     (setq yankpad-file (expand-file-name "yankpad.org" locale-notebook-dir))
-	     ;; (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
-	     ))
-
-
-;;;; cc-mode
-(idle-load 'cc-mode
-	   :before
-	   (require 'init-cpp)
-	   :after
-	   (progn
-	     (add-hook 'c++-mode-hook #'eye-setup-c++)
-	     (define-key c++-mode-map (kbd ",") nil)))
+;;;; cc-mode cpp
+(auto-require 'cc-mode
+	      :before
+	      (require 'init-cpp))
 
 ;;;; rainbow-delimiters
 ;; 括号高亮
-(idle-load 'rainbow-delimiters
-	   :before
-	   (progn
-	     (add-package-path "rainbow-delimiters")
-	     (autoload 'rainbow-delimiters-mode "rainbow-delimiters" nil t)
-	     (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
+(auto-require 'rainbow-delimiters
+	      :load t
+	      :paths "rainbow-delimiters"
+	      :functions 'rainbow-delimiters-mode
+	      :before
+	      (progn
+		(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
 
 ;;;; highlight-numbers
-(idle-load 'highlight-numbers
-	   :before
-	   (progn
-	     (add-package-path '("highlight-numbers" "parent-mode"))
-	     (autoload 'highlight-numbers-mode "highlight-numbers" nil t)
-	     (add-hook 'prog-mode-hook 'highlight-numbers-mode)))
+(auto-require 'highlight-numbers
+	      :paths '("highlight-numbers" "parent-mode")
+	      :functions 'highlight-numbers-mode
+	      :before
+	      (progn
+		(add-hook 'prog-mode-hook 'highlight-numbers-mode)))
 
 ;;;; whitespace
 ;; http://ergoemacs.org/emacs/whitespace-mode.html
-(idle-load 'whitespace
-	   :before
-	   (progn
-	     ;; Make whitespace-mode with very basic background coloring for whitespaces.
-	     ;; http://ergoemacs.org/emacs/whitespace-mode.html
-	     (setq whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark )))
+(auto-require 'whitespace
+	      :before
+	      (progn
+		;; Make whitespace-mode with very basic background coloring for whitespaces.
+		;; http://ergoemacs.org/emacs/whitespace-mode.html
+		(setq whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark )))
 
-	     ;; Make whitespace-mode and whitespace-newline-mode use “¶” for end of line char and “▷” for tab.
-	     (setq whitespace-display-mappings
-		   ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-		   '(
-		     (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-		     (newline-mark 10 [182 10]) ; LINE FEED,
-		     (tab-mark 9 [9655 9] [92 9]) ; tab
-		     ))))
+		;; Make whitespace-mode and whitespace-newline-mode use “¶” for end of line char and “▷” for tab.
+		(setq whitespace-display-mappings
+		      ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+		      '(
+			(space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+			(newline-mark 10 [182 10]) ; LINE FEED,
+			(tab-mark 9 [9655 9] [92 9]) ; tab
+			))))
 
 
 ;;;; company-c-headers
-(idle-load 'company-c-headers
-	   :after
-	   (progn
-	     (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
-	     (when is-windows
-	       (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
-						     "C:/Program Files (x86)/Microsoft SDKs/Windows\v7.1A/Include")))))
+(auto-require 'company-c-headers
+	      :paths '("company-c-headers" "company")
+	      :reqby 'company
+	      :after
+	      (progn
+		(add-hook 'c++-mode-hook (lambda () (add-to-list 'company-backends 'company-c-headers)))
+		(when is-windows
+		  (setq company-c-headers-path-system '("C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
+							"C:/Program Files (x86)/Microsoft SDKs/Windows\v7.1A/Include")))))
 
 
 ;;;; php-mode
-(idle-load 'php-mode
-	   :before
-	   (progn
-	     (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-	     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
+(auto-require 'php-mode
+	      :paths "php-mode"
+	      :functions 'php-mode
+	      :before
+	      (progn
+		(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+		(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
 
 ;;;; qt-pro-mode
 (defun setup-qt-pro-mode ()
@@ -1042,107 +1247,286 @@ req：t或nil，表示是否添加到idle-require中，在idle-require中的，�
       (browse-url-firefox url))))
 
 ;;;; qt-pro-mode
-(idle-load 'qt-pro-mode
-	   :before
-	   (progn
-	     (add-to-list 'auto-mode-alist '("\\.pro$" . qt-pro-mode))
-	     (add-to-list 'auto-mode-alist '("\\.pri$" . qt-pro-mode))     
-	     (add-hook 'qt-pro-mode-hook 'setup-qt-pro-mode)))
+(auto-require 'qt-pro-mode
+	      :paths "qt-pro-mode"
+	      :reqby 'cc-mode
+	      :functions 'qt-pro-mode
+	      :before
+	      (progn
+		(add-to-list 'auto-mode-alist '("\\.pro$" . qt-pro-mode))
+		(add-to-list 'auto-mode-alist '("\\.pri$" . qt-pro-mode))     
+		(add-hook 'qt-pro-mode-hook 'setup-qt-pro-mode)))
 
 ;;;; css-mode
-(idle-load 'css-mode
-	   :before
-	   (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode)))
+(auto-require 'css-mode
+	      :before
+	      (add-to-list 'auto-mode-alist '("\\.qss$" . css-mode)))
 
 ;;;; qml-mode
-(idle-load 'qml-mode
-	   :before
-	   (progn
-	     (autoload 'qml-mode "qml-mode" "Editing Qt Declarative." t)
-	     (add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))))
+(auto-require 'qml-mode
+	      :paths "qml-mode"
+	      :functions 'qml-mode
+	      :before
+	      (progn
+		(add-to-list 'auto-mode-alist '("\\.qml$" . qml-mode))))
 
-;;;; ctags
-(idle-load 'init-ctags)
-(idle-load 'init-counsel-etags)
+;;;; etags
+(defun eye/create-ctags-file ()
+  "Create ctags file"
+  (interactive)
+  ;; ctags必须加-e选项，否则counsel-xxx-find-tag-xx无法识别其中的tagname
+  (let ((tags-dir (ido-read-directory-name "TAGS DIR:"))
+	;; 需要传"\\("，否则出现错误：bash: -c:行0: 未预期的符号 `(' 附近有语法错误
+	(command "find %s \\( -iwholename \"*.h\" -or -iwholename \"*.cpp\" \\) -print | ctags -e -f %sTAGS -V -R -L -"))
+    (setq command (format command tags-dir tags-dir))
+    (message command)
+    (let ((proc (start-process "ctags" nil shell-file-name shell-command-switch command)))  ;; shell-command-switch值为-c，表示后面的是命令行参数
+      (set-process-sentinel proc `(lambda (proc msg)
+				    (let ((status (process-status proc)))
+				      (when (memq status '(exit signal))
+					(message "ctags:%s" msg)
+					)))))
+      ;;    (async-shell-command command)
+    ))
+
+
+(defun eye/update-ctags-this-file ()
+  "Update current file tags"
+  (interactive)
+  (let ((tags-path (locate-dominating-file default-directory "TAGS"))
+	(command)
+	(proc))
+    (when tags-path
+      (setq tags-path (expand-file-name "TAGS" tags-path))
+      (setq command (format "ctags -e -a -f %s %s" tags-path (buffer-name))) ;; -a means append
+      (message (concat "custom command:" command))
+      (async-shell-command command)
+      (delete-other-windows))))
+
+;; company-etags要么使用当前项目的TAGS，要么使用tags-table-list定义的TAGS文件，所以干脆直接配置tags-table-list
+;;(if locale-system-tags-paths
+;;    (append-to-list 'tags-table-list locale-system-tags-paths)) ;; need load init-locale
+;; Don't ask before rereading the TAGS files if they have changed
+(setq tags-revert-without-query t)
+;; Do case-sensitive tag searches
+(setq tags-case-fold-search nil) ;; t=case-insensitive, nil=case-sensitive
+;; Don't warn when TAGS files are large
+(setq large-file-warning-threshold nil)
+
+(defun eye/load-project-root-tags ()
+  "加载本地文件上层目录中对应的TAGS文件"
+  (interactive)
+  (let ((root-tags-file (locate-dominating-file default-directory "TAGS")))
+    (when root-tags-file
+      (setq root-tags-file (concat root-tags-file "TAGS"))
+      (message "Loading tags file: %s" root-tags-file)
+      (visit-tags-table root-tags-file)
+      (add-to-list 'tags-table-list root-tags-file)
+      (add-to-list 'tags-table-files root-tags-file) ;; for find-file-in-tags
+      )))
+
+;;;; counsel-etags
+(auto-require 'counsel-etags
+	      :paths "counsel-etags"
+	      :functions '(counsel-etags-find-tag counsel-etags-find-tag-at-point)
+	      :after
+	      (progn
+		;; Don't ask before rereading the TAGS files if they have changed
+		(setq tags-revert-without-query t)
+		;; Don't warn when TAGS files are large
+		(setq large-file-warning-threshold nil)
+		(when is-linux
+		  (setq counsel-etags-tags-program "xargs etags --append") ;调用命令类似 find .... -print | xargs etags --append, etags没有递归的参数
+		  )
+		(when is-windows (setq counsel-etags-tags-program (executable-find "ctags"))) ;; if not set, (counsel-etags-guess-program "ctags") find failed
+
+		;; 是否开启输出命令
+		(setq counsel-etags-debug nil)
+
+		;;(append-to-list 'counsel-etags-extra-tags-files locale-system-tags-paths) ;;使counsel-etags能显示系统函数（但无法跳转进入）
+		
+		;; Setup auto update now
+		(setq counsel-etags-update-tags-backend 'eye/update-ctags-this-file)  
+		(add-hook 'c++-mode-hook
+			  (lambda ()
+			    (add-hook 'after-save-hook 'counsel-etags-virtual-update-tags 'append 'local)
+			    ;;(add-hook 'after-save-hook 'eye/update-ctags-this-file))
+			    ))
+		
+		;; counsel-etags-ignore-directories does NOT support wildcast
+		(dolist (dirname (list ".git" ".svn" ".vs" "ipch" "Debug" "Release" "Bin" "tmp"))
+		  (add-to-list 'counsel-etags-ignore-directories dirname))
+
+		;; counsel-etags-ignore-filenames supports wildcast
+		(dolist (filename (list "TAGS" "GPATH" "GTAGS" "*.json" "ui_*.h" "*.ui" "moc_*.cpp" "*.rc"
+					"*.qrc" "*.tlog" "*.md" "*.bat" "*.txt" "*.pdb" "*.filters" "*.user"
+					"*.vcproj" "*.vcxproj" "*.db" "*.opendb" "*.htm" "*.user" "*.make"
+					"*.sln" "*.exp" "*.sdf" "*.opensdf"))
+		  (add-to-list 'counsel-etags-ignore-filenames filename))
+		))
+
 
 ;;;; company
-(idle-load 'init-company)
+(auto-require 'init-company
+	      :paths "company-mode"
+	      :functions '((global-company-mode . "company")))
 
 ;;;; company-quickhelp
-(idle-load 'company-quickhelp
-	   :before
-	   ;;company-quickhelp-manual-begin is not autoload function, must define.
-	   (autoload 'company-quickhelp-manual-begin "company-quickhelp" "quickhelp" t)
-	   :after
-	   (progn
-	     ;; 手动触发显示
-	     (setq company-quickhelp-delay nil)
-	     (define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)))
+(auto-require 'company-quickhelp
+	      :before
+	      ;;company-quickhelp-manual-begin is not autoload function, must define.
+	      (autoload 'company-quickhelp-manual-begin "company-quickhelp" "quickhelp" t)
+	      :after
+	      (progn
+		;; 手动触发显示
+		(setq company-quickhelp-delay nil)
+		(define-key company-active-map (kbd "M-h") #'company-quickhelp-manual-begin)))
 
 ;;;; ffit
-(idle-load 'find-file-in-tags)
+(auto-require 'find-file-in-tags
+	      :paths "find-file-in-tags"
+	      :functions 'find-file-in-tags)
 
 ;;;; ffip
-(idle-load 'find-file-in-project
-	   :before
-	   (progn
-	     ;; Windows平台必须设置，否则执行ffip会直占用CPU。
-	     (when is-windows (setq ffip-find-executable "find"))
-	     (setq ffip-find-executable "find")))
+(auto-require 'find-file-in-project
+	      :paths "find-file-in-project"
+	      :functions 'find-file-in-project
+	      :before
+	      (progn
+		;; Windows平台必须设置，否则执行ffip会直占用CPU。
+		(when is-windows (setq ffip-find-executable "find"))
+		(setq ffip-find-executable "find")))
 
 ;;;; awesome-tab
-(idle-load 'awesome-tab :req t
-	   :before
-	   (progn
-	     (setq awesome-tab-style 'zigzag))
-	   :after
-	   (progn
-	     (awesome-tab-mode 1)
-	     (define-key global-map (kbd "<C-tab>") #'awesome-tab-forward-tab)
-	     (define-key global-map (kbd "<C-S-tab>") #'awesome-tab-backward-tab)))
+;; (auto-require 'awesome-tab
+;; 	      :load t
+;; 	      :paths "awesome-tab"
+;; 	      :before
+;; 	      (progn
+;; 		(setq awesome-tab-style 'zigzag))
+;; 	      :after
+;; 	      (progn
+;; 		(awesome-tab-mode 1)
+;; 		(define-key global-map (kbd "<C-tab>") #'awesome-tab-forward-tab)
+;; 		(define-key global-map (kbd "<C-S-iso-lefttab>") #'awesome-tab-backward-tab)))
 
 ;;;; awesome-tray
-(idle-load 'awesome-tray
-	   :req nil
-	   :after
-	   (progn
-	     (awesome-tray-mode 1)))
+(auto-require 'awesome-tray
+	      :paths "awesome-tray"
+	      :after
+	      (progn
+		(awesome-tray-mode 1)))
 
-;;;; global readonly mode
-(idle-load 'global-readonly-mode)
+;;;; global-readonly
+(auto-require 'global-readonly
+	      :paths "global-readonly"
+	      :functions 'global-readonly-toggle)
 
+;;;; treemacs
+(auto-require 'treemacs
+	      :paths '("s" "f" "ht" "ace-window" "pfuture" "treemacs/src/elisp")
+	      :functions '((treemacs . "treemacs"))
+	      :after
+	      (progn
+		(bind-key treemacs-mode-map "<right>" 'treemacs-RET-action)))
 
 ;;;; writeroom
-(idle-load 'writeroom-mode
-	   :before
-	   (progn
-	     (setq writeroom-width 120)
-	     (defun writeroom-mode-on ()
-	       (interactive)
-	       (add-hook 'c++-mode-hook 'writeroom-mode)
-	       (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-	       (add-hook 'org-mode-hook 'writeroom-mode)
-	       (add-hook 'css-mode-hook 'writeroom-mode)
-	       (writeroom-mode))
-	     (defun writeroom-mode-off ()
-	       (interactive)
-	       (remove-hook 'c++-mode-hook 'writeroom-mode)
-	       (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-	       (remove-hook 'org-mode-hook 'writeroom-mode)
-	       (remove-hook 'css-mode-hook 'writeroom-mode)
-	       (writeroom-mode -1))
-	     ))
+(auto-require 'writeroom-mode
+	      :paths '("writeroom-mode" "visual-fill-column")
+	      :functions 'writeroom-mode
+	      :before
+	      (progn
+		(setq writeroom-width 120)
+		(defun writeroom-mode-on ()
+		  (interactive)
+		  (add-hook 'c++-mode-hook 'writeroom-mode)
+		  (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+		  (add-hook 'org-mode-hook 'writeroom-mode)
+		  (add-hook 'css-mode-hook 'writeroom-mode)
+		  (writeroom-mode))
+		(defun writeroom-mode-off ()
+		  (interactive)
+		  (remove-hook 'c++-mode-hook 'writeroom-mode)
+		  (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
+		  (remove-hook 'org-mode-hook 'writeroom-mode)
+		  (remove-hook 'css-mode-hook 'writeroom-mode)
+		  (writeroom-mode -1))
+		))
 
-(idle-load 'init-external)
+;;;; page-break-lines
+(auto-require 'page-break-lines
+	      :paths "page-break-lines"
+	      :after
+	      (setq page-break-lines-char ?=)) ;避免只显示一半
 
+;;;; dashboard
+(auto-require 'dashboard
+	      :load nil
+	      :paths '("emacs-memoize" "emacs-dashboard")
+	      :after
+	      (progn
+		(setq dashboard-startup-banner (concat user-emacs-directory "res/moleskine_red_notebook.png")
+		      dashboard-banner-logo-title "生命只有一次！"
+		      dashboard-footer "Life is what you make it!"
+		      dashboard-center-content    t
+		      dashboard-set-heading-icons t
+		      dashboard-set-file-icons    t
+		      dashboard-set-init-info     t
+		      dashboard-items '((recents   . 10)
+					(bookmarks . 5)))
+		(dashboard-setup-startup-hook)
+		))
+
+;;;; bing-dict
+(auto-require 'bing-dict
+	      :paths "bing-dict"
+	      :functions 'bing-dict-brief)
+
+;;;; external
+(auto-require 'init-external)
+
+;;;; linux only
 (when is-linux
-  (idle-load 'init-magit)
-  (idle-load 'apt-utils)
-  (idle-load 'init-snails))
+  (auto-require 'init-magit
+		:paths "magit"
+		:functions 'magit-staus
+		:after
+		(progn
+		    (setq magit-push-always-verify nil)
+		    (setq git-commit-summary-max-length 80)
 
+		    ;; 在新 frame 中打开 magit-status
+		    (defun magit-display-buffer-pop-up-frame (buffer)
+		      (if (with-current-buffer buffer (eq major-mode 'magit-status-mode))
+			  (display-buffer buffer
+					  '((display-buffer-reuse-window
+					     display-buffer-pop-up-frame) ;; 在新的 frame 中显示
+					    (reusable-frames . t)))
+			(magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
+
+		    ;; 设置显示 magit buffer 的函数
+		    (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
+
+		    (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
+		    ))
+  
+  (auto-require 'apt-utils
+		:paths "apt-utils"
+		:functions '(apt-utils-search apt-utils-show-package))
+  
+  ;;(auto-require 'init-snails)
+  )
+
+
+;;;; idle load packages
+;; for quick startup
+(setq idle-load-features '(server
+			   saveplace
+			   recentf
+			   savehist
+			   org org-capture org-agenda))
 
 (idle-load-startup)
-;;(idle-require-mode 1)
 
 
 (provide 'configuration)

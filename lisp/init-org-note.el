@@ -59,8 +59,6 @@ http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
 	      "#+INCLUDE: style.org\n"
 	      "#+OPTIONS: ^:nil \\n:t\n"
 	      "#+STARTUP: hideblocks\n"
-	      "- [[file:index.org][Index]]\n\n"
-	      "- Related: \n\n"
 	      "* %n\n"))
 
 (defun org-note-header ()

@@ -1,6 +1,6 @@
-(require-maybe 'ivy)
-(require-maybe 'counsel)
-(require-maybe 'swiper)
+(require 'ivy)
+(require 'counsel)
+(require 'swiper)
 
 ;; counsel-M-x 需要require smex才会按照使用频率排序
 (with-eval-after-load 'counsel (require 'smex))

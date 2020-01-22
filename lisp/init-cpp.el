@@ -1,6 +1,10 @@
 (require 'cc-mode)
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hh\\'" . c++-mode))
 
 ;; outline fold
 (add-hook 'c++-mode-hook
@@ -230,37 +234,40 @@
 ;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 ;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 
-(require 'autoinsert)
-(defun eye-setup-c++ ()
-  (define-auto-insert '(c++-mode . "C++ skeleton")
-    '(
-      (upcase (concat "_"
-                      (replace-regexp-in-string
-                       "[^A-Za-z0-9]" "_"
-                       (file-name-nondirectory buffer-file-name))))
-      "/*******************************************************************************" \n
-      "Copyright: WRW.Tec" \n
-      "Author: WRW" \n
-      "Description: " \n
-      "*******************************************************************************/" \n
-      "#ifndef " str \n "#define " str "\n\n\n"
-      "#endif"
-      ))
+;;(require 'autoinsert)
+;;(define-auto-insert '(c++-mode . "C++ skeleton")
+;;  '(
+;;    (upcase (concat "_"
+;;		    (replace-regexp-in-string
+;;		     "[^A-Za-z0-9]" "_"
+;;		     (file-name-nondirectory buffer-file-name))))
+;;    "//------------------------------------------------------------------------------" \n
+;;    "// Copyright: WRW.Tec" \n
+;;    "// Author: WRW" \n
+;;    "// Description: " \n
+;;    "//------------------------------------------------------------------------------" \n
+;;    "#ifndef " str \n "#define " str "\n\n\n"
+;;    "#endif"
+;;    ))
 
+
+(defun eye-setup-c++ ()
   (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
   (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
   (define-key c++-mode-map (kbd "<f5>") 'make-without-asking)
+  (define-key c++-mode-map (kbd ",") nil)
 
-  (defun set-tab-width-hook ()
-    (setq indent-tabs-mode nil)
-    (setq default-tab-width 2)
-    (setq tab-width 2)
-    (setq c-basic-offset 2) ;; tab 缩进量
-    (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
-    (setq tab-stop-list ()))
-  (add-hook 'c-mode-hook 'set-tab-width-hook)
-  (add-hook 'c++-mode-hook 'set-tab-width-hook)
+  (setq indent-tabs-mode nil)
+  (setq default-tab-width 4)
+  (setq tab-width 4)
+  (setq c-basic-offset 4) ;; tab 缩进量
+  (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
+  (setq tab-stop-list ())
   )
+
+
+(add-hook 'c++-mode-hook #'eye-setup-c++)
+(add-hook 'c-mode-hook 'eye-setup-c++)
 
 
 (provide 'init-cpp)

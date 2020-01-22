@@ -26,14 +26,6 @@
       (setenv "PATH" (concat (getenv "PATH") ";" eye-wget-bin-dir))
       (add-to-list 'exec-path eye-wget-bin-dir)))
 
-(defun add-package-path (dirlist)
-  (cond ((stringp dirlist)
-	 (add-to-list 'load-path (concat eye-packages-dir "/" dirlist)))
-	((listp dirlist)
-	 (dolist (dir dirlist)
-	   (add-to-list 'load-path (concat eye-packages-dir "/" dir))))
-	(t (message "wrong arg for add-package-path"))))
-
 ;;1.download: git clone / mkdir xx && wget -Oxx/xx.el url
 (defun eye-package-download(url path &optional name)
   (let (command)
