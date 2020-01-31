@@ -58,7 +58,10 @@
   ("v" yank :exit t)
   ("e" exchange-point-and-mark "exchange")
   ("m" set-mark-command)
-  ("w" other-window))
+  ("w" other-window)
+  ("n" scroll-up-command)
+  ("p" scroll-down-command)
+  ("r" recenter-top-bottom))
 
 ;;;; outline
 (defhydra hydra-outline ()

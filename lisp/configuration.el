@@ -537,10 +537,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		))
 
 ;;;; helm-org
-;; (auto-require 'helm-org
-;; 	      :paths "helm"
-;; 	      :reqby 'org
-;; 	      :functions '((helm-org-completing-read-tags . "helm-org")))
+(auto-require 'helm-org
+ 	      :paths "helm"
+ 	      :reqby 'org
+ 	      :functions '((helm-org-completing-read-tags . "helm-org")))
 
 ;;;; helm-dash
 ;; must install sqlite3
@@ -740,6 +740,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 	      (progn
 		(setq org2nikola-output-root-directory "~/org/blog")
 		(setq org2nikola-use-verbose-metadata t)
+		(setq org2nikola-org-blog-directory "/mnt/windows/note/wikinote/nikola-blog")
 		
 		(defun org2nikola-after-hook-setup (title slug)
 		  "see https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages/ for setup
@@ -756,6 +757,29 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		    (shell-command cmd)
 		    ))
 		;;(add-hook 'org2nikola-after-hook 'org2nikola-after-hook-setup)
+
+		(defun org2nikola-rerender-all-posts ()
+		  "Re-render all old published posts."
+		  (interactive)
+		  (unless (and org2nikola-org-blog-directory
+			       (file-directory-p org2nikola-org-blog-directory))
+		    (setq org2nikola-org-blog-directory
+			  (read-directory-name "Org blog directory:")))
+
+		  (dolist (f (directory-files org2nikola-org-blog-directory t))
+		    (when (and (not (file-directory-p f))
+			       (string-match-p "\.org$" f))
+		      ;; need setup default-directory to get absolute path of image embedded in org file
+		      (let* ((default-directory (file-name-directory f)))
+			(with-temp-buffer
+			  ;; need make sure is org-mode is load loaded
+			  (insert-file-contents f)
+			  (org-mode)
+			  (goto-char (point-min))
+			  ;; 修复org2nikola-rerender-published-posts失败
+			  ;; blog文件专门放了一个目录，不需要判断是否有POST_SLUG了，判断的话会失败
+			  (if (search-forward-regexp "^\* [^ ]+" (point-max) t) ;; while=>if防止无限循环
+			      (org2nikola-export-subtree)))))))
 
 		))
 
@@ -803,8 +827,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :paths "all-the-icons"
 	      :before
 	      (progn
-		(unless (or is-windows (member "all-the-icons" (font-family-list)))
-		  (all-the-icons-install-fonts t)))
+		(if is-gui
+		    (unless (or is-windows (member "all-the-icons" (font-family-list)))
+		      (all-the-icons-install-fonts t))))
 	      :after
 	      (progn
 		(add-to-list 'all-the-icons-icon-alist '("\\.ipynb" all-the-icons-fileicon "jupyter" :height 1.2 :face all-the-icons-orange))
@@ -1104,11 +1129,11 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 ;; password-generator
 (auto-require 'password-generator
-	      :paths "emacs-password-generateor"
-	      :functions '(password-generator-simple
-			   password-generator-strong
-			   password-generator-paranoid
-			   password-generator-numeric))
+	      :paths "emacs-password-generator"
+	      :functions '((password-generator-simple . "password-generator")
+			   (password-generator-strong . "password-generator")
+			   (password-generator-paranoid . "password-generator")
+			   (password-generator-numeric . "password-generator")))
 
 (defun eye/open-password-file ()
   "Open my password manager file"
