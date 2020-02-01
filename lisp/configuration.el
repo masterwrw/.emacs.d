@@ -1099,7 +1099,13 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-filter-only-filenames t) ;;只搜索文件名
 		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
 		(setq deft-current-sort-method 'mtime) ;;排序方式
-		(setq deft-strip-summary-regexp ".*")))
+		(setq deft-strip-summary-regexp ".*"))
+	      )
+
+(defun eye/deft-search(filter)
+  (interactive "MFilter: ")
+  (deft)
+  (deft-filter filter t))
 
 (defun deft-or-close ()
   (interactive)

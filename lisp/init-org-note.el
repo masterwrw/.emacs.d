@@ -61,6 +61,20 @@ http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
 	      "#+STARTUP: hideblocks\n"
 	      "* %n\n"))
 
+(setq org-blog-template
+      (concat "#+BEGIN_COMMENT\n"
+	      ".. title: %n\n"
+	      ".. slug: %g\n"
+	      ".. date: %d UTC+08:00\n"
+	      ".. tags: draft,\n"
+	      ".. category: \n"
+	      ".. link: \n"
+	      ".. description: \n"
+	      ".. type: text\n"
+	      "#+END_COMMENT\n"
+	      "#+INCLUDE: org-style.ss\n\n\n"
+	      ))
+
 (defun org-note-header ()
   "Insert a header at the top of the file.
 This is copy from org-wiki package, https://github.com/caiorss/org-wiki
@@ -85,6 +99,35 @@ This is copy from org-wiki package, https://github.com/caiorss/org-wiki
       (goto-char (point-min))
       (insert text2))))
 
+(defun org-blog-header ()
+  "Insert a header at the top of the file.
+This is copy from org-wiki package, https://github.com/caiorss/org-wiki
+"
+  (interactive)
+  ;; Save current cursor location and restore it
+  ;; after completion of block insider save-excursion.
+  (save-excursion
+    (let*
+        ;; replace '%n' by page title
+        ((text1 (replace-regexp-in-string
+                 "%n"
+                 (file-name-base (buffer-file-name))
+                 org-blog-template))
+         ;; Replace %d by current date in the format %Y-%m-%d
+         (text2 (replace-regexp-in-string
+                 "%d"
+                 (format-time-string "%Y-%m-%d %H:%M:%S")
+                 text1
+                 ))
+	 (text3 (replace-regexp-in-string
+                 "%g"
+		 (org2nikola-get-slug (file-name-base (buffer-file-name))) ;; 自动得到中文的拼音
+                 text2
+                 )))
+      ;; Got to top of file
+      (goto-char (point-min))
+      (insert text3))))
+
 
 
 (defun org-note-new ()
@@ -97,6 +140,22 @@ This is copy from org-wiki package, https://github.com/caiorss/org-wiki
 	(progn
 	  (find-file notefile)
 	  (org-note-header)
+	  (save-buffer)
+	  (goto-char (point-max)))
+      (find-file notefile))))
+
+
+(defun org-blog-new ()
+  "Create a new posts page and open it without inserting a link."
+  (interactive)
+  (let* ((pagename (read-string "Page Name: "))
+	 (notefile (concat (file-name-as-directory org-note-files-dir)
+			   "/posts/"
+			   pagename ".org")))
+    (if (not (file-exists-p notefile))
+	(progn
+	  (find-file notefile)
+	  (org-blog-header)
 	  (save-buffer)
 	  (goto-char (point-max)))
       (find-file notefile))))

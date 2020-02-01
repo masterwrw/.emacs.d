@@ -174,7 +174,7 @@ Publish: [_wp_] Publish to note
 (defhydra hydra-gtd (:exit t)
   "
 Getting Thing Done system:
-  [_c_] org-capture [_n_] new note    [_s_] search note keyword    [_f_] search note file
+  [_c_] org-capture [_n_] new note  [_b_] new blog    [_s_] search note keyword    [_f_] search note file
   [_i_] 查看收集蓝（处理）                             
   [_t_] 查看任务（建立清单）                           
   [_o_] 查看TODO项（准备下一步行动） 
@@ -197,6 +197,7 @@ Clock:
   ("x" (lambda () (interactive) (org-agenda nil "x")) nil)
   ("T" org-clock-sum-today-by-tags)
   ("n" org-note-new)
+  ("b" org-blog-new)
   ("s" org-note-search-keywords)
   ("f" org-note-search-title)
   ("1" org-clock-in)
@@ -298,6 +299,7 @@ Clock:
 (bind-key global-map ",tf" #'global-font-lock-mode)
 (bind-key global-map ",tC" #'centered-cursor-mode "centered-cursor-mode")
 (bind-key global-map ",tW" #'writeroom-mode)
+(bind-key global-map ",ty" #'yas-global-mode)
 
 (bind-key global-map ",fd" #'dired-jump "dired-x")
 (bind-key global-map ",ff" #'helm-find-files "helm-files")
@@ -332,6 +334,7 @@ Clock:
 (bind-key global-map ",W" #'hydra-watch-other/body)
 
 (bind-key global-map ",x" #'kill-region)
+(bind-key global-map ",y" #'yankpad-insert)
 (bind-key global-map ",z" #'undo)
 
 (bind-key global-map ",/" #'comment-dwim)
