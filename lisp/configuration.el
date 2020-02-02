@@ -65,6 +65,7 @@
   (message (format
 	    "\n\nEmacs startup time: %.6f seconds.\n\n\n"
 	    (- (float-time (current-time)) (float-time startup-time)))))
+(add-hook 'after-init-hook #'eye-print-startup-time)
 
 (defun eye--print-time (msg)
   "Print cost time from begin-time.
@@ -1463,6 +1464,16 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 					  '("encode" . (tray-module-encode-info tray-module-encode-face)))
 			     (add-to-list 'awesome-tray-active-modules "encode")
 
+			     ;; Create a module to show current input method
+			     (defun tray-module-im-info ()
+			       (if current-input-method
+				   (format "%s" current-input-method)
+				 "En"))
+			     (add-to-list 'awesome-tray-module-alist
+					  '("im" . (tray-module-im-info)))
+			     (add-to-list 'awesome-tray-active-modules "im")
+
+			     ;; Enable awesome-tray-mode
 			     (awesome-tray-mode 1)
 			     )))
       
@@ -1550,6 +1561,30 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (define-key snails-mode-map (kbd "<M-down>") #'snails-select-next-backend)
 			     (define-key snails-mode-map (kbd "<M-up>") #'snails-select-prev-backend)
 			     )))
+
+;;;; pyim
+(auto-require 'pyim
+	      :paths '("posframe" "xr" "pyim" "pyim-wbdict")
+	      :load t
+	      :before
+	      (progn
+		(setq default-input-method "pyim")
+		;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
+		;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+		;; 手动安装 posframe 包。
+		(setq pyim-page-tooltip 'posframe)
+		;; 选词框显示5个候选词
+		(setq pyim-page-length 5)
+		
+		;; 设置五笔输入模式，另外，在使用五笔输入法之前，还需要用 pyim-dicts-manager 添加一个五笔词库，选择pyim-wbdict中的pyim文件
+		;; 保存后会得到一个配置文件，里面有设置了pyim-dicts这个变量，所以也可以直接设置这个变量
+		(setq pyim-default-scheme 'wubi)
+		(setq pyim-dicts (quote
+				  ((:name "qingge" :file "~/src/emacs-packages/pyim-wbdict/pyim-wbdict-qingge.pyim")
+				   (:name "freeime" :file "~/src/emacs-packages/pyim-wbdict/pyim-wbdict-freeime.pyim"))))
+		;;(pyim-restart)
+		))
+
 
 ;;;; external
 (auto-require 'init-external)
