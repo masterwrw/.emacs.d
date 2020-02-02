@@ -181,7 +181,7 @@ Getting Thing Done system:
   [_x_] 查看下一步行动
   [_T_] org-clock-sum-today-by-tags
 
-  [_a_] agenda    [_j_] open journal file    [_d_] notdeft
+  [_a_] agenda    [_j_] new journal    [_d_] notdeft
 
 Clock:
   [_1_] in   [_2_] out   [_3_] report   [_4_] cancel
@@ -190,7 +190,7 @@ Clock:
   ("a" org-agenda nil)
   ("c" org-capture nil)
   ("d" notdeft nil)
-  ("j" eye/open-journal-file nil)
+  ("j" org-journal-new-entry nil)
   ("i" (lambda () (interactive) (org-agenda nil "i")) nil)
   ("t" (lambda () (interactive) (org-agenda nil "t")) nil)
   ("o" (lambda () (interactive) (org-agenda nil "o")) nil)

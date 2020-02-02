@@ -318,11 +318,13 @@ This function makes sure that dates are aligned for easy reading."
 	      (progn
 		;; capture 的目标路径不能直接使用 concat
 		(setq org-capture-templates '(("i" "Todo [收集]" entry
-                               (file+headline gtd-inbox-path "Inbox")
-                               "* TODO %i%?")
-                              ("T" "Tickler [提醒]" entry
-                               (file+headline gtd-tickler-path "Tickler")
-                               "* %i%? \n %U")))
+					       (file+headline gtd-inbox-path "Inbox")
+					       "* TODO %i%?")
+					      ("T" "Tickler [提醒]" entry
+					       (file+headline gtd-tickler-path "Tickler")
+					       "* %i%? \n %U")
+					      
+					      ))
 		))
 
 
@@ -333,19 +335,22 @@ This function makes sure that dates are aligned for easy reading."
 ;;(require 'org-install)
 ;;(add-to-list 'org-modules 'org-habit)
 
-  ;; System locale to use for formatting time values.
-  ;; current is "zh_CN.UTF-8", if set to "C", Make sure that the weekdays in the
-  ;; time stamps of your Org mode files and in the agenda appear in English.
-  ;; @see https://github.com/batsibe/org-journal
+;; System locale to use for formatting time values.
+;; current is "zh_CN.UTF-8", if set to "C", Make sure that the weekdays in the
+;; time stamps of your Org mode files and in the agenda appear in English.
+;; @see https://github.com/batsibe/org-journal
 (auto-require 'org-journal
+	      :paths "org-journal"
+	      :reqby 'org
+	      :functions 'org-journal-new-entry
 	      :after
 	      (progn
-		;; (setq org-journal-date-format 'org-journal-date-format-func)
-		(setq org-journal-date-format "%A, %x")
+		;;(setq org-journal-date-format 'org-journal-date-format-func)
+		(setq org-journal-date-format "%Y-%m-%d, %u")
 
-		(setq org-journal-file-type 'daily)
+		(setq org-journal-file-type 'yearly)
 		(setq org-journal-dir (concat locale-notebook-dir "/journal/"))
-		(setq org-journal-file-format "%Y-%m-%d.org")
+		(setq org-journal-file-format "%Y.org")
 		;; (setq today-journal-path (org-journal-find-location))
 		(defun org-journal-date-format-func (time)
 		  "Custom function to insert journal date header.
