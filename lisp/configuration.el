@@ -1555,36 +1555,32 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (auto-require 'init-external)
 
 ;;;; linux only
-(when is-linux
-  (auto-require 'init-magit
-		:paths "magit"
-		:functions 'magit-staus
-		:after
-		(progn
-		    (setq magit-push-always-verify nil)
-		    (setq git-commit-summary-max-length 80)
+(when is-linux (auto-require 'init-magit
+			     :paths "magit"
+			     :functions 'magit-staus
+			     :after
+			     (progn
+			       (setq magit-push-always-verify nil)
+			       (setq git-commit-summary-max-length 80)
 
-		    ;; 在新 frame 中打开 magit-status
-		    (defun magit-display-buffer-pop-up-frame (buffer)
-		      (if (with-current-buffer buffer (eq major-mode 'magit-status-mode))
-			  (display-buffer buffer
-					  '((display-buffer-reuse-window
-					     display-buffer-pop-up-frame) ;; 在新的 frame 中显示
-					    (reusable-frames . t)))
-			(magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
+			       ;; 在新 frame 中打开 magit-status
+			       (defun magit-display-buffer-pop-up-frame (buffer)
+				 (if (with-current-buffer buffer (eq major-mode 'magit-status-mode))
+				     (display-buffer buffer
+						     '((display-buffer-reuse-window
+							display-buffer-pop-up-frame) ;; 在新的 frame 中显示
+						       (reusable-frames . t)))
+				   (magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
 
-		    ;; 设置显示 magit buffer 的函数
-		    (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
+			       ;; 设置显示 magit buffer 的函数
+			       (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
 
-		    (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
-		    ))
-  
-  (auto-require 'apt-utils
-		:paths "apt-utils"
-		:functions '(apt-utils-search apt-utils-show-package))
-  
-  ;;(auto-require 'init-snails)
-  )
+			       (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
+			       )))
+      
+(when is-linux  (auto-require 'apt-utils
+			      :paths "apt-utils"
+			      :functions '(apt-utils-search apt-utils-show-package)))
 
 
 ;;;; idle load packages
@@ -1604,4 +1600,4 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 ;; coding: utf-8
 ;; no-byte-compile: t
 ;; End:
-;;; init.el ends here
+;;; configuration.el ends here
