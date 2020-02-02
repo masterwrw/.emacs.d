@@ -866,17 +866,17 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(solaire-mode-swap-bg)))
 
 ;;;; doom-theme
-;; (when is-gui (auto-require 'doom-themes
-;; 			   :paths "emacs-doom-themes"
-;; 			   :load t
-;; 			   :after
-;; 			   (progn
-;; 			     ;; Enable flashing mode-line on errors
-;; 			     (doom-themes-visual-bell-config)
-;; 			     ;; Corrects (and improves) org-mode's native fontification.
-;; 			     (doom-themes-org-config)
-;; 			     (load-theme 'doom-dracula t)
-;; 			     )))
+(when is-gui (auto-require 'doom-themes
+			   :paths "emacs-doom-themes"
+			   :load t
+			   :after
+			   (progn
+			     ;; Enable flashing mode-line on errors
+			     (doom-themes-visual-bell-config)
+			     ;; Corrects (and improves) org-mode's native fontification.
+			     (doom-themes-org-config)
+			     (load-theme 'doom-dracula t)
+			     )))
 
 ;; ;;;; doom-modeline
 ;; (auto-require 'doom-modeline
@@ -1429,24 +1429,43 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq ffip-find-executable "find")))
 
 ;;;; awesome-tab
-;; (auto-require 'awesome-tab
-;; 	      :load t
-;; 	      :paths "awesome-tab"
-;; 	      :before
-;; 	      (progn
-;; 		(setq awesome-tab-style 'zigzag))
-;; 	      :after
-;; 	      (progn
-;; 		(awesome-tab-mode 1)
-;; 		(define-key global-map (kbd "<C-tab>") #'awesome-tab-forward-tab)
-;; 		(define-key global-map (kbd "<C-S-iso-lefttab>") #'awesome-tab-backward-tab)))
+(when is-gui (auto-require 'awesome-tab
+			   :load t
+			   :paths "awesome-tab"
+			   :before
+			   (progn
+			     (setq awesome-tab-style 'zigzag))
+			   :after
+			   (progn
+			     (awesome-tab-mode 1)
+			     (define-key global-map (kbd "<C-tab>") #'awesome-tab-forward-tab)
+			     (define-key global-map (kbd "<C-S-iso-lefttab>") #'awesome-tab-backward-tab)
+			     )))
 
 ;;;; awesome-tray
-(auto-require 'awesome-tray
-	      :paths "awesome-tray"
-	      :after
-	      (progn
-		(awesome-tray-mode 1)))
+(when is-gui (auto-require 'awesome-tray
+			   :load t
+			   :paths "awesome-tray"
+			   :functions 'awesome-tray-mode
+			   :after
+			   (progn
+			     ;; Create a module to show file encoding
+			     (defun tray-module-encode-info ()
+			       (format "%s" buffer-file-coding-system))
+			     (defface tray-module-encode-face
+			       '((((background light))
+				  :foreground "#00a400" :bold t)
+				 (t
+				  :foreground "green3" :bold t))
+			       "Encode name face."
+			       :group 'awesome-tray)			     
+			     (add-to-list 'awesome-tray-module-alist
+					  '("encode" . (tray-module-encode-info tray-module-encode-face)))
+			     (add-to-list 'awesome-tray-active-modules "encode")
+
+			     (awesome-tray-mode 1)
+			     )))
+      
 
 ;;;; global-readonly
 (auto-require 'global-readonly
@@ -1512,6 +1531,25 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (auto-require 'bing-dict
 	      :paths "bing-dict"
 	      :functions 'bing-dict-brief)
+
+;;;; snails
+;; 使用fuz.el，emacs需要支持动态模块，编译时以--with-modules编译，用(fboundp 'module-load)
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html
+(when is-gui (auto-require 'snails
+			   :paths '("fuz" "snails")
+			   :functions '((snails . "snails"))
+			   :before 
+			   (global-set-key (kbd "<f4>") 'snails)
+			   :after
+			   (progn
+			     (require 'snails-backend-rg)
+
+			     (define-key snails-mode-map (kbd "<down>") #'snails-select-next-item)
+			     (define-key snails-mode-map (kbd "<up>") #'snails-select-prev-item)
+
+			     (define-key snails-mode-map (kbd "<M-down>") #'snails-select-next-backend)
+			     (define-key snails-mode-map (kbd "<M-up>") #'snails-select-prev-backend)
+			     ))
 
 ;;;; external
 (auto-require 'init-external)
