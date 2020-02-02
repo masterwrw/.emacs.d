@@ -875,7 +875,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (doom-themes-visual-bell-config)
 			     ;; Corrects (and improves) org-mode's native fontification.
 			     (doom-themes-org-config)
-			     (load-theme 'doom-dracula t)
+			     (load-theme 'doom-Iosvkem t)
 			     )))
 
 ;; ;;;; doom-modeline
