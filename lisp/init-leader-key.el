@@ -297,6 +297,7 @@ Clock:
 (bind-key global-map ",tR" #'rainbow-mode "rainbow-mode")
 (bind-key global-map ",tw" #'whitespace-mode)
 (bind-key global-map ",tf" #'global-font-lock-mode)
+(bind-key global-map ",tF" #'fullscreen-toggle)
 (bind-key global-map ",tC" #'centered-cursor-mode "centered-cursor-mode")
 (bind-key global-map ",tW" #'writeroom-mode)
 (bind-key global-map ",ty" #'yas-global-mode)

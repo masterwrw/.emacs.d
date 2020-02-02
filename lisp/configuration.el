@@ -433,7 +433,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (defun maximize-frame ()
   "Maximizes the active frame in Windows"
   (interactive)
-  (set-frame-parameter nil 'fullscreen 'maximize)
+  (set-frame-parameter nil 'fullscreen 'maximized)
   ;; Send a `WM_SYSCOMMAND' message to the active frame with the
   ;; `SC_MAXIMIZE' parameter.
   (if is-windows
@@ -1549,7 +1549,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 			     (define-key snails-mode-map (kbd "<M-down>") #'snails-select-next-backend)
 			     (define-key snails-mode-map (kbd "<M-up>") #'snails-select-prev-backend)
-			     ))
+			     )))
 
 ;;;; external
 (auto-require 'init-external)
