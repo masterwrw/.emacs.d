@@ -368,4 +368,8 @@ Clock:
 (bind-key global-map "M-k d" #'bing-dict-brief)
 (bind-key global-map "M-k m" #'magit-status)
 
+(bind-key global-map "M-k xr" #'xref-find-references)
+(bind-key global-map "M-k xd" #'xref-find-definitions)
+
+
 (provide 'init-leader-key)

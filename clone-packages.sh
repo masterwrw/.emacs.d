@@ -121,5 +121,5 @@ git clone https://github.com/manateelazycat/awesome-tab.git
 git clone https://github.com/manateelazycat/awesome-tray.git
 git clone https://github.com/Fanael/snails.git
 git clone https://github.com/manateelazycat/emacs-application-framework.git
-
+git clone https://github.com/Fanael/nox.git
 git clone https://github.com/Fanael/parent-mode.git
