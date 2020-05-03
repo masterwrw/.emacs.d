@@ -8,7 +8,7 @@
       (setq locale-browser-path "C:/Program Files (x86)/Maxthon5/Bin/Maxthon.exe")
       )
   (progn
-    (setq locale-notebook-dir "/mnt/windows/note/wikinote")
+    (setq locale-notebook-dir "/home/dev/orgnote")
     (setq locale-browser-path "/usr/bin/firefox")
     (setq locale-docset-dir "~/.docsets")
     ))
@@ -46,6 +46,7 @@
 	  "/home/owen/src/emacs-packages/fuz"
 	  "/home/owen/opt/oracle/home/bin"
 	  "/home/owen/opt/xapian/bin"
+	  "/home/dev/opt/ccls/Release"
 	  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ":")))
 

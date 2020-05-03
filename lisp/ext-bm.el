@@ -1,4 +1,5 @@
 (require 'ivy)
+(require 'dash)
 
 ;; 结合ivy来使用bm-bookmarks
 ;; @see https://pengpengxp.github.io/emacs/counsel-bm.html
@@ -32,6 +33,7 @@
   "Use ivy to select bm bookmarks.
 It has the ability to preview the bookmarks like `swiper-all'."
   (interactive)
+  (require 'bm)
   (let* ((bm-list (bm-counsel-get-list (bm-overlays-lifo-order t)))
          (bm-hash-table (make-hash-table :test 'equal))
          (search-list (-map (lambda (bm) (car bm)) bm-list)))

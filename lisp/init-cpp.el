@@ -1,24 +1,11 @@
 (require 'cc-mode)
 
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.hh\\'" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.c\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.hpp\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.hh\\'" . c++-mode))
-
-;; outline fold
-(add-hook 'c++-mode-hook
-	  (lambda ()
-	    (outline-minor-mode 1)
-	    (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
-	    ))
-
-;; show current function name
-;; (if (fboundp 'set-header-line)
-    ;; (add-hook 'c++-mode-hook 'set-header-line))
-
-;; (add-hook 'c++-mode-hook 'yas-minor-mode)
-;; (add-hook 'c-mode-hook 'yas-minor-mode)
+(add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 
 
 (defun eye/find-header-or-source-file (&optional is-open-other-window)
@@ -135,7 +122,6 @@
 	(set (make-local-variable 'compile-command)
 	     (expand-file-name build-script dir))))))
 
-(add-hook 'c++-mode-hook 'build-command)
 
 (defun eye/auto-compile ()
   (interactive)
@@ -149,125 +135,26 @@
     (setq url (concat url (read-string "Query cpp document: " (eye/current-word))))
     (browse-url-firefox url)))
 
-
-(defun eye/shell-cmake ()
-  (interactive)
-  (eye/shell-cmd "shell-cmake" (concat "C:\\green-soft\\git\\bin;"
-                                       "C:\\green-soft\\cmake-3.11.0-rc4-win64-x64\\bin;"
-                                       )))
-
-
-(defun eye/create-class ()
-  "Create a class based qt"
-  (interactive)
-  (let (class base-class filename)
-    (setq class (read-string "Class name: "))  ;; input class name
-    (setq base-class (read-string "Based: " "QWidget"))  ;; input base class
-    (insert
-     (with-temp-buffer
-       (if (string-empty-p base-class)
-           (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
-       (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.h"))))
-       (beginning-of-buffer)
-       (replace-string "name" class)
-       (beginning-of-buffer)
-       (replace-string "base" base-class)
-       (buffer-string)
-       ))
-    (setq filename (file-name-nondirectory (buffer-file-name)))
-    (with-temp-buffer
-      (insert
-       (with-temp-buffer
-         (if (string-empty-p base-class)
-             (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class.h")))
-           (insert-file-contents (expand-file-name (concat user-emacs-directory "template/cpp/class-qt.cpp"))))
-         (beginning-of-buffer)
-         (replace-string "name" class)
-         (beginning-of-buffer)
-         (replace-string "base" base-class)
-         (beginning-of-buffer)
-         (replace-string "header" (file-name-sans-extension filename))
-         (buffer-string)
-         ))
-      (write-file (concat (file-name-sans-extension filename) ".cpp")))
-    ))
-
-;; Auto generate c++ class implement, function implement, functipn prototype
-;;
-;; 1.Generate class implement:
-;; Move cursor to class name, call srefactor-refactor-at-point,
-;; if selecte Other file and cpp file already has content, must open it first,
-;; otherwise will be overwritten cpp file.
-;;
-;; 2.Generate function implement:
-;; Move cursor to function name, call srefactor-refactor-at-point, Generate Function Implement
-;;
-;; 3.Generate function prototype:
-;; Move cursor in function, call srefactor-refactor-at-point, Generate Function Prototype
-;;
-;; 4.Convert function to function pointer
-;; Move cursor to function name, call srefactor-refactor-at-point, Generate Function Pointer
-;;
-;; 5.Extract region to a function:
-;; Select a region, call srefactor-refactor-at-point.
-;;
-;; 6.Rename local variable name:
-;; Move cursor on variable name, call srefactor-refactor-at-point
-;;
-
-;; (require-maybe 'srefactor)
-;; (require-maybe 'srefactor-lisp)
-;; (setq srefactor-ui-menu-show-help nil)
-
-;; (setq semantic-idle-scheduler-idle-time 3)
-
-;; maybe set semanticdb-find-default-throttle, https://emacs-china.org/t/topic/5728/6
-
-;; (add-hook 'c++-mode-hook
-                  ;; (lambda ()
-                    ;; (semantic-mode 1)
-                    ;; (semantic-idle-scheduler-mode 1)
-                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-completion-at-point-function)
-                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-notc-completion-at-point-function)
-                    ;; (remove-hook 'completion-at-point-functions 'semantic-analyze-nolongprefix-completion-at-point-function)))
-
-;; (define-key c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
-;; (define-key c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
-
-;;(require 'autoinsert)
-;;(define-auto-insert '(c++-mode . "C++ skeleton")
-;;  '(
-;;    (upcase (concat "_"
-;;		    (replace-regexp-in-string
-;;		     "[^A-Za-z0-9]" "_"
-;;		     (file-name-nondirectory buffer-file-name))))
-;;    "//------------------------------------------------------------------------------" \n
-;;    "// Copyright: WRW.Tec" \n
-;;    "// Author: WRW" \n
-;;    "// Description: " \n
-;;    "//------------------------------------------------------------------------------" \n
-;;    "#ifndef " str \n "#define " str "\n\n\n"
-;;    "#endif"
-;;    ))
-
-
 (defun eye-setup-c++ ()
+  (setq-default tab-width 4);
+  (setq-default c-default-style "k&r")
+  ;; outline fold
+  (outline-minor-mode 1)
+  (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
+  (build-command)
+  (yas-minor-mode 1)
   (define-key c++-mode-map (kbd "<M-up>") 'beginning-of-defun)
   (define-key c++-mode-map (kbd "<M-down>") 'end-of-defun)
   (define-key c++-mode-map (kbd "<f5>") 'make-without-asking)
-  (define-key c++-mode-map (kbd ",") nil)
-
-  (setq indent-tabs-mode nil)
-  (setq default-tab-width 4)
-  (setq tab-width 4)
-  (setq c-basic-offset 4) ;; tab 缩进量
-  (setq c-default-style "k&r") ;; 大括号缩进位置，https://en.wikipedia.org/wiki/Indentation_style
-  (setq tab-stop-list ())
   )
 
 
 (add-hook 'c++-mode-hook #'eye-setup-c++)
-(add-hook 'c-mode-hook 'eye-setup-c++)
+(add-hook 'c-mode-hook #'eye-setup-c++)
+
+;; (add-hook 'c++-mode-hook ')
+;; (add-hook 'c-mode-hook 'yas-minor-mode)
+
 
 
 (provide 'init-cpp)

@@ -10,58 +10,11 @@
 (require 'ox-html)
 (require 'htmlize)
 
-(if is-linux
-    (progn
-      (setq org-note-files-dir "/mnt/windows/note/wikinote")
-      (setq org-note-html-dir "/mnt/windows/note/html")
-      (setq org-note-attach-dir "/mnt/windows/note/a"))
-  (progn
-    (setq org-note-files-dir "f:/wikinote")
-    (setq org-note-html-dir "f:/html")
-    (setq org-note-attach-dir "f:/a")))
-    
-
-
-(defun org-note-export-to-html
-    (&optional async subtreep visible-only body-only ext-plist)
-  "org-html-export-to-html默认导出在当前目录，修改为导出到指定目录，locale-notebook-dir的上级目录下html目录"
-  (interactive)
-  (let* ((extension (concat "." (or (plist-get ext-plist :html-extension)
-				    org-html-extension
-				    "html")))
-	 (file (org-export-output-file-name extension subtreep org-note-html-dir))
-	 (org-export-coding-system org-html-coding-system))
-    (org-export-to-file 'html file
-      async subtreep visible-only body-only ext-plist)))
-
-
-(defun org-note-open-file-html ()
-  "使用默认浏览器打开当前文件的url
-http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
-  (interactive)
-  (let (url (path (expand-file-name (buffer-name) org-note-html-dir)))
-    (setq url (concat "file:///" path))
-    (setq url (replace-regexp-in-string ".org$" ".html" url))
-    (browse-url-default-browser url)
-    ))
-
-(defun org-note-export-and-open ()
-  (interactive)
-  (org-note-export-to-html)
-  (org-note-open-file-html))
-
+(setq org-note-files-dir (if is-linux "/home/dev/orgnote" "f:/orgnote"))
+(setq org-note-attach-dir (if is-linux "/home/dev/orgnote/a" "f:/orgnote/a"))
 
 ;; 自动添加的文件头
 (setq org-note-template
-      (concat "#+TITLE: %n\n"
-	      "#+KEYWORDS: \n"
-	      "#+DATE: %d\n"
-	      "#+INCLUDE: style.org\n"
-	      "#+OPTIONS: ^:nil \\n:t\n"
-	      "#+STARTUP: hideblocks\n"
-	      "* %n\n"))
-
-(setq org-blog-template
       (concat "#+BEGIN_COMMENT\n"
 	      ".. title: %n\n"
 	      ".. slug: %g\n"
@@ -73,9 +26,10 @@ http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
 	      ".. type: text\n"
 	      "#+END_COMMENT\n"
 	      "#+INCLUDE: org-style.ss\n\n\n"
+	      "* %n\n"
 	      ))
 
-(defun org-note-header ()
+(defun org-note-header (str-title uuid)
   "Insert a header at the top of the file.
 This is copy from org-wiki package, https://github.com/caiorss/org-wiki
 "
@@ -87,32 +41,8 @@ This is copy from org-wiki package, https://github.com/caiorss/org-wiki
         ;; replace '%n' by page title
         ((text1 (replace-regexp-in-string
                  "%n"
-                 (file-name-base (buffer-file-name))
+                 str-title
                  org-note-template))
-         ;; Replace %d by current date in the format %Y-%m-%d
-         (text2 (replace-regexp-in-string
-                 "%d"
-                 (format-time-string "%Y-%m-%d")
-                 text1
-                 )))
-      ;; Got to top of file
-      (goto-char (point-min))
-      (insert text2))))
-
-(defun org-blog-header ()
-  "Insert a header at the top of the file.
-This is copy from org-wiki package, https://github.com/caiorss/org-wiki
-"
-  (interactive)
-  ;; Save current cursor location and restore it
-  ;; after completion of block insider save-excursion.
-  (save-excursion
-    (let*
-        ;; replace '%n' by page title
-        ((text1 (replace-regexp-in-string
-                 "%n"
-                 (file-name-base (buffer-file-name))
-                 org-blog-template))
          ;; Replace %d by current date in the format %Y-%m-%d
          (text2 (replace-regexp-in-string
                  "%d"
@@ -121,58 +51,52 @@ This is copy from org-wiki package, https://github.com/caiorss/org-wiki
                  ))
 	 (text3 (replace-regexp-in-string
                  "%g"
-		 (org2nikola-get-slug (file-name-base (buffer-file-name))) ;; 自动得到中文的拼音
+		 ;;(org2nikola-get-slug str-title) ;; 自动得到中文的拼音
+		 (concat uuid "-" str-title)
                  text2
                  )))
       ;; Got to top of file
       (goto-char (point-min))
       (insert text3))))
 
+(random t)
+(defun get-note-name-uuid ()
+  (format "%06x%06x" (random (expt 16 6))
+  (random (expt 16 6))))
 
 
-(defun org-note-new ()
+(defun org-new-page (note-dir)
+  "Create a new wiki page and open it without inserting a link."
+  (let* ((str-title (read-string "Title: "))
+	 (uuid (get-note-name-uuid))
+	 (notefile (concat (file-name-as-directory note-dir)
+			   uuid "-" str-title ".org")))
+    (if (not (file-exists-p notefile))
+	(progn
+	  (find-file notefile)
+	  (org-note-header str-title uuid)
+	  (save-buffer)
+	  (goto-char (point-max)))
+      (find-file notefile))))
+
+(defun org-new-note ()
+  (interactive)
+  (org-new-page org-note-files-dir))
+
+(defun org-new-post ()
   "Create a new wiki page and open it without inserting a link."
   (interactive)
-  (let* ((pagename (read-string "Page Name: "))
-	 (notefile (concat (file-name-as-directory org-note-files-dir)
-			    pagename ".org")))
-    (if (not (file-exists-p notefile))
-	(progn
-	  (find-file notefile)
-	  (org-note-header)
-	  (save-buffer)
-	  (goto-char (point-max)))
-      (find-file notefile))))
+  (org-new-page "/home/dev/orgsite/posts"))
 
 
-(defun org-blog-new ()
-  "Create a new posts page and open it without inserting a link."
-  (interactive)
-  (let* ((pagename (read-string "Page Name: "))
-	 (notefile (concat (file-name-as-directory org-note-files-dir)
-			   "/posts/"
-			   pagename ".org")))
-    (if (not (file-exists-p notefile))
-	(progn
-	  (find-file notefile)
-	  (org-blog-header)
-	  (save-buffer)
-	  (goto-char (point-max)))
-      (find-file notefile))))
-
-
-(defun org-note-search-keywords ()
-  "Search keywords use counsel-ag or grep"
+(defun org-note-search-tag ()
+  "Search tags use counsel-ag or grep"
   (interactive)
   (if (and (fboundp 'counsel-ag) (executable-find "ag"))
-      (let ((str (read-string "Search Keywords: "))
+      (let ((str (read-string "Search Tag: "))
 	    (default-directory org-note-files-dir))
-	(counsel-ag (concat "^#\\+KEYWORDS " str)))
-    
-    (let ((str (read-string "Search Keywords: " ".*"))
-	  (default-directory org-note-files-dir))
-      (rgrep (concat "^#+KEYWORDS:" str) "*.org" org-note-files-dir nil))))
-
+	(counsel-ag (concat "^.. tags: " str)))
+    (message "Please install ag for search quickly!")))
 
 
 (defun org-note-search-title ()
@@ -181,12 +105,8 @@ This is copy from org-wiki package, https://github.com/caiorss/org-wiki
   (if (and (fboundp 'counsel-ag) (executable-find "ag"))
       (let ((str (read-string "Search Title: "))
 	    (default-directory org-note-files-dir))
-	(counsel-ag (concat "^#\\+TITLE " str)))
-    
-    (let ((str (read-string "Search Title: " ".*"))
-	  (default-directory org-note-files-dir))
-      (rgrep (concat "^#+TITLE:" str) "*.org" org-note-files-dir nil))))
-  
+	(counsel-ag (concat "^.. title: " str)))
+    (message "Please install ag for search quickly!")))
 
 
 (provide 'init-org-note)

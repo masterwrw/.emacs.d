@@ -84,7 +84,7 @@
 
 
 (require 'cl-lib)
-(defvar auto-require-packages-dir "~/src/emacs-packages")
+(defvar auto-require-packages-dir "~/.emacs.d/packages")
 
 (defun add-package-path (dirlist)
   (cond ((stringp dirlist)
@@ -156,24 +156,25 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 ;;(load-theme 'wombat t)
 
 ;;;; keywords hightlight
-(setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
-(make-face 'font-lock-fixme-face)
-(make-face 'font-lock-study-face)
-(make-face 'font-lock-important-face)
-(make-face 'font-lock-improve-face)
-(make-face 'font-lock-note-face)
-(mapc (lambda (mode)
-        (font-lock-add-keywords
-         mode
-         '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
-           ("\\<\\(IMPROVE\\)" 1 'font-lock-improve-face t)
-           ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
-           ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
-      fixme-modes)
-(modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
-(modify-face 'font-lock-study-face "#33aa00" nil nil t nil t nil nil)
-(modify-face 'font-lock-note-face "#33aa00" nil nil t nil t nil nil)
+(when is-gui
+  (setq fixme-modes '(c++-mode c-mode emacs-lisp-mode python-mode))
+  (make-face 'font-lock-fixme-face)
+  (make-face 'font-lock-study-face)
+  (make-face 'font-lock-important-face)
+  (make-face 'font-lock-improve-face)
+  (make-face 'font-lock-note-face)
+  (mapc (lambda (mode)
+	  (font-lock-add-keywords
+	   mode
+	   '(("\\<\\(TODO\\)" 1 'font-lock-fixme-face t)
+	     ("\\<\\(IMPROVE\\)" 1 'font-lock-improve-face t)
+	     ("\\<\\(STUDY\\)" 1 'font-lock-study-face t)
+	     ("\\<\\(NOTE\\)" 1 'font-lock-note-face t))))
+	fixme-modes)
+  (modify-face 'font-lock-fixme-face "Red" nil nil t nil t nil nil)
+  (modify-face 'font-lock-improve-face "Red" nil nil t nil t nil nil)
+  (modify-face 'font-lock-study-face "#33aa00" nil nil t nil t nil nil)
+  (modify-face 'font-lock-note-face "#33aa00" nil nil t nil t nil nil))
 
 
 ;;;; font
@@ -213,8 +214,6 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
                     :size cn-font-size))))
   )
 
-(eye-update-font-size)
-
 (defun eye/increase-font-size ()
   "Increase font size of english and chinese."
   (interactive)
@@ -233,6 +232,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
       (maximize-frame))
   )
 
+(when is-gui (eye-update-font-size))
+
+
+
 ;;;; theme: modeline
 ;; Copy from https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-modeline.el
 ;; @see http://emacs-fu.blogspot.com/2011/08/customizing-mode-line.html
@@ -246,14 +249,14 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		 ;;mode-line-front-space
 		 " "
 		 ;; the buffer name; the file name as a tool tip
-;;		 '(:eval (propertize (if (buffer-modified-p)
-;;					 "%b *"
-;;                                       "%b")
-		 ;;                                     'face nil))
+		 '(:eval (propertize (if (buffer-modified-p)
+					 "%b *"
+                                       "%b")
+				     'face nil))
 		 ;; 显示完整路径
-		 '(:eval (concat
-			  (or (buffer-file-name) (buffer-name))
-			  (if (buffer-modified-p) " *")))
+		 ;;'(:eval (concat
+		 ;;  (or (buffer-file-name) (buffer-name))
+		 ;; (if (buffer-modified-p) " *")))
 		 " "
 		 ;; the current major mode for the buffer.
 		 "["
@@ -383,7 +386,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
 
 ;; @see https://stackoverflow.com/questions/2081577/setting-emacs-split-to-horizontal
-;; (setq split-width-threshold nil) ;;不允许自动左右分屏
+;;(setq split-width-threshold nil) ;;不允许自动左右分屏
 (setq split-height-threshold nil) ;;不允许自动上下分屏
 
 ;; 不要自动分割窗口 @see https://github.com/ecxr/handmadehero/blob/master/misc/.emacs
@@ -396,6 +399,19 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
 
+;; 半屏滚动
+(defun scroll-half-page-down ()
+  "scroll down half the page"
+  (interactive)
+  (scroll-down (/ (window-body-height) 2)))
+
+(defun scroll-half-page-up ()
+  "scroll up half the page"
+  (interactive)
+  (scroll-up (/ (window-body-height) 2)))
+
+(global-set-key "\M-n" 'scroll-half-page-up)
+(global-set-key "\M-p" 'scroll-half-page-down)
 
 ;; (setq electric-pair-pairs '((?\{ . ?\})
 ;; (?\( . ?\))
@@ -458,7 +474,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 ;;(require 'init-packages)
 
 ;;;; hydra
-(auto-require 'hydra
+(auto-require 'hydra	      
 	      :load t
 	      :paths "hydra")
 
@@ -475,7 +491,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 	      :after
 	      (progn
 		(which-key-mode 1)
-		(which-key-setup-side-window-right-bottom)))
+		(which-key-setup-side-window-bottom)))
 
 ;;;; saveplace
 (auto-require 'saveplace
@@ -517,7 +533,8 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 	      :paths '("helm" "emacs-async")
 	      :functions '((helm-find-files . "helm-find")
 			   (helm-M-x . "helm-command")
-			   (helm-recentf . "helm-for-files"))
+			   (helm-recentf . "helm-for-files")
+			   (helm-buffers-list . "helm-buffers"))
 	      :after
 	      (progn
 		(setq helm-autoresize-max-height 50
@@ -725,8 +742,9 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (auto-require 'init-org-note
 	      :before
 	      (progn
-		(autoload 'org-note-new "init-org-note" "" t)
-		(autoload 'org-note-search-keywords "init-org-note" "" t)
+		(autoload 'org-new-note "init-org-note" "" t)
+		(autoload 'org-new-post "init-org-note" "" t)
+		(autoload 'org-note-search-tag "init-org-note" "" t)
 		(autoload 'org-note-search-title "init-org-note" "" t)
 		))
 
@@ -736,7 +754,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (auto-require 'org2nikola
 	      :paths "org2nikola"
 	      :reqby 'org
-	      :functions '(org2nikola-export-subtree org2nikola-rerender-published-posts)
+	      :functions '(org2nikola-export-subtree org2nikola-rerender-published-posts org2nikola-get-slug)
 	      :after
 	      (progn
 		(setq org2nikola-output-root-directory "~/org/blog")
@@ -870,6 +888,8 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (when is-gui (auto-require 'doom-themes
 			   :paths "emacs-doom-themes"
 			   :load t
+			   :functions '((doom-themes-visual-bell-config . "doom-themes-ext-visual-bell")
+					(doom-themes-org-config . "doom-themes-ext-org"))
 			   :after
 			   (progn
 			     ;; Enable flashing mode-line on errors
@@ -953,13 +973,16 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :paths "bm"
 	      :functions '(bm-toggle bm-next bm-previous)
 	      :before
-	      (setq bm-cycle-all-buffers nil		;; 是否在所有buffer中循环
-		    ;; (setq bm-in-lifo-order t)		;; 先入先出
-		    bm-restore-repository-on-load t
-		    ;; where to store persistant files
-		    bm-repository-file "~/.emacs.d/bm-repository"
-		    ;; save bookmarks
-		    bm-buffer-persistence t)
+	      (progn
+		(autoload 'counsel-bm "ext-bm")
+		(setq bm-cycle-all-buffers nil		;; 是否在所有buffer中循环
+		      ;; (setq bm-in-lifo-order t)		;; 先入先出
+		      bm-restore-repository-on-load t
+		      ;; where to store persistant files
+		      bm-repository-file "~/.emacs.d/bm-repository"
+		      ;; save bookmarks
+		      bm-buffer-persistence t)
+		)
 	      :after
 	      (progn
 		;; Loading the repository from file when on start up.
@@ -995,7 +1018,6 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 		;; 设置样式
 		(set-face-attribute 'bm-persistent-face nil :foreground "#ff7800" :background "#1142AA")
-		(require 'ext-bm)
 		))	   
 
 ;;;; ibuffer
@@ -1040,9 +1062,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :after (global-hungry-delete-mode 1))
 
 ;;;; rainbow-mode
-(auto-require 'rainbow-mode
-	      :paths "rainbow-mode"
-	      :functions 'rainbow-mode)
+(when is-gui (auto-require 'rainbow-mode
+			   :paths "rainbow-mode"
+			   :functions 'rainbow-mode))
 
 ;;;; aweshell
 (auto-require 'aweshell
@@ -1119,8 +1141,8 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (auto-require 'notdeft
 	      :paths "notdeft"
 	      :functions 'notdeft
-	      :before
-	      (require 'notdeft-autoloads)
+	      ;;:before
+	      ;;(require 'notdeft-autoloads)
 	      :after
 	      (progn
 		(require 'notdeft)
@@ -1198,12 +1220,12 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)))
 
 ;;;; highlight-numbers
-(auto-require 'highlight-numbers
-	      :paths '("highlight-numbers" "parent-mode")
-	      :functions 'highlight-numbers-mode
-	      :before
-	      (progn
-		(add-hook 'prog-mode-hook 'highlight-numbers-mode)))
+(when is-gui (auto-require 'highlight-numbers
+			   :paths '("highlight-numbers" "parent-mode")
+			   :functions 'highlight-numbers-mode
+			   :before
+			   (progn
+			     (add-hook 'prog-mode-hook 'highlight-numbers-mode))))
 
 ;;;; whitespace
 ;; http://ergoemacs.org/emacs/whitespace-mode.html
@@ -1401,6 +1423,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 ;;;; company
 (auto-require 'init-company
 	      :paths "company-mode"
+	      :load t
 	      :functions '((global-company-mode . "company")))
 
 ;;;; company-quickhelp
@@ -1473,6 +1496,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 					  '("im" . (tray-module-im-info)))
 			     (add-to-list 'awesome-tray-active-modules "im")
 
+			     ;; set color
+			     (setq awesome-tray-mode-line-active-color "DarkGreen")
+				   
 			     ;; Enable awesome-tray-mode
 			     (awesome-tray-mode 1)
 			     )))
@@ -1549,8 +1575,6 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (when is-gui (auto-require 'snails
 			   :paths '("fuz" "snails")
 			   :functions '((snails . "snails"))
-			   :before 
-			   (global-set-key (kbd "<f4>") 'snails)
 			   :after
 			   (progn
 			     (require 'snails-backend-rg)
@@ -1580,19 +1604,48 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		;; 保存后会得到一个配置文件，里面有设置了pyim-dicts这个变量，所以也可以直接设置这个变量
 		(setq pyim-default-scheme 'wubi)
 		(setq pyim-dicts (quote
-				  ((:name "qingge" :file "~/src/emacs-packages/pyim-wbdict/pyim-wbdict-qingge.pyim")
-				   (:name "freeime" :file "~/src/emacs-packages/pyim-wbdict/pyim-wbdict-freeime.pyim"))))
+				  ((:name "qingge" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-qingge.pyim")
+				   (:name "freeime" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-freeime.pyim"))))
 		;;(pyim-restart)
 		))
+
+;;;; tempbuf
+(auto-require 'tempbuf
+	      :paths "tempbuf"
+	      :before
+	      (progn
+		(setq tempbuf-kill-message nil)         ;不在Mode-line显示删除临时buffer提示消息
+		(setq tempbuf-minimum-timeout 30)       ;删除 buffer 的最低期限
+		(dolist (hook (list
+			       'compilation-mode-hook     ;编译模式
+			       'comint-mode-hook          ;comint 模式
+			       'completion-list-mode-hook ;补全列表模式
+			       'help-mode-hook            ;帮助模式
+			       'Info-mode-hook            ;Info 模式
+			       'woman-mode-hook		  ;man 手册
+			       ))
+		  (add-hook
+		   hook
+		   '(lambda ()
+		      (require 'tempbuf)
+		      (turn-on-tempbuf-mode))))         ;加载自动清理临时buffer
+		))
+
+
+(auto-require 'eaf
+	      :paths "emacs-application-framework"
+	      :functions '((eaf-open-browser . "eaf")
+			   (eaf-open-terminal . "eaf"))
+	      )
 
 
 ;;;; external
 (auto-require 'init-external)
 
-;;;; linux only
-(when is-linux (auto-require 'init-magit
-			     :paths "magit"
-			     :functions 'magit-staus
+;;;; magit 
+(when is-linux (auto-require 'magit
+			     :paths '("magit/lisp" "with-editor" "transient/lisp")
+			     :functions '((magit-status . "magit-status"))
 			     :after
 			     (progn
 			       (setq magit-push-always-verify nil)
@@ -1608,15 +1661,45 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 				   (magit-display-buffer-traditional buffer))) ;; magit-display-buffer-traditional 是默认的函数
 
 			       ;; 设置显示 magit buffer 的函数
-			       (setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
+			       ;;(setq magit-display-buffer-function #'magit-display-buffer-pop-up-frame)
+			       ;;(define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
+			       
+			       (setq magit-display-buffer-function #'magit-display-buffer-traditional)
 
-			       (define-key magit-mode-map (kbd "q") 'delete-frame) ;; 自动关闭 frame
 			       )))
-      
+
+;;;; apt-utils
 (when is-linux  (auto-require 'apt-utils
 			      :paths "apt-utils"
 			      :functions '(apt-utils-search apt-utils-show-package)))
 
+
+;;;; editorconfig
+(auto-require 'editorconfig
+	      :paths "editorconfig"
+	      :load t
+	      :after
+	      (editorconfig-mode 1))
+
+
+;;;; slime
+(auto-require 'slime
+	      :paths "slime"
+	      :functions 'slime
+	      :after
+	      (progn
+		(setq inferior-lisp-program "/usr/bin/sbcl")))
+
+;;;; newlisp
+(auto-require 'newlisp-mode
+	      :paths "newlisp-mode"
+	      :functions '(run-newlisp)
+	      :after
+	      (progn
+		(add-to-list 'auto-mode-alist '("\\.lsp\\'" . newlisp-mode))
+		(define-key newlisp-mode-map (kbd "C-x C-e") #'newlisp-eval-last-sexp)
+		(define-key newlisp-mode-map (kbd "<f5>") #'newlisp-eval-buffer)
+		))
 
 ;;;; idle load packages
 ;; for quick startup
