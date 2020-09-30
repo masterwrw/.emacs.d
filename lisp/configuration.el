@@ -1576,7 +1576,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :after
 	      (progn
 		(setq dashboard-startup-banner (concat user-emacs-directory "res/moleskine_red_notebook.png")
-		      dashboard-banner-logo-title "生命只有一次！"
+		      dashboard-banner-logo-title ""
 		      dashboard-footer "Life is what you make it!"
 		      dashboard-center-content    t
 		      dashboard-set-heading-icons t
