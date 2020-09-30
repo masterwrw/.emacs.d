@@ -603,11 +603,21 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		      (set-selection-coding-system 'utf-16le-dos) ;; 别名set-clipboard-coding-system
 		      )
 		  (set-selection-coding-system 'utf-8))
-		(prefer-coding-system 'utf-8)
+		
+		;; set coding config, last is highest priority.
+		;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html#Recognize-Coding
+		(prefer-coding-system 'cp950)
+		(prefer-coding-system 'gb2312)
+		(prefer-coding-system 'cp936)
+		(prefer-coding-system 'gb18030)
+		(prefer-coding-system 'utf-16)
+		(prefer-coding-system 'utf-8-dos)
+		(prefer-coding-system 'utf-8-unix)
+		
 		;; 文件默认保存为 utf-8
-		(set-buffer-file-coding-system 'utf-8)
-		(set-default buffer-file-coding-system 'utf8)
-		(set-default-coding-systems 'utf-8)
+		(set-buffer-file-coding-system 'utf-8-unix)
+		(set-default buffer-file-coding-system 'utf-8-unix)
+		(set-default-coding-systems 'utf-8-unix)
 		;; 防止终端中文乱码
 		(set-terminal-coding-system 'utf-8)
 		(modify-coding-system-alist 'process "*" 'utf-8)
@@ -620,9 +630,9 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		  (setq default-process-coding-system '(gbk . gbk))
 		  ;; file encoding
 		  ;; @see https://www.gnu.org/software/emacs/manual/html_node/emacs/Recognize-Coding.html
-		  (modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
-		  (modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
-		  (modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
+		  ;;(modify-coding-system-alist 'file "\\.txt\\'" 'chinese-iso-8bit-dos)
+		  ;;(modify-coding-system-alist 'file "\\.h\\'" 'chinese-iso-8bit-dos)
+		  ;;(modify-coding-system-alist 'file "\\.cpp\\'" 'chinese-iso-8bit-dos)
 		  )
 
 		;; windows shell
