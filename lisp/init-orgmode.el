@@ -279,5 +279,10 @@ This function makes sure that dates are aligned for easy reading."
 
 
 
+;;;; notdeft-org
+(add-to-list 'load-path (concat auto-require-packages-dir "/notdeft"))
+(require 'notdeft-org)
+
+
 
 (provide 'init-orgmode)

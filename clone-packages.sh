@@ -123,3 +123,32 @@ git clone https://github.com/Fanael/snails.git
 git clone https://github.com/manateelazycat/emacs-application-framework.git
 git clone https://github.com/Fanael/nox.git
 git clone https://github.com/Fanael/parent-mode.git
+
+# notdeft
+git clone https://github.com/hasu/notdeft.git
+sudo apt install libtclap-dev libxapian-dev
+pushd notdeft/xapian
+make
+popd
+
+# apt-utils
+mkdir -p apt-utils
+pushd apt-utils
+wget http://www.emacswiki.org/emacs/download/apt-utils.el
+popd
+
+# org-sidebar
+git clone https://github.com/alphapapa/org-super-agenda.git
+git clone https://github.com/alphapapa/org-sidebar.git
+git clone https://github.com/alphapapa/org-ql.git
+git clone https://github.com/alphapapa/ts.el.git
+git clone https://github.com/emacsmirror/peg.git
+git clone https://github.com/emacsmirror/ht.git
+git clone https://github.com/emacsmirror/ov.git
+
+# dashboard
+git clone https://github.com/emacs-dashboard/emacs-dashboard.git
+git clone https://github.com/purcell/page-break-lines.git
+
+# dict
+git clone https://github.com/cute-jumper/bing-dict.el.git bing-dict

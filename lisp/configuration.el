@@ -178,13 +178,9 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 
 
 ;;;; font
-;; Inconsolata
-;; Fira Code
-;; Droid Sans Mono Wide
-(setq en-font-name "Inconsolata"                ;;"Inconsolata"
-      cn-font-name "Noto Sans CJK SC Regular" ;; "WenQuanYi Micro Hei Mono"
-      en-font-size 14
-      cn-font-size 12)
+(if is-windows (setq cn-font-name "Microsoft YaHei") (setq cn-font-name "Noto Sans CJK SC Regular"))
+(setq en-font-name "Inconsolata")
+(setq en-font-size 18 cn-font-size 12)
 
 ;; 获取屏幕分辨率自动增大字体
 (when (and is-gui
@@ -378,10 +374,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
   )
 
 (when is-gui
-  ;;(blink-cursor-mode -1) ;; 取消光标闪烁
+  (blink-cursor-mode -1) ;; 取消光标闪烁
   (add-hook 'after-init-hook
 	    (lambda ()
-	      (set-cursor-color "#00A876"))))
+	      (set-cursor-color "#FF3300"))))
 
 (setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
 
@@ -413,11 +409,11 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (global-set-key "\M-n" 'scroll-half-page-up)
 (global-set-key "\M-p" 'scroll-half-page-down)
 
-;; (setq electric-pair-pairs '((?\{ . ?\})
-;; (?\( . ?\))
-;; (?\[ . ?\])
-;; (?\" . ?\")))
-;; (electric-pair-mode t) ;;自动输出成对括号
+(setq electric-pair-pairs '((?\{ . ?\})
+							(?\( . ?\))
+							(?\[ . ?\])
+							(?\" . ?\")))
+(electric-pair-mode t) ;;自动输出成对括号
 
 (show-paren-mode 1) ;;高亮匹配的括号
 
@@ -1138,21 +1134,31 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
     ))
 
 ;;;; notdeft
+;; 安装方法
+;; git clone https://github.com/hasu/notdeft.git
+;; sudo apt install libtclap-dev libxapian-dev
+;; pushd notdeft/xapian
+;; make
+;; popd
 (auto-require 'notdeft
-	      :paths "notdeft"
-	      :functions 'notdeft
-	      ;;:before
-	      ;;(require 'notdeft-autoloads)
-	      :after
-	      (progn
-		(require 'notdeft)
-		(setq notdeft-xapian-program "notdeft-xapian") ;; 设置notdef-xapian程序名
-		(setq-default notdeft-directories `(,(expand-file-name locale-notebook-dir)))
-		(require 'notdeft-org)
-		(require 'notdeft-global-hydra)
-		;; 通过notdeft自动创建文件时，使用输入的字符串作文件名
-		(setq notdeft-notename-function '(lambda (str) str))
-		))
+			  :load t
+			  :paths "notdeft"
+			  :functions 'notdeft
+			  :before
+			  (require 'notdeft-autoloads)
+			  :after
+			  (progn
+				(require 'notdeft)
+				(setenv "XAPIAN_CJK_NGRAM" "1") ;; 通过环境变量支持中文搜索，也可以修改源代码https://emacs-china.org/t/notdeft/11314
+				(setq notdeft-xapian-program (expand-file-name "notdeft/xapian/notdeft-xapian" auto-require-packages-dir)) ;; 设置notdef-xapian程序名
+				(setq-default notdeft-directories `(,(expand-file-name locale-notebook-dir)))
+				(require 'notdeft-org)
+				(require 'notdeft-global-hydra)
+				;; 通过notdeft自动创建文件时，使用输入的字符串作文件名
+				(setq notdeft-notename-function '(lambda (str) str))
+				(defun notdeft-file-summary (file) "") ;; 不显示摘要信息
+				(setq notdeft-xapian-max-results 0) ;; No limit if 0
+				))
 
 
 
@@ -1536,22 +1542,16 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :functions 'writeroom-mode
 	      :before
 	      (progn
-		(setq writeroom-width 120)
-		(defun writeroom-mode-on ()
-		  (interactive)
-		  (add-hook 'c++-mode-hook 'writeroom-mode)
-		  (add-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-		  (add-hook 'org-mode-hook 'writeroom-mode)
-		  (add-hook 'css-mode-hook 'writeroom-mode)
-		  (writeroom-mode))
-		(defun writeroom-mode-off ()
-		  (interactive)
-		  (remove-hook 'c++-mode-hook 'writeroom-mode)
-		  (remove-hook 'emacs-lisp-mode-hook 'writeroom-mode)
-		  (remove-hook 'org-mode-hook 'writeroom-mode)
-		  (remove-hook 'css-mode-hook 'writeroom-mode)
-		  (writeroom-mode -1))
-		))
+			(setq writeroom-width 120)
+			(defun writeroom-mode-on ()
+			  (interactive)
+			  (add-hook 'prog-mode-hook 'writeroom-mode)
+			  (writeroom-mode))
+			(defun writeroom-mode-off ()
+			  (interactive)
+			  (remove-hook 'prog-mode-hook 'writeroom-mode)
+			  (writeroom-mode -1))
+			))
 
 ;;;; page-break-lines
 (auto-require 'page-break-lines
@@ -1561,7 +1561,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 ;;;; dashboard
 (auto-require 'dashboard
-	      :load nil
+	      :load t
 	      :paths '("emacs-memoize" "emacs-dashboard")
 	      :after
 	      (progn
