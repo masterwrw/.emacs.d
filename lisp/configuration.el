@@ -652,6 +652,11 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 		))
 
+;;;; unicad
+(add-to-list 'load-path (concat auto-require-packages-dir "/unicad"))
+(require 'unicad)
+(unicad-enable)
+
 (auto-require 'bookmark
 	      :load nil
 	      :after
