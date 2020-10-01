@@ -104,6 +104,14 @@
  )
 
 
+;;;; my wiki link type
+(setq my-wiki-base-url "http://192.168.119.128:8000/")
+(org-add-link-type
+ "MyWiki"
+ (lambda (text)
+   (browse-url-default-browser (concat my-wiki-base-url text))
+   ))
+
 ;;;; htmlize
 (add-to-list 'load-path (concat auto-require-packages-dir "/emacs-htmlize"))
 (require 'htmlize)
