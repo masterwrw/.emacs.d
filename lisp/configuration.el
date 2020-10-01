@@ -1524,19 +1524,21 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (awesome-tray-mode 1)
 			     )))
 
-(when is-gui (auto-require 'nox
-			   :paths '("posframe" "company-mode" "nox")
-			   :functions '((nox-ensure . "nox"))
-			   :before
-			   (progn
-			     (dolist (hook (list
-					    'c-mode-common-hook
-					    'c-mode-hook
+;;;; nox
+(when (and is-linux is-gui (executable-find "nox"))
+  (auto-require 'nox
+		:paths '("posframe" "company-mode" "nox")
+		:functions '((nox-ensure . "nox"))
+		:before
+		(progn
+		  (dolist (hook (list
+				 'c-mode-common-hook
+				 'c-mode-hook
 					    'c++-mode-hook
 					    ))
-			       (add-hook hook '(lambda () (nox-ensure))))
-			     )))
-      
+		    (add-hook hook '(lambda () (nox-ensure))))
+		  )))
+
 
 ;;;; global-readonly
 (auto-require 'global-readonly

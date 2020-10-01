@@ -10,8 +10,8 @@
 (require 'ox-html)
 (require 'htmlize)
 
-(setq org-note-files-dir (if is-linux "/home/dev/orgnote" "f:/orgnote"))
-(setq org-note-attach-dir (if is-linux "/home/dev/orgnote/a" "f:/orgnote/a"))
+(setq org-note-files-dir (if is-linux "/home/dev/orgnote" "~/orgnote"))
+(setq org-note-attach-dir (if is-linux "/home/dev/orgnote/a" "~/orgnote/a"))
 
 ;; 自动添加的文件头
 (setq org-note-template

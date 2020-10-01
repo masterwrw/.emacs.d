@@ -3,7 +3,7 @@
 
 (if is-windows
     (progn
-      (setq locale-notebook-dir "F:/wikinote")
+      (setq locale-notebook-dir "~/orgnote")
       (setq locale-docset-dir "~/.docsets")
       (setq locale-browser-path "C:/Program Files (x86)/Maxthon5/Bin/Maxthon.exe")
       )
