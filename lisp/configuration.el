@@ -179,8 +179,8 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 
 ;;;; font
 (if is-windows (setq cn-font-name "Microsoft YaHei") (setq cn-font-name "Noto Sans CJK SC Regular"))
-(setq en-font-name "Inconsolata")
-(setq en-font-size 18 cn-font-size 12)
+(setq en-font-name "Source Code Pro")
+(setq en-font-size 14 cn-font-size 14)
 
 ;; 获取屏幕分辨率自动增大字体
 (when (and is-gui
@@ -363,7 +363,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (when (and is-gui scroll-bar-mode)
   (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
 
-(setq frame-title-format "Editor") ;; 自定义标题栏
+(setq frame-title-format "GNUEmacs") ;; 自定义标题栏
 
 ;; 去掉窗口边缘和分割窗口时分割条的边缘
 ;; http://emacsredux.com/blog/2015/01/18/customizing-the-fringes/
