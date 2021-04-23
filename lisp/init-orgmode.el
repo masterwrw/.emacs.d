@@ -1,12 +1,13 @@
 ;;;; org
 (require 'org)
 
+(add-to-list 'auto-mode-alist '("\\.gtd$" . org-mode))
 
 (setq gtd-inbox-path (concat locale-notebook-dir "/gtd/inbox.org"))          ;; 收集所有东西
-(setq gtd-someday-path (concat locale-notebook-dir "/gtd/someday.org"))      ;; 不确定什么时候做或者以后要做的事
+;;(setq gtd-someday-path (concat locale-notebook-dir "/gtd/someday.org"))      ;; 不确定什么时候做或者以后要做的事
 (setq gtd-gtd-path (concat locale-notebook-dir "/gtd/gtd.org"))              ;; gtd主文件
-(setq gtd-tickler-path (concat locale-notebook-dir "/gtd/tickler.org"))      ;; 需要提醒的事项
-(setq gtd-archive-path (concat locale-notebook-dir "/gtd/archive-2019.org")) ;; 归档文件
+;;(setq gtd-tickler-path (concat locale-notebook-dir "/gtd/tickler.org"))      ;; 需要提醒的事项
+(setq gtd-archive-path (concat locale-notebook-dir "/gtd/archive-2021.org")) ;; 归档文件
 
 ;; 9.3使用<s需要org-tempo
 (when (string-equal (org-version) "9.3")
@@ -32,6 +33,7 @@
 (setq require-final-newline t)
 (setq org-tags-column 0)		;; 在org文件中，使tags跟在标题后面
 (setq org-return-follows-link t) ;; 是否回车打开link
+(setq org-startup-truncated nil)
 (setq org-clock-string "计时:"
       org-closed-string "已关闭:"
       org-deadline-string "最后期限:"
@@ -59,13 +61,13 @@
 ;; quick navigation when cursor is on a headline (before any of the stars)
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DEFERRED(f)" "|" "DONE(d)" "SOMEDAY(s)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DEFERRED(f)" "|" "DONE(d)" "MAYBE(s)" "CANCELLED(c)")))
 (setf org-todo-keyword-faces
-      '(("TODO" . (:foreground "red" :bold t :weight bold))
+      '(("TODO" . (:foreground "#aa0000" :bold t :weight bold))
 	("WAITING" . (:foreground "DarkRed" :bold t :weight bold))
 	("DEFERRED" . (:foreground "red" :bold t :weight bold))
-	("DONE" . (:foreground "green" :bold t :weight bold))
-	("SOMEDAY" . (:foreground "gray30" :bold t :weight bold))
+	("DONE" . (:foreground "#00aa00" :bold t :weight bold))
+	("MAYBE" . (:foreground "#773300" :bold t :weight bold))
 	("CANCELLED" . (:foreground "gray50" :bold t :weight bold))
 	))
 
@@ -76,8 +78,8 @@
 ;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
 (setq org-refile-targets
       `((,gtd-gtd-path :maxlevel . 1)     ;; 最多第1层
-	(,gtd-someday-path :level . 1)    ;; 只要第1层
-	(,gtd-tickler-path :maxlevel . 1) ;; 最多第1层
+;;	(,gtd-someday-path :level . 1)    ;; 只要第1层
+;;	(,gtd-tickler-path :maxlevel . 1) ;; 最多第1层
 	))
 
 
@@ -149,7 +151,7 @@
 
 ;; Tickler
 ;; %^t 输入提醒时间
-(add-to-list 'org-capture-templates '("t" "Tickler [提醒]" entry (file+headline gtd-tickler-path "Tickler")
+(add-to-list 'org-capture-templates '("t" "Tickler [提醒]" entry (file+headline gtd-inbox-path "Tickler")
 				      "* %^t %i%? \n"))
 
 ;; 日记模板
@@ -183,8 +185,9 @@
 
 (setq org-agenda-files `(,gtd-inbox-path
 			 ,gtd-gtd-path
-			 ,gtd-someday-path
-			 ,gtd-tickler-path))
+			 ;;,gtd-someday-path
+			 ;;,gtd-tickler-path
+			 ))
 
 (add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
 
@@ -275,13 +278,13 @@ This function makes sure that dates are aligned for easy reading."
 	    "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
 	    "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
 	    "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
-	    "scheme" "sqlite")))
+	    "scheme" "sqlite" "example")))
      (list (ido-completing-read "Source code type: " src-code-types))))
   (progn
                                         ;(newline-and-indent) ; no auto indent space
-    (insert (format "#+BEGIN_SRC %s\n" src-code-type)) ; use lower string
+    (insert (format "#+begin_src %s\n" src-code-type)) ; use lower string
                                         ;(newline-and-indent)
-    (insert "#+END_SRC\n")
+    (insert "#+end_src\n")
     (previous-line 2)
     (org-edit-src-code)))
 
