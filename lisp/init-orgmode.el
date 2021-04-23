@@ -61,9 +61,10 @@
 ;; quick navigation when cursor is on a headline (before any of the stars)
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
-(setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "DEFERRED(f)" "|" "DONE(d)" "MAYBE(s)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "MAYBE(s)" "DEFERRED(f)" "|" "DONE(d)" "CANCELLED(c)")))
 (setf org-todo-keyword-faces
-      '(("TODO" . (:foreground "#aa0000" :bold t :weight bold))
+      '(("TODO" . (:foreground "orange red" :bold t :weight bold))
+	("NEXT" . (:foreground "magenta" :bold t :weight bold))
 	("WAITING" . (:foreground "DarkRed" :bold t :weight bold))
 	("DEFERRED" . (:foreground "red" :bold t :weight bold))
 	("DONE" . (:foreground "#00aa00" :bold t :weight bold))
@@ -107,12 +108,12 @@
 
 
 ;;;; my wiki link type
-(setq my-wiki-base-url "http://192.168.119.128:8000/")
-(org-add-link-type
- "MyWiki"
- (lambda (text)
-   (browse-url-default-browser (concat my-wiki-base-url text))
-   ))
+;;(setq my-wiki-base-url "http://192.168.119.128:8000/")
+;;(org-add-link-type
+;; "MyWiki"
+;; (lambda (text)
+;;   (browse-url-default-browser (concat my-wiki-base-url text))
+;;   ))
 
 ;;;; htmlize
 (add-to-list 'load-path (concat auto-require-packages-dir "/emacs-htmlize"))
@@ -146,7 +147,7 @@
 
 ;; Inbox
 (add-to-list 'org-capture-templates '("i" "Inbox [收集]" entry (file+headline gtd-inbox-path "Inbox")
-				      "* TODO %i%?"))
+				      "* %i%?"))
 
 
 ;; Tickler
@@ -158,18 +159,32 @@
 ;; %T  插入时间戳，便于在agenda中显示
 ;; %^G 插入tags
 ;; 问题：**无法创建二级标题，需要手动调整一下
-(add-to-list 'org-capture-templates '("j" "Journal" entry (function my-org-journal-find-location)
-				      "* %T %^{Title} %^G\n%i%?"))
+;;(add-to-list 'org-capture-templates '("j" "Journal" entry (function my-org-journal-find-location)
+;;				      "* %T %^{Title} %^G\n%i%?"))
 
+(defun eye--not-actionable-next ()
+  (let ((read-answer-short t))
+  (read-answer "trash(d), maybe(m), reference(r), select:"
+     '(("trash" ?d "move to trash?")
+       ("maybe" ?m "someday/maybe")
+       ("ref"  ?r "reference")))))
 
-;; TODO
-(defun my/process-daily-item ()
+(defun eye/process-inbox-item ()
   "根据GTD流程自动处理inbox item"
   (interactive)
-  (when (y-or-n-p "Is is Actionable?")
-    (org-todo)
-    (if (y-or-n-p "A single step(if not, move to a project)?")
-      (org-refile))))
+  (if (y-or-n-p "Is it actionable?")
+      (if (y-or-n-p "Will it take less than 2 minutes?")
+	  (message "Do it now!")
+	(progn
+	  (org-todo)
+	  (org-refile)))
+    (progn
+      (let ((ret (eye--not-actionable-next)))
+	(cond ((string-equal ret "trash") (org-todo "CANCELLED"))
+	      ((string-equal ret "maybe") (org-todo "MAYBE"))
+	      ((string-equal ret "ref") (message "Please move it to reference note."))
+	      ))
+      )))
 
 
 
@@ -189,7 +204,7 @@
 			 ;;,gtd-tickler-path
 			 ))
 
-(add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
+;;(add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
 
   
   
@@ -230,25 +245,42 @@ This function makes sure that dates are aligned for easy reading."
     (format "%4d-%s-%02d %-4s %s"
 	    year monthname day dayname weekstring)))
 
+;;;; gtd workflow
+(add-to-list 'org-agenda-custom-commands '("g" . "GTD Workflow"))
 
-
-(add-to-list 'org-agenda-custom-commands '("i" "View inbox" tags-todo "inbox"
+;; 使用tags而不是tags-todo，将显示所有inbox标签下的items
+(add-to-list 'org-agenda-custom-commands '("gi" "View Inbox" tags "inbox"
 					   ((org-agenda-overriding-header "Inbox"))))
 
+;; priority-down把优先级高的显示在前面
+(add-to-list 'org-agenda-custom-commands '("gt" "Today" todo "TODO"
+					   ((org-agenda-overriding-header "Today")
+					    (org-agenda-sorting-strategy '(priority-down)))))
+
+(add-to-list 'org-agenda-custom-commands '("gn" "Next Actions" todo "NEXT"
+					   ((org-agenda-overriding-header "Next Actions"))))
+
+(add-to-list 'org-agenda-custom-commands '("gm" "Someday/Maybe " todo "MAYBE"
+					   ((org-agenda-overriding-header "Someday/Maybe"))))
+
+(add-to-list 'org-agenda-custom-commands '("gw" "Waiting " todo "WAITING"
+					   ((org-agenda-overriding-header "Waiting"))))
+
+
+;;;; other search command
+;; tags-todo显示同时满足设置了todo和tag的items
 (add-to-list 'org-agenda-custom-commands '("t" "View personal todolist" tags-todo "task|repeat|body"
 					   ((org-agenda-overriding-header "Task"))))
 	 
 
-;; 查看project rx
+;; 查看project
 (add-to-list 'org-agenda-custom-commands '("p" . "View project todolist"))
 
-(add-to-list 'org-agenda-custom-commands '("pr" "Rx" tags-todo "proj+rx" ;; 搜索tag
-					   ((org-agenda-overriding-header "Rx")))) ;;用于显示的字符串
+(add-to-list 'org-agenda-custom-commands '("ps" "ts" tags-todo "ts"
+					   ((org-agenda-overriding-header "TS") ;;用于显示的字符串
+					    (org-agenda-sorting-strategy '(priority-down)))))
 
-(add-to-list 'org-agenda-custom-commands '("ph" "Hisi" tags-todo "proj+hisi" ;; 搜索tag
-					   ((org-agenda-overriding-header "Hisi")))) ;;用于显示的字符串
-
-(add-to-list 'org-agenda-custom-commands '("pm" "Memory" tags-todo "proj+memory" ;; 搜索tag
+(add-to-list 'org-agenda-custom-commands '("pm" "Memory" tags-todo "proj+memory" ;; 搜索同时满足多个tag
 					   ((org-agenda-overriding-header "Memory")))) ;;用于显示的字符串
 
 
