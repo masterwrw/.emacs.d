@@ -136,7 +136,8 @@
     (browse-url-firefox url)))
 
 (defun eye-setup-c++ ()
-  (setq-default tab-width 4);
+  (setq-default tab-width 4)
+  (setq tab-width 4)
   (setq-default c-default-style "k&r")
   ;; outline fold
   (outline-minor-mode 1)
