@@ -4,9 +4,8 @@
 (add-to-list 'auto-mode-alist '("\\.gtd$" . org-mode))
 
 (setq gtd-inbox-path (concat locale-notebook-dir "/gtd/inbox.org"))          ;; 收集所有东西
-;;(setq gtd-someday-path (concat locale-notebook-dir "/gtd/someday.org"))      ;; 不确定什么时候做或者以后要做的事
-(setq gtd-gtd-path (concat locale-notebook-dir "/gtd/gtd.org"))              ;; gtd主文件
-;;(setq gtd-tickler-path (concat locale-notebook-dir "/gtd/tickler.org"))      ;; 需要提醒的事项
+(setq gtd-work-path (concat locale-notebook-dir "/gtd/task-work.org"))
+(setq gtd-priv-path (concat locale-notebook-dir "/gtd/task-priv.org"))
 (setq gtd-archive-path (concat locale-notebook-dir "/gtd/archive-2021.org")) ;; 归档文件
 
 ;; 9.3使用<s需要org-tempo
@@ -61,11 +60,11 @@
 ;; quick navigation when cursor is on a headline (before any of the stars)
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
-(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "MAYBE(s)" "DEFERRED(f)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "MAYBE(s)" "DEFERRED(f)" "|" "DONE(d)" "CANCELLED(c)")))
 (setf org-todo-keyword-faces
       '(("TODO" . (:foreground "orange red" :bold t :weight bold))
 	("NEXT" . (:foreground "magenta" :bold t :weight bold))
-	("WAITING" . (:foreground "DarkRed" :bold t :weight bold))
+	("WAIT" . (:foreground "DarkRed" :bold t :weight bold))
 	("DEFERRED" . (:foreground "red" :bold t :weight bold))
 	("DONE" . (:foreground "#00aa00" :bold t :weight bold))
 	("MAYBE" . (:foreground "#773300" :bold t :weight bold))
@@ -78,9 +77,8 @@
 
 ;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
 (setq org-refile-targets
-      `((,gtd-gtd-path :maxlevel . 1)     ;; 最多第1层
-;;	(,gtd-someday-path :level . 1)    ;; 只要第1层
-;;	(,gtd-tickler-path :maxlevel . 1) ;; 最多第1层
+      `((,gtd-work-path :maxlevel . 1)    ;; 最多第1层
+	(,gtd-priv-path :level . 1)    ;; 只要第1层
 	))
 
 
@@ -146,13 +144,13 @@
 
 
 ;; Inbox
-(add-to-list 'org-capture-templates '("i" "Inbox [收集]" entry (file+headline gtd-inbox-path "Inbox")
+(add-to-list 'org-capture-templates '("i" "Inbox" entry (file+headline gtd-inbox-path "Inbox")
 				      "* %i%?"))
 
 
 ;; Tickler
 ;; %^t 输入提醒时间
-(add-to-list 'org-capture-templates '("t" "Tickler [提醒]" entry (file+headline gtd-inbox-path "Tickler")
+(add-to-list 'org-capture-templates '("t" "Tickler" entry (file+headline gtd-inbox-path "Tickler")
 				      "* %^t %i%? \n"))
 
 ;; 日记模板
@@ -199,9 +197,8 @@
 				   "......" "------------------")))
 
 (setq org-agenda-files `(,gtd-inbox-path
-			 ,gtd-gtd-path
-			 ;;,gtd-someday-path
-			 ;;,gtd-tickler-path
+			 ,gtd-work-path
+			 ,gtd-priv-path
 			 ))
 
 ;;(add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
@@ -313,9 +310,9 @@ This function makes sure that dates are aligned for easy reading."
 	    "scheme" "sqlite" "example")))
      (list (ido-completing-read "Source code type: " src-code-types))))
   (progn
-                                        ;(newline-and-indent) ; no auto indent space
+    ;;(newline-and-indent) ; no auto indent space
     (insert (format "#+begin_src %s\n" src-code-type)) ; use lower string
-                                        ;(newline-and-indent)
+    ;;(newline-and-indent)
     (insert "#+end_src\n")
     (previous-line 2)
     (org-edit-src-code)))
