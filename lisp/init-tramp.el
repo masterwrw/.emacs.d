@@ -2,6 +2,8 @@
 (setq password-cache-expiry 360000000)      ;设置密码过期时间，避免每次询问密码
 
 (when is-windows
+  ;; windows必须设置bash才能使用tramp
+  (setq explicit-shell-file-name "/bin/bash")
   (setq tramp-default-method "plink")
   (setq tramp-password-end-of-line "\r\n"))
 (when is-linux

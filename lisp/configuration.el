@@ -2,7 +2,7 @@
 
 ;;;; debug
 ;;Produce backtraces when errors occur
-(setq debug-on-error t)
+(setq debug-on-error nil)
 
 ;;;; version check
 (let ((minver "24.4"))
@@ -359,9 +359,9 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 
 ;; Fix load slow, https://github.com/raxod502/radian/issues/180
 (when tool-bar-mode (tool-bar-mode -1)) ;; 禁用工具栏
-(when menu-bar-mode (menu-bar-mode -1)) ;; 禁用菜单栏
-(when (and is-gui scroll-bar-mode)
-  (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
+;;(when menu-bar-mode (menu-bar-mode -1)) ;; 禁用菜单栏
+;;(when (and is-gui scroll-bar-mode)
+;;  (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
 
 (setq frame-title-format "GNUEmacs") ;; 自定义标题栏
 
@@ -496,7 +496,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 
 ;;;; recentf
 (auto-require 'recentf
-	      :load t
+	      ;;:load t
 	      :after
 	      (progn
 		(setq recentf-max-saved-items 100)
@@ -653,9 +653,9 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		))
 
 ;;;; unicad
-(add-to-list 'load-path (concat auto-require-packages-dir "/unicad"))
-(require 'unicad)
-(unicad-enable)
+;(add-to-list 'load-path (concat auto-require-packages-dir "/unicad"))
+;(require 'unicad)
+;(unicad-enable)
 
 (auto-require 'bookmark
 	      :load nil
@@ -726,7 +726,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		  (dired-hide-details-mode 1)		;隐藏以.开头的文件
 		  (dired-omit-mode 1)			;隐藏.和..本身 @see https://stackoverflow.com/questions/43628315/how-to-hide-one-dot-current-directory-in-dired-mode
 		  )
-		(add-hook 'dired-mode-hook 'eye-dired-mode-setup)
+		;;(add-hook 'dired-mode-hook 'eye-dired-mode-setup)
 		)
 	      
 	      :after
@@ -750,14 +750,14 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		))
 
 ;;;; org note
-(auto-require 'init-org-note
-	      :before
-	      (progn
-		(autoload 'org-new-note "init-org-note" "" t)
-		(autoload 'org-new-post "init-org-note" "" t)
-		(autoload 'org-note-search-tag "init-org-note" "" t)
-		(autoload 'org-note-search-title "init-org-note" "" t)
-		))
+;;(auto-require 'init-org-note
+;;			  :before
+;;			  (progn
+;;				(autoload 'org-new-note "init-org-note" "" t)
+;;				(autoload 'org-new-post "init-org-note" "" t)
+;;				(autoload 'org-note-search-tag "init-org-note" "" t)
+;;				(autoload 'org-note-search-title "init-org-note" "" t)
+;;				))
 
 ;;;; org2nikola
 ;; 需要安装插件nikola plugin -i upgrade_metadata
@@ -907,29 +907,30 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (doom-themes-visual-bell-config)
 			     ;; Corrects (and improves) org-mode's native fontification.
 			     (doom-themes-org-config)
-			     (load-theme 'doom-Iosvkem t)
+				 ;;(load-theme 'doom-Iosvkem t)
+				 (load-theme 'doom-nord-light t)
 			     )))
 
-;; ;;;; doom-modeline
-;; (auto-require 'doom-modeline
-;; 	      :paths '("doom-modeline" "all-the-icons" "eldoc-eval" "shrink-path" "emacs-memoize" "s" "f" "dash")
-;; 	      :load t
-;; 	      :before
-;; 	      (progn
-;; 		(setq doom-modeline-major-mode-color-icon t
-;; 		      doom-modeline-github t
-;; 		      ;;How tall the mode-line should be (only respected in GUI Emacs).
-;; 		      doom-modeline-height 25
-;; 		      ;;How wide the mode-line bar should be (only respected in GUI Emacs).
-;; 		      doom-modeline-bar-width 3
-;; 		      ;;don't use github notifications, because must set github.user, if not, will has a lot of emacs error process
-;; 		      doom-modeline-github nil
-;; 		      ))
-;; 	      :after
-;; 	      (progn
-;; 		(doom-modeline-mode 1)
-;; 		;;(cancel-timer doom-modeline--github-timer)
-;;		))
+ ;;;; doom-modeline
+(when is-gui (auto-require 'doom-modeline
+ 						   :paths '("doom-modeline" "all-the-icons" "eldoc-eval" "shrink-path" "emacs-memoize" "s" "f" "dash")
+ 						   :load t
+ 						   :before
+ 						   (progn
+ 							 (setq doom-modeline-major-mode-color-icon t
+ 								   doom-modeline-github t
+ 								   ;;How tall the mode-line should be (only respected in GUI Emacs).
+ 								   doom-modeline-height 25
+ 								   ;;How wide the mode-line bar should be (only respected in GUI Emacs).
+ 								   doom-modeline-bar-width 3
+ 								   ;;don't use github notifications, because must set github.user, if not, will has a lot of emacs error process
+ 								   doom-modeline-github nil
+ 								   ))
+ 						   :after
+ 						   (progn
+ 							 (doom-modeline-mode 1)
+ 							 ;;(cancel-timer doom-modeline--github-timer)
+							 )))
 
 
 ;; (when is-terminal
@@ -1104,6 +1105,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 ;;;; orgmode
 (auto-require 'init-orgmode :load t)
+(auto-require 'init-my-orgwiki :load t)
 
 ;; Advise set auto-save-default to nil
 (auto-require 'org-crypt
@@ -1521,7 +1523,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (setq awesome-tray-mode-line-active-color "DarkGreen")
 				   
 			     ;; Enable awesome-tray-mode
-			     (awesome-tray-mode 1)
+			     ;;(awesome-tray-mode 1)
 			     )))
 
 ;;;; nox
@@ -1730,6 +1732,8 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(define-key newlisp-mode-map (kbd "C-x C-e") #'newlisp-eval-last-sexp)
 		(define-key newlisp-mode-map (kbd "<f5>") #'newlisp-eval-buffer)
 		))
+
+(require 'init-utils)
 
 ;;;; idle load packages
 ;; for quick startup

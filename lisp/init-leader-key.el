@@ -114,43 +114,33 @@ _a_: list tags
 
 (defhydra hydra-org (:exit t)
   "
-[_a_]: attach
 [_gp_]: previous block
 
 Insert:
-[_il_] link    [_ia_] attach link   [_s_] src block    [_S_] subheading
+[_il_] link    [_s_] src block    [_S_] subheading
 
 Toggle:
-[_tl_] display link   [_ti_] inline image
+[_tl_] display link
 
 Wiki:
-[_wi_] insert new       [_wk_] insert link     [_wc_] insert block
-[_wo_] open at point    [_wn_] wiki nav
-[_wu_] open url         [_wf_] open from url
-[_we_] export page   
-
-Publish: [_wp_] Publish to note
+[_wc_] insert block
+[_wo_] open at point
+[_wu_] open url
+[_wf_] open from url
+[_we_] export page 
 
 "
   ("SPC" nil "quit")
-  ("a" org-attach)
   ("gp" org-previous-block)
-  ("ia" eye/insert-attach-link)
   ("il" org-insert-link)
   ("s" eye/org-insert-src-block)
   ("S" org-insert-subheading)
   ("tl" org-toggle-link-display)
-  ("ti" org-toggle-inline-images)
-  ("we" org-note-export-to-html)
-  ("wi" org-note-new)
-  ("wk" org-wiki-insert-link)
+  ("we" my-org-wiki-auto-export-hook)
   ("wo" org-open-at-point)
-  ;; ("wh" org-wiki-helm)
-  ("wn" org-wiki-nav)
-  ("wu" org-note-export-and-open)
-  ("wf" org-wiki-from-url)
+  ("wu" my-org-wiki-open-url)
+  ("wf" my-org-wiki-from-url)
   ("wc" org-wiki-insert-block)
-  ("wp" org2nikola-export-subtree)
   )
 
 (defhydra hydra-highlight ()
