@@ -210,6 +210,8 @@ Clock:
 
 
 ;;;; bind keys
+(bind-key global-map "C-v" #'scroll-half-page-up)
+(bind-key global-map "M-v" #'scroll-half-page-down)
 (bind-key global-map "C-x C-b" #'switch-to-buffer)
 (bind-key global-map "<C-wheel-up>" #'eye/increase-font-size)
 (bind-key global-map "<C-wheel-down>" #'eye/decrease-font-size)
