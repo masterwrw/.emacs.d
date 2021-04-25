@@ -138,7 +138,9 @@
 (defun eye-setup-c++ ()
   (setq-default tab-width 4)
   (setq tab-width 4)
-  (setq-default c-default-style "k&r")
+  ;; 用k&r风格经常会突然变成tab为5个空格长度
+  (setq-default c-default-style "stroustrup")
+  (setq c-default-style "stroustrup")
   ;; outline fold
   (outline-minor-mode 1)
   (setq outline-regexp "^class\\|^struct\\|^enum\\|^[a-zA-Z][a-zA-Z0-9 _&\*]+::")
