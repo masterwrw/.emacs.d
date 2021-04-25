@@ -360,8 +360,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 ;; Fix load slow, https://github.com/raxod502/radian/issues/180
 (when tool-bar-mode (tool-bar-mode -1)) ;; 禁用工具栏
 ;;(when menu-bar-mode (menu-bar-mode -1)) ;; 禁用菜单栏
-;;(when (and is-gui scroll-bar-mode)
-;;  (scroll-bar-mode -1)) ;; 禁用滚动条 emacs26 -nw will be error
+
+;; 禁用滚动条 if no check is-gui, emacs26 -nw will be error
+(when (and is-gui scroll-bar-mode)
+  (scroll-bar-mode -1))
 
 (setq frame-title-format "GNUEmacs") ;; 自定义标题栏
 
