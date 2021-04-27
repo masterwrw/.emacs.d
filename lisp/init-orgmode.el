@@ -26,18 +26,19 @@
 ;; indent content
 (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
 (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
+(setq-default org-startup-indented nil)
 (setq org-startup-folded (quote overview))
-;; hides blank lines between headings
-(setq org-cycle-separator-lines 0)
+;; 保留几行空白行
+(setq org-cycle-separator-lines 2)
 ;; always require new line in header below
 (setq require-final-newline t)
 (setq org-tags-column 0)		;; 在org文件中，使tags跟在标题后面
 (setq org-return-follows-link t) ;; 是否回车打开link
 (setq org-startup-truncated nil)
 (setq org-clock-string "计时:"
-      org-closed-string "已关闭:"
-      org-deadline-string "最后期限:"
-      org-scheduled-string "计划任务:"
+      ;;org-closed-string "已关闭:"
+      ;;org-deadline-string "最后期限:"
+      ;;org-scheduled-string "计划任务:"
       org-time-stamp-formats  '("<%Y-%m-%d 周%u>" . "<%Y-%m-%d 周%u %H:%M>")
       org-deadline-warning-days 5	;最后期限到达前5天即给出警告
       org-log-done 'time
