@@ -152,3 +152,9 @@ git clone https://github.com/purcell/page-break-lines.git
 
 # dict
 git clone https://github.com/cute-jumper/bing-dict.el.git bing-dict
+
+# org-roam
+git clone https://github.com/org-roam/org-roam.git
+git clone https://github.com/skeeto/emacsql.git
+git clone https://github.com/cireu/emacsql-sqlite3.git
+
