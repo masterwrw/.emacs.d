@@ -213,7 +213,9 @@
 (setq org-agenda-deadline-leaders (quote ("最后期限:  " "%3d 天后到期: " "%2d 天前: "))
       org-agenda-scheduled-leaders (quote ("计划任务:" "计划任务(第%2d次激活): "))
       org-agenda-inhibit-startup t
-      org-agenda-span 'day)
+      org-agenda-span 'day
+      ;; 隐藏agenda中的tag显示
+      org-agenda-hide-tags-regexp ".")
 
 
 ;; 自定义日期显示格式
