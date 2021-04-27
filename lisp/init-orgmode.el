@@ -3,10 +3,11 @@
 
 (add-to-list 'auto-mode-alist '("\\.gtd$" . org-mode))
 
-(setq gtd-inbox-path (concat locale-notebook-dir "/gtd/inbox.org"))          ;; 收集所有东西
-(setq gtd-work-path (concat locale-notebook-dir "/gtd/task-work.org"))
-(setq gtd-priv-path (concat locale-notebook-dir "/gtd/task-priv.org"))
-(setq gtd-archive-path (concat locale-notebook-dir "/gtd/archive-2021.org")) ;; 归档文件
+(setq gtd-inbox-path (concat locale-notebook-dir "/org/inbox.org"))          ;; 收集所有东西
+(setq gtd-gtd-path (concat locale-notebook-dir "/org/gtd.org"))
+(setq gtd-someday-path (concat locale-notebook-dir "/org/someday.org"))
+(setq gtd-tickler-path (concat locale-notebook-dir "/org/tickler.org"))
+(setq gtd-archive-path (concat locale-notebook-dir "/org/archive-2021.org")) ;; 归档文件
 
 ;; 9.3使用<s需要org-tempo
 (when (string-equal (org-version) "9.3")
@@ -60,14 +61,11 @@
 ;; quick navigation when cursor is on a headline (before any of the stars)
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
-(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "MAYBE(s)" "DEFERRED(f)" "|" "DONE(d)" "CANCELLED(c)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED(c)")))
 (setf org-todo-keyword-faces
-      '(("TODO" . (:foreground "orange red" :bold t :weight bold))
-	("NEXT" . (:foreground "magenta" :bold t :weight bold))
-	("WAIT" . (:foreground "DarkRed" :bold t :weight bold))
-	("DEFERRED" . (:foreground "red" :bold t :weight bold))
-	("DONE" . (:foreground "#00aa00" :bold t :weight bold))
-	("MAYBE" . (:foreground "#773300" :bold t :weight bold))
+      '(("TODO" . (:foreground "DeepPink" :bold t :weight bold))
+	("WAIT" . (:foreground "sienna1" :bold t :weight bold))
+	("DONE" . (:foreground "LimeGreen" :bold t :weight bold))
 	("CANCELLED" . (:foreground "gray50" :bold t :weight bold))
 	))
 
@@ -77,8 +75,9 @@
 
 ;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
 (setq org-refile-targets
-      `((,gtd-work-path :maxlevel . 1)    ;; 最多第1层
-	(,gtd-priv-path :level . 1)    ;; 只要第1层
+      `((,gtd-gtd-path :maxlevel . 2)
+	(,gtd-someday-path :level . 1)    ;; 最多第1层
+	(,gtd-tickler-path :level . 2)    ;; 只要第2层
 	))
 
 
@@ -145,13 +144,13 @@
 
 ;; Inbox
 (add-to-list 'org-capture-templates '("i" "Inbox" entry (file+headline gtd-inbox-path "Inbox")
-				      "* %i%?"))
+				      "* TODO %i%?"))
 
 
 ;; Tickler
 ;; %^t 输入提醒时间
-(add-to-list 'org-capture-templates '("t" "Tickler" entry (file+headline gtd-inbox-path "Tickler")
-				      "* %^t %i%? \n"))
+(add-to-list 'org-capture-templates '("t" "Tickler" entry (file+headline gtd-tickler-path "Tickler")
+				      "* %i%? \n %U"))
 
 ;; 日记模板
 ;; %T  插入时间戳，便于在agenda中显示
@@ -197,8 +196,8 @@
 				   "......" "------------------")))
 
 (setq org-agenda-files `(,gtd-inbox-path
-			 ,gtd-work-path
-			 ,gtd-priv-path
+			 ,gtd-gtd-path
+			 ,gtd-tickler-path
 			 ))
 
 ;;(add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
@@ -265,7 +264,6 @@ This function makes sure that dates are aligned for easy reading."
 (add-to-list 'org-agenda-custom-commands '("gw" "Waiting " todo "WAITING"
 					   ((org-agenda-overriding-header "Waiting"))))
 
-
 ;;;; other search command
 ;; tags-todo显示同时满足设置了todo和tag的items
 (add-to-list 'org-agenda-custom-commands '("t" "View personal todolist" tags-todo "task|repeat|body"
@@ -277,10 +275,29 @@ This function makes sure that dates are aligned for easy reading."
 
 (add-to-list 'org-agenda-custom-commands '("ps" "ts" tags-todo "ts"
 					   ((org-agenda-overriding-header "TS") ;;用于显示的字符串
-					    (org-agenda-sorting-strategy '(priority-down)))))
+					    (org-agenda-sorting-strategy '(priority-down))
+					    (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))
+					   ))
 
 (add-to-list 'org-agenda-custom-commands '("pm" "Memory" tags-todo "proj+memory" ;; 搜索同时满足多个tag
 					   ((org-agenda-overriding-header "Memory")))) ;;用于显示的字符串
+
+;; 只显示一个任务
+(defun my-org-agenda-skip-all-siblings-but-first ()
+  "Skip all but the first non-done entry."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (while (and (not should-skip-entry) (org-goto-sibling t))
+        (when (org-current-is-todo)
+          (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+		  
+(defun org-current-is-todo ()
+  (string= "TODO" (org-get-todo-state)))
 
 
 ;; 自动打开calendar
