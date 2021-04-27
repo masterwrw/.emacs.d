@@ -970,13 +970,13 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		))
 
 ;;;; super-save
-(auto-require 'super-save
-	      :load t
-	      :paths "super-save"
-	      :after
-	      (progn
-		(setq super-save-remote-files nil)
-		(super-save-mode 1)))
+;;(auto-require 'super-save
+;;	      :load t
+;;	      :paths "super-save"
+;;	      :after
+;;	      (progn
+;;		(setq super-save-remote-files nil)
+;;		(super-save-mode 1)))
 
 (auto-require 'symbol-overlay
 	      :paths "symbol-overlay"
