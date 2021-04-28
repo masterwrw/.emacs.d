@@ -1137,6 +1137,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-filter-only-filenames t) ;;只搜索文件名
 		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
 		(setq deft-current-sort-method 'mtime) ;;排序方式
+		(setq deft-default-extension "org")
 		(setq deft-strip-summary-regexp ".*"))
 	      )
 
@@ -1151,6 +1152,25 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
       (progn (kill-buffer "*Deft*"))
     (deft)
     ))
+
+(defun eye/deft-new-file-named (slug)
+  "Create a new file named SLUG.
+SLUG is the short file name, without a path or a file extension."
+  (interactive "sNew filename (without extension): ")
+  (let ((file (deft-absolute-filename slug "org")))
+    (if (file-exists-p file)
+        (message "Aborting, file already exists: %s" file)
+      (deft-auto-populate-title-maybe file)
+      (deft-cache-update-file file)
+      (deft-refresh-filter)
+      (deft-open-file file)
+      (with-current-buffer (get-file-buffer (file-truename file))
+	(insert "#+TITLE: ")
+	(insert slug)
+	(newline)
+	(newline)
+        (goto-char (point-max))))))
+
 
 ;;;; notdeft
 ;; 安装方法
