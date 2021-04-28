@@ -1132,7 +1132,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-recursive t)
 		(setq deft-use-filename-as-title t) ;;是否把文件名作为标题
 		(setq deft-extensions '("txt" "tex" "org"))
-		(setq deft-directory locale-notebook-dir)
+		(setq deft-directory (concat locale-notebook-dir "/org/note"))
 		(setq deft-file-limit 200) ;;最多显示多少文件，nil不限制
 		(setq deft-filter-only-filenames t) ;;只搜索文件名
 		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
@@ -1169,8 +1169,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			  (progn
 				(require 'notdeft)
 				(setenv "XAPIAN_CJK_NGRAM" "1") ;; 通过环境变量支持中文搜索，也可以修改源代码https://emacs-china.org/t/notdeft/11314
-				(setq notdeft-xapian-program (expand-file-name "notdeft/xapian/notdeft-xapian" auto-require-packages-dir)) ;; 设置notdef-xapian程序名
-				(setq-default notdeft-directories `(,(expand-file-name locale-notebook-dir)))
+				;;(setq notdeft-xapian-program (expand-file-name "notdeft/xapian/notdeft-xapian" auto-require-packages-dir))
+				(setq notdeft-xapian-program (executable-find "notdeft-xapian")) ;; 设置notdef-xapian程序名
+				(setq-default notdeft-directories `(,(expand-file-name (concat locale-notebook-dir "/org/note"))))
 				(require 'notdeft-org)
 				(require 'notdeft-global-hydra)
 				;; 通过notdeft自动创建文件时，使用输入的字符串作文件名
