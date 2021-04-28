@@ -94,4 +94,80 @@
 
 (eye/org-attach-enable)
 
+
+(defun xah-html-encode-percent-encoded-url ()
+  "Percent encode URL in current line or selection.
+          Example:
+          http://example.org/(Dürer)
+          becomes
+          http://example.org/(D%C3%BCrer)
+
+          Example:
+          http://example.org/文本编辑器
+          becomes
+          http://example.org/%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8
+
+          URL `http://ergoemacs.org/emacs/emacs_url_percent_decode.html'     
+         Version 2018-10-26"
+  ;; (interactive)
+  (let ($p1 $p2 $input-str $newStr)
+    (if (use-region-p)
+        (setq $p1 (region-beginning) $p2 (region-end))
+      (setq $p1 (line-beginning-position) $p2 (line-end-position)))
+    (setq $input-str (buffer-substring-no-properties $p1 $p2))
+    (require 'url-util)
+    (setq $newStr (url-encode-url $input-str))
+    (if (string-equal $newStr $input-str)
+        (progn (message "no change" ))
+      (progn
+        (delete-region $p1 $p2)
+        (insert $newStr)))))
+
+(defun xah-html-decode-percent-encoded-url ()
+  "Decode percent encoded URL of current line or selection.
+
+          Example:
+           %28D%C3%BCrer%29
+          becomes
+           (Dürer)
+
+          Example:
+           %E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E5%99%A8
+          becomes
+           文本编辑器
+
+          URL `http://ergoemacs.org/emacs/emacs_url_percent_decode.html'
+          Version 2018-10-26"
+  ;; (interactive)     
+  (let ( $p1 $p2 $input-str $newStr)
+    (if (use-region-p)
+        (setq $p1 (region-beginning) $p2 (region-end))
+      (setq $p1 (line-beginning-position) $p2 (line-end-position)))
+    (setq $input-str (buffer-substring-no-properties $p1 $p2))
+    (require 'url-util)
+    (setq $newStr (url-unhex-string $input-str))
+    (if (string-equal $newStr $input-str)
+        (progn (message "no change" ))
+      (progn
+        (delete-region $p1 $p2)
+        (insert (decode-coding-string $newStr 'utf-8))))))
+
+;; @see https://emacs-china.org/t/org-mode-link/17059/4
+;; 把原函数的interactive特性去掉，自己包装了一下
+;; 如果想直接对整个buffer转码，就把mark-whole-buffer前面的注释去掉
+(defun buffer-url-decode()
+  (interactive)
+  ;; (mark-whole-buffer)
+  (xah-html-decode-percent-encoded-url))
+
+(defun buffer-url-encode()
+  (interactive)
+  ;; (mark-whole-buffer)
+  (xah-html-encode-percent-encoded-url))
+
+;; 设置全局快捷键
+(global-set-key (kbd "C-x RET d") 'buffer-url-decode)
+(global-set-key (kbd "C-x RET e") 'buffer-url-encode)
+
+
 (provide 'init-org-note-attach)
