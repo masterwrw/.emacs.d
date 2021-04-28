@@ -10,7 +10,7 @@
 (setq gtd-archive-path (concat locale-notebook-dir "/org/archive-2021.org")) ;; 归档文件
 
 ;; 9.3使用<s需要org-tempo
-(when (string-equal (org-version) "9.3")
+(when (>= emacs-major-version 27)
   (require 'org-tempo))
 
 
