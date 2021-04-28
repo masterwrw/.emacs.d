@@ -32,12 +32,20 @@
       (message command))
     ))
 
+(setq eye-match-drop-file-exp
+      (concat "\\(jpg\\|png\\|gif\\|"
+	      "zip\\|xz\\|gz\\|7z\\|"
+	      "jpeg\\|txt\\|doc\\|docx\\|xlsx\\|"
+	      "apk\\|rar\\|md\\|json\\|"
+	      "html\\|bak\\|db\\|"
+	      "pptx\\|pdf\\)$"))
 
 ;; see http://that-year.blogspot.com/2008/10/emacs_5377.html?m=1
 (defun my-dnd-insert-link (uri action)
   (if (and (eq 'org-mode major-mode)
-	   (string-match "\\(jpg\\|png\\|gif\\|zip\\|xz\\|gz\\)$" uri))
-      
+	   ;;(string-match eye-match-drop-file-exp uri)
+	   1 ;; ignore file extension
+	   )
       (let* ((file-line (dnd-get-local-file-uri uri))
 	     (attach-dir (eye/get-org-file-attach-path))
 	     file-path file-name new-file-path)
