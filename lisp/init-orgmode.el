@@ -7,6 +7,7 @@
 (setq gtd-gtd-path (concat locale-notebook-dir "/org/gtd.org"))
 (setq gtd-someday-path (concat locale-notebook-dir "/org/someday.org"))
 (setq gtd-tickler-path (concat locale-notebook-dir "/org/tickler.org"))
+(setq gtd-trash-path (concat locale-notebook-dir "/org/Trash.org"))
 (setq gtd-archive-path (concat locale-notebook-dir "/org/archive-2021.org")) ;; 归档文件
 
 ;; 9.3使用<s需要org-tempo
@@ -102,6 +103,7 @@
       `((,gtd-gtd-path :maxlevel . 2)
 	(,gtd-someday-path :level . 1)    ;; 最多第1层
 	(,gtd-tickler-path :level . 2)    ;; 只要第2层
+	(,gtd-trash-path :level . 1)
 	))
 
 
