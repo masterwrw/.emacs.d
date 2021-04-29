@@ -818,8 +818,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			  :paths "pangu-spacing"
 			  :load t
 			  :after
-			  (setq pangu-spacing-real-insert-separtor t)
-			  (global-pangu-spacing-mode 1))
+			  (progn
+			    (setq pangu-spacing-real-insert-separtor t)
+			    (global-pangu-spacing-mode 1)))
 
 ;;;; keyfreq
 (auto-require 'keyfreq
@@ -1164,6 +1165,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
   "Create a new file named SLUG.
 SLUG is the short file name, without a path or a file extension."
   (interactive "sNew filename (without extension): ")
+  (require 'deft)
   (let ((file (deft-absolute-filename slug "org")))
     (if (file-exists-p file)
         (message "Aborting, file already exists: %s" file)
@@ -1509,7 +1511,7 @@ SLUG is the short file name, without a path or a file extension."
 
 ;;;; awesome-tab
 (when is-gui (auto-require 'awesome-tab
-			   :load t
+			   :load nil
 			   :paths "awesome-tab"
 			   :before
 			   (progn
