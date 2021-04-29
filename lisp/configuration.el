@@ -1165,10 +1165,12 @@ SLUG is the short file name, without a path or a file extension."
       (deft-refresh-filter)
       (deft-open-file file)
       (with-current-buffer (get-file-buffer (file-truename file))
-	(insert "#+TITLE: ")
-	(insert slug)
-	(newline)
-	(newline)
+		(insert "#+TITLE: ")
+		(insert slug)
+		(newline)
+		(insert "#+FILETAGS: ::")
+		(newline)
+		(newline)
         (goto-char (point-max))))))
 
 
