@@ -816,7 +816,6 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 ;;;; pangu-spacing 在中英文之间自动添加空格
 (auto-require 'pangu-spacing
 			  :paths "pangu-spacing"
-			  :load t
 			  :after
 			  (progn
 			    (setq pangu-spacing-real-insert-separtor t)
