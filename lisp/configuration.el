@@ -592,7 +592,7 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 	      :load t
 	      :after
 	      (progn
-		(setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
+		;;(setq locale-coding-system 'utf-8)     ;; 设置emacs 使用 utf-8
 		(set-language-environment 'Chinese-GB) ;; 设置为中文简体语言环境
 		(set-keyboard-coding-system 'utf-8)    ;; 设置键盘输入时的字符编码
 		;; 解决粘贴中文出现乱码的问题
