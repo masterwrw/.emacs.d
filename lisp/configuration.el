@@ -192,23 +192,17 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 
 (defun eye-update-font-size ()
   ;; English font
-  (set-face-attribute
-   'default nil
-   :font (font-spec :family en-font-name
-                    :weight 'normal
-                    :slant 'normal
-                    :size en-font-size))
+  (set-face-attribute 'default nil :font
+		      (font-spec :family en-font-name :weight 'normal :slant 'normal :size en-font-size))
   ;; Chinese font
-  (if is-gui
-      (dolist (charset '(kana han symbol cjk-misc bopomofo))
-	(set-fontset-font
-	 (frame-parameter nil 'font)
-	 charset
-	 (font-spec :family cn-font-name
-                    :weight 'normal
-                    :slant 'normal
-                    :size cn-font-size))))
-  )
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font)
+		      charset
+		      (font-spec :family cn-font-name
+				 :weight 'normal
+				 :slant 'normal
+				 ;;:size cn-font-size
+				 ))))
 
 (defun eye/increase-font-size ()
   "Increase font size of english and chinese."
@@ -228,7 +222,11 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
       (maximize-frame))
   )
 
-(when is-gui (eye-update-font-size))
+(when is-gui
+  (eye-update-font-size)
+  ;;(setq face-font-rescale-alist '(("微软雅黑" . 1.2) ("Microsoft Yahei" . 1.2) ("Noto Sans CJK SC Regular" . 1.2)))
+  )
+
 
 
 

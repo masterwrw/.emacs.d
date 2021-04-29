@@ -7,7 +7,7 @@
     (if (not (search-backward "* attach" nil t))
 	(progn
 	  (newline)
-	  (insert "* attach")
+	  (insert "******** attach")
 	  ))
     (org-id-get-create)))
 
@@ -39,6 +39,9 @@
 	      "apk\\|rar\\|md\\|json\\|"
 	      "html\\|bak\\|db\\|"
 	      "pptx\\|pdf\\)$"))
+
+(setq eye-match-image-file-exp
+      (concat "\\(jpg\\|jpeg\\|png\\|gif\\)$"))
 
 ;; see http://that-year.blogspot.com/2008/10/emacs_5377.html?m=1
 (defun my-dnd-insert-link (uri action)
@@ -77,8 +80,13 @@
 	;; make sure insert with a new line
 	(end-of-line)
 	(newline)
-	(insert (format "[[file:../../attach%s]]"
-			(substring new-file-path (length eye-org-file-attach-base-dir))))
+	;; 由于图片加了描述时不能显示，所以区分对待
+	(if (string-match eye-match-image-file-exp uri)
+	    (insert (format "[[file:../../attach%s]]"
+			    (substring new-file-path (length eye-org-file-attach-base-dir))))
+	  (insert (format "[[file:../../attach%s][%s]]"
+			  (substring new-file-path (length eye-org-file-attach-base-dir))
+			  file-name)))
 	(newline)
 	)
     (dnd-open-file uri action)))

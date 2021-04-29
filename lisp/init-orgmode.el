@@ -27,7 +27,8 @@
 (setq org-edit-src-content-indentation 0) ;; 代码块默认不缩进
 (setq org-startup-indented nil) ;; 是否自动开启org-indent-mode
 (setq-default org-startup-indented nil)
-(setq org-startup-folded (quote overview))
+(setq org-hide-block-startup t)
+(setq org-startup-folded t)
 ;; 保留几行空白行
 (setq org-cycle-separator-lines 2)
 ;; always require new line in header below
@@ -57,6 +58,13 @@
 (font-lock-add-keywords 'org-mode
 			'(("^ +\\([-*]\\) "
 			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+;; 标题字体大小，注意在设置中文字体时set-fontset-font中不要指定size，否则中文会不生效
+(let ((idx 0))
+  (dolist (face '(org-level-5 org-level-4 org-level-3 org-level-2 org-level-1))
+	(set-face-attribute face nil :weight 'semi-bold :height (+ 1.0 (* idx 0.2)))
+	(setq idx (+ idx 1))))
+
 
 ;; Speed keys, @see https://orgmode.org/manual/Speed-keys.html
 ;; quick navigation when cursor is on a headline (before any of the stars)
@@ -88,7 +96,10 @@
 (define-key org-mode-map (kbd "C-k") nil)
 
 ;; Line wrapping
-(add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
+(add-hook 'org-mode-hook (lambda ()
+			   (visual-line-mode 1)
+			   (org-show-children 1)
+			   ))
 
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
 
@@ -277,8 +288,8 @@ This function makes sure that dates are aligned for easy reading."
 (add-to-list 'org-agenda-custom-commands '("ps" "ts" tags-todo "ts"
 					   ((org-agenda-overriding-header "TS") ;;用于显示的字符串
 					    (org-agenda-sorting-strategy '(priority-down))
-					    (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))
-					   ))
+					    ;;(org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first) ;; 只显示一个
+					   )))
 
 (add-to-list 'org-agenda-custom-commands '("pm" "Memory" tags-todo "proj+memory" ;; 搜索同时满足多个tag
 					   ((org-agenda-overriding-header "Memory")))) ;;用于显示的字符串
