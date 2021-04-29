@@ -65,6 +65,21 @@
 	(set-face-attribute face nil :weight 'semi-bold :height (+ 1.0 (* idx 0.2)))
 	(setq idx (+ idx 1))))
 
+;; 使用系统程序打开文件
+(setq org-file-apps
+      '(("\\.docx\\'" . system)
+	("\\.xlsx\\'" . system)
+	("\\.pptx\\'" . system)
+	("\\.zip\\'" . system)
+	("\\.gz\\'" . system)
+	("\\.bz\\'" . system)
+	("\\.xz\\'" . system)
+	("\\.7z\\'" . system)
+	("\\.rar\\'" . system)
+	("\\.x?html?\\'" . system)
+	("\\.pdf\\'" . system)
+	(auto-mode . emacs)))
+
 
 ;; Speed keys, @see https://orgmode.org/manual/Speed-keys.html
 ;; quick navigation when cursor is on a headline (before any of the stars)
