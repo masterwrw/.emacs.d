@@ -158,3 +158,5 @@ git clone https://github.com/org-roam/org-roam.git
 git clone https://github.com/skeeto/emacsql.git
 git clone https://github.com/cireu/emacsql-sqlite3.git
 
+# auto insert space
+git clone https://github.com/coldnew/pangu-spacing.git
