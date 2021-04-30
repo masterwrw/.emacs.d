@@ -156,6 +156,32 @@
  'org-babel-load-languages '((emacs-lisp . t)
 							 (shell . t)))
 
+;;;; Code block face
+;; @see https://emacs-china.org/t/topic/12520
+(defcustom load-theme-before-hook nil
+  "Functions to run before load theme."
+  :type 'hook)
+
+(defcustom load-theme-after-hook nil
+  "Functions to run after load theme."
+  :type 'hook)
+
+(defun load-theme-hook-wrapper (origin-func theme &rest args)
+  "A wrapper of hooks around `load-theme'."
+  (mapc #'disable-theme custom-enabled-themes)
+  (run-hook-with-args 'load-theme-before-hook theme)
+  (apply origin-func theme args)
+  (run-hook-with-args 'load-theme-after-hook theme))
+
+(advice-add 'load-theme :around #'load-theme-hook-wrapper)
+
+(add-hook 'load-theme-after-hook
+		  (lambda ()
+			;; @see https://emacs-china.org/t/awesome-tab/9607/6
+			(set-face-attribute 'org-block-begin-line nil :foreground "gainsboro" :background (face-background 'default))
+			(set-face-attribute 'org-block-end-line nil :foreground "gainsboro" :background)))
+
+
 ;;;; plantuml
 (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
