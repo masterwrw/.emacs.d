@@ -278,6 +278,7 @@ Clock:
 
 (bind-key global-map "C-k ii" #'counsel-imenu "counsel")
 (bind-key global-map "C-k ie" #'eye/imenu-init)
+(bind-key global-map "C-k id" #'eye/insert-date)
 (bind-key global-map "C-k m" (lambda ()
 			     (interactive)
 			     (call-interactively 'set-mark-command)
