@@ -1,4 +1,5 @@
 (setq eye-org-file-attach-base-dir (concat locale-notebook-dir "/attach"))
+(setq eye-org-file-attach-auto-show-image t)
 
 (defun eye--get-org-file-attach-id ()
   (interactive)
@@ -88,6 +89,8 @@
 			  (substring new-file-path (length eye-org-file-attach-base-dir))
 			  file-name)))
 	(newline)
+	(if (and (string-match eye-match-image-file-exp uri) eye-org-file-attach-auto-show-image)
+		(org-redisplay-inline-images))
 	)
     (dnd-open-file uri action)))
 
