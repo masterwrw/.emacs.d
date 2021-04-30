@@ -2,7 +2,7 @@
 # name: plantuml
 # key: uml
 # --
-#+begin_src plantuml :file `(progn
+#+begin_src plantuml :cmdline -charset utf-8 :file `(progn
 						(let ((dir (concat "../../attach/" (eye--get-org-file-attach-id))))
 							 (unless (f-dir-p dir)
 							   (f-mkdir dir))
