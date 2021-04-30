@@ -157,7 +157,7 @@
 							 (shell . t)))
 
 ;;;; plantuml
-(setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml-nodot.1.2021.5.jar"))
+(setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/bin/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 

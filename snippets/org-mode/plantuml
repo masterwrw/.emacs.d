@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: plantuml
+# key: uml
+# --
+#+begin_src plantuml :file `(progn
+						(let ((dir (concat "../../attach/" (eye--get-org-file-attach-id))))
+							 (unless (f-dir-p dir)
+							   (f-mkdir dir))
+							 (format "%s/%s.png" dir (random))))`
+$0
+#+end_src
+#+results:
