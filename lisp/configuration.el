@@ -1246,7 +1246,7 @@ SLUG is the short file name, without a path or a file extension."
 	      (progn
 		;; ~/.emacs.d/snippets is yas--default-user-snippets-dir
 		;;如果手动更换orgmode9后，这句执行后出现Not a face: nil的奇怪问题，终端下ivy无法弹出来，如果是赋值为不带/的字符串，又不会出现问题
-		(setq yankpad-file (expand-file-name "Yankpad.org" locale-notebook-dir))
+		(setq yankpad-file (expand-file-name "org/note/yankpad.org" locale-notebook-dir))
 		;; (add-to-list 'hippie-expand-try-functions-list #'yankpad-expand)
 		))
 
