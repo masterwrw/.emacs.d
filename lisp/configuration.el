@@ -480,6 +480,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 	      :load t
 	      :reqby 'hydra)
 
+(auto-require 'init-meow
+	      :load t
+	      :paths "meow")
+
 ;;;; which-key
 (auto-require 'which-key
 	      :load t

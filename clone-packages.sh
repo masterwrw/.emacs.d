@@ -160,3 +160,6 @@ git clone https://github.com/cireu/emacsql-sqlite3.git
 
 # auto insert space
 git clone https://github.com/coldnew/pangu-spacing.git
+
+
+git clone https://github.com/DogLooksGood/meow.git
