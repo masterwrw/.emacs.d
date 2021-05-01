@@ -20,7 +20,9 @@
     )))
 
 (defun eye/open-org-file-attach-dir ()
-  "Open explorer of current buffer directory."
+  "Open explorer of current buffer directory.
+locale-notebook-dir use absolute path for advise.
+"
   (interactive)
   (when (eq system-type 'windows-nt)
     (let* ((dir (eye/get-org-file-attach-path))
