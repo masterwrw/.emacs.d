@@ -1078,7 +1078,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 
 ;;;; hungry-delete
 (auto-require 'hungry-delete
-	      :load t
+	      :load nil
 	      :paths "hungry-delete"
 	      :after (global-hungry-delete-mode 1))
 
