@@ -106,6 +106,32 @@
 (eye/org-attach-enable)
 
 
+(defun eye/paste-image-from-clipboard ()
+  (interactive)
+  (let* ((convert-path (executable-find "convert"))
+	 (attach-dir (eye/get-org-file-attach-path))
+	 (imagename (concat (format-time-string "%Y-%m-%d_%H-%M-%S") ".png"))
+	 (tmppath (concat "d:\\\\" imagename))
+	 (fullpath (concat attach-dir "/" imagename))
+	command)
+    (if convert-path
+	(progn
+	  ;; create attach dir
+	  (unless (f-directory? attach-dir)
+	    (f-mkdir attach-dir))
+	  (setq command (format "%s clipboard: %s" convert-path tmppath))
+	  (message (format "fullpath: %s" fullpath))
+	  (shell-command command)
+	  (f-move tmppath fullpath)
+	  (insert (format "[[file:../../attach%s]]"
+			  (substring fullpath (length eye-org-file-attach-base-dir))))
+	  (newline)
+	  (org-redisplay-inline-images)
+	  )
+      (message "convert.exe not found.")
+      )))
+
+
 (defun xah-html-encode-percent-encoded-url ()
   "Percent encode URL in current line or selection.
           Example:
