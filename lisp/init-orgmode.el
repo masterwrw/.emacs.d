@@ -9,6 +9,7 @@
 (setq gtd-tickler-path (concat locale-notebook-dir "/org/tickler.org"))
 (setq gtd-trash-path (concat locale-notebook-dir "/org/Trash.org"))
 (setq gtd-archive-path (concat locale-notebook-dir "/org/archive-2021.org")) ;; 归档文件
+(setq my-bookmarks-path (concat locale-notebook-dir "/org/note/bookmarks.org"))
 
 ;; 9.3使用<s需要org-tempo
 (when (>= emacs-major-version 27)
@@ -30,6 +31,8 @@
 (setq-default org-startup-indented nil)
 (setq org-hide-block-startup t)
 (setq org-startup-folded t)
+;; 默认显示图片出来
+(setq org-startup-with-inline-images t)
 ;; 保留几行空白行
 (setq org-cycle-separator-lines 2)
 ;; always require new line in header below
@@ -219,6 +222,8 @@
 (add-to-list 'org-capture-templates '("t" "Tickler" entry (file+headline gtd-tickler-path "Tickler")
 				      "* %i%? \n %U"))
 
+(add-to-list 'org-capture-templates '("b" "Bookmark" entry (file+headline my-bookmarks-path "Bookmarks")
+				      "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1))
 ;; 日记模板
 ;; %T  插入时间戳，便于在agenda中显示
 ;; %^G 插入tags
