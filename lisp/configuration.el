@@ -478,10 +478,12 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 ;;;; leader-key
 (auto-require 'init-leader-key
 	      :load t
+	      :paths '("helm" "emacs-async")
 	      :reqby 'hydra)
 
 (auto-require 'init-meow
 	      :load t
+	      :paths '("dash" "s" "meow")
 	      :paths "meow")
 
 ;;;; which-key
