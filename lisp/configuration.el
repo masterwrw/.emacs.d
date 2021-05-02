@@ -12,14 +12,14 @@
   (message "Your Emacs is old, and some functionality in this config will be disabled. Please upgrade if possible."))
 
 ;;;; startup
-(setq gc-cons-threshold 80000000) ;;80MB
+(setq gc-cons-threshold (* 100 1000 1000)) ;;100MB
 (defvar default-file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'emacs-startup-hook
           (lambda ()
             "Restore defalut values after init."
             (setq file-name-handler-alist default-file-name-handler-alist)
-            (setq gc-cons-threshold 800000) ;;800KB
+            (setq gc-cons-threshold (* 10 1000 1000)) ;;10MB
             (if (boundp 'after-focus-change-function)
                 (add-function :after after-focus-change-function
                               (lambda ()
@@ -34,7 +34,7 @@
   (setq gc-cons-threshold most-positive-fixnum))
 
 (defun eye-minibuffer-exit-hook ()
-  (setq gc-cons-threshold 800000))
+  (setq gc-cons-threshold (* 10 1000 1000))) ;;10MB
 
 (add-hook 'minibuffer-setup-hook #'eye-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'eye-minibuffer-exit-hook)
