@@ -161,5 +161,9 @@ git clone https://github.com/cireu/emacsql-sqlite3.git
 # auto insert space
 git clone https://github.com/coldnew/pangu-spacing.git
 
-
 git clone https://github.com/DogLooksGood/meow.git
+
+# gkroam
+git clone https://github.com/Kinneyzhang/gkroam.git
+git clone https://github.com/nicferrier/emacs-db.git
+git clone https://github.com/nicferrier/emacs-kv.git

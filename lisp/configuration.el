@@ -1122,6 +1122,39 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (auto-require 'init-orgmode :load t)
 (auto-require 'init-my-orgwiki :load t)
 
+(auto-require 'org-brain
+	      :load t
+	      :paths "org-brain"
+	      :after
+	      (progn
+		(setq org-brain-path (concat locale-notebook-dir "/org/brain"))
+		(setq org-id-track-globally t)
+		(setq org-id-locations-file "~/.emacs.d/.org-id-locations")
+		(add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+		(setq org-brain-visualize-default-choices 'all)
+		(setq org-brain-title-max-length 12)
+		(setq org-brain-scan-directories-recursively nil)
+		(setq org-brain-include-file-entries nil
+		      org-brain-file-entries-use-title nil)))
+
+(defun eye/org-brain-rename-file-by-region ()
+  "选中标题，重命名文件"
+  (interactive)
+  (message "title:" )
+  (let* ((ext (file-name-extension (buffer-name)))
+	 (newname (concat (buffer-substring-no-properties (region-beginning) (region-end))
+			  "."
+			  ext))
+	 (oldpath (buffer-file-name))
+	 (newpath (expand-file-name newname (f-dirname (buffer-file-name))))
+	 )
+    (f-move oldpath newpath)
+    (kill-buffer)
+    (find-file newpath)
+    (message (format "Rename %s to %s" (f-filename oldpath) newname))
+    ))
+
+
 ;; Advise set auto-save-default to nil
 (auto-require 'org-crypt
 	      :reqby 'org
@@ -1145,14 +1178,15 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-recursive t)
 		(setq deft-use-filename-as-title t) ;;是否把文件名作为标题
 		(setq deft-extensions '("txt" "tex" "org"))
-		(setq deft-directory (concat locale-notebook-dir "/org/note"))
+		(setq deft-directory (concat locale-notebook-dir "/org"))
 		(setq deft-file-limit 20) ;;最多显示多少文件，nil不限制
-		(setq deft-filter-only-filenames t) ;;只搜索文件名
+		;;(setq deft-filter-only-filenames t) ;;只搜索文件名
+		(setq deft-use-filename-as-title nil)
+		(setq deft-filter-only-filenames nil) ;;搜索标题
 		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
 		(setq deft-current-sort-method 'mtime) ;;排序方式
 		(setq deft-default-extension "org")
-		(setq deft-strip-summary-regexp ".*"))
-	      )
+		(setq deft-strip-summary-regexp ".*")))
 
 (defun eye/deft-search(filter)
   (interactive "MFilter: ")
@@ -1216,6 +1250,35 @@ SLUG is the short file name, without a path or a file extension."
 				(setq notdeft-xapian-max-results 0) ;; No limit if 0
 				))
 
+
+;;;; gkroam
+(add-to-list 'load-path "e:/home/.emacs.d/packages/company")
+(auto-require 'gkroam
+	      :load t
+	      :paths '("company-mode" "gkroam" "emacs-db" "emacs-kv" "rg")
+	      :before
+	      (progn
+		(setq gkroam-root-dir (concat locale-notebook-dir "/org/gkroam"))
+		(setq gkroam-prettify-page-p t
+		      gkroam-show-brackets-p nil
+		      gkroam-use-default-filename t
+		      gkroam-window-margin 4))
+	      :after
+	      (progn
+		(gkroam-mode 1)
+		(bind-key gkroam-mode-map "C-c r I" #'gkroam-index)
+		(bind-key gkroam-mode-map "C-c r d" #'gkroam-daily)
+		(bind-key gkroam-mode-map "C-c r D" #'gkroam-delete)
+		(bind-key gkroam-mode-map "C-c r f" #'gkroam-find)
+		(bind-key gkroam-mode-map "C-c r i" #'gkroam-insert)
+		(bind-key gkroam-mode-map "C-c r n" #'gkroam-dwim)
+		(bind-key gkroam-mode-map "C-c r e" #'gkroam-link-edit)
+		(bind-key gkroam-mode-map "C-c r u" #'gkroam-show-unlinked)
+		(bind-key gkroam-mode-map "C-c r p" #'gkroam-toggle-prettify)
+		(bind-key gkroam-mode-map "C-c r t" #'gkroam-toggle-brackets)
+		(bind-key gkroam-mode-map "C-c r R" #'gkroam-rebuild-caches)
+		(bind-key gkroam-mode-map "C-c r g" #'gkroam-update)
+		))
 
 
 ;; password-generator
