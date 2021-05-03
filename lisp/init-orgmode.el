@@ -92,10 +92,12 @@
 ;; quick navigation when cursor is on a headline (before any of the stars)
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
-;(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED(c)")))
+
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
+
 (setf org-todo-keyword-faces
       '(("TODO" . (:foreground "DeepPink" :bold t :weight bold))
-	("WAITING" . (:foreground "sienna1" :bold t :weight bold))
+	("WAIT" . (:foreground "sienna1" :bold t :weight bold))
 	("DONE" . (:foreground "LimeGreen" :bold t :weight bold))
 	("ARCHIEVED" . (:foreground "LimeGreen" :bold t :weight bold))
 	("CANCELLED" . (:foreground "gray50" :bold t :weight bold))
@@ -107,10 +109,6 @@
 ;; org-archive-subtree moving an tree to archive file
 ;; settings on org file #+ARCHIVE file head or ARCHIVE PROPERTY
 (setq org-archive-location (concat gtd-archive-path "::"))
-
-;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
-(setq org-refile-targets
-      '((org-agenda-files :maxlevel . 2)))
 
 ;;(setq org-refile-targets
 ;;      `((,gtd-gtd-path :maxlevel . 2)
@@ -285,10 +283,16 @@
 
 (setq org-agenda-files (directory-files "~/Dropbox/org" t "^proj-*"))
 
+(add-to-list 'org-agenda-files "~/Dropbox/org/goals.org")
+(add-to-list 'org-agenda-files "~/Dropbox/org/inbox.org")
+(add-to-list 'org-agenda-files "~/Dropbox/org/someday.org")
+
+;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
+(setq org-refile-targets
+      '((org-agenda-files :maxlevel . 2)))
+
+
 ;;(add-to-list 'org-agenda-files (concat locale-notebook-dir "/journal/"))
-
-;;(setq org-tag-alist '(("工作" . ?w) ("教育" . ?e) ("副业" . ?f) ("生活" . ?s)))
-
   
 ;; full frame show
 (setq org-agenda-window-setup 'only-window)
@@ -304,7 +308,7 @@
  )
 
 ;;(setq-default org-columns-default-format "%80ITEM %50TODO %3PRIORITY %TAGS")
-(setq org-agenda-overriding-columns-format "%TODO %7EFFORT %PRIORITY %100ITEM 100%TAGS")
+;;(setq org-agenda-overriding-columns-format "%TODO %7EFFORT %PRIORITY %100ITEM 100%TAGS")
 
 ;; 自定义日期显示格式
 (setq-default org-agenda-format-date (quote my-org-agenda-format-date-aligned))
@@ -350,7 +354,7 @@ This function makes sure that dates are aligned for easy reading."
 (add-to-list 'org-agenda-custom-commands '("gm" "Someday/Maybe " todo "MAYBE"
 					   ((org-agenda-overriding-header "Someday/Maybe"))))
 
-(add-to-list 'org-agenda-custom-commands '("gw" "Waiting " todo "WAITING"
+(add-to-list 'org-agenda-custom-commands '("gw" "Waiting " todo "WAIT"
 					   ((org-agenda-overriding-header "Waiting"))))
 
 ;;;; other search command
@@ -460,28 +464,40 @@ This function makes sure that dates are aligned for easy reading."
 ;; 分类显示时，不能使用带冒号的时间
 (defun eye/agenda-by-area ()
   (interactive)
-  (let ((org-super-agenda-groups
-       '((:auto-property "Area"))))
-    (org-agenda-list)))
+  (setq org-super-agenda-groups
+	 '((:auto-property "Area")))
+  (org-agenda-list))
 
+
+
+;; copy from library, change to show Project:
+(org-super-agenda--def-auto-group category "their org-category property"
+  :key-form (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+              (org-get-category))
+  :header-form (concat "Project: " key))
 
 (defun eye/agenda-by-proj ()
   "默认分类就是文件名，每个文件属于一个项目"
   (interactive)
-  (let ((org-super-agenda-groups
-	 '((:auto-category t))))
-    (org-agenda-list)))
+  (setq org-agenda-span 'day)
+  (setq org-super-agenda-groups
+	'((:auto-category t)))
+    (org-agenda-list))
 
 
 (defun eye/agenda-by-goals ()
   (interactive)
-  (let ((org-super-agenda-groups
-       '((:auto-property "Goals"))))
-    (org-agenda-list)))
+  (setq org-agenda-span 'day)
+  (setq org-super-agenda-groups
+	'((:auto-property "Goals")
+	  ;; don't show other items
+	  (:discard (:anything t))))
+    (org-agenda-list))
 
 
 (defun eye/agenda-by-time ()
   (interactive)
+  (setq org-agenda-span 'day)
   (let ((org-super-agenda-groups
 	 '((:log t)  ; Automatically named "Log"
            (:name "Schedule"
@@ -507,57 +523,60 @@ This function makes sure that dates are aligned for easy reading."
 
 (defun eye/agenda-show-work-items ()
   (interactive)
-  (let ((org-super-agenda-groups
-	 `((:name "Work-related"
-                  :tag "@office"))))
-    (org-tags-view t "@office")))
+  (setq org-agenda-span 'day)
+  (setq org-super-agenda-groups
+	`((:name "Work-related"
+                  :tag "@company")))
+    (org-tags-view t "@company"))
 
 
 (defun eye/agenda-show-home-items ()
   (interactive)
-  (let ((org-super-agenda-groups
-	 `((:name "Personal-related"
-                  :tag "@home"))))
-    (org-tags-view t "@home")))
+  (setq org-agenda-span 'day)
+  (setq org-super-agenda-groups
+	`((:name "Personal-related"
+                  :tag "@home")))
+    (org-tags-view t "@home"))
+
+
+;;;; review once a week
+(defun eye/agenda-done-week ()
+  (interactive)
+  (setq org-agenda-span 'week)
+  (setq org-super-agenda-groups
+	'((:name "Done task by week" 
+		 :todo "DONE"
+		 :discard (:anything t))))
+  (org-agenda-list))
+
 
 
 
 ;; @See https://github.com/alphapapa/org-super-agenda/blob/master/examples.org
-(add-to-list 'org-agenda-custom-commands '("v" "Super view"
-					   ((agenda "" ((org-agenda-span 'day)
-							(org-super-agenda-groups
-							 '((:name "My Today"
-								  :time-grid t
-								  :date today
-								  :todo "TODAY"
-								  :scheduled today
-								  :order 1)))))
-					    (alltodo "" ((org-agenda-overriding-header "")
-							 (org-super-agenda-groups
-							  '((:name "Next to do"
-								   :todo "NEXT"
-								   :order 1)
-							    (:name "Important"
-								   :tag "Important"
-								   :priority "A"
-								   :order 2)
-							    (:name "Due Today"
-								   :deadline today
-								   :order 3)
-							    (:name "Due Soon"
-								   :deadline future
-								   :order 4)
-							    (:name "Overdue"
-								   :deadline past
-								   :order 5)
-							    (:name "Emacs"
-								   :tag "Emacs"
-								   :order 6))))))))
+(add-to-list 'org-agenda-custom-commands
+	     '("v" "Super view"
+	       ((agenda "" ((org-agenda-span 'day)
+			    (org-super-agenda-groups
+			     '((:name "Today Tasks"
+				      :time-grid t
+				      :date today
+				      :todo "TODAY"
+				      :scheduled today
+				      :order 1)))))
+		(alltodo "" ((org-agenda-overriding-header "")
+			     (org-super-agenda-groups
+			      '((:name "All Todo items" :todo "TODO" )
+				(:name "All Next to do" :todo "NEXT")
+				(:name "All Important"  :tag "Important" :priority "A")
+				(:name "All Due Today"  :deadline today)
+				(:name "All Due Soon"   :deadline future)
+				(:name "All Overdue"    :deadline past)
+				(:name "All Wait"       :todo "WAIT")
+				(:name "All Someday"    :todo "SOMEDAY")
+				(:name "All Goals"      :todo "GOAL")
+				)))))))
 
 
-
-(add-to-list 'org-agenda-files "~/Dropbox/org/goals.org")
-(add-to-list 'org-agenda-files "~/Dropbox/org/inbox.org")
 
 
 (provide 'init-orgmode)
