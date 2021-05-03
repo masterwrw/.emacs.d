@@ -29,6 +29,12 @@
    '("dl" . meow-C-k)
    '("df" . meow-C-d)
    '("G" . meow-kill-whole-line)
+   '(",ff" . helm-find-files)
+   '(",fh" . helm-recentf)
+   '(",fk" . kill-this-buffer)
+   '(",fs" . save-buffer)
+   '(",sr" . color-rg-search-input)
+   '(",fd" . dired-jump)
    )
   )
 
