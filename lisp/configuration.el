@@ -1178,7 +1178,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-recursive t)
 		(setq deft-use-filename-as-title t) ;;是否把文件名作为标题
 		(setq deft-extensions '("txt" "tex" "org"))
-		(setq deft-directory (concat locale-notebook-dir "/org"))
+		(setq deft-directory (concat locale-notebook-dir "/org/note"))
 		(setq deft-file-limit 20) ;;最多显示多少文件，nil不限制
 		;;(setq deft-filter-only-filenames t) ;;只搜索文件名
 		(setq deft-use-filename-as-title nil)
