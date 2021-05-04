@@ -93,7 +93,7 @@
 ;; ?:for help, n/p/f/b...
 (setq org-use-speed-commands t)
 
-(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w@/!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
+(setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w!)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELLED(c!)")))
 
 (setf org-todo-keyword-faces
       '(("TODO" . (:foreground "DeepPink" :bold t :weight bold))
@@ -286,6 +286,7 @@
 (add-to-list 'org-agenda-files "~/Dropbox/org/goals.org")
 (add-to-list 'org-agenda-files "~/Dropbox/org/inbox.org")
 (add-to-list 'org-agenda-files "~/Dropbox/org/someday.org")
+(add-to-list 'org-agenda-files "~/Dropbox/org/tickler.org")
 
 ;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
 (setq org-refile-targets
