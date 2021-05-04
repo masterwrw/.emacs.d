@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: plantuml
-# key: uml
+# key: u
 # --
 #+begin_src plantuml :cmdline -charset utf-8 :file `(progn
 						(let ((dir (concat "../../attach/" (eye--get-org-file-attach-id))))
