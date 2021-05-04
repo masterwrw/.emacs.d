@@ -280,15 +280,15 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 ;; Show modeline information on top header
 ;; (setq header-line-format mode-line-format)
 ;; (setq-default header-line-format mode-line-format) ; Copy mode-line
-
-(set-mode-line-format)
+;;
+;; 开启doom-mode-line后，自定义的格式已经无效了
+;;(set-mode-line-format)
 ;; Remove mode-line
 ;;(setq mode-line-format nil)
 ;;(setq-default mode-line-format nil)
 ;;(set-face-attribute 'header-line nil :background "grey70" :foreground "purple4")
-
-(set-face-attribute 'mode-line nil :background "grey70" :foreground "purple4")
-(force-mode-line-update)
+;;(set-face-attribute 'mode-line nil :background "grey70" :foreground "purple4")
+;;(force-mode-line-update)
 
 
 
