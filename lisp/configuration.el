@@ -983,6 +983,16 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq ivy-count-format "(%d/%d)") ;; display both the index and the count
 		))
 
+(auto-require 'ivy-rich
+	      :paths "ivy-rich"
+	      :reqby 'ivy
+	      :functions '(ivy-rich-mode)
+	      :after
+	      (progn
+		(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+		(ivy-rich-mode 1)))
+
+
 ;;;; super-save
 ;;(auto-require 'super-save
 ;;	      :load t
@@ -1123,8 +1133,15 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 (auto-require 'init-orgmode :load t)
 (auto-require 'init-my-orgwiki :load t)
 
-(auto-require 'org-brain
+;;;; ox-hugo
+(auto-require 'ox-hugo
 	      :load t
+	      :paths "ox-hugo"
+	      :reqby 'ox)
+
+;;;; org-brain
+(auto-require 'org-brain
+	      :load nil
 	      :paths "org-brain"
 	      :after
 	      (progn
