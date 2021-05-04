@@ -23,6 +23,7 @@
   (setq company-dabbrev-code-other-buffers 't) ;If t, search buffers with the same major mode.
 
   (setq company-etags-ignore-case t)
+  (setq company-etags-support-ctags-only t)
   
   ;; set default backends
   ;; company-dabbrev is for current buffer string auto complete

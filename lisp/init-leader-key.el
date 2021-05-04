@@ -100,8 +100,8 @@
   "
 _a_: list tags
 "
-  ("a" counsel-etags-list-tag)
-  ("c" counsel-etags-scan-code "create TAGS")
+  ("a" counsel-etags-list-tag "list tags")
+  ("c" eye/create-ctags-file "create TAGS by git") ;;counsel-etags-scan-code "create TAGS"
   ("d" counsel-etags-find-tag-at-point "find tag at point")
   ("e" counsel-etags-find-tag "find tag")
   ("r" counsel-etags-recent-tag "recent tag")

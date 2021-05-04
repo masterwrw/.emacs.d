@@ -1451,7 +1451,7 @@ SLUG is the short file name, without a path or a file extension."
 
 ;;;; etags
 (defun eye/create-ctags-file ()
-  "Create ctags file"
+  "Create ctags file(windows ok)"
   (interactive)
   ;; ctags必须加-e选项，否则counsel-xxx-find-tag-xx无法识别其中的tagname
   (let ((tags-dir (ido-read-directory-name "TAGS DIR:"))
@@ -1467,6 +1467,17 @@ SLUG is the short file name, without a path or a file extension."
 					)))))
       ;;    (async-shell-command command)
     ))
+
+(defun eye/create-ctags-file-by-git ()
+  "在项目目录下执行此命令，即可生成TAGS文件，如果弹出提示时，需要选yes"
+  (interactive)
+  (async-shell-command "git ls-tree -r HEAD --name-only > list_files")
+  (with-temp-buffer
+    (insert "--output-format=etags\r\n")
+    (insert "-f TAGS\r\n")
+    (insert "-L list_files\r\n")
+    (write-file "opt.ctags"))
+  (async-shell-command (concat (executable-find "ctags") " --options=opt.ctags")))
 
 
 (defun eye/update-ctags-this-file ()
