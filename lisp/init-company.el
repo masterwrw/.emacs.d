@@ -24,6 +24,18 @@
 
   (setq company-etags-ignore-case t)
   (setq company-etags-support-ctags-only t)
+
+  
+  (defun eye/company-remove-dups (candidates)
+	"自动移除company列表的中重复元素"
+	(let ((newseq))
+      (mapcar #'(lambda (c)
+				  (if (not (member c newseq))
+					  (add-to-list 'newseq c)))
+			  candidates)
+      newseq))
+  (add-to-list 'company-transformers #'eye/company-remove-dups)
+
   
   ;; set default backends
   ;; company-dabbrev is for current buffer string auto complete
