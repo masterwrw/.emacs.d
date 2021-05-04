@@ -922,8 +922,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     ;; Corrects (and improves) org-mode's native fontification.
 			     (doom-themes-org-config)
 				 ;;(load-theme 'doom-Iosvkem t)
-				 ;;(load-theme 'doom-nord-light t)
-				 (load-theme 'doom-peacock t)
+				 (if (<= (string-to-number (format-time-string "%H")) 18)
+					 (load-theme 'doom-nord-light t)
+				   (load-theme 'doom-peacock t))
 			     )))
 
  ;;;; doom-modeline
