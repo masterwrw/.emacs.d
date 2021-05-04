@@ -3,12 +3,12 @@
 
 (if is-windows
     (progn
-      (setq locale-notebook-dir "~/orgnote")
+      (setq locale-notebook-dir "E:/home/Dropbox")
       (setq locale-docset-dir "~/.docsets")
-      (setq locale-browser-path "C:/Program Files (x86)/Maxthon5/Bin/Maxthon.exe")
+      (setq locale-browser-path "C:/Program Files/Mozilla Firefox/firefox.exe")
       )
   (progn
-    (setq locale-notebook-dir "/home/dev/orgnote")
+    (setq locale-notebook-dir "/home/orgnote")
     (setq locale-browser-path "/usr/bin/firefox")
     (setq locale-docset-dir "~/.docsets")
     ))
@@ -23,18 +23,25 @@
 (defvar system-path-var nil)
 (when is-windows
   (setq system-path-list
-	'(
-	  "D:/portable/Emacs26.1/ctags-2019-01-18_5a2b65f8-x64"
-	  "D:/portable/Emacs26.1/Searcher"
-	  "D:/portable/Emacs26.1/global663wb/bin"
-	  "D:/portable/putty"
-	  ;;msys2
-	  "D:/msys32/usr/bin"
-	  "C:/software/Java/bin"
-	  "D:/portable/WinSCP-5.15.3-Portable"
-	  "D:/portable/Emacs26.1/newlisp"
-	  ))
-  (setenv "PATH" (mapconcat 'identity system-path-list ";")))
+		'(
+		  "D:/portable/ctags-2017-10-14_d9944ef9-x64"
+		  "D:/portable/ripgrep-12.1.1-x86_64-pc-windows-msvc"
+		  "D:/portable/Graphviz/bin"
+		  "D:/portable/PortableGit/bin"
+		  ;"D:/portable/Emacs26.1/Searcher"
+		  ;"D:/portable/Emacs26.1/global663wb/bin"
+		  ;;msys2
+		  "D:/msys64/usr/bin"
+		  "D:/msys64/mingw32/bin"
+		  "D:/jdk/jre1.8.0_241/bin"
+		  "D:/portable/WinSCP-5.17.5-Portable"
+		  "D:/portable/newlisp"
+		  "D:/portable/ImageMagick-7.0.10-34-portable-Q16-HDRI-x64"
+		  ))
+  (setenv "PATH" (mapconcat 'identity system-path-list ";"))
+  (setq exec-path (append system-path-list (list "." exec-directory)))
+  )
+
 
 (when is-linux
   (setq system-path-list
@@ -48,10 +55,9 @@
 	  "/home/owen/opt/xapian/bin"
 	  "/home/dev/opt/ccls/Release"
 	  ))
-  (setenv "PATH" (mapconcat 'identity system-path-list ":")))
-
-
-(setq exec-path (append system-path-list (list "." exec-directory)))
+  (setenv "PATH" (mapconcat 'identity system-path-list ":"))
+  (setq exec-path (append system-path-list (list "." exec-directory)))
+  )
 
 
 
@@ -73,6 +79,9 @@
     (add-to-list 'company-c-headers-path-user "../LibHttp")
     )
   )
+
+(when is-windows
+  (async-shell-command (expand-file-name "bin/windows-keys.ahk" user-emacs-directory) nil nil))
 
 
 (defun eye/run-exe ()
