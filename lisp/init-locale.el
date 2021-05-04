@@ -37,6 +37,7 @@
 		  "D:/portable/WinSCP-5.17.5-Portable"
 		  "D:/portable/newlisp"
 		  "D:/portable/ImageMagick-7.0.10-34-portable-Q16-HDRI-x64"
+		  "D:/portable/hugo_0.83.1_Windows-64bit"
 		  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ";"))
   (setq exec-path (append system-path-list (list "." exec-directory)))
