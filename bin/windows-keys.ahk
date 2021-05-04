@@ -32,7 +32,7 @@ CapsLock::Esc
   WinActivate, GNUEmacs
 return
 
-^F5::
+^F6::
 ; firefox
 if WinExist("Mozilla Firefox")
   WinActivate, Mozilla Firefox
