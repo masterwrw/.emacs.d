@@ -30,14 +30,17 @@
 		  "D:/portable/PortableGit/bin"
 		  ;"D:/portable/Emacs26.1/Searcher"
 		  ;"D:/portable/Emacs26.1/global663wb/bin"
-		  ;;msys2
-		  "D:/msys64/usr/bin"
-		  "D:/msys64/mingw32/bin"
+		  ;;msys2, python和eaf用的python冲突，先不设置msys		  
+		  ;;"D:/msys64/usr/bin"
+		  ;;"D:/msys64/mingw32/bin"
 		  "D:/jdk/jre1.8.0_241/bin"
 		  "D:/portable/WinSCP-5.17.5-Portable"
 		  "D:/portable/newlisp"
 		  "D:/portable/ImageMagick-7.0.10-34-portable-Q16-HDRI-x64"
 		  "D:/portable/hugo_0.83.1_Windows-64bit"
+		  "D:/Installed/Python3.8.5"
+		  "D:/Installed/Python3.8.5/Scripts"
+		  "D:/portable/node-v13.14.0-win-x64"
 		  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ";"))
   (setq exec-path (append system-path-list (list "." exec-directory)))

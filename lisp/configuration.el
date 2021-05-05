@@ -1673,6 +1673,23 @@ SLUG is the short file name, without a path or a file extension."
 		  )))
 
 
+;;;; eaf
+(auto-require 'eaf
+	      :paths '("s" "emacs-ctable" "emacs-deferred" "emacs-epc"
+		       "emacs-application-framework")
+	      :functions '((eaf-open-browser . "eaf"))
+	      :after
+	      (progn
+		(setq eaf-browser-continue-where-left-off t)
+		(eaf-setq eaf-browser-enable-adblocker "true")
+		(eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+		(eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+		(eaf-bind-key take_photo "p" eaf-camera-keybinding)
+		(eaf-bind-key nil "M-q" eaf-browser-keybinding) ;; unbind, see more in the Wiki
+		))
+		
+
+
 ;;;; global-readonly
 (auto-require 'global-readonly
 	      :paths "global-readonly"

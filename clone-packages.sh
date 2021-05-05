@@ -120,7 +120,7 @@ git clone https://github.com/srcery-colors/srcery-emacs.git
 git clone https://github.com/manateelazycat/awesome-tab.git
 git clone https://github.com/manateelazycat/awesome-tray.git
 git clone https://github.com/Fanael/snails.git
-git clone https://github.com/manateelazycat/emacs-application-framework.git
+
 git clone https://github.com/Fanael/nox.git
 git clone https://github.com/Fanael/parent-mode.git
 
@@ -173,3 +173,9 @@ git clone https://github.com/kaushalmodi/ox-hugo.git
 
 
 git clone https://github.com/Yevgnen/ivy-rich.git
+
+# eaf
+git clone https://github.com/kiwanami/emacs-ctable.git
+git clone https://github.com/kiwanami/emacs-deferred.git
+git clone https://github.com/kiwanami/emacs-epc.git
+git clone https://github.com/manateelazycat/emacs-application-framework.git
