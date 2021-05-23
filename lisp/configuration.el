@@ -1198,9 +1198,9 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-extensions '("txt" "tex" "org"))
 		(setq deft-directory (concat locale-notebook-dir "/org/note"))
 		(setq deft-file-limit 20) ;;最多显示多少文件，nil不限制
-		;;(setq deft-filter-only-filenames t) ;;只搜索文件名
-		(setq deft-use-filename-as-title nil)
-		(setq deft-filter-only-filenames nil) ;;搜索标题
+		(setq deft-filter-only-filenames t) ;;只搜索文件名
+		(setq deft-use-filename-as-title t)
+		;;(setq deft-filter-only-filenames nil) ;;搜索标题
 		(setq deft-auto-save-interval 0) ;;是否自动保存从deft打开的文件
 		(setq deft-current-sort-method 'mtime) ;;排序方式
 		(setq deft-default-extension "org")
@@ -1270,7 +1270,6 @@ SLUG is the short file name, without a path or a file extension."
 
 
 ;;;; gkroam
-(add-to-list 'load-path "e:/home/.emacs.d/packages/company")
 (auto-require 'gkroam
 	      :load t
 	      :paths '("company-mode" "gkroam" "emacs-db" "emacs-kv" "rg")
@@ -1299,9 +1298,9 @@ SLUG is the short file name, without a path or a file extension."
 		))
 
 
-;; password-generator
+;;;; password-generator
 (auto-require 'password-generator
-	      :paths "emacs-password-generator"
+	      :paths "password-genarator"
 	      :functions '((password-generator-simple . "password-generator")
 			   (password-generator-strong . "password-generator")
 			   (password-generator-paranoid . "password-generator")
