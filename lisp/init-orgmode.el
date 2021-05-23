@@ -281,12 +281,12 @@
 ;;			 ,gtd-tickler-path
 ;;			 ))
 
-(setq org-agenda-files (directory-files "~/Dropbox/org" t "^proj-*"))
+(setq org-agenda-files (directory-files (concat locale-notebook-dir "/org") t "^proj-*"))
 
-(add-to-list 'org-agenda-files "~/Dropbox/org/goals.org")
-(add-to-list 'org-agenda-files "~/Dropbox/org/inbox.org")
-(add-to-list 'org-agenda-files "~/Dropbox/org/someday.org")
-(add-to-list 'org-agenda-files "~/Dropbox/org/tickler.org")
+(add-to-list 'org-agenda-files (concat locale-notebook-dir "/org/goals.org"))
+(add-to-list 'org-agenda-files (concat locale-notebook-dir "/org/inbox.org"))
+(add-to-list 'org-agenda-files (concat locale-notebook-dir "/org/someday.org"))
+(add-to-list 'org-agenda-files (concat locale-notebook-dir "/org/tickler.org"))
 
 ;; C-c C-w: org-refile 从inbox移到其它文件，不需要再移回inbox文件
 (setq org-refile-targets
