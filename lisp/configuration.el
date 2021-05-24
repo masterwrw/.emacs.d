@@ -49,6 +49,8 @@
 (setq is-gui (display-graphic-p))
 (setq is-terminal (not (display-graphic-p)))
 
+(setq is-company (file-exists-p "d:/work"))
+
 ;;;; load custom-file before all init-* config
 (setq custom-file (expand-file-name (if is-windows
 					"custom-set-variables-win.el"
@@ -150,7 +152,13 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 (auto-require 'server
 	      :after
 	      (if (not (equal t (server-running-p)))
-		  (server-start)))
+			  (server-start)))
+
+;;;; proxy
+(auto-require 'proxy-mode
+			  :load t
+			  :paths "proxy-mode"
+			  )
 
 ;;;; color theme
 ;;(load-theme 'wombat t)
@@ -583,6 +591,10 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		(add-hook 'lisp-interaction-mode-hook 'emacs-lisp-dash)
 		))
 
+(add-to-list 'load-path "~/.emacs.d/packages/pfuture")
+(require 'pfuture)
+(let ((proc (pfuture-new "c:/windows/system32/subst.exe" "x:" "d:\\\\home\\\\dropbox\\\\Dropbox")))
+  (pfuture-await proc))
 
 ;;;; load packages
 (defvar is-enable-posframe nil)
@@ -657,11 +669,6 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		  (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 		  (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
 		))
-
-;;;; unicad
-;(add-to-list 'load-path (concat auto-require-packages-dir "/unicad"))
-;(require 'unicad)
-;(unicad-enable)
 
 (auto-require 'bookmark
 	      :load nil
@@ -923,7 +930,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 			     (doom-themes-org-config)
 				 ;;(load-theme 'doom-Iosvkem t)
 				 (if (<= (string-to-number (format-time-string "%H")) 18)
-					 (load-theme 'doom-nord-light t)
+					 (load-theme 'doom-solarized-dark t)
 				   (load-theme 'doom-peacock t))
 			     )))
 

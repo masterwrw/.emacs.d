@@ -54,8 +54,8 @@ must use expand-file-name, use absolute path")
 (defun eye-async-shell-command (&rest args)
   (let ((future1 (apply #'pfuture-new args)))
     (pfuture-await future1)
-    (message "Future stdout: [%s]" (string-trim (pfuture-result future1)))
-    (message "Future stderr: [%s]" (string-trim (pfuture-stderr future1)))
+    (message "Future stdout: [%s]" (pfuture-result future1))
+    (message "Future stderr: [%s]" (pfuture-stderr future1))
     ))
 
 ;;1.download: git clone / mkdir xx && wget -Oxx/xx.el url
@@ -95,7 +95,8 @@ example:
 	  (progn
 	    (add-to-list 'load-path path)
 	    (message "compile")
-	    (byte-recompile-directory path 0)
+	    ;; compile some test el file will be error
+	    ;;(byte-recompile-directory path 0)
 	    (message "generate autoloads: %s" path)
 	    (update-directory-autoloads path)
 	    (message "install package all finished."))
@@ -276,7 +277,7 @@ git-bash进入包目录后执行
 ;; (eye--reset-time)
 ;;(setq test-time (current-time))
 
-(when (file-exists-p eye-packages-autoload-file)
+(when (file-exists-p generated-autoload-file)
   (require 'autoload.pkg generated-autoload-file))
 
 ;;(message
@@ -288,5 +289,5 @@ git-bash进入包目录后执行
 
 
 
-(provide 'init-packages)
-;;; init-packages.el ends here
+(provide 'eye-packages)
+;;; eye-packages.el ends here
