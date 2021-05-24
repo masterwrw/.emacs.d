@@ -94,7 +94,7 @@ example:
       (if (file-exists-p path)
 	  (progn
 	    (add-to-list 'load-path path)
-	    (message "compile")
+	    ;;(message "compile")
 	    ;; compile some test el file will be error
 	    ;;(byte-recompile-directory path 0)
 	    (message "generate autoloads: %s" path)
@@ -154,20 +154,25 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 如果没有指定paths，就不要指定functions参数。
 "
   `(progn
-     (when ,urls
-       (eye-install-packages ,urls))
      (when ,paths
        (add-package-path ,paths)
+       ;;(message "add load path ok:%s" ,paths);
        (if ,functions
 	   (add-autoload ,functions ,paths)))
+     (when ,urls
+       (eye-install-packages ,urls))
      ,before
      (if ,reqby
 	 (with-eval-after-load ,reqby
-	   (when ,load (require ,feature))
-	   (with-eval-after-load ,feature ,after))
-       (progn
-	 (when ,load (require ,feature))
-	 (with-eval-after-load ,feature ,after)))))
+	   (if ,load
+	       ;;(message "load feature:%s" ,feature)
+	       (require ,feature nil 'noerror))
+	   (with-eval-after-load ,feature ,after)))
+     (progn
+       (when ,load	   
+	 ;;(message "load feature:%s" ,feature)
+	 (require ,feature nil 'noerror))
+       (with-eval-after-load ,feature ,after))))
 
 ;;(eye-install-packages
 ;; '(("pfuture" . "https://github.com/Alexander-Miller/pfuture.git")
@@ -277,6 +282,7 @@ git-bash进入包目录后执行
 ;; (eye--reset-time)
 ;;(setq test-time (current-time))
 
+;; 是不是这里导致首次下载后，require失败？
 (when (file-exists-p generated-autoload-file)
   (require 'autoload.pkg generated-autoload-file))
 

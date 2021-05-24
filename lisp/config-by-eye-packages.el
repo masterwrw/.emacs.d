@@ -88,9 +88,7 @@
 	 ("s" . "https://github.com/magnars/s.el.git")
 	 ("f" . "https://github.com/rejeep/f.el.git"))
  :paths '("dash" "s" "f")
- :load t
- :after
- (message "load f ok."))
+ :load t)
 
 
 ;;;; theme
@@ -100,3 +98,20 @@
  :urls '(("naysayer-theme" . "https://github.com/nickav/naysayer-theme.el.git"))
  :after
  (load-theme 'naysayer t))
+
+
+;;;; swiper counsel ivy
+(auto-require
+ 'swiper
+ :load t
+ :urls '(("swiper" . "https://github.com/abo-abo/swiper.git"))
+ :paths "swiper"
+ ;;:functions '(swiper counsel-imenu counsel-ag counsel-rg counsel-git)
+ :after
+ (progn
+   (setq ivy-initial-inputs-alist nil) ;;不需要自动添加^符号
+   (setq ivy-count-format "(%d/%d)") ;; display both the index and the count
+  ))
+
+
+
