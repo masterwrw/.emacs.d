@@ -591,10 +591,11 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		(add-hook 'lisp-interaction-mode-hook 'emacs-lisp-dash)
 		))
 
-(add-to-list 'load-path "~/.emacs.d/packages/pfuture")
-(require 'pfuture)
-(let ((proc (pfuture-new "c:/windows/system32/subst.exe" "x:" "d:\\\\home\\\\dropbox\\\\Dropbox")))
-  (pfuture-await proc))
+(when is-company
+  (add-to-list 'load-path "~/.emacs.d/packages/pfuture")
+  (require 'pfuture)
+  (let ((proc (pfuture-new "c:/windows/system32/subst.exe" "x:" "d:\\\\home\\\\dropbox\\\\Dropbox")))
+    (pfuture-await proc)))
 
 ;;;; load packages
 (defvar is-enable-posframe nil)
@@ -1134,7 +1135,7 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 	      :paths "color-rg"
 	      :functions '(color-rg-search-input))
 
-(auto-require 'init-elisp :load t)
+;;(auto-require 'init-elisp :load t)
 
 ;;;; orgmode
 (auto-require 'init-orgmode :load t)

@@ -4,15 +4,17 @@
 ;; 1.移除dash, s, f依赖 => ok
 ;; 2.git clone 增加 --depth=1 => ok
 ;; 3.把下载包的命令自动添加到shell脚本（或者使用变量保存命令列表）
-;; 4.采用异步执行命令
+;; 4.采用异步执行命令 => ok
 ;; 5.增加删除包的函数（删除目录，删除load-path，删除shell脚本中，更新autoloads）
-;; 6.启动时调用安装包（判断本地目录是否存在，不存在则异步安装）
+;; 6.启动时调用安装包（判断本地目录是否存在，不存在则异步安装） => ok
 
 ;; depends git wget
 (defvar eye-packages-dir (expand-file-name "eye-packages" user-emacs-directory)
   "All packages main directory.
 must use expand-file-name, use absolute path")
 
+;; 必须加到load-path中，否则autoload函数会找不到，调用出错
+(add-to-list 'load-path eye-packages-dir)
 (add-to-list 'load-path (concat eye-packages-dir "/pfuture"))
 (require 'pfuture)
 

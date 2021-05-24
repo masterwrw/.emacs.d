@@ -1,3 +1,59 @@
+(global-auto-revert-mode 1)
+
+(show-paren-mode 1) ;;高亮匹配的括号
+
+(setq electric-pair-pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\]) (?\" . ?\")))
+(electric-pair-mode t) ;;自动输出成对括号
+
+;; enable narrow-to-region
+(put 'narrow-to-region 'disabled nil)
+
+;; save clipboard contents into kill-ring before replace theme
+(setq save-interprogram-paste-before-kill t)
+
+(delete-selection-mode 1)
+
+(setq mouse-yank-at-point t) ;; 强制粘贴时粘贴到光标处
+
+;; Kill buffers without asking
+(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+
+
+(setq ibuffer-expert t) ;;don't ask when delete
+
+;; Don't open a file in a new frame
+(when (boundp 'ns-pop-up-frames)
+  (setq ns-pop-up-frames nil))
+
+;;(setq track-eol t) ;; 保持光标上下移动时一直在行尾，需要设置line-move-visual为nil
+;; (setq line-move-visual t)		;在长行中移动
+(global-visual-line-mode 1)
+
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; 鼠标滚轮滑动一次滚动多少行
+;; (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+;; (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+;; (setq scroll-step 5) ;; keyboard scroll one line at a time
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+
+;; 半屏滚动
+(defun scroll-half-page-down ()
+  "scroll down half the page"
+  (interactive)
+  (scroll-down (/ (window-body-height) 2)))
+
+(defun scroll-half-page-up ()
+  "scroll up half the page"
+  (interactive)
+  (scroll-up (/ (window-body-height) 2)))
+
+(global-set-key "\M-n" 'scroll-half-page-up)
+(global-set-key "\M-p" 'scroll-half-page-down)
+
+
+(setq undo-limit 20000000)
+(setq undo-strong-limit 40000000)
+
 ;; 防止退出时卡死在 Saving clipboard to X clipboard manager 状态
 (setq x-select-enable-clipboard-manager nil)
 
