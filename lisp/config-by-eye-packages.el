@@ -1,5 +1,15 @@
 ;;;; configuration.el --- My emacs configuration -*- lexical-binding: t -*-
 
+;;(require 'eye-startup)
+;; eye-session
+;; eye-orgnote
+;; eye-agenda
+;; eye-ui
+;; eye-programming
+;; eye-encoding
+;;
+;;(async-shell-command-no-window "notepad2.exe")
+
 ;;;; startup
 (setq gc-cons-threshold (* 100 1000 1000)) ;;100MB
 (defvar default-file-name-handler-alist file-name-handler-alist)
@@ -465,8 +475,6 @@ SLUG is the short file name, without a path or a file extension."
 			   ("org-super-agenda" . "https://github.com/alphapapa/org-super-agenda.git")))
    ))
 
-(auto-require 'init-my-orgwiki :load t)
-
 ;;;; yankpad
 (auto-require
  'yankpad
@@ -519,3 +527,31 @@ SLUG is the short file name, without a path or a file extension."
  :urls '(("bing-dict" . "https://github.com/cute-jumper/bing-dict.el.git"))
  :paths "bing-dict"
  :functions 'bing-dict-brief)
+
+
+;;;; pyim
+(auto-require
+ 'pyim
+ :urls '(("xr" . "https://github.com/mattiase/xr.git")
+		 ("posframe" . "https://github.com/tumashu/posframe.git")
+		 ("pyim" . "https://github.com/tumashu/pyim.git")
+		 ("pyim-wbdict" . "https://github.com/yefeiyu/pyim-wbdict.git"))
+ :after
+ (progn
+   (setq default-input-method "pyim")
+   ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
+   ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
+   ;; 手动安装 posframe 包。
+   (setq pyim-page-tooltip 'posframe)
+   ;; 选词框显示5个候选词
+   (setq pyim-page-length 5)
+   
+   (global-set-key (kbd "C-\\") 'toggle-input-method)
+
+   ;; 设置五笔输入模式，另外，在使用五笔输入法之前，还需要用 pyim-dicts-manager 添加一个五笔词库，选择pyim-wbdict中的pyim文件
+   ;; 保存后会得到一个配置文件，里面有设置了pyim-dicts这个变量，所以也可以直接设置这个变量
+   (setq pyim-default-scheme 'wubi)
+   (setq pyim-dicts (quote
+					 ((:name "qingge" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-qingge.pyim")
+					  (:name "freeime" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-freeime.pyim"))))))
+ 

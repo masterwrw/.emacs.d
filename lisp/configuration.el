@@ -591,11 +591,11 @@ paths只需要设置插件存放的目录名，统一在auto-require-packages-di
 		(add-hook 'lisp-interaction-mode-hook 'emacs-lisp-dash)
 		))
 
-(when is-company
-  (add-to-list 'load-path "~/.emacs.d/packages/pfuture")
-  (require 'pfuture)
-  (let ((proc (pfuture-new "c:/windows/system32/subst.exe" "x:" "d:\\\\home\\\\dropbox\\\\Dropbox")))
-    (pfuture-await proc)))
+;;(when is-company
+;;  (add-to-list 'load-path "~/.emacs.d/packages/pfuture")
+;;  (require 'pfuture)
+;;  (let ((proc (pfuture-new "c:/windows/system32/subst.exe" "x:" "d:\\\\home\\\\dropbox\\\\Dropbox")))
+;;    (pfuture-await proc)))
 
 ;;;; load packages
 (defvar is-enable-posframe nil)
@@ -1787,6 +1787,8 @@ SLUG is the short file name, without a path or a file extension."
 		;; 选词框显示5个候选词
 		(setq pyim-page-length 5)
 		
+		(global-set-key (kbd "C-\\") 'toggle-input-method)
+
 		;; 设置五笔输入模式，另外，在使用五笔输入法之前，还需要用 pyim-dicts-manager 添加一个五笔词库，选择pyim-wbdict中的pyim文件
 		;; 保存后会得到一个配置文件，里面有设置了pyim-dicts这个变量，所以也可以直接设置这个变量
 		(setq pyim-default-scheme 'wubi)
