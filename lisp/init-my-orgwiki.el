@@ -162,6 +162,4 @@ http://blog.binchen.org/posts/open-url-in-emacs-with-external-browser.html"
 	  (w32-shell-execute "open" "explorer" "N:\\org\\attach")))
 
 
-(my-org-wiki-open-attach-dir)
-
 (provide 'init-my-orgwiki)
