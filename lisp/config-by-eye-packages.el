@@ -508,6 +508,21 @@ SLUG is the short file name, without a path or a file extension."
  (require 'init-cpp))
 
 
+;;;; ivy-posframe
+(auto-require
+ 'ivy-posframe
+ :load t
+ :urls '(("posframe" . "https://github.com/tumashu/posframe.git")
+		 ("swiper" . "https://github.com/abo-abo/swiper.git")
+		 ("ivy-posframe" . "https://github.com/tumashu/ivy-posframe.git"))
+ :after
+ (progn
+   ;; display at `ivy-posframe-style'
+   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+   (ivy-posframe-mode 1)
+   ))
+
 
 ;;;; treemacs
 (auto-require
