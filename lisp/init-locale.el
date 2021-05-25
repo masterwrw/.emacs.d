@@ -24,6 +24,7 @@
 (when is-windows
   (setq system-path-list
 		'(
+		  "D:/emacs_env"
 		  "D:/emacs_env/texinfo-6.7-w32-bin/bin"
 		  "D:/emacs_env/gnuwin32/bin"
 		  "d:/emacs_env/emacs-27.2-i686/bin"
@@ -88,8 +89,17 @@
     )
   )
 
+(defun async-shell-command-no-window (command)
+  (let ((display-buffer-alist
+         (list (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil))))
+		(output-buffer (format "*Async Shell Command*.%s" (random 1000)))
+		(error-buffer (format "*Async Shell Command*.%s" (random 1000)))
+		)
+    (async-shell-command command output-buffer error-buffer)))
+
+
 (when is-windows
-  (async-shell-command (expand-file-name "bin/windows-keys.ahk" user-emacs-directory) nil nil))
+  (async-shell-command-no-window (expand-file-name "bin/windows-keys.ahk" user-emacs-directory)))
 
 
 (defun eye/run-exe ()
