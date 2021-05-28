@@ -1214,6 +1214,12 @@ Run `ln -s ~/org/owensys.github.io ~/org/blog/output`"
 		(setq deft-default-extension "org")
 		(setq deft-strip-summary-regexp ".*")))
 
+(defun eye/deft-work ()
+  (interactive)
+  (setq deft-directory (concat locale-notebook-dir "/org/ts"))
+  (deft-refresh)
+  (switch-to-buffer "*Deft*"))
+
 (defun eye/deft-search(filter)
   (interactive "MFilter: ")
   (deft)
