@@ -1,78 +1,7 @@
 ;;;; configuration.el --- My emacs configuration -*- lexical-binding: t -*-
 
-;;(require 'eye-startup)
-;; eye-session
-;; eye-orgnote
-;; eye-agenda
-;; eye-ui
-;; eye-programming
-;; eye-encoding
-;;
-;;(async-shell-command-no-window "notepad2.exe")
-
-;;;; startup
-(setq gc-cons-threshold (* 100 1000 1000)) ;;100MB
-(defvar default-file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            "Restore defalut values after init."
-            (setq file-name-handler-alist default-file-name-handler-alist)
-            (setq gc-cons-threshold (* 10 1000 1000)) ;;10MB
-            (if (boundp 'after-focus-change-function)
-                (add-function :after after-focus-change-function
-                              (lambda ()
-                                (unless (frame-focus-state)
-                                  (garbage-collect))))
-              (add-hook 'focus-out-hook 'garbage-collect))))
-
-
-;; Do not use garbage-collect when use minibuffer
-;; @see http://bling.github.io/blog/2016/01/18/why-are-you-changing-gc-cons-threshold/
-(defun eye-minibuffer-setup-hook ()
-  (setq gc-cons-threshold most-positive-fixnum))
-
-(defun eye-minibuffer-exit-hook ()
-  (setq gc-cons-threshold (* 10 1000 1000))) ;;10MB
-
-(add-hook 'minibuffer-setup-hook #'eye-minibuffer-setup-hook)
-(add-hook 'minibuffer-exit-hook #'eye-minibuffer-exit-hook)
-
-;;;; system version
-(setq is-windows (or
-		  (eq system-type 'windows-nt)
-		  (eq system-type 'cygwin)))
-(setq is-linux (eq system-type 'gnu/linux))
-(setq is-mac (eq system-type 'darwin))
-
-(setq is-gui (display-graphic-p))
-(setq is-terminal (not (display-graphic-p)))
-
-;;;; custom file
-;; must load custom-file before all init-* config
-(setq custom-file
-      (concat user-emacs-directory
-	      (if is-windows "custom-set-variables-win.el" "custom-set-variables-linux.el")))
-
-(defun touch (path)
-  (unless (file-exists-p custom-file)
-    (with-temp-buffer
-      (write-file path))))
-
-(touch custom-file)
-(load custom-file t t)
-
-;;;; startup time
-(defvar startup-time (current-time))
-(defvar begin-time nil "This is for calc require package time")
-(defun eye-print-startup-time ()
-  (message (format
-	    "\n\nEmacs startup time: %.6f seconds.\n\n\n"
-	    (- (float-time (current-time)) (float-time startup-time)))))
-(add-hook 'after-init-hook #'eye-print-startup-time)
-
-;;;; init-system-path
 (add-to-list 'load-path "~/.emacs.d/lisp")
+(require 'eye-startup)
 (require 'init-system-path)
 (require 'init-font)
 (require 'init-misc)
@@ -80,15 +9,6 @@
 
 ;;;; eye-packages
 (setq eye-packages-dir (expand-file-name "emacs-packages" user-emacs-directory))
-(mkdir eye-packages-dir t)
-(let ((default-directory eye-packages-dir)
-      (pfuture-path (concat eye-packages-dir "/pfuture")))
-  (unless (file-exists-p pfuture-path)
-    (call-process "git" nil t nil "clone" "https://github.com/Alexander-Miller/pfuture.git")
-    (if (file-exists-p pfuture-path)
-	(add-to-list 'load-path pfuture-path)
-      (message "install pfuture failed."))))
-
 (require 'eye-packages)
 
 
@@ -160,9 +80,10 @@
 ;;;; recentf
 (auto-require
  'recentf
- ;;:load t
+ :load t
  :after
  (progn
+   (recentf-mode 1)
    (setq recentf-max-saved-items 100)
    (setq recentf-save-file "~/tmp/emacs_cache/recentf") ;;使双系统切换后不清空记录
    ;;(add-to-list 'recentf-exclude (expand-file-name package-user-dir))
@@ -236,15 +157,6 @@
    (which-key-mode 1)
    (which-key-setup-side-window-bottom)))
 
-;;;; meow
-(auto-require
- 'meow
- :load t
- :urls '(("meow" . "https://github.com/DogLooksGood/meow.git"))
- :paths '("dash" "s" "meow")
- :after
- (require 'init-meow))
-
 
 ;;;; theme
 (auto-require
@@ -255,13 +167,18 @@
  (load-theme 'naysayer t))
 
 
+;;;; eye-keybindings
+(auto-require
+ 'eye-keybindings
+ :load t)
+
+
 ;;;; swiper counsel ivy
 (auto-require
  'swiper
  :load t
  :urls '(("swiper" . "https://github.com/abo-abo/swiper.git"))
  :paths "swiper"
- ;;:functions '(swiper counsel-imenu counsel-ag counsel-rg counsel-git)
  :after
  (progn
    (setq ivy-initial-inputs-alist nil) ;;不需要自动添加^符号
@@ -269,19 +186,6 @@
    (define-key global-map (kbd "M-x") #'counsel-M-x)
    ))
 
-
-;;;; ivy-rich
-(auto-require
- 'ivy-rich
- :load t
- :urls '(("ivy-rich" . "https://github.com/Yevgnen/ivy-rich.git"))
- :paths "ivy-rich"
- :reqby 'ivy
- :functions '(ivy-rich-mode)
- :after
- (progn
-   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-   (ivy-rich-mode 1)))
 
 
 ;;;; color-rg
@@ -325,7 +229,8 @@
 (when is-gui
   (auto-require
    'highlight-numbers
-   :urls '(("highlight-numbers" . "https://github.com/Fanael/highlight-numbers.git"))
+   :urls '(("parent-mode" . "https://github.com/Fanael/parent-mode.git")
+	   ("highlight-numbers" . "https://github.com/Fanael/highlight-numbers.git"))
    :paths '("highlight-numbers" "parent-mode")
    :functions 'highlight-numbers-mode
    :before
@@ -428,7 +333,8 @@ SLUG is the short file name, without a path or a file extension."
  :functions '(bm-toggle bm-next bm-previous)
  :before
  (progn
-   (autoload 'counsel-bm "ext-bm")
+   (require 'ext-bm)
+   ;;(autoload 'counsel-bm "ext-bm")
    (setq bm-cycle-all-buffers nil		;; 是否在所有buffer中循环
 	 ;; (setq bm-in-lifo-order t)		;; 先入先出
 	 bm-restore-repository-on-load t
@@ -462,18 +368,8 @@ SLUG is the short file name, without a path or a file extension."
 
 
 ;;;; orgmode
-(auto-require
- 'init-orgmode :load t
- :before
- (progn
-   (setq locale-notebook-dir "x:/orgnotes")
-   (setq auto-require-packages-dir eye-packages-dir)
-   (eye-install-packages '(("htmlize" . "https://github.com/hniksic/emacs-htmlize.git")
-			   ("notdeft" . "https://github.com/hasu/notdeft.git")
-			   ("ts" . "https://github.com/alphapapa/ts.el.git")
-			   ("ht" . "https://github.com/emacsmirror/ht.git")
-			   ("org-super-agenda" . "https://github.com/alphapapa/org-super-agenda.git")))
-   ))
+(auto-require 'eye-org :load t)
+ 
 
 ;;;; yankpad
 (auto-require
@@ -544,29 +440,5 @@ SLUG is the short file name, without a path or a file extension."
  :functions 'bing-dict-brief)
 
 
-;;;; pyim
-(auto-require
- 'pyim
- :urls '(("xr" . "https://github.com/mattiase/xr.git")
-		 ("posframe" . "https://github.com/tumashu/posframe.git")
-		 ("pyim" . "https://github.com/tumashu/pyim.git")
-		 ("pyim-wbdict" . "https://github.com/yefeiyu/pyim-wbdict.git"))
- :after
- (progn
-   (setq default-input-method "pyim")
-   ;; 使用 popup-el 来绘制选词框, 如果用 emacs26, 建议设置
-   ;; 为 'posframe, 速度很快并且菜单不会变形，不过需要用户
-   ;; 手动安装 posframe 包。
-   (setq pyim-page-tooltip 'posframe)
-   ;; 选词框显示5个候选词
-   (setq pyim-page-length 5)
-   
-   (global-set-key (kbd "C-\\") 'toggle-input-method)
+(auto-require 'eye-programming :load t)
 
-   ;; 设置五笔输入模式，另外，在使用五笔输入法之前，还需要用 pyim-dicts-manager 添加一个五笔词库，选择pyim-wbdict中的pyim文件
-   ;; 保存后会得到一个配置文件，里面有设置了pyim-dicts这个变量，所以也可以直接设置这个变量
-   (setq pyim-default-scheme 'wubi)
-   (setq pyim-dicts (quote
-					 ((:name "qingge" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-qingge.pyim")
-					  (:name "freeime" :file "~/.emacs.d/packages/pyim-wbdict/pyim-wbdict-freeime.pyim"))))))
- 

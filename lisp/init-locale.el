@@ -45,6 +45,7 @@
 		  "D:/emacs_env/Python3.8.5"
 		  "D:/emacs_env/Python3.8.5/Scripts"
 		  "D:/emacs_env/node-v13.14.0-win-x64"
+		  "D:/emacs_env/home/.emacs.d/bin/sqlite-tools-win32-x86-3350500"
 		  "D:/portable/cmake-3.18.1-win32-x86/bin"
 		  ))
   (setenv "PATH" (mapconcat 'identity system-path-list ";"))

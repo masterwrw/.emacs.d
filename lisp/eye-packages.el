@@ -13,6 +13,18 @@
   "All packages main directory.
 must use expand-file-name, use absolute path")
 
+(defun eye/install-pfuture ()
+  (mkdir eye-packages-dir t)
+  (let ((default-directory eye-packages-dir)
+	(pfuture-path (concat eye-packages-dir "/pfuture")))
+    (unless (file-exists-p pfuture-path)
+      (call-process "git" nil t nil "clone" "https://github.com/Alexander-Miller/pfuture.git")
+      (if (file-exists-p pfuture-path)
+	  (add-to-list 'load-path pfuture-path)
+	(message "install pfuture failed.")))))
+
+(eye/install-pfuture)
+
 ;; 必须加到load-path中，否则autoload函数会找不到，调用出错
 (add-to-list 'load-path eye-packages-dir)
 (add-to-list 'load-path (concat eye-packages-dir "/pfuture"))
