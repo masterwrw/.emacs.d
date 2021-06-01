@@ -35,6 +35,11 @@
  :load t
  :urls '(("one-key" . "https://github.com/manateelazycat/one-key.git")))
 
+(auto-require
+ 'hydra
+ :load t
+ :urls '(("hydra" . "https://github.com/abo-abo/hydra.git")))
+
 
 (one-key-create-menu
  "WINDOW"
@@ -84,15 +89,16 @@
    ) t)
 
 (one-key-create-menu
- "FILE"
+ "File"
  '(
    (("r" . "Recent file") . recentf-open-files)
    (("o" . "Open file") . counsel-find-file)
    (("s" . "Save file") . save-buffer)
    (("g" . "Open git file") . counsel-git)
    (("f" . "Switch buffer") . counsel-switch-buffer)
-   (("k" . "Kill buffer") . kill-buffer)
-   (("d" . "dired") . dired)
+   (("k" . "Kill buffer") . kill-this-buffer)
+   (("d" . "dired") . dired-jump)
+   (("b" . "Bookmark jump") . bookmark-jump)
    )
  t)
 

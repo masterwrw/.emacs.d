@@ -1,3 +1,5 @@
+(require 'f)
+
 (setq eye-org-file-attach-base-dir (concat locale-notebook-dir "/attach"))
 (setq eye-org-file-attach-auto-show-image t)
 
