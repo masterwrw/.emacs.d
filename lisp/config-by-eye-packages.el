@@ -6,6 +6,7 @@
 (require 'init-font)
 (require 'init-misc)
 (require 'init-encoding)
+(require 'init-utils)
 
 ;;;; eye-packages
 (setq eye-packages-dir (expand-file-name "emacs-packages" user-emacs-directory))
